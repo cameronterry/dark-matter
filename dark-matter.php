@@ -15,7 +15,16 @@ defined( 'ABSPATH' ) or die();
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '0.0.0' );
 
+require_once( DM_PATH . '/ui/blog.php' );
 require_once( DM_PATH . '/ui/network.php' );
+
+function dark_matter_enqueue_scripts( $hook ) {
+  if ( 'settings_page_dark_matter_blog_settings' === $hook ) {
+    wp_enqueue_script( 'dark-matter-js', plugin_dir_url( __FILE__ ) . 'ui/js/dark-matter.js', array( 'jquery' ), DM_VERSION );
+    wp_enqueue_style( 'dark-matter-css', plugin_dir_url( __FILE__ ) . 'ui/css/blog.css', null, DM_VERSION );
+  }
+}
+add_action( 'admin_enqueue_scripts', 'dark_matter_enqueue_scripts' );
 
 function dark_matter_maybe_create_tables() {
   global $wpdb;
@@ -41,7 +50,7 @@ function dark_matter_maybe_create_tables() {
 function dark_matter_maybe_upgrade() {
   if ( is_network_admin() ) {
     $current_version = get_network_option( null, 'dark_matter_version', null );
-    
+
     if ( null == $current_version || version_compare( DM_VERSION, $current_version, '>' ) ) {
       dark_matter_maybe_create_tables();
       update_network_option( null, 'dark_matter_version', DM_VERSION );
