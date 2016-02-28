@@ -6,7 +6,17 @@
     width:100%;
   }
 
-    .dark-matter-blog table > thead > tr > td {
+    .dark-matter-blog table > tbody > tr > td {
+      background-color:#FFFFFF;
+      border-bottom:1px solid #DDDDDD;
+      line-height:1.42857143;
+      padding:8px;
+      text-align:left;
+      vertical-align:top;
+    }
+
+    .dark-matter-blog table > tbody > tr > th {
+      background-color:#FFFFFF;
       border-bottom:1px solid #DDDDDD;
       line-height:1.42857143;
       padding:8px;
@@ -15,7 +25,8 @@
     }
 
     .dark-matter-blog table > thead > tr > th {
-      border-bottom:2px solid #DDDDDD;
+      background-color:#0073AA;
+      color:#FFFFFF;
       line-height:1.42857143;
       padding:8px;
       text-align:left;
