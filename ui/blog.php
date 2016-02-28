@@ -51,5 +51,23 @@ function dark_matter_blog_domain_mapping() { ?>
       </tr>
     </script>
     <h2><?php _e( 'Add New Domain', 'darkmatter' ); ?></h2>
+    <form id="dm_add_domain_form">
+      <input id="dm_new_nonce" name="dm_new_nonce" type="hidden" value="<?php echo( wp_create_nonce( 'dm_new_nonce' ) ); ?>" />
+      <p>
+        <label>
+          Domain :
+          <input id="dm_new_domain" name="dm_new_domain" type="text" value="" />
+        </label>
+      </p>
+      <p>
+        <label>
+          Is Main? :
+          <input id="dm_new_is_main" name="dm_new_domain" type="checkbox" />
+        </label>
+      </p>
+      <p>
+        <button id="dm_new_add_domain" class="button button-primary">Add Domain</button>
+      </p>
+    </form>
   </div>
 <?php }
