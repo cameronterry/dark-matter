@@ -36,6 +36,20 @@ function dark_matter_blog_domain_mapping() { ?>
         </tr>
       </tbody>
     </table>
+    <script type="text/html" id="tmpl-domain-row">
+      <tr>
+        <th scope="row">{{{data.number}}}</th>
+        <td>
+          <a href="#">{{{data.domain}}}</a>
+        </td>
+        <td>
+          {{{data.is_primary}}}
+        </td>
+        <td>
+          Delete
+        </td>
+      </tr>
+    </script>
     <h2><?php _e( 'Add New Domain', 'darkmatter' ); ?></h2>
   </div>
 <?php }
