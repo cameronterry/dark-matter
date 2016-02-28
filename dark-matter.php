@@ -15,11 +15,15 @@ defined( 'ABSPATH' ) or die();
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '0.0.0' );
 
+require_once( DM_PATH . '/ui/network.php' );
+
 function dark_matter_maybe_create_tables() {
   global $wpdb;
 
-  $charset_collate = $wpdb->get_charset_collate();
+  /** As dbDelta function is called before the upgrade file is included. */
+  require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
+  $charset_collate = $wpdb->get_charset_collate();
   $wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
 
   $sql = "CREATE TABLE `{$wpdb->dmtable}` (
@@ -37,8 +41,8 @@ function dark_matter_maybe_create_tables() {
 function dark_matter_maybe_upgrade() {
   if ( is_network_admin() ) {
     $current_version = get_network_option( null, 'dark_matter_version', null );
-
-    if ( null == $current_version || version_compare( DM_VERSION, $current_version, '=' ) ) {
+    
+    if ( null == $current_version || version_compare( DM_VERSION, $current_version, '>' ) ) {
       dark_matter_maybe_create_tables();
       update_network_option( null, 'dark_matter_version', DM_VERSION );
     }
