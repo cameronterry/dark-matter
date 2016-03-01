@@ -8,7 +8,9 @@ function dark_matter_blog_admin_menu() {
 }
 add_action( 'admin_menu', 'dark_matter_blog_admin_menu' );
 
-function dark_matter_blog_domain_mapping() { ?>
+function dark_matter_blog_domain_mapping() {
+  $domains = dark_matter_api_get_domains();
+?>
   <div class="wrap dark-matter-blog">
     <h1><?php _e( 'Domain Mapping for this Blog', 'darkmatter' ); ?></h1>
     <h2><?php _e( 'Mapped Domains', 'darkmatter' ); ?></h2>
@@ -22,22 +24,24 @@ function dark_matter_blog_domain_mapping() { ?>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <th scope="row">1</th>
-          <td>
-            <a href="#">siteone.test</a>
-          </td>
-          <td>
-            Yes
-          </td>
-          <td>
-            Delete
-          </td>
-        </tr>
+        <?php foreach ( $domains as $domain ) : ?>
+          <tr id="domain-<?php echo( $domain->id ); ?>">
+            <th scope="row">1</th>
+            <td>
+              <?php printf( '<a href="http://%1$s">%1$s</a>', $domain->domain ); ?>
+            </td>
+            <td>
+              Yes
+            </td>
+            <td>
+              Delete
+            </td>
+          </tr>
+        <?php endforeach; ?>
       </tbody>
     </table>
     <script type="text/html" id="tmpl-domain-row">
-      <tr>
+      <tr id="domain-{{{id}}}" style="display:none;">
         <th scope="row">{{{data.number}}}</th>
         <td>
           <a href="#">{{{data.domain}}}</a>
@@ -52,7 +56,7 @@ function dark_matter_blog_domain_mapping() { ?>
     </script>
     <h2><?php _e( 'Add New Domain', 'darkmatter' ); ?></h2>
     <form id="dm_add_domain_form">
-      <input id="dm_new_nonce" name="dm_new_nonce" type="hidden" value="<?php echo( wp_create_nonce( 'dm_new_nonce' ) ); ?>" />
+      <input id="dm_new_nonce" name="dm_new_nonce" type="hidden" value="<?php echo( wp_create_nonce( 'nonce' ) ); ?>" />
       <p>
         <label>
           Domain :
@@ -62,7 +66,7 @@ function dark_matter_blog_domain_mapping() { ?>
       <p>
         <label>
           Is Main? :
-          <input id="dm_new_is_main" name="dm_new_domain" type="checkbox" />
+          <input id="dm_new_is_main" name="dm_new_is_main" type="checkbox" value="yes" />
         </label>
       </p>
       <p>
