@@ -14,7 +14,7 @@ function dark_matter_blog_domain_mapping() {
   <div class="wrap dark-matter-blog">
     <h1><?php _e( 'Domain Mapping for this Blog', 'darkmatter' ); ?></h1>
     <h2><?php _e( 'Mapped Domains', 'darkmatter' ); ?></h2>
-    <table>
+    <table id="dark-matter-blog-domains" data-delete-nonce="<?php echo( wp_create_nonce( 'delete_nonce' ) ); ?>">
       <thead>
         <tr>
           <th>#</th>
