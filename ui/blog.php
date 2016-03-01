@@ -25,7 +25,7 @@ function dark_matter_blog_domain_mapping() {
       </thead>
       <tbody>
         <?php foreach ( $domains as $domain ) : ?>
-          <tr id="domain-<?php echo( $domain->id ); ?>">
+          <tr id="domain-<?php echo( $domain->id ); ?>" data-id="<?php echo( $domain->id ); ?>">
             <th scope="row">1</th>
             <td>
               <?php printf( '<a href="http://%1$s">%1$s</a>', $domain->domain ); ?>
@@ -34,14 +34,14 @@ function dark_matter_blog_domain_mapping() {
               Yes
             </td>
             <td>
-              Delete
+              <button class="delete-domain button">Delete</button>
             </td>
           </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
     <script type="text/html" id="tmpl-domain-row">
-      <tr id="domain-{{{id}}}" style="display:none;">
+      <tr id="domain-{{{id}}}" data-id="{{{id}}}" style="display:none;">
         <th scope="row">{{{data.number}}}</th>
         <td>
           <a href="#">{{{data.domain}}}</a>
