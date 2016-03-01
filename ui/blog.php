@@ -50,7 +50,7 @@ function dark_matter_blog_domain_mapping() {
           {{{data.is_primary}}}
         </td>
         <td>
-          Delete
+          <button class="delete-domain button">Delete</button>
         </td>
       </tr>
     </script>
