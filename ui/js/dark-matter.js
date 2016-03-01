@@ -30,6 +30,26 @@
       e.preventDefault();
     } );
 
+    $( 'table#dark-matter-blog-domains' ).on( 'click', 'button.delete-domain', function ( e ) {
+      var domain_id = $( this ).parents( 'tr' ).data( 'id' );
+
+      var data = {
+        'action' : 'dark_matter_del_domain',
+        'dm_delete_nonce' : $( 'table#dark-matter-blog-domains' ).data( 'delete-nonce' ),
+        'id' : $( this ).parents( 'tr' ).data( 'id' )
+      };
+
+      $.post( ajaxurl, data, function ( response ) {
+        if ( response.success ) {
+          $( 'tr#domain-' + domain_id ).slideUp( 'fast', function () {
+            $( this ).remove();
+          } );
+        }
+      } );
+
+      e.preventDefault();
+    } );
+
   } );
 
 } )( jQuery, window );
