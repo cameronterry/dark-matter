@@ -23,6 +23,14 @@ function dark_matter_api_add_domain( $domain = '', $is_primary = false ) {
   }
 }
 
+function dark_matter_api_del_domain( $id ) {
+  global $wpdb;
+
+  return $wpdb->delete( $wpdb->dmtable, array(
+    'id' => $id
+  ) );
+}
+
 function dark_matter_api_get_domain( $domain = null ) {
   global $wpdb;
   $sql = "SELECT * FROM {$wpdb->dmtable} WHERE ";
