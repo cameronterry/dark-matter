@@ -15,6 +15,9 @@ defined( 'ABSPATH' ) or die();
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '0.0.0' );
 
+require_once( DM_PATH . '/inc/ajax.php' );
+require_once( DM_PATH . '/inc/api.php' );
+
 require_once( DM_PATH . '/ui/blog.php' );
 require_once( DM_PATH . '/ui/network.php' );
 
@@ -33,7 +36,6 @@ function dark_matter_maybe_create_tables() {
   require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
   $charset_collate = $wpdb->get_charset_collate();
-  $wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
 
   $sql = "CREATE TABLE `{$wpdb->dmtable}` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
@@ -57,4 +59,12 @@ function dark_matter_maybe_upgrade() {
     }
   }
 }
-add_action( 'plugins_loaded', 'dark_matter_maybe_upgrade' );
+
+function dark_matter_plugins_loaded() {
+  global $wpdb;
+
+  $wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
+
+  dark_matter_maybe_upgrade();
+}
+add_action( 'plugins_loaded', 'dark_matter_plugins_loaded' );
