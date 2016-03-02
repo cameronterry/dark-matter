@@ -17,6 +17,7 @@ define( 'DM_VERSION', '0.0.0' );
 
 require_once( DM_PATH . '/inc/ajax.php' );
 require_once( DM_PATH . '/inc/api.php' );
+require_once( DM_PATH . '/inc/redirects.php' );
 
 require_once( DM_PATH . '/ui/blog.php' );
 require_once( DM_PATH . '/ui/network.php' );
