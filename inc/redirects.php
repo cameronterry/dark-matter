@@ -1,7 +1,19 @@
 <?php
 
 function dark_matter_admin_redirect() {
+  /**
+   * Do not redirect the AJAX calls. It is part of the admin but not
+   * the part we wish to put redirects on.  Especially for Front-end
+   * AJAX functionality.
+   */
   if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-admin/admin-ajax.php' ) ) {
+    return;
+  }
+
+  /**
+   * Also do not redirect the Cron URL.
+   */
+  if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-cron.php' ) ) {
     return;
   }
 
