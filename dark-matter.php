@@ -18,6 +18,7 @@ define( 'DM_VERSION', '0.0.0' );
 require_once( DM_PATH . '/inc/ajax.php' );
 require_once( DM_PATH . '/inc/api.php' );
 require_once( DM_PATH . '/inc/redirects.php' );
+require_once( DM_PATH . '/inc/urls.php' );
 
 require_once( DM_PATH . '/ui/blog.php' );
 require_once( DM_PATH . '/ui/network.php' );
@@ -49,6 +50,24 @@ function dark_matter_maybe_create_tables() {
 
   dbDelta( $sql );
 }
+
+function test( $value ) {
+  echo( '<pre>' );
+  print_r( $value );
+  echo( '</pre>' );
+  return $value;
+}
+
+// add_filter( 'pre_option_siteurl', 'test' );
+// add_filter( 'pre_option_home', 'test' );
+//
+// add_filter( 'stylesheet_uri', 'test' );
+// add_filter( 'stylesheet_directory', 'test' );
+// add_filter( 'stylesheet_directory_uri', 'test' );
+//
+// add_filter( 'template_directory', 'test' );
+// add_filter( 'template_directory_uri', 'test' );
+// add_filter( 'plugins_url', 'test' );
 
 function dark_matter_maybe_upgrade() {
   if ( is_network_admin() ) {
