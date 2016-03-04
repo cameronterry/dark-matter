@@ -28,7 +28,7 @@ if ( false === empty( $domain_mapping_id ) ) {
   define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
   define( 'DOMAIN_MAPPING', true );
 
-  $current_blog = get_blog_details( $domain_mapping_id );
+  $current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d", $domain_mapping_id ) );
   $current_blog->original_domain = $current_blog->domain . $current_blog->path;
   $current_blog->domain = $_SERVER[ 'HTTP_HOST' ];
   $current_blog->path = '/';
