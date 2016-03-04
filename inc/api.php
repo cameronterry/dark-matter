@@ -31,18 +31,21 @@ function dark_matter_api_del_domain( $id ) {
   ) );
 }
 
-function dark_matter_api_get_domain( $domain = null ) {
+function dark_matter_api_get_domain( $identifier = null, $domain_only = false ) {
   global $wpdb;
   $sql = "SELECT * FROM {$wpdb->dmtable} WHERE ";
-
-  if ( null === $domain && empty( $domain ) ) {
+  
+  if ( null === $identifier && empty( $identifier ) ) {
     return false;
   }
-  else if ( is_numeric( $domain ) ) {
-    return $wpdb->get_row( $wpdb->prepare( $sql . 'id = %s', $domain ) );
+  else if ( is_numeric( $identifier ) ) {
+    return $wpdb->get_row( $wpdb->prepare( $sql . 'id = %s', $identifier ) );
   }
   else {
-    return $wpdb->get_row( $wpdb->prepare( $sql . 'domain = %s', $domain ) );
+    return $wpdb->get_row( $wpdb->prepare( $sql . 'domain = %s', $identifier ) );
+  }
+}
+
   }
 }
 
