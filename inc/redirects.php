@@ -18,12 +18,13 @@ function dark_matter_admin_redirect() {
   }
 
   global $current_blog;
+  $original_domain = dark_matter_api_get_domain_original();
 
-  if ( false === empty( $current_blog->original_domain ) && false === strpos( $current_blog->original_domain, $_SERVER[ 'HTTP_HOST' ] ) ) {
+  if ( false === empty( $original_domain ) && false === strpos( $original_domain, $_SERVER[ 'HTTP_HOST' ] ) ) {
     $protocol = ( is_ssl() ? 'https://' : 'http://' );
     $protocol = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https://' : $protocol );
 
-    $domain = untrailingslashit( $current_blog->original_domain );
+    $domain = untrailingslashit( $original_domain );
     $request = $_SERVER['REQUEST_URI'];
 
     wp_redirect( sprintf( '%1$s%2$s%3$s', $protocol, $domain, $request ) );
