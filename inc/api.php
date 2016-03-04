@@ -46,7 +46,14 @@ function dark_matter_api_get_domain( $identifier = null, $domain_only = false ) 
   }
 }
 
+function dark_matter_api_get_domain_original() {
+  global $current_blog;
+
+  if ( property_exists( $current_blog, 'original_domain' ) ) {
+    return $current_blog->original_domain;
   }
+
+  return $current_blog->domain . $current_blog->path;
 }
 
 function dark_matter_api_get_domains( $blog_id = null ) {
