@@ -91,5 +91,6 @@ function dark_matter_post_row_actions( $actions ) {
 add_filter( 'post_row_actions', 'dark_matter_post_row_actions' );
 add_filter( 'media_row_actions', 'dark_matter_post_row_actions' );
 add_filter( 'page_row_actions', 'dark_matter_post_row_actions' );
+add_filter( 'tag_row_actions', 'dark_matter_post_row_actions' );
 
 add_filter( 'get_comment_author_url', 'dark_matter_api_map_permalink' );
