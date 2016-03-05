@@ -65,8 +65,14 @@ function dark_matter_blog_domain_mapping() {
       </p>
       <p>
         <label>
-          Is Main? :
-          <input id="dm_new_is_main" name="dm_new_is_main" type="checkbox" value="yes" />
+          Is Primary? :
+          <input id="dm_new_is_primary" name="dm_new_is_primary" type="checkbox" value="yes" />
+        </label>
+      </p>
+      <p>
+        <label>
+          Is HTTPS? :
+          <input id="dm_new_is_https" name="dm_new_is_https" type="checkbox" value="yes" />
         </label>
       </p>
       <p>
