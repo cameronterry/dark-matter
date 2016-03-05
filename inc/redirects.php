@@ -36,7 +36,7 @@ add_action( 'login_init', 'dark_matter_admin_redirect' );
 
 function dark_matter_frontend_redirect() {
   /** If it's the main site in the network, do not redirect. */
-  if ( is_main_site() ) {
+  if ( is_main_site() || is_preview() ) {
     return;
   }
 
