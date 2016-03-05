@@ -3,8 +3,10 @@
 function dark_matter_ajax_add_domain() {
   check_ajax_referer( 'nonce', 'dm_new_nonce' );
   $domain = $_POST['dm_new_domain'];
-  $is_primary = ( array_key_exists( 'dm_new_is_main', $_POST ) && 'yes' === $_POST['dm_new_is_main'] );
-  $new_domain = dark_matter_api_add_domain( $domain, $is_primary );
+  $is_primary = ( array_key_exists( 'dm_new_is_primary', $_POST ) && 'yes' === $_POST['dm_new_is_primary'] );
+  $is_https = ( array_key_exists( 'dm_new_is_https', $_POST ) && 'yes' === $_POST['dm_new_is_https'] );
+
+  $new_domain = dark_matter_api_add_domain( $domain, $is_primary, $is_https );
 
   if ( false === $new_domain ) {
     wp_send_json_error();
