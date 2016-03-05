@@ -83,4 +83,5 @@ function dark_matter_post_row_actions( $actions ) {
   return $actions;
 }
 add_filter( 'post_row_actions', 'dark_matter_post_row_actions' );
+add_filter( 'media_row_actions', 'dark_matter_post_row_actions' );
 add_filter( 'page_row_actions', 'dark_matter_post_row_actions' );
