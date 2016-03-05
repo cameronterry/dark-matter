@@ -51,24 +51,6 @@ function dark_matter_maybe_create_tables() {
   dbDelta( $sql );
 }
 
-function test( $value ) {
-  echo( '<pre>' );
-  print_r( $value );
-  echo( '</pre>' );
-  return $value;
-}
-
-// add_filter( 'pre_option_siteurl', 'test' );
-// add_filter( 'pre_option_home', 'test' );
-//
-// add_filter( 'stylesheet_uri', 'test' );
-// add_filter( 'stylesheet_directory', 'test' );
-// add_filter( 'stylesheet_directory_uri', 'test' );
-//
-// add_filter( 'template_directory', 'test' );
-// add_filter( 'template_directory_uri', 'test' );
-// add_filter( 'plugins_url', 'test' );
-
 function dark_matter_maybe_upgrade() {
   if ( is_network_admin() ) {
     $current_version = get_network_option( null, 'dark_matter_version', null );
