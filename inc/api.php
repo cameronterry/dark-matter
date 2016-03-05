@@ -1,6 +1,6 @@
 <?php
 
-function dark_matter_api_add_domain( $domain = '', $is_primary = false ) {
+function dark_matter_api_add_domain( $domain = '', $is_primary = false, $is_https = false ) {
   global $wpdb;
 
   /** No domain provided, then we will crap out. */
@@ -10,7 +10,8 @@ function dark_matter_api_add_domain( $domain = '', $is_primary = false ) {
 
   $insert = $wpdb->insert( $wpdb->dmtable, array(
     'blog_id' => get_current_blog_id(),
-    //'primary' => $is_primary,
+    'is_primary' => $is_primary,
+    'is_https' => $is_https,
     'domain' => $domain,
     'active' => true
   ) );
