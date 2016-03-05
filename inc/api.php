@@ -56,7 +56,7 @@ function dark_matter_api_get_domain_original() {
   return $current_blog->domain . $current_blog->path;
 }
 
-function dark_matter_api_get_domain_primary( $blog_id ) {
+function dark_matter_api_get_domain_primary( $blog_id = null ) {
   $blog_id = ( null === $blog_id ? get_current_blog_id() : $blog_id );
 
   global $wpdb;
