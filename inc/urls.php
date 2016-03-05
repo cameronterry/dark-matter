@@ -62,6 +62,19 @@ function dark_matter_map_admin_ajax_sample_permalink() {
 }
 add_action( 'wp_ajax_sample-permalink', 'dark_matter_map_admin_ajax_sample_permalink', 0 );
 
+function dark_matter_map_admin_ajax_query_attachments() {
+  add_filter( 'attachment_link', 'dark_matter_api_map_permalink' );
+}
+add_action( 'wp_ajax_query-attachments', 'dark_matter_map_admin_ajax_query_attachments', 0 );
+
+function dark_matter_wp_prepare_attachment_for_js( $response ) {
+  if ( array_key_exists( 'url', $response ) ) {
+    $response['url'] = dark_matter_api_map_permalink( $response['url'] );
+  }
+  return $response;
+}
+add_filter( 'wp_prepare_attachment_for_js', 'dark_matter_wp_prepare_attachment_for_js' );
+
 function dark_matter_post_row_actions( $actions ) {
   if ( array_key_exists( 'view', $actions ) && false === strpos( $actions['view'], 'preview=true' ) ) {
     $actions['view'] = dark_matter_api_map_permalink( $actions['view'] );
