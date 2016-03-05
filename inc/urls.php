@@ -13,7 +13,15 @@ function dark_matter_map_content( $content ) {
 
   $protocol = ( is_ssl() ? 'https://' : 'http://' );
   $domain = sprintf( '%1$s%2$s/', $protocol, $current_blog->domain );
-  $content = preg_replace( "#http?://{$current_blog->original_domain}#", $domain, $content );
+
+  if ( is_string( $domain ) ) {
+    $content = preg_replace( "#http?://{$current_blog->original_domain}#", $domain, $content );
+  }
+  elseif ( is_array( $content ) ) {
+    foreach ( $content as $key => $value ) {
+      $content[$key] = preg_replace( "#http?://{$current_blog->original_domain}#", $domain, $value );
+    }
+  }
 
   return $content;
 }
