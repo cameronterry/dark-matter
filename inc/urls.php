@@ -25,6 +25,7 @@ function dark_matter_map_content( $content ) {
 
   return $content;
 }
+
 if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
   add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
   add_filter( 'pre_option_home', 'dark_matter_map_url' );
@@ -38,4 +39,35 @@ if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
   add_filter( 'plugins_url', 'dark_matter_map_content' );
   add_filter( 'upload_dir', 'dark_matter_map_content' );
   add_filter( 'wp_get_attachment_url', 'dark_matter_map_content' );
+}
+
+/**
+ * WP-ADMIN adjustments. This is to ensure that the various elements which should
+ * be displaying the mapped domain ... do!
+ */
+function dark_matter_map_admin_permalink() {
+  add_filter( 'post_link', 'dark_matter_get_sample_permalink' );
+}
+add_action( 'edit_form_before_permalink', 'dark_matter_map_admin_permalink' );
+
+function dark_matter_map_admin_ajax_sample_permalink() {
+  add_filter( 'get_sample_permalink', 'dark_matter_get_sample_permalink' );
+}
+add_action( 'wp_ajax_sample-permalink', 'dark_matter_map_admin_ajax_sample_permalink', 0 );
+
+function dark_matter_unmap_admin_permalink() {
+  remove_filter( 'post_link', 'dark_matter_get_sample_permalink' );
+}
+add_action( 'edit_form_after_title', 'dark_matter_unmap_admin_permalink' );
+
+function dark_matter_get_sample_permalink( $permalink ) {
+  global $current_blog;
+
+  $original_domain = $current_blog->domain . $current_blog->path;
+  $primary_domain = dark_matter_api_get_domain_primary();
+
+  $protocol = ( is_ssl() ? 'https://' : 'http://' );
+  $domain = sprintf( '%1$s%2$s/', $protocol, $primary_domain->domain );
+
+  return preg_replace( "#http?://{$original_domain}#", $domain, $permalink );
 }
