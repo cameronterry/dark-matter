@@ -46,9 +46,16 @@ if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
  * be displaying the mapped domain ... do!
  */
 function dark_matter_map_admin_permalink() {
+  add_filter( 'page_link', 'dark_matter_get_sample_permalink' );
   add_filter( 'post_link', 'dark_matter_get_sample_permalink' );
 }
 add_action( 'edit_form_before_permalink', 'dark_matter_map_admin_permalink' );
+
+function dark_matter_unmap_admin_permalink() {
+  remove_filter( 'page_link', 'dark_matter_get_sample_permalink' );
+  remove_filter( 'post_link', 'dark_matter_get_sample_permalink' );
+}
+add_action( 'edit_form_after_title', 'dark_matter_unmap_admin_permalink' );
 
 function dark_matter_map_admin_ajax_sample_permalink() {
   add_filter( 'get_sample_permalink', 'dark_matter_get_sample_permalink' );
@@ -64,11 +71,6 @@ function dark_matter_post_row_actions( $actions ) {
 }
 add_filter( 'post_row_actions', 'dark_matter_post_row_actions' );
 add_filter( 'page_row_actions', 'dark_matter_post_row_actions' );
-
-function dark_matter_unmap_admin_permalink() {
-  remove_filter( 'post_link', 'dark_matter_get_sample_permalink' );
-}
-add_action( 'edit_form_after_title', 'dark_matter_unmap_admin_permalink' );
 
 function dark_matter_get_sample_permalink( $permalink ) {
   global $current_blog;
