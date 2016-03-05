@@ -69,3 +69,15 @@ function dark_matter_api_get_domains( $blog_id = null ) {
   global $wpdb;
   return $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dmtable} WHERE blog_id = %s", $blog_id ) );
 }
+
+function dark_matter_api_map_permalink( $permalink ) {
+  global $current_blog;
+
+  $original_domain = $current_blog->domain . $current_blog->path;
+  $primary_domain = dark_matter_api_get_domain_primary();
+
+  $protocol = ( is_ssl() ? 'https://' : 'http://' );
+  $domain = sprintf( '%1$s%2$s/', $protocol, $primary_domain->domain );
+
+  return preg_replace( "#http?://{$original_domain}#", $domain, $permalink );
+}
