@@ -57,6 +57,12 @@ function dark_matter_unmap_admin_permalink() {
 }
 add_action( 'edit_form_after_title', 'dark_matter_unmap_admin_permalink' );
 
+function dark_matter_map_admin_comments_permalink() {
+  add_filter( 'page_link', 'dark_matter_api_map_permalink' );
+  add_filter( 'post_link', 'dark_matter_api_map_permalink' );
+}
+add_action( 'manage_comments_nav', 'dark_matter_map_admin_comments_permalink' );
+
 function dark_matter_map_admin_ajax_sample_permalink() {
   add_filter( 'get_sample_permalink', 'dark_matter_api_map_permalink' );
 }
