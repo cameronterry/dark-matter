@@ -74,7 +74,7 @@ function dark_matter_blog_domain_mapping_row( $data ) {
     $features[] = 'Active';
   }
 ?>
-  <tr id="domain-<?php echo( $data->id ); ?>" data-id="<?php echo( $data->id ); ?>">
+  <tr id="domain-<?php echo( $data->id ); ?>" data-id="<?php echo( $data->id ); ?>" data-primary="<?php echo( $data->is_primary ); ?>">
     <th scope="row">1</th>
     <td>
       <?php printf( '<a href="http://%1$s">%1$s</a>', $data->domain ); ?>
