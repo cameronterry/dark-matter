@@ -6,15 +6,19 @@ function dark_matter_ajax_add_domain() {
   $is_primary = ( array_key_exists( 'dm_new_is_primary', $_POST ) && 'yes' === $_POST['dm_new_is_primary'] );
   $is_https = ( array_key_exists( 'dm_new_is_https', $_POST ) && 'yes' === $_POST['dm_new_is_https'] );
 
+  if ( 0 < dark_matter_api_domain_exists( $domain ) ) {
+    wp_send_json_error( 'Domain is specified for this blog or another.' );
+  }
+
   $new_domain = dark_matter_api_add_domain( $domain, $is_primary, $is_https );
 
   if ( false === $new_domain ) {
-    echo( 'error' );
+    wp_send_json_error( 'An unknown error occurred.' );
   }
   else {
     dark_matter_blog_domain_mapping_row( $new_domain );
   }
-  
+
   die();
 }
 add_action( 'wp_ajax_dark_matter_add_domain', 'dark_matter_ajax_add_domain' );
