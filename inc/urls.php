@@ -88,10 +88,28 @@ function dark_matter_post_row_actions( $actions ) {
 
   return $actions;
 }
-add_filter( 'comment_row_actions', 'dark_matter_post_row_actions' );
-add_filter( 'post_row_actions', 'dark_matter_post_row_actions' );
-add_filter( 'media_row_actions', 'dark_matter_post_row_actions' );
-add_filter( 'page_row_actions', 'dark_matter_post_row_actions' );
-add_filter( 'tag_row_actions', 'dark_matter_post_row_actions' );
 
-add_filter( 'get_comment_author_url', 'dark_matter_api_map_permalink' );
+function dark_matter_admin_pre_option_home() {
+  $primary_domain = dark_matter_api_get_domain_primary();
+
+  if ( empty( $primary_domain ) ) {
+    return false;
+  }
+
+  $protocol = ( false ? 'https://' : 'http://' );
+  $domain = sprintf( '%1$s%2$s', $protocol, $primary_domain->domain );
+
+  return $domain;
+}
+
+if ( is_admin() ) {
+  add_filter( 'pre_option_home', 'dark_matter_admin_pre_option_home' );
+
+  add_filter( 'comment_row_actions', 'dark_matter_post_row_actions' );
+  add_filter( 'post_row_actions', 'dark_matter_post_row_actions' );
+  add_filter( 'media_row_actions', 'dark_matter_post_row_actions' );
+  add_filter( 'page_row_actions', 'dark_matter_post_row_actions' );
+  add_filter( 'tag_row_actions', 'dark_matter_post_row_actions' );
+
+  add_filter( 'get_comment_author_url', 'dark_matter_api_map_permalink' );
+}
