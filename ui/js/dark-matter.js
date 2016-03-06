@@ -15,15 +15,12 @@
       $.post( ajaxurl, data, function ( response ) {
         console.log( response );
 
-        if ( false === response.success ) {
-          alert( response.error_message );
+        if ( 'error' === response ) {
+          alert( 'Something has gone wrong!' );
         }
         else {
-          var template = wp.template( 'domain-row' );
-          var $this = $( template( response.data ) );
-
-          $( '.dark-matter-blog table > tbody' ).append( $this );
-          $this.slideDown( 'fast' );
+          $( '.dark-matter-blog table > tbody' ).append( response );
+          document.getElementById( 'dm_add_domain_form' ).reset();
         }
       } );
 
@@ -41,9 +38,7 @@
 
       $.post( ajaxurl, data, function ( response ) {
         if ( response.success ) {
-          $( 'tr#domain-' + domain_id ).slideUp( 'fast', function () {
-            $( this ).remove();
-          } );
+          $( 'tr#domain-' + domain_id ).hide().remove();
         }
       } );
 
