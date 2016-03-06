@@ -19,41 +19,18 @@ function dark_matter_blog_domain_mapping() {
         <tr>
           <th>#</th>
           <th>Domain</th>
-          <th>Is Main?</th>
+          <th>Features</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <?php foreach ( $domains as $domain ) : ?>
-          <tr id="domain-<?php echo( $domain->id ); ?>" data-id="<?php echo( $domain->id ); ?>">
-            <th scope="row">1</th>
-            <td>
-              <?php printf( '<a href="http://%1$s">%1$s</a>', $domain->domain ); ?>
-            </td>
-            <td>
-              Yes
-            </td>
-            <td>
-              <button class="delete-domain button">Delete</button>
-            </td>
-          </tr>
-        <?php endforeach; ?>
+        <?php
+          foreach ( $domains as $domain ) {
+            dark_matter_blog_domain_mapping_row( $domain );
+          }
+        ?>
       </tbody>
     </table>
-    <script type="text/html" id="tmpl-domain-row">
-      <tr id="domain-{{{id}}}" data-id="{{{id}}}" style="display:none;">
-        <th scope="row">{{{data.number}}}</th>
-        <td>
-          <a href="#">{{{data.domain}}}</a>
-        </td>
-        <td>
-          {{{data.is_primary}}}
-        </td>
-        <td>
-          <button class="delete-domain button">Delete</button>
-        </td>
-      </tr>
-    </script>
     <h2><?php _e( 'Add New Domain', 'darkmatter' ); ?></h2>
     <form id="dm_add_domain_form">
       <input id="dm_new_nonce" name="dm_new_nonce" type="hidden" value="<?php echo( wp_create_nonce( 'nonce' ) ); ?>" />
