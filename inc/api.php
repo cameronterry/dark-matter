@@ -87,3 +87,12 @@ function dark_matter_api_map_permalink( $permalink ) {
 
   return preg_replace( "#http?://{$original_domain}#", $domain, $permalink );
 }
+
+function dark_matter_api_set_domain_primary( $domain_id = null ) {
+  global $wpdb;
+  return $wpdb->update( $wpdb->dmtable, array(
+    'is_primary' => 1
+  ), array(
+    'id' => $domain_id
+  ) );
+}
