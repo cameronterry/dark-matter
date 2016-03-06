@@ -50,6 +50,8 @@ function dark_matter_ajax_set_primary_domain() {
     wp_send_json_error();
   }
   else {
-    wp_send_json_success();
+    $data = dark_matter_api_get_domain( $_POST['id'] );
+    dark_matter_blog_domain_mapping_row( $data );
   }
 }
+add_action( 'wp_ajax_dark_matter_set_primary_domain', 'dark_matter_ajax_set_primary_domain' );
