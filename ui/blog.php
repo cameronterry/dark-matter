@@ -83,6 +83,9 @@ function dark_matter_blog_domain_mapping_row( $data ) {
       <?php echo( implode( ', ', $features ) ); ?>
     </td>
     <td>
+      <?php if ( empty( $data->is_primary ) ) : ?>
+        <button class="primary-domain button" title="<?php echo( $data->domain ); ?>">Make Primary</button>
+      <?php endif; ?>
       <button class="delete-domain button">Delete</button>
     </td>
   </tr>
