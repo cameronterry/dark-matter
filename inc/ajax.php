@@ -9,11 +9,13 @@ function dark_matter_ajax_add_domain() {
   $new_domain = dark_matter_api_add_domain( $domain, $is_primary, $is_https );
 
   if ( false === $new_domain ) {
-    wp_send_json_error();
+    echo( 'error' );
   }
   else {
-    wp_send_json_success( $new_domain );
+    dark_matter_blog_domain_mapping_row( $new_domain );
   }
+  
+  die();
 }
 add_action( 'wp_ajax_dark_matter_add_domain', 'dark_matter_ajax_add_domain' );
 
