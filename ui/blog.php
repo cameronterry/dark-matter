@@ -81,3 +81,32 @@ function dark_matter_blog_domain_mapping() {
     </form>
   </div>
 <?php }
+
+function dark_matter_blog_domain_mapping_row( $data ) {
+  $features = array();
+
+  if ( $data->is_primary ) {
+    $features[] = 'Primary';
+  }
+
+  if ( $data->is_https ) {
+    $features[] = 'HTTPS';
+  }
+
+  if ( $data->active ) {
+    $features[] = 'Active';
+  }
+?>
+  <tr id="domain-<?php echo( $data->id ); ?>" data-id="<?php echo( $data->id ); ?>">
+    <th scope="row">1</th>
+    <td>
+      <?php printf( '<a href="http://%1$s">%1$s</a>', $data->domain ); ?>
+    </td>
+    <td>
+      <?php echo( implode( ', ', $features ) ); ?>
+    </td>
+    <td>
+      <button class="delete-domain button">Delete</button>
+    </td>
+  </tr>
+<?php }
