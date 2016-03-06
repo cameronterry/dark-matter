@@ -10,6 +10,14 @@ function dark_matter_ajax_add_domain() {
     wp_send_json_error( 'Domain is specified for this blog or another.' );
   }
 
+  if ( $is_primary ) {
+    $primary_domain = dark_matter_api_get_domain_primary();
+
+    if ( false === empty( $primary_domain ) ) {
+      wp_send_json_error( 'This blog already has a primary domain.' );
+    }
+  }
+
   $new_domain = dark_matter_api_add_domain( $domain, $is_primary, $is_https );
 
   if ( false === $new_domain ) {
