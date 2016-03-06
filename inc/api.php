@@ -32,6 +32,11 @@ function dark_matter_api_del_domain( $id ) {
   ) );
 }
 
+function dark_matter_api_domain_exists( $domain ) {
+  global $wpdb;
+  return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$wpdb->dmtable} WHERE domain = %s", $domain ) );
+}
+
 function dark_matter_api_get_domain( $identifier = null, $domain_only = false ) {
   global $wpdb;
   $sql = "SELECT * FROM {$wpdb->dmtable} WHERE ";
