@@ -42,3 +42,14 @@ function dark_matter_ajax_delete_domain() {
   }
 }
 add_action( 'wp_ajax_dark_matter_del_domain', 'dark_matter_ajax_delete_domain' );
+
+function dark_matter_ajax_set_primary_domain() {
+  check_ajax_referer( 'primary_nonce', 'dm_primary_nonce' );
+
+  if ( false === dark_matter_api_set_domain_primary( $_POST['id'] ) ) {
+    wp_send_json_error();
+  }
+  else {
+    wp_send_json_success();
+  }
+}
