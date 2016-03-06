@@ -13,10 +13,8 @@
       console.log( data );
 
       $.post( ajaxurl, data, function ( response ) {
-        console.log( response );
-
-        if ( 'error' === response ) {
-          alert( 'Something has gone wrong!' );
+        if ( typeof( response.success ) && false === response.success ) {
+          alert( response.data );
         }
         else {
           $( '.dark-matter-blog table > tbody' ).append( response );
