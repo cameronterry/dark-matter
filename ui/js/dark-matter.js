@@ -26,7 +26,17 @@
     } );
 
     $( 'table#dark-matter-blog-domains' ).on( 'click', 'button.delete-domain', function ( e ) {
-      var domain_id = $( this ).parents( 'tr' ).data( 'id' );
+      var $row = $( this ).parents( 'tr' );
+
+      if ( '1' === $this.data( 'primary' ) ) {
+        if ( false === confirm( 'Are you sure you wish to delete the primary domain?' ) ) {
+          return;
+        }
+      }
+
+      return;
+
+      var domain_id = $row.data( 'id' );
 
       var data = {
         'action' : 'dark_matter_del_domain',
