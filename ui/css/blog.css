@@ -32,3 +32,13 @@
       text-align:left;
       vertical-align:bottom;
     }
+
+    .dark-matter-blog table > tbody > tr.success > td,
+    .dark-matter-blog table > tbody > tr.success > th {
+      background-color:#DFF0D8;
+    }
+
+    .dark-matter-blog table > tbody > tr.warning > td,
+    .dark-matter-blog table > tbody > tr.warning > th {
+      background-color:#F2DEDE;
+    }
