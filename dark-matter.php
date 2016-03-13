@@ -23,6 +23,8 @@ require_once( DM_PATH . '/inc/urls.php' );
 require_once( DM_PATH . '/ui/blog.php' );
 require_once( DM_PATH . '/ui/network.php' );
 
+require_once( DM_PATH . '/sso/index.php' );
+
 function dark_matter_enqueue_scripts( $hook ) {
   if ( 'settings_page_dark_matter_blog_settings' === $hook ) {
     wp_enqueue_script( 'dark-matter-js', plugin_dir_url( __FILE__ ) . 'ui/js/dark-matter.js', array( 'jquery', 'wp-util' ), DM_VERSION );
