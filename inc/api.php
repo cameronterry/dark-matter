@@ -82,6 +82,10 @@ function dark_matter_api_map_permalink( $permalink ) {
   $original_domain = $current_blog->domain . $current_blog->path;
   $primary_domain = dark_matter_api_get_domain_primary();
 
+  if ( empty( $primary_domain ) ) {
+    return $permalink;
+  }
+
   $protocol = ( is_ssl() ? 'https://' : 'http://' );
   $domain = sprintf( '%1$s%2$s/', $protocol, $primary_domain->domain );
 
