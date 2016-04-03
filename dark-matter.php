@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) or die();
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '0.0.2' );
+define( 'DM_VERSION', '0.1.0' );
 
 require_once( DM_PATH . '/inc/ajax.php' );
 require_once( DM_PATH . '/inc/api.php' );
