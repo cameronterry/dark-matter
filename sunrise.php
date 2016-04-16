@@ -15,6 +15,10 @@ $dmtable = $wpdb->base_prefix . 'domain_mapping';
 $domain = $_SERVER['HTTP_HOST'];
 $dark_matter_sql = '';
 
+/**
+ * Get the Blog ID based on the provided Domain Name. This check is also done
+ * for and without the www. sub-domain part.
+ */
 if ( ( $domain_no_www = preg_replace( '|^www\.|', '', $domain ) ) !== $domain ) {
   $dark_matter_sql = $wpdb->prepare( "SELECT blog_id FROM {$dmtable} WHERE domain IN(%s, %s) LIMIT 1", $domain, $domain_no_www );
 }
@@ -24,18 +28,26 @@ else {
 
 $domain_mapping_id = $wpdb->get_var( $dark_matter_sql );
 
+/**
+ * If the return value is not an integer (like NULL or FALSE), then that means
+ * the domain hasn't been mapped with Dark Matter. If the return value is an
+ * integer then we can proceed to construct the $current_blog global variable.
+ */
 if ( false === empty( $domain_mapping_id ) ) {
-  define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
-  define( 'DOMAIN_MAPPING', true );
+	/** Set the domain for the Cookie setting to the mapped domain. */
+	define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
 
-  $current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d", $domain_mapping_id ) );
-  $current_blog->original_domain = $current_blog->domain . $current_blog->path;
-  $current_blog->domain = $_SERVER[ 'HTTP_HOST' ];
-  $current_blog->path = '/';
+	/** Set a constant to indicate that a mapped domain is in use. */
+	define( 'DOMAIN_MAPPING', true );
 
-  $blog_id = $domain_mapping_id;
-  $site_id = $current_blog->site_id;
+	$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d", $domain_mapping_id ) );
+	$current_blog->original_domain = $current_blog->domain . $current_blog->path;
+	$current_blog->domain = $_SERVER[ 'HTTP_HOST' ];
+	$current_blog->path = '/';
 
-  $current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->site} WHERE id = %s LIMIT 1", $site_id ) );
-  $current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT * FROM {$wpdb->blogs} WHERE domain = %s AND path = %s LIMIT 1", $current_site->domain, $current_site->path ) );
+	$blog_id = $domain_mapping_id;
+	$site_id = $current_blog->site_id;
+
+	$current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->site} WHERE id = %s LIMIT 1", $site_id ) );
+    $current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT * FROM {$wpdb->blogs} WHERE domain = %s AND path = %s LIMIT 1", $current_site->domain, $current_site->path ) );
 }
