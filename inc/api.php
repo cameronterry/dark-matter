@@ -95,6 +95,22 @@ function dark_matter_api_map_permalink( $permalink ) {
   return preg_replace( "#http?://{$original_domain}#", $domain, $permalink );
 }
 
+function dark_matter_api_unmap_permalink( $permalink ) {
+  global $current_blog;
+
+  $original_domain = untrailingslashit( $current_blog->original_domain );
+  $primary_domain = dark_matter_api_get_domain_primary();
+
+  if ( empty( $primary_domain ) ) {
+    return $permalink;
+  }
+
+  $protocol = ( is_ssl() ? 'https://' : 'http://' );
+  $domain = sprintf( '%1$s%2$s', $protocol, $original_domain );
+
+  return preg_replace( "#http?://{$primary_domain}#", $domain, $permalink );
+}
+
 function dark_matter_api_set_domain_primary( $domain_id = null ) {
   global $wpdb;
   return $wpdb->update( $wpdb->dmtable, array(
