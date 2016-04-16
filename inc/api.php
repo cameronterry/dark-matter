@@ -82,7 +82,7 @@ function dark_matter_api_get_domains( $blog_id = null ) {
 function dark_matter_api_map_permalink( $permalink ) {
   global $current_blog;
 
-  $original_domain = $current_blog->domain . $current_blog->path;
+  $original_domain = untrailingslashit( $current_blog->original_domain );
   $primary_domain = dark_matter_api_get_domain_primary();
 
   if ( empty( $primary_domain ) ) {
@@ -90,7 +90,7 @@ function dark_matter_api_map_permalink( $permalink ) {
   }
 
   $protocol = ( is_ssl() ? 'https://' : 'http://' );
-  $domain = sprintf( '%1$s%2$s/', $protocol, $primary_domain->domain );
+  $domain = sprintf( '%1$s%2$s/', $protocol, $primary_domain );
 
   return preg_replace( "#http?://{$original_domain}#", $domain, $permalink );
 }
