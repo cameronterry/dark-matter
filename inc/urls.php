@@ -97,7 +97,7 @@ function dark_matter_admin_pre_option_home() {
   }
 
   $protocol = ( false ? 'https://' : 'http://' );
-  $domain = sprintf( '%1$s%2$s', $protocol, $primary_domain->domain );
+  $domain = sprintf( '%1$s%2$s', $protocol, $primary_domain );
 
   return $domain;
 }
