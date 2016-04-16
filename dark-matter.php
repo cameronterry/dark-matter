@@ -65,10 +65,22 @@ function dark_matter_maybe_upgrade() {
 }
 
 function dark_matter_plugins_loaded() {
-  global $wpdb;
-
-  $wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
-
   dark_matter_maybe_upgrade();
 }
 add_action( 'plugins_loaded', 'dark_matter_plugins_loaded' );
+
+function dark_matter_prepare() {
+	global $current_blog, $wpdb;
+
+	/** Set the property for the Domain Mapping table. */
+	$wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
+
+	/** Set the primary domain for the Current Blog. */
+	$current_blog->primary_domain = $wpdb->get_var( $wpdb->prepare( "SELECT domain FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
+
+	/** Check to see if the Original Domain is present and if not, set it. */
+	if ( false === isset( $current_blog->original_domain ) ) {
+		$current_blog->original_domain = $current_blog->domain . $current_blog->path;
+	}
+}
+add_action( 'muplugins_loaded', 'dark_matter_prepare' );
