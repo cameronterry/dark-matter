@@ -49,7 +49,7 @@ function dark_matter_frontend_redirect() {
 
   global $current_blog, $wpdb;
 
-  $primary_domain = $wpdb->get_var( $wpdb->prepare( "SELECT domain FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", get_current_blog_id() ) );
+  $primary_domain = dark_matter_api_get_domain_primary();
 
   /** No domain has been mapped. */
   if ( empty( $primary_domain ) ) {
