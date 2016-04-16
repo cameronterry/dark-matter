@@ -79,7 +79,7 @@ function dark_matter_prepare() {
 	$current_blog->primary_domain = $wpdb->get_var( $wpdb->prepare( "SELECT domain FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
 
 	/** Check to see if the Original Domain is present and if not, set it. */
-	if ( false === isset( $current_blog->original_domain ) ) {
+	if ( false === property_exists( $current_blog, 'original_domain' ) ) {
 		$current_blog->original_domain = $current_blog->domain . $current_blog->path;
 	}
 }
