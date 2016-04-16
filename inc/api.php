@@ -63,10 +63,13 @@ function dark_matter_api_get_domain_original() {
 }
 
 function dark_matter_api_get_domain_primary( $blog_id = null ) {
-  $blog_id = ( null === $blog_id ? get_current_blog_id() : $blog_id );
+	global $current_blog;
 
-  global $wpdb;
-  return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $blog_id ) );
+    if ( property_exists( $current_blog, 'primary_domain' ) ) {
+      return $current_blog->primary_domain;
+    }
+
+    return dark_matter_api_get_domain_original();
 }
 
 function dark_matter_api_get_domains( $blog_id = null ) {
