@@ -49,7 +49,7 @@ function dark_matter_sso_template() {
 add_action( 'template_redirect', 'dark_matter_sso_template' );
 
 function dark_matter_sso_wp_head() {
-	if ( false === is_user_logged_in() && 1 < get_current_blog_id() ) : ?>
+	if ( false === is_user_logged_in() && false === is_main_site() ) : ?>
 	<script type="text/javascript" src="<?php echo( network_site_url( '/sso/' ) ); ?>"></script>
 <?php endif;
 }
