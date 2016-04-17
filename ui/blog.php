@@ -4,7 +4,9 @@
 defined( 'ABSPATH' ) or die();
 
 function dark_matter_blog_admin_menu() {
-  $hook = add_options_page( __( 'Domain Mapping', 'darkmatter' ), __( 'Domain Mapping', 'darkmatter' ), 'manage_options', 'dark_matter_blog_settings', 'dark_matter_blog_domain_mapping' );
+	if ( false === is_main_site() ) {
+		$hook = add_options_page( __( 'Domain Mapping', 'darkmatter' ), __( 'Domain Mapping', 'darkmatter' ), 'manage_options', 'dark_matter_blog_settings', 'dark_matter_blog_domain_mapping' );
+	}
 }
 add_action( 'admin_menu', 'dark_matter_blog_admin_menu' );
 
