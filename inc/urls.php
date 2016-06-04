@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) or die();
+
 function dark_matter_map_url( $setting ) {
   global $current_blog;
 

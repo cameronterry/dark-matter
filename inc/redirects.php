@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) or die();
+
 function dark_matter_admin_redirect() {
   /**
    * Do not redirect the AJAX calls. It is part of the admin but not

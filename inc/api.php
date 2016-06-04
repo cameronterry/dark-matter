@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) or die();
+
 function dark_matter_api_add_domain( $domain = '', $is_primary = false, $is_https = false ) {
   global $wpdb;
 

@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) or die();
+
 /**
  * Links:
  * - http://meta.stackexchange.com/questions/64260/how-does-sos-new-auto-login-feature-work/64274#64274

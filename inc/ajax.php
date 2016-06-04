@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) or die();
+
 function dark_matter_ajax_add_domain() {
   check_ajax_referer( 'nonce', 'dm_new_nonce' );
   $domain = $_POST['dm_new_domain'];
