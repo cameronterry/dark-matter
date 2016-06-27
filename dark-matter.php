@@ -72,11 +72,16 @@ add_action( 'plugins_loaded', 'dark_matter_plugins_loaded' );
 function dark_matter_prepare() {
 	global $current_blog, $wpdb;
 
+	/** Get the currently installed version. */
+	global $dm_current_version; $dm_current_version = get_network_option( null, 'dark_matter_version', null );
+
 	/** Set the property for the Domain Mapping table. */
 	$wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
 
 	/** Set the primary domain for the Current Blog. */
-	$current_blog->primary_domain = $wpdb->get_var( $wpdb->prepare( "SELECT domain FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
+	if ( null !== $dm_current_version ) {
+		$current_blog->primary_domain = $wpdb->get_var( $wpdb->prepare( "SELECT domain FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
+	}
 
 	/** Check to see if the Original Domain is present and if not, set it. */
 	if ( false === property_exists( $current_blog, 'original_domain' ) ) {
