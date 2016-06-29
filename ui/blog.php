@@ -61,7 +61,8 @@ function dark_matter_blog_domain_mapping() { $domains = dark_matter_api_get_doma
 
 function dark_matter_blog_domain_mapping_row( $data ) {
 	$features = array();
-
+	$base_actions_url = admin_url( 'admin.php?id=' . $data->id );
+	
 	if ( $data->is_primary ) {
 		$features[] = 'Primary';
 	}
@@ -86,7 +87,7 @@ function dark_matter_blog_domain_mapping_row( $data ) {
 			<?php if ( empty( $data->is_primary ) ) : ?>
 				<button class="primary-domain button" title="<?php echo( $data->domain ); ?>">Make Primary</button>
 			<?php endif; ?>
-			<button class="delete-domain button">Delete</button>
+			<a class="button" href="<?php echo( wp_nonce_url( add_query_arg( 'action', 'dm_del_domain', $base_actions_url ), 'darkmatter-delete-domain', 'dm_del_nonce' ) ); ?>">Delete</a>
 		</td>
 	</tr>
 <?php }
