@@ -10,9 +10,7 @@ function dark_matter_blog_admin_menu() {
 }
 add_action( 'admin_menu', 'dark_matter_blog_admin_menu' );
 
-function dark_matter_blog_domain_mapping() {
-  $domains = dark_matter_api_get_domains();
-?>
+function dark_matter_blog_domain_mapping() { $domains = dark_matter_api_get_domains(); ?>
 	<div class="wrap dark-matter-blog">
 		<h1><?php _e( 'Domain Mapping for this Blog', 'darkmatter' ); ?></h1>
 		<h2><?php _e( 'Mapped Domains', 'darkmatter' ); ?></h2>
@@ -34,8 +32,8 @@ function dark_matter_blog_domain_mapping() {
 			</tbody>
 		</table>
 		<h2><?php _e( 'Add New Domain', 'darkmatter' ); ?></h2>
-		<form id="dm_add_domain_form">
-			<input id="dm_new_nonce" name="dm_new_nonce" type="hidden" value="<?php echo( wp_create_nonce( 'nonce' ) ); ?>" />
+		<form action="<?php echo( admin_url( 'admin.php?action=dm_add_domain' ) ); ?>" method="POST">
+			<input id="dm_new_nonce" name="dm_new_nonce" type="hidden" value="<?php echo( wp_create_nonce( 'darkmatter-add-domain' ) ); ?>" />
 			<p>
 				<label>
 					Domain :
