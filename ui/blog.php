@@ -62,7 +62,7 @@ function dark_matter_blog_domain_mapping() { $domains = dark_matter_api_get_doma
 function dark_matter_blog_domain_mapping_row( $data ) {
 	$features = array();
 	$base_actions_url = admin_url( 'admin.php?id=' . $data->id );
-	
+
 	if ( $data->is_primary ) {
 		$features[] = 'Primary';
 	}
@@ -85,7 +85,7 @@ function dark_matter_blog_domain_mapping_row( $data ) {
 		</td>
 		<td>
 			<?php if ( empty( $data->is_primary ) ) : ?>
-				<button class="primary-domain button" title="<?php echo( $data->domain ); ?>">Make Primary</button>
+				<a class="primary-domain button"  href="<?php echo( wp_nonce_url( add_query_arg( 'action', 'dm_new_primary_domain', $base_actions_url ), 'darkmatter-new-primary-domain', 'dm_new_primary_nonce' ) ); ?>" title="Make '<?php echo( $data->domain ); ?>' the primary domain for this blog.">Make Primary</a>
 			<?php endif; ?>
 			<a class="button" href="<?php echo( wp_nonce_url( add_query_arg( 'action', 'dm_del_domain', $base_actions_url ), 'darkmatter-delete-domain', 'dm_del_nonce' ) ); ?>">Delete</a>
 		</td>
