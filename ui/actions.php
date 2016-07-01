@@ -81,7 +81,6 @@ function dark_matter_actions_delete_domain() {
 
 	if ( false === dark_matter_api_del_domain( $_GET['id'] ) ) {
 		$redirect_url = add_query_arg( array(
-			'domain' => esc_url( $domain ),
 			'message' => 'fail_deleted'
 		), $redirect_url );
 
@@ -90,7 +89,6 @@ function dark_matter_actions_delete_domain() {
 	}
 	else {
 		$redirect_url = add_query_arg( array(
-			'domain' => esc_url( $domain ),
 			'message' => 'success_deleted'
 		), $redirect_url );
 
@@ -101,3 +99,22 @@ function dark_matter_actions_delete_domain() {
 	wp_die( 'An unexpected error with Domain Mapping has occurred.' );
 }
 add_action( 'admin_action_dm_del_domain', 'dark_matter_actions_delete_domain' );
+
+function dark_matter_actions_new_primary_domain() {
+	/** Validate the nonce before proceeding. */
+	if ( array_key_exists( 'dm_new_primary_nonce', $_GET ) && false === wp_verify_nonce( $_GET['dm_new_primary_nonce'], 'darkmatter-new-primary-domain' ) ) {
+		wp_die( 'Unable to delete domain for this blog due to an unknown error.' );
+	}
+
+	$redirect_url = admin_url( 'options-general.php' );
+	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
+
+	dark_matter_api_set_domain_primary( intval( $_GET['id'] ) );
+
+	wp_safe_redirect( add_query_arg( array(
+		'message' => 'success_primary'
+	), $redirect_url ) );
+
+	wp_die( 'An unexpected error with Domain Mapping has occurred.' );
+}
+add_action( 'admin_action_dm_new_primary_domain', 'dark_matter_actions_new_primary_domain' );
