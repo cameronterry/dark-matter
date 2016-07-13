@@ -79,7 +79,10 @@ function dark_matter_prepare() {
 
 	/** Set the primary domain for the Current Blog. */
 	if ( null !== $dm_current_version ) {
-		$current_blog->primary_domain = $wpdb->get_var( $wpdb->prepare( "SELECT domain FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
+		$mapped_domain = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
+
+		$current_blog->https = boolval( $mapped_domain->is_https );
+		$current_blog->primary_domain = $mapped_domain->domain;
 	}
 
 	/** Check to see if the Original Domain is present and if not, set it. */

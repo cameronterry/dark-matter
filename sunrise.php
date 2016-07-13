@@ -20,32 +20,33 @@ $dark_matter_sql = '';
  * for and without the www. sub-domain part.
  */
 if ( ( $domain_no_www = preg_replace( '|^www\.|', '', $domain ) ) !== $domain ) {
-  $dark_matter_sql = $wpdb->prepare( "SELECT blog_id FROM {$dmtable} WHERE domain IN(%s, %s) LIMIT 1", $domain, $domain_no_www );
+  $dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain IN(%s, %s) LIMIT 1", $domain, $domain_no_www );
 }
 else {
-  $dark_matter_sql = $wpdb->prepare( "SELECT blog_id FROM {$dmtable} WHERE domain = %s LIMIT 1", $domain );
+  $dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain = %s LIMIT 1", $domain );
 }
 
-$domain_mapping_id = $wpdb->get_var( $dark_matter_sql );
+$mapped_domain = $wpdb->get_row( $dark_matter_sql );
 
 /**
  * If the return value is not an integer (like NULL or FALSE), then that means
  * the domain hasn't been mapped with Dark Matter. If the return value is an
  * integer then we can proceed to construct the $current_blog global variable.
  */
-if ( false === empty( $domain_mapping_id ) ) {
+if ( false === empty( $mapped_domain ) ) {
 	/** Set the domain for the Cookie setting to the mapped domain. */
 	define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
 
 	/** Set a constant to indicate that a mapped domain is in use. */
 	define( 'DOMAIN_MAPPING', true );
 
-	$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d", $domain_mapping_id ) );
+	$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d", $mapped_domain->blog_id ) );
 	$current_blog->original_domain = $current_blog->domain . $current_blog->path;
 	$current_blog->domain = $_SERVER[ 'HTTP_HOST' ];
 	$current_blog->path = '/';
+	$current_blog->https = boolval( $mapped_domain->is_https );
 
-	$blog_id = $domain_mapping_id;
+	$blog_id = $mapped_domain->blog_id;
 	$site_id = $current_blog->site_id;
 
 	$current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->site} WHERE id = %s LIMIT 1", $site_id ) );
