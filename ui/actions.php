@@ -109,11 +109,22 @@ function dark_matter_actions_new_primary_domain() {
 	$redirect_url = admin_url( 'options-general.php' );
 	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
 
-	dark_matter_api_set_domain_primary( intval( $_GET['id'] ) );
+	if ( false === dark_matter_api_set_domain_primary( intval( $_GET['id'] ) ) ) {
+		$redirect_url = add_query_arg( array(
+			'message' => 'failed_new_primary'
+		), $redirect_url );
 
-	wp_safe_redirect( add_query_arg( array(
-		'message' => 'success_primary'
-	), $redirect_url ) );
+		wp_safe_redirect( $redirect_url );
+		die();
+	}
+	else {
+		$redirect_url = add_query_arg( array(
+			'message' => 'success_new_primary'
+		), $redirect_url );
+
+		wp_safe_redirect( $redirect_url );
+		die();
+	}
 
 	wp_die( 'An unexpected error with Domain Mapping has occurred.' );
 }

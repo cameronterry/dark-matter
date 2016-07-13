@@ -116,12 +116,16 @@ function dark_matter_api_unmap_permalink( $permalink ) {
 }
 
 function dark_matter_api_set_domain_primary( $domain_id = null ) {
-  global $wpdb;
-  return $wpdb->update( $wpdb->dmtable, array(
-    'is_primary' => 1
-  ), array(
-    'id' => $domain_id
-  ) );
+	global $wpdb;
+
+	dark_matter_api_unset_domain_primary();
+
+	return $wpdb->update( $wpdb->dmtable, array(
+		'is_primary' => 1
+	), array(
+		'id' => $domain_id
+	) );
+}
 
 function dark_matter_api_unset_domain_primary( $domain = null ) {
 	global $wpdb;
