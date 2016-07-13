@@ -3,6 +3,10 @@
 /** A bit of security for those who are too clever for their own good. */
 defined( 'ABSPATH' ) or die();
 
+if ( false === defined( 'DM_VERSION' ) ) {
+	return;
+}
+
 if ( defined( 'COOKIE_DOMAIN' ) ) {
   wp_die( __( 'Multiple domain and sign-on is an interesting experience with a single ... defined domain ...', 'darkmatter' ) );
 }
