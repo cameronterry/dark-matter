@@ -129,3 +129,63 @@ function dark_matter_actions_new_primary_domain() {
 	wp_die( 'An unexpected error with Domain Mapping has occurred.' );
 }
 add_action( 'admin_action_dm_new_primary_domain', 'dark_matter_actions_new_primary_domain' );
+
+function dark_matter_actions_set_domain_https() {
+	/** Validate the nonce before proceeding. */
+	if ( array_key_exists( 'dm_set_https_nonce', $_GET ) && false === wp_verify_nonce( $_GET['dm_set_https_nonce'], 'darkmatter-set-https-domain' ) ) {
+		wp_die( 'Unable to delete domain for this blog due to an unknown error.' );
+	}
+
+	$redirect_url = admin_url( 'options-general.php' );
+	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
+
+	if ( false === dark_matter_api_set_domain_https( intval( $_GET['id'] ) ) ) {
+		$redirect_url = add_query_arg( array(
+			'message' => 'failed_set_https'
+		), $redirect_url );
+
+		wp_safe_redirect( $redirect_url );
+		die();
+	}
+	else {
+		$redirect_url = add_query_arg( array(
+			'message' => 'success_set_https'
+		), $redirect_url );
+
+		wp_safe_redirect( $redirect_url );
+		die();
+	}
+
+	wp_die( 'An unexpected error with Domain Mapping has occurred.' );
+}
+add_action( 'admin_action_dm_set_domain_https', 'dark_matter_actions_set_domain_https' );
+
+function dark_matter_actions_unset_domain_https() {
+	/** Validate the nonce before proceeding. */
+	if ( array_key_exists( 'dm_set_https_nonce', $_GET ) && false === wp_verify_nonce( $_GET['dm_set_https_nonce'], 'darkmatter-set-https-domain' ) ) {
+		wp_die( 'Unable to delete domain for this blog due to an unknown error.' );
+	}
+
+	$redirect_url = admin_url( 'options-general.php' );
+	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
+
+	if ( false === dark_matter_api_unset_domain_https( intval( $_GET['id'] ) ) ) {
+		$redirect_url = add_query_arg( array(
+			'message' => 'failed_unset_https'
+		), $redirect_url );
+
+		wp_safe_redirect( $redirect_url );
+		die();
+	}
+	else {
+		$redirect_url = add_query_arg( array(
+			'message' => 'success_unset_https'
+		), $redirect_url );
+
+		wp_safe_redirect( $redirect_url );
+		die();
+	}
+
+	wp_die( 'An unexpected error with Domain Mapping has occurred.' );
+}
+add_action( 'admin_action_dm_unset_domain_https', 'dark_matter_actions_unset_domain_https' );

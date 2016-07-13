@@ -87,6 +87,11 @@ function dark_matter_blog_domain_mapping_row( $data ) {
 			<?php if ( empty( $data->is_primary ) ) : ?>
 				<a class="primary-domain button"  href="<?php echo( wp_nonce_url( add_query_arg( 'action', 'dm_new_primary_domain', $base_actions_url ), 'darkmatter-new-primary-domain', 'dm_new_primary_nonce' ) ); ?>" title="Make '<?php echo( $data->domain ); ?>' the primary domain for this blog.">Make Primary</a>
 			<?php endif; ?>
+
+			<a class="primary-domain button"  href="<?php echo( wp_nonce_url( add_query_arg( 'action', ( $data->is_https ? 'dm_unset_domain_https' : 'dm_set_domain_https' ), $base_actions_url ), 'darkmatter-set-https-domain', 'dm_set_https_nonce' ) ); ?>" title="Make '<?php echo( $data->domain ); ?>' the primary domain for this blog.">
+				<?php echo( $data->is_https ? 'Remove HTTPS' : 'Add HTTPS' ); ?>
+			</a>
+
 			<a class="button" href="<?php echo( wp_nonce_url( add_query_arg( 'action', 'dm_del_domain', $base_actions_url ), 'darkmatter-delete-domain', 'dm_del_nonce' ) ); ?>">Delete</a>
 		</td>
 	</tr>
