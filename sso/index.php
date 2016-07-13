@@ -24,9 +24,11 @@ defined( 'ABSPATH' ) or die();
  * including the header otherwise people will end up in an infinite loop.
  */
 function dark_matter_sso_wp_head() {
-	if ( false === is_user_logged_in() && false === is_main_site() ) : ?>
-	<script type="text/javascript" src="<?php echo( network_site_url( '/wp-login.php?action=dmsso' ) ); ?>"></script>
-<?php endif;
+	if ( is_main_site() ) {
+		return;
+	}
+
+	?><script type="text/javascript" src="<?php echo( network_site_url( sprintf( '/wp-login.php?action=%1$s', false === is_user_logged_in() ? 'dmsso' : 'dmcheck' ) ) ); ?>"></script><?php
 }
 add_action( 'wp_head', 'dark_matter_sso_wp_head' );
 
@@ -36,23 +38,38 @@ add_action( 'wp_head', 'dark_matter_sso_wp_head' );
  */
 function dark_matter_sso_create_token() {
 	if ( 'dmsso' === filter_input( INPUT_GET, 'action' ) ) {
-		header( 'Content-Type: text/javascript' );
+		if ( is_user_logged_in() ) {
+			header( 'Content-Type: text/javascript' );
 
-		/**
-		 * Construct an authentication token which is passed back along with an
-		 * action flag to tell the front end to
-		 */
-		$url = add_query_arg( array(
-			'__dm_action' => 'authorise',
-			'auth' => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) )
-		), $_SERVER['HTTP_REFERER'] );
+			/**
+			 * Construct an authentication token which is passed back along with an
+			 * action flag to tell the front end to
+			 */
+			$url = add_query_arg( array(
+				'__dm_action' => 'authorise',
+				'auth' => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) )
+			), $_SERVER['HTTP_REFERER'] );
 
-		printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
+			printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
+		}
 
 		/**
 		 * End the request here as we do not want to process the rest of the
 		 * wp-login.php page as it is not needed.
 		 */
+		die();
+	}
+	else if ( 'dmcheck' === filter_input( INPUT_GET, 'action' ) ) {
+		header( 'Content-Type: text/javascript' );
+
+		if ( false === is_user_logged_in() ) {
+			$url = add_query_arg( array(
+				'__dm_action' => 'logout'
+			), $_SERVER['HTTP_REFERER'] );
+
+			printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
+		}
+
 		die();
 	}
 }
@@ -89,6 +106,12 @@ function dark_matter_validate_sso_validate_token() {
 
 			die();
 		}
+	}
+	else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
+		wp_logout();
+		wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ) );
+
+		die();
 	}
 }
 add_action( 'plugins_loaded', 'dark_matter_validate_sso_validate_token' );
