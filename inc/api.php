@@ -10,6 +10,8 @@ function dark_matter_api_add_domain( $domain = '', $is_primary = false, $is_http
     return false;
   }
 
+  dark_matter_api_unset_domain_primary();
+
   $insert = $wpdb->insert( $wpdb->dmtable, array(
     'blog_id' => get_current_blog_id(),
     'is_primary' => $is_primary,
@@ -120,4 +122,21 @@ function dark_matter_api_set_domain_primary( $domain_id = null ) {
   ), array(
     'id' => $domain_id
   ) );
+
+function dark_matter_api_unset_domain_primary( $domain = null ) {
+	global $wpdb;
+
+	/**
+	 * Get the old domain and then unset the primary flag.
+	 */
+	$primary_domain = ( null === $domain ? dark_matter_api_get_domain_primary() : $domain );
+
+	if ( false === empty( $primary_domain ) ) {
+		return $wpdb->update( $wpdb->dmtable, array(
+			'is_primary' => 0
+		), array(
+			'blog_id' => get_current_blog_id(),
+			'domain' => $primary_domain
+		) );
+	}
 }
