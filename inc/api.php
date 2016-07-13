@@ -115,6 +115,26 @@ function dark_matter_api_unmap_permalink( $permalink ) {
   return preg_replace( "#http?://{$primary_domain}#", $domain, $permalink );
 }
 
+function dark_matter_api_set_domain_https( $domain_id = null ) {
+	global $wpdb;
+
+	return $wpdb->update( $wpdb->dmtable, array(
+		'is_https' => 1
+	), array(
+		'id' => $domain_id
+	) );
+}
+
+function dark_matter_api_unset_domain_https( $domain_id = null ) {
+	global $wpdb;
+
+	return $wpdb->update( $wpdb->dmtable, array(
+		'is_https' => 0
+	), array(
+		'id' => $domain_id
+	) );
+}
+
 function dark_matter_api_set_domain_primary( $domain_id = null ) {
 	global $wpdb;
 
