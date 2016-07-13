@@ -28,7 +28,6 @@ require_once( DM_PATH . '/sso/index.php' );
 
 function dark_matter_enqueue_scripts( $hook ) {
 	if ( 'settings_page_dark_matter_blog_settings' === $hook ) {
-		//wp_enqueue_script( 'dark-matter-js', plugin_dir_url( __FILE__ ) . 'ui/js/dark-matter.js', array( 'jquery', 'wp-util' ), DM_VERSION );
 		wp_enqueue_style( 'dark-matter-css', plugin_dir_url( __FILE__ ) . 'ui/css/blog.css', null, DM_VERSION );
 	}
 }
