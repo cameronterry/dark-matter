@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) or die();
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '0.3.0' );
 
-require_once( DM_PATH . '/inc/ajax.php' );
 require_once( DM_PATH . '/inc/api.php' );
 require_once( DM_PATH . '/inc/redirects.php' );
 require_once( DM_PATH . '/inc/urls.php' );
