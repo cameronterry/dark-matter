@@ -41,12 +41,13 @@ function dark_matter_maybe_create_tables() {
 	$charset_collate = $wpdb->get_charset_collate();
 
 	$sql = "CREATE TABLE `{$wpdb->dmtable}` (
-		`id` BIGINT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		`blog_id` BIGINT(20) NOT NULL,
-		`is_primary` TINYINT(4) DEFAULT '0',
-		`domain` VARCHAR(255) NOT NULL,
-		`active` TINYINT(4) DEFAULT '1',
-		`is_https` TINYINT(4) DEFAULT '0'
+		id BIGINT(20) NOT NULL AUTO_INCREMENT,
+		blog_id BIGINT(20) NOT NULL,
+		is_primary TINYINT(4) DEFAULT '0',
+		domain VARCHAR(255) NOT NULL,
+		active TINYINT(4) DEFAULT '1',
+		is_https TINYINT(4) DEFAULT '0',
+		PRIMARY KEY  (id)
 	) $charset_collate;";
 
 	dbDelta( $sql );
