@@ -10,7 +10,14 @@ function dark_matter_blog_admin_menu() {
 }
 add_action( 'admin_menu', 'dark_matter_blog_admin_menu' );
 
-function dark_matter_blog_domain_mapping() { $domains = dark_matter_api_get_domains(); ?>
+function dark_matter_blog_domain_mapping() {
+	$domains = dark_matter_api_get_domains();
+
+	if ( false === current_user_can( 'activate_plugins' ) ) {
+		wp_die( 'Insufficient permissions.' );
+	}
+	
+?>
 	<div class="wrap dark-matter-blog">
 		<h1><?php _e( 'Domain Mapping for this Blog', 'darkmatter' ); ?></h1>
 		<h2><?php _e( 'Mapped Domains', 'darkmatter' ); ?></h2>
