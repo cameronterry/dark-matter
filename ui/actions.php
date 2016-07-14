@@ -1,6 +1,10 @@
 <?php
 
 function dark_matter_actions_add_domain() {
+	if ( false === current_user_can( 'activate_plugins' ) ) {
+		wp_die( 'Insufficient permissions.' );
+	}
+	
 	/** Validate the nonce before proceeding. */
 	if ( array_key_exists( 'dm_new_nonce', $_POST ) && false === wp_verify_nonce( $_POST['dm_new_nonce'], 'darkmatter-add-domain' ) ) {
 		wp_die( 'Unable to add Domain Mapping to this blog due to an unknown error.' );
@@ -71,6 +75,10 @@ function dark_matter_actions_add_domain() {
 add_action( 'admin_action_dm_add_domain', 'dark_matter_actions_add_domain' );
 
 function dark_matter_actions_delete_domain() {
+	if ( false === current_user_can( 'activate_plugins' ) ) {
+		wp_die( 'Insufficient permissions.' );
+	}
+
 	/** Validate the nonce before proceeding. */
 	if ( array_key_exists( 'dm_del_nonce', $_GET ) && false === wp_verify_nonce( $_GET['dm_del_nonce'], 'darkmatter-delete-domain' ) ) {
 		wp_die( 'Unable to delete domain for this blog due to an unknown error.' );
@@ -101,6 +109,10 @@ function dark_matter_actions_delete_domain() {
 add_action( 'admin_action_dm_del_domain', 'dark_matter_actions_delete_domain' );
 
 function dark_matter_actions_new_primary_domain() {
+	if ( false === current_user_can( 'activate_plugins' ) ) {
+		wp_die( 'Insufficient permissions.' );
+	}
+
 	/** Validate the nonce before proceeding. */
 	if ( array_key_exists( 'dm_new_primary_nonce', $_GET ) && false === wp_verify_nonce( $_GET['dm_new_primary_nonce'], 'darkmatter-new-primary-domain' ) ) {
 		wp_die( 'Unable to delete domain for this blog due to an unknown error.' );
@@ -131,6 +143,10 @@ function dark_matter_actions_new_primary_domain() {
 add_action( 'admin_action_dm_new_primary_domain', 'dark_matter_actions_new_primary_domain' );
 
 function dark_matter_actions_set_domain_https() {
+	if ( false === current_user_can( 'activate_plugins' ) ) {
+		wp_die( 'Insufficient permissions.' );
+	}
+
 	/** Validate the nonce before proceeding. */
 	if ( array_key_exists( 'dm_set_https_nonce', $_GET ) && false === wp_verify_nonce( $_GET['dm_set_https_nonce'], 'darkmatter-set-https-domain' ) ) {
 		wp_die( 'Unable to delete domain for this blog due to an unknown error.' );
@@ -161,6 +177,10 @@ function dark_matter_actions_set_domain_https() {
 add_action( 'admin_action_dm_set_domain_https', 'dark_matter_actions_set_domain_https' );
 
 function dark_matter_actions_unset_domain_https() {
+	if ( false === current_user_can( 'activate_plugins' ) ) {
+		wp_die( 'Insufficient permissions.' );
+	}
+
 	/** Validate the nonce before proceeding. */
 	if ( array_key_exists( 'dm_set_https_nonce', $_GET ) && false === wp_verify_nonce( $_GET['dm_set_https_nonce'], 'darkmatter-set-https-domain' ) ) {
 		wp_die( 'Unable to delete domain for this blog due to an unknown error.' );
