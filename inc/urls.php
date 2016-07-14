@@ -5,27 +5,27 @@ defined( 'ABSPATH' ) or die();
 function dark_matter_map_url( $setting ) {
   global $current_blog;
 
-  $protocol = ( is_ssl() ? 'https://' : 'http://' );
+  $protocol = ( $current_blog->https ? 'https://' : 'http://' );
 
   return sprintf( '%1$s%2$s', $protocol, $current_blog->domain );
 }
 
 function dark_matter_map_content( $content ) {
-  global $current_blog;
+	global $current_blog;
 
-  $protocol = ( is_ssl() ? 'https://' : 'http://' );
-  $domain = sprintf( '%1$s%2$s/', $protocol, $current_blog->domain );
+	$protocol = ( $current_blog->https ? 'https://' : 'http://' );
+	$domain = sprintf( '%1$s%2$s/', $protocol, $current_blog->domain );
 
-  if ( is_string( $domain ) ) {
-    $content = preg_replace( "#http?://{$current_blog->original_domain}#", $domain, $content );
-  }
-  elseif ( is_array( $content ) ) {
-    foreach ( $content as $key => $value ) {
-      $content[$key] = preg_replace( "#http?://{$current_blog->original_domain}#", $domain, $value );
-    }
-  }
+	if ( is_string( $domain ) ) {
+		$content = preg_replace( "#http?://{$current_blog->original_domain}#", $domain, $content );
+	}
+	elseif ( is_array( $content ) ) {
+		foreach ( $content as $key => $value ) {
+			$content[$key] = preg_replace( "#http?://{$current_blog->original_domain}#", $domain, $value );
+		}
+	}
 
-  return $content;
+	return $content;
 }
 
 if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
@@ -92,16 +92,17 @@ function dark_matter_post_row_actions( $actions ) {
 }
 
 function dark_matter_admin_pre_option_home() {
-  $primary_domain = dark_matter_api_get_domain_primary();
+	global $current_blog;
+	$primary_domain = dark_matter_api_get_domain_primary();
 
-  if ( empty( $primary_domain ) ) {
-    return false;
-  }
+	if ( empty( $primary_domain ) ) {
+		return false;
+	}
 
-  $protocol = ( false ? 'https://' : 'http://' );
-  $domain = sprintf( '%1$s%2$s', $protocol, $primary_domain );
+	$protocol = ( $current_blog->https ? 'https://' : 'http://' );
+	$domain = sprintf( '%1$s%2$s', $protocol, $primary_domain );
 
-  return $domain;
+	return $domain;
 }
 
 if ( is_admin() ) {
