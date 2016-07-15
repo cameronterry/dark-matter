@@ -96,7 +96,7 @@ function dark_matter_api_map_permalink( $permalink ) {
   $protocol = ( $current_blog->https ? 'https://' : 'http://' );
   $domain = sprintf( '%1$s%2$s/', $protocol, $primary_domain );
 
-  return preg_replace( "#https?://{$original_domain}#", $domain, $permalink );
+  return preg_replace( "#https?://{$original_domain}/?#", $domain, $permalink );
 }
 
 function dark_matter_api_unmap_permalink( $permalink ) {
