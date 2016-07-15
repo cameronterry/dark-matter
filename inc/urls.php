@@ -76,10 +76,21 @@ function dark_matter_map_admin_ajax_query_attachments() {
 add_action( 'wp_ajax_query-attachments', 'dark_matter_map_admin_ajax_query_attachments', 0 );
 
 function dark_matter_wp_prepare_attachment_for_js( $response ) {
-  if ( array_key_exists( 'url', $response ) ) {
-    $response['url'] = dark_matter_api_map_permalink( $response['url'] );
-  }
-  return $response;
+	if ( array_key_exists( 'url', $response ) ) {
+		$response['url'] = dark_matter_api_map_permalink( $response['url'] );
+	}
+
+	if ( array_key_exists( 'sizes', $response ) ) {
+		$sizes = array_keys( $response['sizes'] );
+
+		foreach ( $sizes as $size ) {
+			if ( array_key_exists( 'url', $response['sizes'][$size] ) ) {
+				$response['sizes'][$size]['url'] = dark_matter_api_map_permalink( $response['sizes'][$size]['url'] );
+			}
+		}
+	}
+
+	return $response;
 }
 add_filter( 'wp_prepare_attachment_for_js', 'dark_matter_wp_prepare_attachment_for_js' );
 
