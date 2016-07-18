@@ -93,10 +93,10 @@ function dark_matter_api_map_permalink( $permalink ) {
     return $permalink;
   }
 
-  $protocol = ( is_ssl() ? 'https://' : 'http://' );
+  $protocol = ( $current_blog->https ? 'https://' : 'http://' );
   $domain = sprintf( '%1$s%2$s/', $protocol, $primary_domain );
 
-  return preg_replace( "#http?://{$original_domain}#", $domain, $permalink );
+  return preg_replace( "#https?://{$original_domain}/?#", $domain, $permalink );
 }
 
 function dark_matter_api_unmap_permalink( $permalink ) {
@@ -112,7 +112,7 @@ function dark_matter_api_unmap_permalink( $permalink ) {
   $protocol = ( is_ssl() ? 'https://' : 'http://' );
   $domain = sprintf( '%1$s%2$s', $protocol, $original_domain );
 
-  return preg_replace( "#http?://{$primary_domain}#", $domain, $permalink );
+  return preg_replace( "#https?://{$primary_domain}#", $domain, $permalink );
 }
 
 function dark_matter_api_set_domain_https( $domain_id = null ) {
