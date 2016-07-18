@@ -2,6 +2,15 @@
 
 defined( 'ABSPATH' ) or die();
 
+/**
+ * If the Network Admin, then we just get out as the domain mapping is causing
+ * a variety of errors which are related to the fact the Network admin is all
+ * sites and not a specific website.
+ */
+if ( is_network_admin() ) {
+	return;
+}
+
 function dark_matter_map_url( $setting ) {
   global $current_blog;
 
