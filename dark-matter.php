@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Dark Matter
- * Plugin URI: http://projectdarkmatter.com/dark-matter/
+ * Plugin URI: https://cameronterry.supernovawp.com/dark-matter/
  * Description: A domain mapping plugin from Project Dark Matter.
- * Version: 0.3.0
+ * Version: 0.5.0 (Beta)
  * Author: Cameron Terry
  * Author URI: https://cameronterry.supernovawp.com/
  */
