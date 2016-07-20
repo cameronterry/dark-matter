@@ -37,19 +37,10 @@ function dark_matter_map_content( $content ) {
 	return $content;
 }
 
-function dark_matter_allowed_redirect_hosts( $allowed_hosts ) {
-	if ( property_exists( $current_blog, 'primary_domain' ) ) {
-		$allowed_hosts[] = $current_blog->primary_domain;
-	}
-
-	return $allowed_hosts;
-}
-
 if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
 	add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
 	add_filter( 'pre_option_home', 'dark_matter_map_url' );
 
-	add_filter( 'allowed_redirect_hosts', 'dark_matter_allowed_redirect_hosts' );
 	add_filter( 'the_content', 'dark_matter_map_content' );
 	add_filter( 'stylesheet_uri', 'dark_matter_map_content' );
 	add_filter( 'stylesheet_directory_uri', 'dark_matter_map_content' );
@@ -146,7 +137,17 @@ if ( is_admin() ) {
 	add_filter( 'preview_post_link', 'dark_matter_api_unmap_permalink' );
 }
 
-  add_filter( 'get_comment_author_url', 'dark_matter_api_map_permalink' );
+function dark_matter_allowed_redirect_hosts( $allowed_hosts ) {
+	global $current_blog;
 
-  add_filter( 'preview_post_link', 'dark_matter_api_unmap_permalink' );
+	if ( property_exists( $current_blog, 'original_domain' ) ) {
+		$allowed_hosts[] = untrailingslashit( $current_blog->original_domain );
+	}
+
+	if ( property_exists( $current_blog, 'primary_domain' ) ) {
+		$allowed_hosts[] = $current_blog->primary_domain;
+	}
+
+	return $allowed_hosts;
 }
+add_filter( 'allowed_redirect_hosts', 'dark_matter_allowed_redirect_hosts' );
