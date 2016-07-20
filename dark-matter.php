@@ -14,6 +14,7 @@ defined( 'ABSPATH' ) or die();
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '0.3.0' );
+define( 'DM_DB_VERSION', '133' );
 
 require_once( DM_PATH . '/inc/api.php' );
 require_once( DM_PATH . '/inc/redirects.php' );
@@ -57,9 +58,9 @@ function dark_matter_maybe_upgrade() {
 	global $dm_current_version;
 
 	if ( is_network_admin() ) {
-		if ( DM_VERSION !== $dm_current_version ) {
+		if ( DM_DB_VERSION !== get_network_option( null, 'dark_matter_db_version', null ) ) {
 			dark_matter_maybe_create_tables();
-			update_network_option( null, 'dark_matter_version', DM_VERSION );
+			update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION );
 		}
 	}
 }
