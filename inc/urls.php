@@ -140,10 +140,21 @@ if ( is_admin() ) {
 function dark_matter_allowed_redirect_hosts( $allowed_hosts ) {
 	global $current_blog;
 
-	if ( property_exists( $current_blog, 'original_domain' ) ) {
+	/**
+	 * Only include this if its a sub-domain setup. It appears WordPress is only
+	 * adding the root domain and not adding the additional sub-domains. Not
+	 * sure right now if that is unique to the development setup for Dark Matter
+	 * or WordPress in general.
+	 */
+	if ( property_exists( $current_blog, 'original_domain' ) && defined( 'SUBDOMAIN_INSTALL' ) && SUBDOMAIN_INSTALL ) {
 		$allowed_hosts[] = untrailingslashit( $current_blog->original_domain );
 	}
 
+	/**
+	 * Add the primary domain to the allow list. As it is part of the website
+	 * then it makes sense. For now, the other mapped domains are excluded as
+	 * they should be redirecting through sunrise.php to the primary domain.
+	 */
 	if ( property_exists( $current_blog, 'primary_domain' ) ) {
 		$allowed_hosts[] = $current_blog->primary_domain;
 	}
