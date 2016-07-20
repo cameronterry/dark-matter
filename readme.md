@@ -1,15 +1,12 @@
 # WARNING
 
-**This plugin is still under development and testing. So if you do decide to use it, then be prepared for bugs and
-other oddities.**
+**This plugin is still under development and testing. So if you do decide to use it, then be prepared for bugs and other oddities.**
 
 # Dark Matter
 
-Dark Matter is a highly opinionated domain mapping plugin for WordPress multisites, designed
-to work out of the box as-is with no setup.
+Dark Matter is a highly opinionated domain mapping plugin for WordPress multisites, designed to work out of the box as-is with no setup.
 
-Unlike other plugins such as Donncha's "WordPress MU Domain Mapping" and WPMU Dev's premium
-domain mapping plugin, Dark Matter offers virtually no options.
+Unlike other plugins such as Donncha's "WordPress MU Domain Mapping" and WPMU Dev's premium domain mapping plugin, Dark Matter offers virtually no options.
 
 It is designed specifically to work as follows;
 
