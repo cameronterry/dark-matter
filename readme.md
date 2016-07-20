@@ -1,3 +1,8 @@
+# WARNING
+
+**This plugin is still under development and testing. So if you do decide to use it, then be prepared for bugs and
+other oddities.**
+
 # Dark Matter
 
 Dark Matter is a highly opinionated domain mapping plugin for WordPress multisites, designed
