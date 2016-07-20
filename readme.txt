@@ -3,7 +3,7 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 4.5
 Tested up to: 4.5.3
-Stable tag: 0.5.0
+Stable tag: 0.6.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -98,6 +98,13 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 * Twenty Twelve - https://wordpress.org/themes/twentytwelve/
 
 == Changelog ==
+
+= 0.6.0 (Beta) =
+
+* Removed URL mapping from the filters "stylesheet_directory" and "template_directory" as these filters handle folder paths. Not URLs.
+* Fixed a regex bug with the URL mapping API not handling the difference between HTTP and HTTPS URLs.
+* Changed the upgrade mechanism to have a separate version number for the plugin itself and the database.
+  * This is to stop database upgrade procedure running when it is not needed.
 
 = 0.5.0 (Beta) =
 
