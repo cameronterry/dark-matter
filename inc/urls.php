@@ -37,17 +37,26 @@ function dark_matter_map_content( $content ) {
 	return $content;
 }
 
-if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
-  add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
-  add_filter( 'pre_option_home', 'dark_matter_map_url' );
+function dark_matter_allowed_redirect_hosts( $allowed_hosts ) {
+	if ( property_exists( $current_blog, 'primary_domain' ) ) {
+		$allowed_hosts[] = $current_blog->primary_domain;
+	}
 
-  add_filter( 'the_content', 'dark_matter_map_content' );
-  add_filter( 'stylesheet_uri', 'dark_matter_map_content' );
-  add_filter( 'stylesheet_directory_uri', 'dark_matter_map_content' );
-  add_filter( 'template_directory_uri', 'dark_matter_map_content' );
-  add_filter( 'plugins_url', 'dark_matter_map_content' );
-  add_filter( 'upload_dir', 'dark_matter_map_content' );
-  add_filter( 'wp_get_attachment_url', 'dark_matter_map_content' );
+	return $allowed_hosts;
+}
+
+if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
+	add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
+	add_filter( 'pre_option_home', 'dark_matter_map_url' );
+
+	add_filter( 'allowed_redirect_hosts', 'dark_matter_allowed_redirect_hosts' );
+	add_filter( 'the_content', 'dark_matter_map_content' );
+	add_filter( 'stylesheet_uri', 'dark_matter_map_content' );
+	add_filter( 'stylesheet_directory_uri', 'dark_matter_map_content' );
+	add_filter( 'template_directory_uri', 'dark_matter_map_content' );
+	add_filter( 'plugins_url', 'dark_matter_map_content' );
+	add_filter( 'upload_dir', 'dark_matter_map_content' );
+	add_filter( 'wp_get_attachment_url', 'dark_matter_map_content' );
 }
 
 /**
