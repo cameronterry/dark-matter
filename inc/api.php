@@ -100,19 +100,19 @@ function dark_matter_api_map_permalink( $permalink ) {
 }
 
 function dark_matter_api_unmap_permalink( $permalink ) {
-  global $current_blog;
+	global $current_blog;
 
-  $original_domain = untrailingslashit( $current_blog->original_domain );
-  $primary_domain = dark_matter_api_get_domain_primary();
+	$original_domain = untrailingslashit( $current_blog->original_domain );
+	$primary_domain = dark_matter_api_get_domain_primary();
 
-  if ( empty( $primary_domain ) ) {
-    return $permalink;
-  }
+	if ( empty( $primary_domain ) ) {
+		return $permalink;
+	}
 
-  $protocol = ( is_ssl() ? 'https://' : 'http://' );
-  $domain = sprintf( '%1$s%2$s', $protocol, $original_domain );
+	$protocol = ( ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ) || is_ssl() ? 'https://' : 'http://' );
+	$domain = sprintf( '%1$s%2$s', $protocol, $original_domain );
 
-  return preg_replace( "#https?://{$primary_domain}#", $domain, $permalink );
+	return preg_replace( "#https?://{$primary_domain}#", $domain, $permalink );
 }
 
 function dark_matter_api_set_domain_https( $domain_id = null ) {
