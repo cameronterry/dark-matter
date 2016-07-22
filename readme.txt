@@ -101,10 +101,10 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 
 = 0.8.0 (Beta) =
 
-* Front-end redirect is now executed on parse_request action rather than template_redirect.
+* Front-end redirect is now executed on parse_query action rather than template_redirect.
   * The way Yoast SEO sitemaps are generated means that template_redirect is never fired.
   * It has the added bonus of being a [handful of actions before template_redirect](https://codex.wordpress.org/Plugin_API/Action_Reference#Actions_Run_During_a_Typical_Request), so means less of WordPress loads before issuing the redirect and is bit more efficient.
-* Fixed the logic inside the front-end redirect so that it no longer attempts to fix both a domain and protocol mismatch at the same time.
+* Fixed the logic inside the front-end redirect so that it no longer attempts to fix both a domain and protocol mismatch at the same time. Now it is one or the other.
 
 = 0.7.0 (Beta) =
 

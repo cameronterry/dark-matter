@@ -104,4 +104,4 @@ function dark_matter_frontend_redirect() {
 	wp_redirect( $redirect_url );
 	return;
 }
-add_action( 'parse_request', 'dark_matter_frontend_redirect' );
+add_action( 'parse_query', 'dark_matter_frontend_redirect' );
