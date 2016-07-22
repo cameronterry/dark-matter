@@ -88,16 +88,15 @@ function dark_matter_frontend_redirect() {
 		/** Construct the final redirect URL with the primary domain. */
 		$redirect_url = sprintf( '%1$s%2$s/%3$s', $scheme, $primary_domain, $path );
 	}
-
-	/**
-	 * Someone has attempted to access the URL on the HTTP version of the blog
-	 * and it is currently set to accept only HTTPS (or vice versa). Then this
-	 * handles that redirect.
-	 */
-	if ( false === $protocols_match ) {
+	else if ( false === $protocols_match ) {
+		/**
+		 * Someone has attempted to access the URL on the HTTP version of the blog
+		 * and it is currently set to accept only HTTPS (or vice versa). Then this
+		 * handles that redirect.
+		 */
 		$redirect_url = sprintf( '%1$s://%2$s%3$s', ( $current_blog->https ? 'https' : 'http' ), $primary_domain, $_SERVER['REQUEST_URI'] );
 	}
-	
+
 	wp_redirect( $redirect_url );
 	return;
 }
