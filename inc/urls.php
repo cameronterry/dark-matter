@@ -12,11 +12,11 @@ if ( is_network_admin() ) {
 }
 
 function dark_matter_map_url( $setting ) {
-  global $current_blog;
+	global $current_blog;
 
-  $protocol = ( $current_blog->https ? 'https://' : 'http://' );
+	$protocol = ( $current_blog->https ? 'https://' : 'http://' );
 
-  return sprintf( '%1$s%2$s', $protocol, $current_blog->domain );
+	return sprintf( '%1$s%2$s', $protocol, $current_blog->domain );
 }
 
 function dark_matter_map_content( $content ) {
@@ -62,30 +62,30 @@ if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
  * be displaying the mapped domain ... do!
  */
 function dark_matter_map_admin_permalink() {
-  add_filter( 'page_link', 'dark_matter_api_map_permalink' );
-  add_filter( 'post_link', 'dark_matter_api_map_permalink' );
+	add_filter( 'page_link', 'dark_matter_api_map_permalink' );
+	add_filter( 'post_link', 'dark_matter_api_map_permalink' );
 }
 add_action( 'edit_form_before_permalink', 'dark_matter_map_admin_permalink' );
 
 function dark_matter_unmap_admin_permalink() {
-  remove_filter( 'page_link', 'dark_matter_api_map_permalink' );
-  remove_filter( 'post_link', 'dark_matter_api_map_permalink' );
+	remove_filter( 'page_link', 'dark_matter_api_map_permalink' );
+	remove_filter( 'post_link', 'dark_matter_api_map_permalink' );
 }
 add_action( 'edit_form_after_title', 'dark_matter_unmap_admin_permalink' );
 
 function dark_matter_map_admin_comments_permalink() {
-  add_filter( 'page_link', 'dark_matter_api_map_permalink' );
-  add_filter( 'post_link', 'dark_matter_api_map_permalink' );
+	add_filter( 'page_link', 'dark_matter_api_map_permalink' );
+	add_filter( 'post_link', 'dark_matter_api_map_permalink' );
 }
 add_action( 'manage_comments_nav', 'dark_matter_map_admin_comments_permalink' );
 
 function dark_matter_map_admin_ajax_sample_permalink() {
-  add_filter( 'get_sample_permalink', 'dark_matter_api_map_permalink' );
+	add_filter( 'get_sample_permalink', 'dark_matter_api_map_permalink' );
 }
 add_action( 'wp_ajax_sample-permalink', 'dark_matter_map_admin_ajax_sample_permalink', 0 );
 
 function dark_matter_map_admin_ajax_query_attachments() {
-  add_filter( 'attachment_link', 'dark_matter_api_map_permalink' );
+	add_filter( 'attachment_link', 'dark_matter_api_map_permalink' );
 }
 add_action( 'wp_ajax_query-attachments', 'dark_matter_map_admin_ajax_query_attachments', 0 );
 
@@ -109,11 +109,11 @@ function dark_matter_wp_prepare_attachment_for_js( $response ) {
 add_filter( 'wp_prepare_attachment_for_js', 'dark_matter_wp_prepare_attachment_for_js' );
 
 function dark_matter_post_row_actions( $actions ) {
-  if ( array_key_exists( 'view', $actions ) && false === strpos( $actions['view'], 'preview=true' ) ) {
-    $actions['view'] = dark_matter_api_map_permalink( $actions['view'] );
-  }
+	if ( array_key_exists( 'view', $actions ) && false === strpos( $actions['view'], 'preview=true' ) ) {
+		$actions['view'] = dark_matter_api_map_permalink( $actions['view'] );
+	}
 
-  return $actions;
+	return $actions;
 }
 
 function dark_matter_admin_pre_option_home() {

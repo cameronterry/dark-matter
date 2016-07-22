@@ -102,6 +102,7 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 = 1.0.0 =
 
 * Removed the Network Admin page as it is currently has no options or need.
+* Standardised indentation to tabs rather than spaces for all files.
 
 = 0.8.0 (Beta) =
 

@@ -4,11 +4,11 @@
 defined( 'ABSPATH' ) or die();
 
 if ( defined( 'COOKIE_DOMAIN' ) ) {
-  wp_die( __( 'Multiple domain and sign-on is an interesting experience with a single ... defined domain ...', 'darkmatter' ) );
+	wp_die( __( 'Multiple domain and sign-on is an interesting experience with a single ... defined domain ...', 'darkmatter' ) );
 }
 
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
-  define( 'SUNRISE_LOADED', true );
+	define( 'SUNRISE_LOADED', true );
 }
 
 $dmtable = $wpdb->base_prefix . 'domain_mapping';
@@ -20,10 +20,10 @@ $dark_matter_sql = '';
  * for and without the www. sub-domain part.
  */
 if ( ( $domain_no_www = preg_replace( '|^www\.|', '', $domain ) ) !== $domain ) {
-  $dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain IN(%s, %s) LIMIT 1", $domain, $domain_no_www );
+	$dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain IN(%s, %s) LIMIT 1", $domain, $domain_no_www );
 }
 else {
-  $dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain = %s LIMIT 1", $domain );
+	$dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain = %s LIMIT 1", $domain );
 }
 
 $mapped_domain = $wpdb->get_row( $dark_matter_sql );
