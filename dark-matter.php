@@ -6,6 +6,7 @@
  * Version: 0.8.0 (Beta)
  * Author: Cameron Terry
  * Author URI: https://cameronterry.supernovawp.com/
+ * Text Domain: dark-matter
  */
 
 /** A bit of security for those who are too clever for their own good. */

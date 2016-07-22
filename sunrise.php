@@ -4,7 +4,7 @@
 defined( 'ABSPATH' ) or die();
 
 if ( defined( 'COOKIE_DOMAIN' ) ) {
-	wp_die( __( 'Multiple domain and sign-on is an interesting experience with a single ... defined domain ...', 'darkmatter' ) );
+	wp_die( __( 'Multiple domain and sign-on is an interesting experience with a single ... defined domain ...', 'dark-matter' ) );
 }
 
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
