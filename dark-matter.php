@@ -22,7 +22,6 @@ require_once( DM_PATH . '/inc/urls.php' );
 
 require_once( DM_PATH . '/ui/actions.php' );
 require_once( DM_PATH . '/ui/blog.php' );
-require_once( DM_PATH . '/ui/network.php' );
 
 require_once( DM_PATH . '/sso/index.php' );
 

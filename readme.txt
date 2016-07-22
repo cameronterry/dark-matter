@@ -99,6 +99,10 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 
 == Changelog ==
 
+= 1.0.0 =
+
+* Removed the Network Admin page as it is currently has no options or need.
+
 = 0.8.0 (Beta) =
 
 * Front-end redirect is now executed on parse_query action rather than template_redirect.
