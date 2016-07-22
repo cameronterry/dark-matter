@@ -102,8 +102,10 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 = 0.7.0 (Beta) =
 
 * Added primary domain to the allowed_redirect_hosts, so that it passes the validation for wp_safe_redirect().
+* Set domain HTTPS API mechanism now respects the FORCE_SSL_ADMIN constant setting.
 * Fixed the issue which caused the options on the Settings -> Domain Mapping admin panel to redirect to the Dashboard upon save.
 * Fixed an issue in which the domain mapping would not fire or map correctly during a Cron job.
+* Fixed an issue on the front-end domain mapping which now points admin URLs to the correct domain.
 
 = 0.6.0 (Beta) =
 
