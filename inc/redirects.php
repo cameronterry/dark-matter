@@ -37,8 +37,12 @@ add_action( 'admin_init', 'dark_matter_admin_redirect' );
 add_action( 'login_init', 'dark_matter_admin_redirect' );
 
 function dark_matter_frontend_redirect() {
-	/** If it's the main site in the network, do not redirect. */
-	if ( is_main_site() || is_preview() ) {
+	/**
+	 * If it's the main site in the network, do not redirect. Also double-check
+	 * to make sure this isn't called in the admin area as parse_request action
+	 * is used both back-end and front-end.
+	 */
+	if ( is_admin() || is_main_site() || is_preview() ) {
 		return;
 	}
 
