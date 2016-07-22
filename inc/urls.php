@@ -38,6 +38,13 @@ function dark_matter_map_content( $content ) {
 }
 
 if ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING ) {
+	/**
+	 * This is to make sure that links and requests using admin_url() template
+	 * tag get the actual Admin URL. This is also solves a problem when the admin
+	 * is HTTPS but the mapped domain is HTTP.
+	 */
+	add_filter( 'admin_url', 'dark_matter_api_unmap_permalink' );
+
 	add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
 	add_filter( 'pre_option_home', 'dark_matter_map_url' );
 
