@@ -10,6 +10,9 @@ Unlike other plugins such as Donncha's "WordPress MU Domain Mapping" and WPMU De
 
 It is designed specifically to work as follows;
 
-* To have separate domain for /wp-admin/ and for the front-end websites.
+* To have separate domain for /wp-admin/ (admin domain) and for the front-end websites (blog domain).
+* Previews are viewed on the Admin domain.
+  * This is to ensure Preview functionality continues to work in the event of a single-sign on failure.
 * Provide per blog administrator users the ability to map a domain for their website.
 * Ensure that the WordPress Admin Bar is visible on all mapped domains using a basic single sign-on implementation.
+  * This is currently implemented using third-party cookies.
