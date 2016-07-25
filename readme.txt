@@ -106,6 +106,7 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 * Standardised indentation to tabs rather than spaces for all files.
 * Added a license block, as recommended in the WordPress.org Plugin Handbook.
 * Removed a superfluous check on version number when retrieving the primary domain.
+* Removed the sarcasm from the error message when someone has defined a "COOKIE_DOMAIN" value.
 
 = 0.8.0 (Beta) =
 
