@@ -69,8 +69,6 @@ function dark_matter_maybe_create_tables() {
 }
 
 function dark_matter_maybe_upgrade() {
-	global $dm_current_version;
-
 	if ( is_network_admin() ) {
 		if ( DM_DB_VERSION !== get_network_option( null, 'dark_matter_db_version', null ) ) {
 			dark_matter_maybe_create_tables();
@@ -86,9 +84,6 @@ add_action( 'plugins_loaded', 'dark_matter_plugins_loaded' );
 
 function dark_matter_prepare() {
 	global $current_blog, $wpdb;
-
-	/** Get the currently installed version. */
-	global $dm_current_version; $dm_current_version = get_network_option( null, 'dark_matter_version', null );
 
 	/** Set the property for the Domain Mapping table. */
 	$wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
