@@ -105,6 +105,7 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 * Added the L10n API calls where relevant in the code for localisation.
 * Standardised indentation to tabs rather than spaces for all files.
 * Added a license block, as recommended in the WordPress.org Plugin Handbook.
+* Removed a superfluous check on version number when retrieving the primary domain.
 
 = 0.8.0 (Beta) =
 
