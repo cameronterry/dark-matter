@@ -40,6 +40,20 @@ require_once( DM_PATH . '/ui/blog.php' );
 
 require_once( DM_PATH . '/sso/index.php' );
 
+/**
+ * When Dark Matter is activated, it will attempt to copy the sunrise.php file
+ * to the correct destination.
+ */
+function dark_matter_activate() {
+	$destination = WP_CONTENT_DIR . '/sunrise.php';
+	$source = DM_PATH . '/sunrise.php';
+
+	if ( is_writable( WP_CONTENT_DIR ) && false === file_exists( $destination ) && is_readable( $source ) ) {
+		@copy( $source, $destination );
+	}
+}
+register_activation_hook( __FILE__, 'dark_matter_activate' );
+
 function dark_matter_enqueue_scripts( $hook ) {
 	if ( 'settings_page_dark_matter_blog_settings' === $hook ) {
 		wp_enqueue_style( 'dark-matter-css', plugin_dir_url( __FILE__ ) . 'ui/css/blog.css', null, DM_VERSION );
