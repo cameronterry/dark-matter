@@ -105,6 +105,8 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 * Added the L10n API calls where relevant in the code for localisation.
 * Standardised indentation to tabs rather than spaces for all files.
 * Added a license block, as recommended in the WordPress.org Plugin Handbook.
+* Changed the sunrise.php so that grunt work version is in the dark-matter/inc/ folder and the one to be used inside wp-content/ references the one inside the plugin directory.
+  * This should make upgrades more seamless without manual intervention from site owners in the future.
 * Removed a superfluous check on version number when retrieving the primary domain.
 * Removed the sarcasm from the error message when someone has defined a "COOKIE_DOMAIN" value.
 
