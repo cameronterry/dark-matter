@@ -92,10 +92,10 @@ function dark_matter_blog_domain_mapping_row( $data ) {
 		</td>
 		<td>
 			<?php if ( empty( $data->is_primary ) ) : ?>
-				<a class="primary-domain button"  href="<?php echo( wp_nonce_url( add_query_arg( 'action', 'dm_new_primary_domain', $base_actions_url ), 'darkmatter-new-primary-domain', 'dm_new_primary_nonce' ) ); ?>" title="<?php printf( esc_attr( __( 'Make %s the primary domain for this blog.' ) ), $data->domain ); ?>"><?php esc_html_e( 'Make Primary', 'dark-matter' ); ?></a>
+				<a class="primary-domain button"  href="<?php echo( wp_nonce_url( add_query_arg( 'action', 'dm_new_primary_domain', $base_actions_url ), 'darkmatter-new-primary-domain', 'dm_new_primary_nonce' ) ); ?>" title="<?php printf( esc_attr( __( 'Make %s the primary domain for this blog.', 'dark-matter' ) ), $data->domain ); ?>"><?php esc_html_e( 'Make Primary', 'dark-matter' ); ?></a>
 			<?php endif; ?>
 
-			<a class="primary-domain button"  href="<?php echo( wp_nonce_url( add_query_arg( 'action', ( $data->is_https ? 'dm_unset_domain_https' : 'dm_set_domain_https' ), $base_actions_url ), 'darkmatter-set-https-domain', 'dm_set_https_nonce' ) ); ?>" title="<?php printf( esc_attr( __( 'Add HTTPS to %s this domain.' ) ), $data->domain ); ?>">
+			<a class="primary-domain button"  href="<?php echo( wp_nonce_url( add_query_arg( 'action', ( $data->is_https ? 'dm_unset_domain_https' : 'dm_set_domain_https' ), $base_actions_url ), 'darkmatter-set-https-domain', 'dm_set_https_nonce' ) ); ?>" title="<?php printf( esc_attr( __( 'Add HTTPS to %s this domain.', 'dark-matter' ) ), $data->domain ); ?>">
 				<?php echo( $data->is_https ? __( 'Remove HTTPS', 'dark-matter' ) : __( 'Add HTTPS', 'dark-matter' ) ); ?>
 			</a>
 
