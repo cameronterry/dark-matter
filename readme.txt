@@ -106,6 +106,8 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 * The front-end redirect logic now detects if wp-login.php or wp-register.php is in use and exits, to let a more suitable process handle the redirection logic.
 * Moved the dark_matter_prepare action to execute immediately and BEFORE the rest of the plugin loads.
 * API dark_matter_api_get_domain_primary() now returns null rather than the original domain.
+* Now checks to make sure we have a primary domain before attempting to change URLs.
+* A lot of the fixes solves problems with sites which have no mapped domains.
 
 = 0.9.0 (Beta) =
 

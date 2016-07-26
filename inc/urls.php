@@ -137,7 +137,7 @@ function dark_matter_admin_pre_option_home() {
  * the admin area and for wp-cron as well. This ensures that functionality which
  * depends on getting the mapped domain gets it correctly.
  */
-if ( is_admin() || ( defined( 'DOING_CRON' ) && DOING_CRON ) ) {
+if ( is_admin() || ( defined( 'DOING_CRON' ) && DOING_CRON ) && property_exists( $current_blog, 'primary_domain' ) ) {
 	add_filter( 'pre_option_home', 'dark_matter_admin_pre_option_home' );
 
 	add_filter( 'comment_row_actions', 'dark_matter_post_row_actions' );
