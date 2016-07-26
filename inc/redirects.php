@@ -42,7 +42,7 @@ function dark_matter_frontend_redirect() {
 	 * to make sure this isn't called in the admin area as parse_request action
 	 * is used both back-end and front-end.
 	 */
-	if ( is_admin() || is_main_site() || is_preview() || in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) ) {
+	if ( is_admin() || is_main_site() || is_preview() || in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) || defined( 'XMLRPC_REQUEST' ) ) {
 		return;
 	}
 

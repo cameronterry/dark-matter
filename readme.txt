@@ -104,9 +104,13 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 * Fixed a typo with dark_matter_map_content() which prevented the logic handling array types (like upload_dir).
 * Put in additional logic in dark_matter_map_content() so that it doesn't accidentally convert booleans to strings.
 * The front-end redirect logic now detects if wp-login.php or wp-register.php is in use and exits, to let a more suitable process handle the redirection logic.
-* Moved the dark_matter_prepare action to execute immediately and BEFORE the rest of the plugin loads.
+* Moved the dark_matter_prepare action to execute immediately upon inclusion of the dark-matter.php file and BEFORE the rest of the plugin loads.
+  * This is so that actions and filters can be executed from being added in the scenario of a website not having a mapped domain.
 * API dark_matter_api_get_domain_primary() now returns null rather than the original domain.
 * Now checks to make sure we have a primary domain before attempting to change URLs.
+* XMLRPC requests are no longer redirected.
+  * This was preventing sites from connecting to WordPress.com for Jetpack functionality.
+  * Jetpack now connects but the debugger fails with a "Could not validate security token" if Jetpack is not connected. However, if once connected the debugger claims all is fine!
 * A lot of the fixes solves problems with sites which have no mapped domains.
 
 = 0.9.0 (Beta) =
