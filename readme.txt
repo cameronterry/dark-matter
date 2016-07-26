@@ -105,6 +105,7 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 * Put in additional logic in dark_matter_map_content() so that it doesn't accidentally convert booleans to strings.
 * The front-end redirect logic now detects if wp-login.php or wp-register.php is in use and exits, to let a more suitable process handle the redirection logic.
 * Moved the dark_matter_prepare action to execute immediately and BEFORE the rest of the plugin loads.
+* API dark_matter_api_get_domain_primary() now returns null rather than the original domain.
 
 = 0.9.0 (Beta) =
 
