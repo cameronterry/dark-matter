@@ -31,6 +31,30 @@ define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '0.9.0-beta' );
 define( 'DM_DB_VERSION', '133' );
 
+/**
+ * Dark Matter Prepare
+ */
+global $current_blog, $wpdb;
+
+/** Set the property for the Domain Mapping table. */
+$wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
+
+/** Set the primary domain for the Current Blog. */
+$mapped_domain = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
+
+if ( false === empty( $mapped_domain ) ) {
+	$current_blog->https = boolval( $mapped_domain->is_https );
+	$current_blog->primary_domain = $mapped_domain->domain;
+}
+
+/** Check to see if the Original Domain is present and if not, set it. */
+if ( false === property_exists( $current_blog, 'original_domain' ) ) {
+	$current_blog->original_domain = $current_blog->domain . $current_blog->path;
+}
+
+/**
+ * Dark Matter plugin
+ */
 require_once( DM_PATH . '/inc/api.php' );
 require_once( DM_PATH . '/inc/redirects.php' );
 require_once( DM_PATH . '/inc/urls.php' );
@@ -95,24 +119,3 @@ function dark_matter_plugins_loaded() {
 	dark_matter_maybe_upgrade();
 }
 add_action( 'plugins_loaded', 'dark_matter_plugins_loaded' );
-
-function dark_matter_prepare() {
-	global $current_blog, $wpdb;
-
-	/** Set the property for the Domain Mapping table. */
-	$wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
-
-	/** Set the primary domain for the Current Blog. */
-	$mapped_domain = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
-
-	if ( false === empty( $mapped_domain ) ) {
-		$current_blog->https = boolval( $mapped_domain->is_https );
-		$current_blog->primary_domain = $mapped_domain->domain;
-	}
-
-	/** Check to see if the Original Domain is present and if not, set it. */
-	if ( false === property_exists( $current_blog, 'original_domain' ) ) {
-		$current_blog->original_domain = $current_blog->domain . $current_blog->path;
-	}
-}
-add_action( 'muplugins_loaded', 'dark_matter_prepare' );
