@@ -99,6 +99,11 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 
 == Changelog ==
 
+= 1.0.0 RC1 =
+
+* Fixed a typo with dark_matter_map_content() which prevented the logic handling array types (like upload_dir).
+* Put in additional logic in dark_matter_map_content() so that it doesn't accidentally convert booleans to strings.
+
 = 0.9.0 (Beta) =
 
 * Removed the Network Admin page as it is currently has no options or need.

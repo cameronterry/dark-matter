@@ -30,7 +30,9 @@ function dark_matter_map_content( $content ) {
 	}
 	elseif ( is_array( $content ) ) {
 		foreach ( $content as $key => $value ) {
-			$content[$key] = preg_replace( "#https?://{$current_blog->original_domain}#", $domain, $value );
+			if ( is_string( $value ) ) {
+				$content[$key] = preg_replace( "#https?://{$current_blog->original_domain}#", $domain, $value );
+			}
 		}
 	}
 
