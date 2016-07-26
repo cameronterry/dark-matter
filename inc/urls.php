@@ -25,7 +25,7 @@ function dark_matter_map_content( $content ) {
 	$protocol = ( $current_blog->https ? 'https://' : 'http://' );
 	$domain = sprintf( '%1$s%2$s/', $protocol, $current_blog->domain );
 
-	if ( is_string( $domain ) ) {
+	if ( is_string( $content ) ) {
 		$content = preg_replace( "#https?://{$current_blog->original_domain}#", $domain, $content );
 	}
 	elseif ( is_array( $content ) ) {
