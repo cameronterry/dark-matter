@@ -103,6 +103,7 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 
 * Fixed a typo with dark_matter_map_content() which prevented the logic handling array types (like upload_dir).
 * Put in additional logic in dark_matter_map_content() so that it doesn't accidentally convert booleans to strings.
+* The front-end redirect logic now detects if wp-login.php or wp-register.php is in use and exits, to let a more suitable process handle the redirection logic.
 
 = 0.9.0 (Beta) =
 
