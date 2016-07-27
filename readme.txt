@@ -99,6 +99,16 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 
 == Changelog ==
 
+= 0.11.0 (Beta) =
+
+* Completely rewritten the redirects logic to fix the following issues;
+  * Post previews not working and being served from the mapped domain (rather than the admin domain).
+    * This is because the parse_query action runs too earlier and the is_preview() API returns "false" rather than "true".
+  * To ensure the Admin area redirects properly.
+  * To ensure the Login page is always served on the admin domain.
+* Fixed a bug where redirects from the admin domain to the mapped domain included an extra forward slash in the domain.
+  * This in turn caused a double-redirect; one from the admin domain to the mapped domain and then a second from the double-slashed version to the single-slashed version.
+
 = 0.10.0 (Beta) =
 
 * Fixed a typo with dark_matter_map_content() which prevented the logic handling array types (like upload_dir).
