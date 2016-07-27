@@ -133,10 +133,16 @@ add_action( 'wp_loaded', 'dark_matter_main_redirect' );
  */
 function dark_matter_preview_redirect() {
 	if ( is_preview() ) {
-		$redirect = dark_matter_redirect_url();
+		$primary_domain = dark_matter_api_get_domain_primary();
 
-		if ( false !== $redirect ) {
-			wp_redirect( $redirect );
+		if ( false === empty( $primary_domain ) ) {
+			global $current_blog;
+			$redirect = dark_matter_redirect_url( $primary_domain, $current_blog->https );
+
+			if ( false !== $redirect ) {
+				wp_redirect( $redirect );
+				exit;
+			}
 		}
 	}
 }
