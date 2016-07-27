@@ -2,72 +2,26 @@
 
 defined( 'ABSPATH' ) or die();
 
-function dark_matter_admin_redirect() {
-	/**
-	 * Do not redirect the AJAX calls. It is part of the admin but not
-	 * the part we wish to put redirects on.  Especially for Front-end
-	 * AJAX functionality.
-	 */
-	if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-admin/admin-ajax.php' ) ) {
-		return;
-	}
-
-	/**
-	 * Also do not redirect the Cron URL.
-	 */
-	if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-cron.php' ) ) {
-		return;
-	}
-
+function dark_matter_redirect_url() {
 	global $current_blog;
+
 	$original_domain = dark_matter_api_get_domain_original();
-
-	if ( false === empty( $original_domain ) && false === strpos( $original_domain, $_SERVER[ 'HTTP_HOST' ] ) ) {
-		$protocol = ( is_ssl() ? 'https://' : 'http://' );
-		$protocol = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https://' : $protocol );
-
-		$domain = untrailingslashit( $original_domain );
-		$request = $_SERVER['REQUEST_URI'];
-
-		wp_redirect( sprintf( '%1$s%2$s%3$s', $protocol, $domain, $request ) );
-		exit;
-	}
-}
-add_action( 'admin_init', 'dark_matter_admin_redirect' );
-add_action( 'login_init', 'dark_matter_admin_redirect' );
-
-function dark_matter_frontend_redirect() {
-	/**
-	 * If it's the main site in the network, do not redirect. Also double-check
-	 * to make sure this isn't called in the admin area as parse_request action
-	 * is used both back-end and front-end.
-	 */
-	if ( is_admin() || is_main_site() || is_preview() || in_array( $GLOBALS['pagenow'], array( 'wp-login.php', 'wp-register.php' ) ) || defined( 'XMLRPC_REQUEST' ) ) {
-		return;
-	}
-
-	/** If we are viewing in the WP Customizer, then we don't want to redirect either. */
-	global $wp_customize;
-
-	if ( is_a( $wp_customize, 'WP_Customize_Manager' ) ) {
-		return;
-	}
-
-	global $current_blog, $wpdb;
-
 	$primary_domain = dark_matter_api_get_domain_primary();
 
 	/** No domain has been mapped. */
 	if ( empty( $primary_domain ) ) {
-		return;
+		return false;
 	}
 
 	$domains_match = ( $primary_domain === $_SERVER['HTTP_HOST'] );
 	$protocols_match = ( $current_blog->https === array_key_exists( 'HTTPS', $_SERVER ) );
 
 	if ( $domains_match && $protocols_match ) {
-		return;
+		return false;
 	}
+
+	$redirect_url = null;
+	$scheme = ( $current_blog->https ? 'https://' : 'http://' );
 
 	/**
 	 * If the domains do not match, then we work on the assumption that a large
@@ -75,7 +29,6 @@ function dark_matter_frontend_redirect() {
 	 * domain.
 	 */
 	if ( false === $domains_match ) {
-		$scheme = ( $current_blog->https ? 'https://' : 'http://' );
 		$path = '';
 
 		/**
@@ -90,7 +43,7 @@ function dark_matter_frontend_redirect() {
 		}
 
 		/** Construct the final redirect URL with the primary domain. */
-		$redirect_url = sprintf( '%1$s%2$s/%3$s', $scheme, $primary_domain, $path );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $primary_domain, $path );
 	}
 	else if ( false === $protocols_match ) {
 		/**
@@ -98,10 +51,119 @@ function dark_matter_frontend_redirect() {
 		 * and it is currently set to accept only HTTPS (or vice versa). Then this
 		 * handles that redirect.
 		 */
-		$redirect_url = sprintf( '%1$s://%2$s%3$s', ( $current_blog->https ? 'https' : 'http' ), $primary_domain, $_SERVER['REQUEST_URI'] );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $primary_domain, $_SERVER['REQUEST_URI'] );
 	}
 
-	wp_redirect( $redirect_url );
-	return;
+	if ( empty( $redirect_url ) ) {
+		return false;
+	}
+
+	return $redirect_url;
 }
-add_action( 'parse_query', 'dark_matter_frontend_redirect' );
+
+function dark_matter_main_redirect() {
+	/** If Preview, then exit and let the wp action hook handle it. */
+	if ( array_key_exists( 'preview', $_GET ) ) {
+		return;
+	}
+
+	/** If no domain has been mapped, then exit as well. */
+	$primary_domain = dark_matter_api_get_domain_primary();
+	if ( empty( $primary_domain ) ) {
+		return;
+	}
+
+	/** If a request on XML-RPC, then also exit. */
+	if ( defined( 'XMLRPC_REQUEST' ) ) {
+		return;
+	}
+
+	/** If a request for WP Customizer, then also exit. */
+	global $wp_customize;
+	if ( is_a( $wp_customize, 'WP_Customize_Manager' ) ) {
+		return;
+	}
+
+	/**
+	 * If it's the main site in the network, do not redirect. Also double-check
+	 * to make sure this isn't called in the admin area as parse_request action
+	 * is used both back-end and front-end.
+	 */
+	global $pagenow;
+
+	/**
+	 * Unlike before where we had differnet redirect hooks for the admin and
+	 * front-end, this new implementation combines both.
+	 */
+	if ( is_admin() ) {
+		/** Do not redirect AJAX requests. */
+		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-admin/admin-ajax.php' ) ) {
+			return;
+		}
+
+		/** Also do not redirect the Cron URL. */
+		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-cron.php' ) ) {
+			return;
+		}
+
+		$original_domain = dark_matter_api_get_domain_original();
+
+		if ( false === empty( $original_domain ) && false === strpos( $original_domain, $_SERVER[ 'HTTP_HOST' ] ) ) {
+			$protocol = ( is_ssl() ? 'https://' : 'http://' );
+			$protocol = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https://' : $protocol );
+
+			$domain = untrailingslashit( $original_domain );
+			$request = $_SERVER['REQUEST_URI'];
+
+			wp_redirect( sprintf( '%1$s%2$s%3$s', $protocol, $domain, $request ) );
+			exit;
+		}
+	}
+	else if ( in_array( $pagenow, array( 'wp-login.php', 'wp-register.php' ) ) ) {
+		/**
+		 * This logic is to make sure that the login and registration pages are
+		 * served on the admin domain and not the mapped.
+		 */
+		$original_domain = dark_matter_api_get_domain_original();
+
+		if ( false === empty( $original_domain ) && false === strpos( $original_domain, $_SERVER[ 'HTTP_HOST' ] ) ) {
+			$protocol = ( is_ssl() ? 'https://' : 'http://' );
+			$protocol = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https://' : $protocol );
+
+			$domain = untrailingslashit( $original_domain );
+			$request = $_SERVER['REQUEST_URI'];
+
+			wp_redirect( sprintf( '%1$s%2$s%3$s', $protocol, $domain, $request ) );
+			exit;
+		}
+	}
+	else {
+		/** Front-end redirects. */
+		$redirect = dark_matter_redirect_url();
+
+		if ( false !== $redirect ) {
+			wp_redirect( $redirect );
+		}
+	}
+}
+add_action( 'wp_loaded', 'dark_matter_main_redirect' );
+
+/**
+ * The helper API, is_preview(), can only property assert if the current request
+ * is a "preview" after parse_query is executed and the property is set. Prior
+ * to this is_preview() will return false but not necessarily because the
+ * request is a preview or not, but because the logic has not been executed yet.
+ *
+ * So to ensure that the Preview is on the Admin domain, we have to use the wp
+ * action hook to perform our check and any necessary redirects.
+ */
+function dark_matter_preview_redirect() {
+	if ( is_preview() ) {
+		$redirect = dark_matter_redirect_url();
+
+		if ( false !== $redirect ) {
+			wp_redirect( $redirect );
+		}
+	}
+}
+add_action( 'wp', 'dark_matter_preview_redirect' );
