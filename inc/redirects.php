@@ -14,7 +14,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 	$domain = untrailingslashit( $domain );
 
 	/** Now performance the checks on the domain and protocol. */
-	$domains_match = ( $domain === $_SERVER['HTTP_HOST'] );
+	$domains_match = ( false !== stripos( $domain, $_SERVER['HTTP_HOST'] ) );
 	$protocols_match = true;
 
 	if ( $is_https ) {
@@ -113,7 +113,7 @@ function dark_matter_main_redirect() {
 
 		$original_domain = dark_matter_api_get_domain_original();
 		$redirect = dark_matter_redirect_url( $original_domain, defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN || is_ssl() );
-		
+
 		if ( false !== $redirect ) {
 			wp_redirect( $redirect );
 			exit;
