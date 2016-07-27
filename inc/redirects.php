@@ -10,15 +10,23 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 		return false;
 	}
 
+	/** We ensure we have a clean domain and that there is no trailing slash. */
+	$domain = untrailingslashit( $domain );
+
+	/** Now performance the checks on the domain and protocol. */
 	$domains_match = ( $domain === $_SERVER['HTTP_HOST'] );
-	$protocols_match = ( $is_https && array_key_exists( 'HTTPS', $_SERVER ) && ( $_SERVER['HTTPS'] || 'on' === $_SERVER['HTTPS'] ) );
+	$protocols_match = true;
+
+	if ( $is_https ) {
+		$protocols_match = ( array_key_exists( 'HTTPS', $_SERVER ) && ( $_SERVER['HTTPS'] || 'on' === $_SERVER['HTTPS'] ) );
+	}
 
 	if ( $domains_match && $protocols_match ) {
 		return false;
 	}
 
 	$redirect_url = null;
-	$scheme = ( $current_blog->https ? 'https://' : 'http://' );
+	$scheme = ( $is_https ? 'https://' : 'http://' );
 
 	/**
 	 * If the domains do not match, then we work on the assumption that a large
