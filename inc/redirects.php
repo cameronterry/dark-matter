@@ -2,19 +2,16 @@
 
 defined( 'ABSPATH' ) or die();
 
-function dark_matter_redirect_url() {
+function dark_matter_redirect_url( $domain, $is_https ) {
 	global $current_blog;
 
-	$original_domain = dark_matter_api_get_domain_original();
-	$primary_domain = dark_matter_api_get_domain_primary();
-
 	/** No domain has been mapped. */
-	if ( empty( $primary_domain ) ) {
+	if ( empty( $domain ) ) {
 		return false;
 	}
 
-	$domains_match = ( $primary_domain === $_SERVER['HTTP_HOST'] );
-	$protocols_match = ( $current_blog->https === array_key_exists( 'HTTPS', $_SERVER ) );
+	$domains_match = ( $domain === $_SERVER['HTTP_HOST'] );
+	$protocols_match = ( $is_https && array_key_exists( 'HTTPS', $_SERVER ) && ( $_SERVER['HTTPS'] || 'on' === $_SERVER['HTTPS'] ) );
 
 	if ( $domains_match && $protocols_match ) {
 		return false;
@@ -43,7 +40,7 @@ function dark_matter_redirect_url() {
 		}
 
 		/** Construct the final redirect URL with the primary domain. */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $primary_domain, $path );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, $path );
 	}
 	else if ( false === $protocols_match ) {
 		/**
@@ -51,7 +48,7 @@ function dark_matter_redirect_url() {
 		 * and it is currently set to accept only HTTPS (or vice versa). Then this
 		 * handles that redirect.
 		 */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $primary_domain, $_SERVER['REQUEST_URI'] );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, $_SERVER['REQUEST_URI'] );
 	}
 
 	if ( empty( $redirect_url ) ) {
