@@ -111,8 +111,9 @@ function dark_matter_main_redirect() {
 			return;
 		}
 
+		$original_domain = dark_matter_api_get_domain_original();
 		$redirect = dark_matter_redirect_url( $original_domain, defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN || is_ssl() );
-
+		
 		if ( false !== $redirect ) {
 			wp_redirect( $redirect );
 			exit;
