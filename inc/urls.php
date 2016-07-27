@@ -118,8 +118,15 @@ function dark_matter_post_row_actions( $actions ) {
 	return $actions;
 }
 
-function dark_matter_admin_pre_option_home() {
+function dark_matter_admin_pre_option_home( $value ) {
 	global $current_blog;
+
+	$original_domain = dark_matter_api_get_domain_original();
+
+	if ( false === stripos( $value, $original_domain ) ) {
+		return $value;
+	}
+
 	$primary_domain = dark_matter_api_get_domain_primary();
 
 	if ( empty( $primary_domain ) ) {

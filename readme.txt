@@ -99,6 +99,11 @@ Dark Matter has been tested to ensure it functions correctly with the following 
 
 == Changelog ==
 
+= 1.0.0 Release Candidate 1 =
+
+* pre_option_home now checks to make sure the URL is actually the one used for the domain mapping before changing it.
+* This should improve the issue where Network Admin "Visit Sites" was being mapped for all websites and not just the one the user is looking at.
+
 = 0.11.0 (Beta) =
 
 * Completely rewritten the redirects logic to fix the following issues;
