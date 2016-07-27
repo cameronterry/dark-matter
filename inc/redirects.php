@@ -86,13 +86,13 @@ function dark_matter_main_redirect() {
 	 * to make sure this isn't called in the admin area as parse_request action
 	 * is used both back-end and front-end.
 	 */
-	global $pagenow;
+	global $current_blog, $pagenow;
 
 	/**
 	 * Unlike before where we had differnet redirect hooks for the admin and
 	 * front-end, this new implementation combines both.
 	 */
-	if ( is_admin() ) {
+	if ( is_admin() || in_array( $pagenow, array( 'wp-login.php', 'wp-register.php' ) ) ) {
 		/** Do not redirect AJAX requests. */
 		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-admin/admin-ajax.php' ) ) {
 			return;
@@ -103,43 +103,20 @@ function dark_matter_main_redirect() {
 			return;
 		}
 
-		$original_domain = dark_matter_api_get_domain_original();
+		$redirect = dark_matter_redirect_url( $original_domain, defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN || is_ssl() );
 
-		if ( false === empty( $original_domain ) && false === strpos( $original_domain, $_SERVER[ 'HTTP_HOST' ] ) ) {
-			$protocol = ( is_ssl() ? 'https://' : 'http://' );
-			$protocol = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https://' : $protocol );
-
-			$domain = untrailingslashit( $original_domain );
-			$request = $_SERVER['REQUEST_URI'];
-
-			wp_redirect( sprintf( '%1$s%2$s%3$s', $protocol, $domain, $request ) );
-			exit;
-		}
-	}
-	else if ( in_array( $pagenow, array( 'wp-login.php', 'wp-register.php' ) ) ) {
-		/**
-		 * This logic is to make sure that the login and registration pages are
-		 * served on the admin domain and not the mapped.
-		 */
-		$original_domain = dark_matter_api_get_domain_original();
-
-		if ( false === empty( $original_domain ) && false === strpos( $original_domain, $_SERVER[ 'HTTP_HOST' ] ) ) {
-			$protocol = ( is_ssl() ? 'https://' : 'http://' );
-			$protocol = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN ? 'https://' : $protocol );
-
-			$domain = untrailingslashit( $original_domain );
-			$request = $_SERVER['REQUEST_URI'];
-
-			wp_redirect( sprintf( '%1$s%2$s%3$s', $protocol, $domain, $request ) );
+		if ( false !== $redirect ) {
+			wp_redirect( $redirect );
 			exit;
 		}
 	}
 	else {
 		/** Front-end redirects. */
-		$redirect = dark_matter_redirect_url();
+		$redirect = dark_matter_redirect_url( $primary_domain, $current_blog->https );
 
 		if ( false !== $redirect ) {
 			wp_redirect( $redirect );
+			exit;
 		}
 	}
 }
