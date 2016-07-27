@@ -68,7 +68,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 
 function dark_matter_main_redirect() {
 	/** If Preview, then exit and let the wp action hook handle it. */
-	if ( array_key_exists( 'preview', $_GET ) ) {
+	if ( array_key_exists( 'preview', $_GET ) || array_key_exists( 'p', $_GET ) ) {
 		return;
 	}
 
