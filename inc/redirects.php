@@ -48,7 +48,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 		}
 
 		/** Construct the final redirect URL with the primary domain. */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, $path );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, trailingslashit( $domain ), ltrim( $path, '/' ) . '/' );
 	}
 	else if ( false === $protocols_match ) {
 		/**
@@ -56,7 +56,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 		 * and it is currently set to accept only HTTPS (or vice versa). Then this
 		 * handles that redirect.
 		 */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, $_SERVER['REQUEST_URI'] );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, trailingslashit( $domain ), ltrim( $_SERVER['REQUEST_URI'], '/' ) . '/' );
 	}
 
 	if ( empty( $redirect_url ) ) {
