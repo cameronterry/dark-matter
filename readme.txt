@@ -78,6 +78,10 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 1.0.0 =
+
+* [Fix] Cleaned up and eliminated some code duplication in the redirect on the "delete domain" action.
+
 = 1.0.0 Release Candidate 1 =
 
 * pre_option_home now checks to make sure the URL is actually the one used for the domain mapping before changing it.

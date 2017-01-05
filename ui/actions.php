@@ -87,24 +87,19 @@ function dark_matter_actions_delete_domain() {
 	$redirect_url = admin_url( 'options-general.php' );
 	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
 
+	$message = 'success_deleted';
+
 	if ( false === dark_matter_api_del_domain( $_GET['id'] ) ) {
-		$redirect_url = add_query_arg( array(
-			'message' => 'fail_deleted'
-		), $redirect_url );
-
-		wp_safe_redirect( $redirect_url );
-		die();
-	}
-	else {
-		$redirect_url = add_query_arg( array(
-			'message' => 'success_deleted'
-		), $redirect_url );
-
-		wp_safe_redirect( $redirect_url );
-		die();
+		$message = 'fail_deleted';
 	}
 
-	wp_die( __( 'An unexpected error with Domain Mapping has occurred.', 'dark-matter' ) );
+	$redirect_url = add_query_arg( array(
+		'message' => $message
+	), $redirect_url );
+	
+	wp_safe_redirect( $redirect_url );
+
+	die();
 }
 add_action( 'admin_action_dm_del_domain', 'dark_matter_actions_delete_domain' );
 
