@@ -85,7 +85,11 @@ Google Analytics) with over 60 websites.
 * Tidied up the readme.txt file to;
   * Standardise on the usage of WordPress Network / Network rather than WordPress Multisite / Multiste.
   * Line breaks now inline with Atom text editor.
+* [Bug] $wpdb is now explicitly global rather than implied in sunrise.php file.
 * [Bug] Fixed a bug with sub-folder WordPress Networks where redirecting from the Admin Domain to the Primary Domain would in some scenarios omit the forward slash between Domain and Request URI.
+* [Enhancement] Removed an unused parameter in dark_matter_api_get_domain().
+* [Enhancement] Removed some unnecessary wp_die() calls on admin actions as the logic meant they would never be reached.
+* [Enhancement] Removed an unused variable on dark_matter_blog_admin_menu() which was designed to catch the hook name. But the implementation changed direction.
 
 = 0.11.0 (Beta) =
 
