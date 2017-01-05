@@ -85,6 +85,7 @@ Google Analytics) with over 60 websites.
 * Tidied up the readme.txt file to;
   * Standardise on the usage of WordPress Network / Network rather than WordPress Multisite / Multiste.
   * Line breaks now inline with Atom text editor.
+* [Bug] Fixed a bug with sub-folder WordPress Networks where redirecting from the Admin Domain to the Primary Domain would in some scenarios omit the forward slash between Domain and Request URI.
 
 = 0.11.0 (Beta) =
 
