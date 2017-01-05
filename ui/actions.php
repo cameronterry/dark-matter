@@ -137,8 +137,6 @@ function dark_matter_actions_new_primary_domain() {
 		wp_safe_redirect( $redirect_url );
 		die();
 	}
-
-	wp_die( __( 'An unexpected error with Domain Mapping has occurred.', 'dark-matter' ) );
 }
 add_action( 'admin_action_dm_new_primary_domain', 'dark_matter_actions_new_primary_domain' );
 
@@ -171,8 +169,6 @@ function dark_matter_actions_set_domain_https() {
 		wp_safe_redirect( $redirect_url );
 		die();
 	}
-
-	wp_die( __( 'An unexpected error with Domain Mapping has occurred.', 'dark-matter' ) );
 }
 add_action( 'admin_action_dm_set_domain_https', 'dark_matter_actions_set_domain_https' );
 
@@ -205,7 +201,5 @@ function dark_matter_actions_unset_domain_https() {
 		wp_safe_redirect( $redirect_url );
 		die();
 	}
-
-	wp_die( __( 'An unexpected error with Domain Mapping has occurred.', 'dark-matter' ) );
 }
 add_action( 'admin_action_dm_unset_domain_https', 'dark_matter_actions_unset_domain_https' );
