@@ -34,8 +34,6 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 	 * domain.
 	 */
 	if ( false === $domains_match ) {
-		$path = '';
-
 		/**
 		 * Check to make sure Path is not just a forward slash and handle the
 		 * URL reconstruction appropriately.
