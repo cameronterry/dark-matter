@@ -5,7 +5,7 @@ defined( 'ABSPATH' ) or die();
 
 function dark_matter_blog_admin_menu() {
 	if ( false === is_main_site() ) {
-		$hook = add_options_page( __( 'Domain Mapping', 'dark-matter' ), __( 'Domain Mapping', 'dark-matter' ), 'activate_plugins', 'dark_matter_blog_settings', 'dark_matter_blog_domain_mapping' );
+		add_options_page( __( 'Domain Mapping', 'dark-matter' ), __( 'Domain Mapping', 'dark-matter' ), 'activate_plugins', 'dark_matter_blog_settings', 'dark_matter_blog_domain_mapping' );
 	}
 }
 add_action( 'admin_menu', 'dark_matter_blog_admin_menu' );
