@@ -11,6 +11,8 @@ if ( false === defined( 'SUNRISE_LOADED' ) ) {
 	define( 'SUNRISE_LOADED', true );
 }
 
+global $wpdb;
+
 $dmtable = $wpdb->base_prefix . 'domain_mapping';
 $domain = $_SERVER['HTTP_HOST'];
 $dark_matter_sql = '';
