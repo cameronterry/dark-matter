@@ -90,6 +90,7 @@ Google Analytics) with over 60 websites.
 * [Enhancement] Removed an unused parameter in dark_matter_api_get_domain().
 * [Enhancement] Removed some unnecessary wp_die() calls on admin actions as the logic meant they would never be reached.
 * [Enhancement] Removed an unused variable on dark_matter_blog_admin_menu() which was designed to catch the hook name. But the implementation changed direction.
+* [Enhancement] Removed unnecessary declaration of $path variable inside dark_matter_redirect_url() function.
 
 = 0.11.0 (Beta) =
 
