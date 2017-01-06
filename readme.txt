@@ -80,7 +80,7 @@ Google Analytics) with over 60 websites.
 
 = 1.0.0 =
 
-* [Fix] Cleaned up and eliminated some code duplication in the redirect on the "delete domain" action.
+* [Fix] Cleaned up and eliminated some code duplication on handling redirects from the admin actions for Add / Remove HTTPS, Make Primary, etc.
 
 = 1.0.0 Release Candidate 1 =
 
