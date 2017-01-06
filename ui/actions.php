@@ -35,39 +35,30 @@ function dark_matter_actions_add_domain() {
 		 * not mapped to another website within this WordPress Network.
 		 */
 		if ( 0 < dark_matter_api_domain_exists( $domain ) ) {
-			$redirect_url = add_query_arg( array(
-				'domain' => esc_url( $domain ),
-				'message' => 'in_use'
-			), $redirect_url );
-
-			wp_safe_redirect( $redirect_url );
-			die();
-		}
-
-		/**
-		 * Add the domain to the database and then handle a redirect depending on whether
-		 * the database insert was successful or unsuccessful.
-		 */
-		$new_domain = dark_matter_api_add_domain( $domain, $is_primary, $is_https );
-
-		if ( false === $new_domain ) {
-			$redirect_url = add_query_arg( array(
-				'domain' => esc_url( $domain ),
-				'message' => 'failed'
-			), $redirect_url );
-
-			wp_safe_redirect( $redirect_url );
-			die();
+			$message = 'in_use';
 		}
 		else {
-			$redirect_url = add_query_arg( array(
-				'domain' => esc_url( $domain ),
-				'message' => 'success_added'
-			), $redirect_url );
+			/**
+			 * Add the domain to the database and then handle a redirect depending on whether
+			 * the database insert was successful or unsuccessful.
+			 */
+			$new_domain = dark_matter_api_add_domain( $domain, $is_primary, $is_https );
 
-			wp_safe_redirect( $redirect_url );
-			die();
+			if ( false === $new_domain ) {
+				$message = 'failed';
+			}
+			else {
+				$message = 'success_added';
+			}
 		}
+
+		$redirect_url = add_query_arg( array(
+			'domain' => esc_url( $domain ),
+			'message' => $message
+		), $redirect_url );
+
+		wp_safe_redirect( $redirect_url );
+		die();
 	}
 
 	wp_die( __( 'An unexpected error with Domain Mapping has occurred.', 'dark-matter' ) );
@@ -96,7 +87,7 @@ function dark_matter_actions_delete_domain() {
 	$redirect_url = add_query_arg( array(
 		'message' => $message
 	), $redirect_url );
-	
+
 	wp_safe_redirect( $redirect_url );
 
 	die();
@@ -116,22 +107,17 @@ function dark_matter_actions_new_primary_domain() {
 	$redirect_url = admin_url( 'options-general.php' );
 	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
 
+	$message = 'success_new_primary';
+
 	if ( false === dark_matter_api_set_domain_primary( intval( $_GET['id'] ) ) ) {
-		$redirect_url = add_query_arg( array(
-			'message' => 'failed_new_primary'
-		), $redirect_url );
-
-		wp_safe_redirect( $redirect_url );
-		die();
+		$message = 'failed_new_primary';
 	}
-	else {
-		$redirect_url = add_query_arg( array(
-			'message' => 'success_new_primary'
-		), $redirect_url );
 
-		wp_safe_redirect( $redirect_url );
-		die();
-	}
+	wp_safe_redirect( add_query_arg( array(
+		'message' => $message
+	), $redirect_url ); );
+
+	die();
 }
 add_action( 'admin_action_dm_new_primary_domain', 'dark_matter_actions_new_primary_domain' );
 
@@ -148,22 +134,17 @@ function dark_matter_actions_set_domain_https() {
 	$redirect_url = admin_url( 'options-general.php' );
 	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
 
+	$message = 'success_set_https';
+
 	if ( false === dark_matter_api_set_domain_https( intval( $_GET['id'] ) ) ) {
-		$redirect_url = add_query_arg( array(
-			'message' => 'failed_set_https'
-		), $redirect_url );
-
-		wp_safe_redirect( $redirect_url );
-		die();
+		$message = 'failed_set_https';
 	}
-	else {
-		$redirect_url = add_query_arg( array(
-			'message' => 'success_set_https'
-		), $redirect_url );
 
-		wp_safe_redirect( $redirect_url );
-		die();
-	}
+	wp_safe_redirect( add_query_arg( array(
+		'message' => $message
+	), $redirect_url ); );
+
+	die();
 }
 add_action( 'admin_action_dm_set_domain_https', 'dark_matter_actions_set_domain_https' );
 
@@ -180,21 +161,16 @@ function dark_matter_actions_unset_domain_https() {
 	$redirect_url = admin_url( 'options-general.php' );
 	$redirect_url = add_query_arg( 'page', 'dark_matter_blog_settings', $redirect_url );
 
+	$message = 'success_unset_https';
+
 	if ( false === dark_matter_api_unset_domain_https( intval( $_GET['id'] ) ) ) {
-		$redirect_url = add_query_arg( array(
-			'message' => 'failed_unset_https'
-		), $redirect_url );
-
-		wp_safe_redirect( $redirect_url );
-		die();
+		$message = 'failed_unset_https';
 	}
-	else {
-		$redirect_url = add_query_arg( array(
-			'message' => 'success_unset_https'
-		), $redirect_url );
 
-		wp_safe_redirect( $redirect_url );
-		die();
-	}
+	wp_safe_redirect( add_query_arg( array(
+		'message' => $message
+	), $redirect_url ); );
+
+	die();
 }
 add_action( 'admin_action_dm_unset_domain_https', 'dark_matter_actions_unset_domain_https' );
