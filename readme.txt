@@ -80,6 +80,7 @@ Google Analytics) with over 60 websites.
 
 = 1.0.0 =
 
+* [New] Dark Matter will now warn Super Admins if the SUNRISE constant is not detected.
 * [Fix] Cleaned up and eliminated some code duplication on handling redirects from the admin actions for Add / Remove HTTPS, Make Primary, etc.
 
 = 1.0.0 Release Candidate 1 =
