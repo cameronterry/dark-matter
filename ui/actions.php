@@ -115,7 +115,7 @@ function dark_matter_actions_new_primary_domain() {
 
 	wp_safe_redirect( add_query_arg( array(
 		'message' => $message
-	), $redirect_url ); );
+	), $redirect_url ) );
 
 	die();
 }
@@ -142,7 +142,7 @@ function dark_matter_actions_set_domain_https() {
 
 	wp_safe_redirect( add_query_arg( array(
 		'message' => $message
-	), $redirect_url ); );
+	), $redirect_url ) );
 
 	die();
 }
@@ -169,7 +169,7 @@ function dark_matter_actions_unset_domain_https() {
 
 	wp_safe_redirect( add_query_arg( array(
 		'message' => $message
-	), $redirect_url ); );
+	), $redirect_url ) );
 
 	die();
 }
