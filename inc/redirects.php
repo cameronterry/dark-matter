@@ -12,6 +12,17 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 
 	/** We ensure we have a clean domain and that there is no trailing slash. */
 	$domain = untrailingslashit( $domain );
+	$request = strtok( $_SERVER['REQUEST_URI'], '?' );
+
+	/**
+	 * Handle the query string parameters. This is used to reassemble the URL
+	 * later for the redirect.
+	 */
+	$querystring = '';
+
+	if ( array_key_exists( 'QUERY_STRING', $_SERVER ) && false === empty( $_SERVER['QUERY_STRING'] ) ) {
+		$querystring = '?' . $_SERVER['QUERY_STRING'];
+	}
 
 	/** Now performance the checks on the domain and protocol. */
 	$domains_match = ( false !== stripos( $domain, $_SERVER['HTTP_HOST'] ) );
@@ -39,22 +50,34 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 		 * URL reconstruction appropriately.
 		 */
 		if ( '/' === $current_blog->path ) {
-			$path = $_SERVER['REQUEST_URI'];
+			$path = $request;
 		}
 		else {
-			$path = str_replace( $current_blog->path, '', $_SERVER['REQUEST_URI'] );
+			$path = str_replace( $current_blog->path, '', $request );
+		}
+
+		if ( trailingslashit( $_SERVER['HTTP_HOST'] . $request ) === $current_blog->domain . $current_blog->path ) {
+			$path = '/';
+		}
+
+		if ( '/' !== substr( $path, 0, 1 ) ) {
+			$path = '/' . $path;
 		}
 
 		/** Construct the final redirect URL with the primary domain. */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, trailingslashit( $domain ), ltrim( $path, '/' ) . '/' );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, trailingslashit( $path ) . $querystring );
 	}
 	else if ( false === $protocols_match ) {
+		if ( '/' !== substr( $request, 0, 1 ) ) {
+			$request = '/' . $request;
+		}
+
 		/**
 		 * Someone has attempted to access the URL on the HTTP version of the blog
 		 * and it is currently set to accept only HTTPS (or vice versa). Then this
 		 * handles that redirect.
 		 */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, trailingslashit( $domain ), ltrim( $_SERVER['REQUEST_URI'], '/' ) . '/' );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, trailingslashit( $request ) . $querystring );
 	}
 
 	if ( empty( $redirect_url ) ) {
