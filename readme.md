@@ -27,7 +27,7 @@ rejected.
   * Provide per blog administrator users the ability to map a domain for their website.
   * WP REST API works on both "Admin domain" and "primary domain", so that it can be used in the Admin area and front-end.
 * **Does not**;
-  * Have domain mapping options for the root website.
+  * Provide any domain mapping options for the root website.
   * For the admin area to work on the "primary domain" (it will use the "Admin domain" always.)
   * Permit a single website to work on multiple domains.
   * Enable protocol on a per Post / Page basis.
