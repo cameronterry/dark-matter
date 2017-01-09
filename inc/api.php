@@ -105,7 +105,7 @@ function dark_matter_api_unmap_permalink( $permalink ) {
 	$original_domain = untrailingslashit( $current_blog->original_domain );
 	$primary_domain = dark_matter_api_get_domain_primary();
 
-	if ( empty( $primary_domain ) ) {
+	if ( empty( $primary_domain ) || false !== strpos( $permalink, 'admin-ajax.php' ) ) {
 		return $permalink;
 	}
 
