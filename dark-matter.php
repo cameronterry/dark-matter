@@ -28,7 +28,7 @@ defined( 'ABSPATH' ) or die();
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '1.0.0-rc1' );
+define( 'DM_VERSION', '1.0.0' );
 define( 'DM_DB_VERSION', '133' );
 
 /**
