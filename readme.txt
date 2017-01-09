@@ -78,6 +78,13 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 1.0.0 =
+
+* First release.
+* [Fix] Removed a breaking conditional when mapping "home" option on the admin side. This was causing issues with;
+  * The "Visit Site" link in the Admin bar on the admin area.
+  * Yoast SEO snippet preview when Editing a post / page.
+
 = 1.0.0 Release Candidate 4 =
 
 * Cleaned up and eliminated some code duplication on handling redirects from the admin actions for Add / Remove HTTPS, Make Primary, etc.
