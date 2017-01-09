@@ -76,6 +76,10 @@ Dark Matter is currently in use on a single WordPress Network (sub-directory)
 handling between 10 million and 15 million page views per month (according to
 Google Analytics) with over 60 websites.
 
+== Screenshots ==
+
+1. Admin interface for mapping Domains to a specific website.
+
 == Changelog ==
 
 = 1.0.0 =
