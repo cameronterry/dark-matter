@@ -99,6 +99,11 @@ function dark_matter_main_redirect() {
 		return;
 	}
 
+	/** Also do not redirect for the version 1.x.x of the WP REST API. */
+	if ( defined( 'JSON_API_VERSION' ) && ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-json/' ) || ( defined( 'JSON_REQUEST' ) && JSON_REQUEST ) ) ) {
+		return;
+	}
+
 	/** If a request on XML-RPC, then also exit. */
 	if ( defined( 'XMLRPC_REQUEST' ) ) {
 		return;
