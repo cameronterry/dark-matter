@@ -78,10 +78,16 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.0 Release Candidate 4 =
 
+* Cleaned up and eliminated some code duplication on handling redirects from the admin actions for Add / Remove HTTPS, Make Primary, etc.
 * [New] Dark Matter will now warn Super Admins if the SUNRISE constant is not detected.
-* [Fix] Cleaned up and eliminated some code duplication on handling redirects from the admin actions for Add / Remove HTTPS, Make Primary, etc.
+* [Fix] admin_url() will no longer map to the primary domain if the URL contains "admin-ajax.php", as usage of this is common for AJAX powered plugins (for now).
+  * This only occurs if WordPress is viewed through a "mapped domain" (primary or not) and should leave the admin-side untouched.
+* [Fix] Redirects no longer erroneously contain a trailing forward slash after all the query string parameters.
+* [Fix] An issue where sub-folder Networks would not redirect properly if omitting the trailing forward slash.
+  * For example; wordpress.test/sitetwo would redirect to www.example.com/sitetwo instead of www.example.com
+* [Fix] If WP REST API v1.x.x is in use, then Dark Matter will no longer redirect to the primary domain.
 
 = 1.0.0 Release Candidate 1 =
 
