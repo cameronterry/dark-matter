@@ -3,7 +3,7 @@
  * Plugin Name: Dark Matter
  * Plugin URI: https://cameronterry.supernovawp.com/dark-matter/
  * Description: A domain mapping plugin from Project Dark Matter.
- * Version: 1.0.0 RC1
+ * Version: 1.0.0
  * Author: Cameron Terry
  * Author URI: https://cameronterry.supernovawp.com/
  * Text Domain: dark-matter
@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) or die();
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '1.0.0' );
-define( 'DM_DB_VERSION', '133' );
+define( 'DM_DB_VERSION', '20170109' );
 
 /**
  * Dark Matter Prepare
@@ -109,9 +109,8 @@ function dark_matter_maybe_create_tables() {
 
 function dark_matter_maybe_upgrade() {
 	if ( is_network_admin() ) {
-		if ( DM_DB_VERSION !== get_network_option( null, 'dark_matter_db_version', null ) ) {
+		if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
 			dark_matter_maybe_create_tables();
-			update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION );
 		}
 	}
 }
