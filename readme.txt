@@ -81,6 +81,7 @@ Google Analytics) with over 60 websites.
 = 1.0.0 =
 
 * First release.
+* [Fix] The first column of the Domain Mapping UI no longer just displays the digit one (1) but now the Domain ID.
 * [Fix] Removed a breaking conditional when mapping "home" option on the admin side. This was causing issues with;
   * The "Visit Site" link in the Admin bar on the admin area.
   * Yoast SEO snippet preview when Editing a post / page.

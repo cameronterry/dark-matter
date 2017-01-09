@@ -83,7 +83,7 @@ function dark_matter_blog_domain_mapping_row( $data ) {
 	}
 ?>
 	<tr id="domain-<?php echo( $data->id ); ?>" data-id="<?php echo( $data->id ); ?>" data-primary="<?php echo( $data->is_primary ); ?>">
-		<th scope="row">1</th>
+		<th scope="row"><?php echo( $data->id ); ?></th>
 		<td>
 			<?php printf( '<a href="%2$s://%1$s">%1$s</a>', $data->domain, ( $data->is_https ? 'https' : 'http' ) ); ?>
 		</td>
