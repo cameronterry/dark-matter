@@ -3,7 +3,7 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 4.5
 Tested up to: 4.7
-Stable tag: 1.0.0 RC4
+Stable tag: 1.0.0 RC5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -82,9 +82,10 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
-= 1.0.0 =
+= 1.0.0 Release Candidate 5 =
 
-* First release.
+* [Fix][Critical] An issue where Dark Matter would not catch all Admin requests to initiate the correct redirect.
+* [Fix] Redirects for direct PHP files - like wp-login.php - no longer erroneously contain a trailing forward slash.
 * [Fix] Improved the database version checking mechanism slightly for which, in some scenarios, may run more than once.
 * [Fix] The first column of the Domain Mapping UI no longer just displays the digit one (1) but now the Domain ID.
 * [Fix] Removed a breaking conditional when mapping "home" option on the admin side. This was causing issues with;
