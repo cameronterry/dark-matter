@@ -159,7 +159,7 @@ function dark_matter_main_redirect() {
 		}
 	}
 }
-add_action( 'parse_request', 'dark_matter_main_redirect', 100 );
+add_action( 'plugins_loaded', 'dark_matter_main_redirect', 100 );
 
 /**
  * The helper API, is_preview(), can only property assert if the current request
