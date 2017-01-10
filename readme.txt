@@ -83,6 +83,7 @@ Google Analytics) with over 60 websites.
 * [Fix] The pre_option_home no longer fires on the page powering Customizer, meaning the IFrame loads on the Admin domain entirely. This should resolve;
   * An authentication issue which sometimes results in a "Cheating huh?" error.
   * A problem where Customizer couldn't load the IFrame if the Admin area is HTTPS and the mapped domain is HTTP due to browser security.
+* [Fix] Removed an unused variable in the Admin-side pre_option_home filter handler.
 * Removed a blank question in the FAQ of the readme file.
 
 = 1.0.0 Release Candidate 5 =
