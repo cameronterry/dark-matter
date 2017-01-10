@@ -119,13 +119,11 @@ function dark_matter_post_row_actions( $actions ) {
 }
 
 function dark_matter_admin_pre_option_home( $value ) {
-	global $current_blog;
-
-	$original_domain = dark_matter_api_get_domain_original();
+	global $current_blog, $pagenow;
 
 	$primary_domain = dark_matter_api_get_domain_primary();
 
-	if ( empty( $primary_domain ) ) {
+	if ( 'customize.php' === $pagenow || empty( $primary_domain ) ) {
 		return false;
 	}
 

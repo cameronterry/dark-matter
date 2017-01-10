@@ -3,7 +3,7 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 4.5
 Tested up to: 4.7
-Stable tag: 1.0.0 RC5
+Stable tag: 1.0.0 RC6
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,10 +35,6 @@ and not for migrating from another domain mapping plugin.
 2. Go to the Network Admin > Plugins area and click "Network Activate".
 3. Copy the /root/wp-content/plugins/dark-matter/sunrise.php to /root/wp-content/sunrise.php
 4. Modify wp-config.php to include - define( 'SUNRISE', 'on' );
-
-= Migrating from another domain mapping plugin =
-
-T.B.D.
 
 = Web Server steps =
 
@@ -81,6 +77,13 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 1.0.0 Release Candidate 6 =
+
+* [Fix] The pre_option_home no longer fires on the page powering Customizer, meaning the IFrame loads on the Admin domain entirely. This should resolve;
+  * An authentication issue which sometimes results in a "Cheating huh?" error.
+  * A problem where Customizer couldn't load the IFrame if the Admin area is HTTPS and the mapped domain is HTTP due to browser security.
+* Removed a blank question in the FAQ of the readme file.
 
 = 1.0.0 Release Candidate 5 =
 
