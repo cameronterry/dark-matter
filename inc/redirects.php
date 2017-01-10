@@ -64,8 +64,12 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 			$path = '/' . $path;
 		}
 
+		if ( '.php' !== substr( $path, -4 ) ) {
+			$path = trailingslashit( $path );
+		}
+
 		/** Construct the final redirect URL with the primary domain. */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, trailingslashit( $path ) . $querystring );
+		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, $path . $querystring );
 	}
 	else if ( false === $protocols_match ) {
 		if ( '/' !== substr( $request, 0, 1 ) ) {
