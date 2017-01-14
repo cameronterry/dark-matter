@@ -78,6 +78,10 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 1.0.0 Release Candidate 7 =
+
+* [Fix][Critical] Redirect is no longer occurs on cron jobs. This was causing issues for certain installations.
+
 = 1.0.0 Release Candidate 6 =
 
 * [Fix] The pre_option_home no longer fires on the page powering Customizer, meaning the IFrame loads on the Admin domain entirely. This should resolve;
