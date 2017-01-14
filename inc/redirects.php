@@ -103,6 +103,11 @@ function dark_matter_main_redirect() {
 		return;
 	}
 
+	/** Do not redirect the Cron URL. */
+	if ( defined( 'DOING_CRON' ) ) {
+		return;
+	}
+
 	/** Also do not redirect for the version 1.x.x of the WP REST API. */
 	if ( defined( 'JSON_API_VERSION' ) && ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-json/' ) || ( defined( 'JSON_REQUEST' ) && JSON_REQUEST ) ) ) {
 		return;
