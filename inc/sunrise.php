@@ -21,12 +21,7 @@ $dark_matter_sql = '';
  * Get the Blog ID based on the provided Domain Name. This check is also done
  * for and without the www. sub-domain part.
  */
-if ( ( $domain_no_www = preg_replace( '|^www\.|', '', $domain ) ) !== $domain ) {
-	$dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain IN(%s, %s) LIMIT 1", $domain, $domain_no_www );
-}
-else {
-	$dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain = %s LIMIT 1", $domain );
-}
+$dark_matter_sql = $wpdb->prepare( "SELECT * FROM {$dmtable} WHERE domain = %s LIMIT 1", $domain );
 
 $mapped_domain = $wpdb->get_row( $dark_matter_sql );
 

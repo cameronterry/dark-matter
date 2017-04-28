@@ -25,7 +25,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 	}
 
 	/** Now performance the checks on the domain and protocol. */
-	$domains_match = ( false !== stripos( $domain, $_SERVER['HTTP_HOST'] ) );
+	$domains_match = ( strtolower( $domain ) === strtolower( $_SERVER['HTTP_HOST'] ) );
 	$protocols_match = true;
 
 	if ( $is_https ) {
