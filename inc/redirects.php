@@ -150,7 +150,7 @@ function dark_matter_main_redirect() {
 		$redirect = dark_matter_redirect_url( $original_domain, defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN || is_ssl() );
 
 		if ( false !== $redirect ) {
-			wp_redirect( $redirect );
+			wp_redirect( $redirect, 301 );
 			exit;
 		}
 	}
@@ -159,7 +159,7 @@ function dark_matter_main_redirect() {
 		$redirect = dark_matter_redirect_url( $primary_domain, $current_blog->https );
 
 		if ( false !== $redirect ) {
-			wp_redirect( $redirect );
+			wp_redirect( $redirect, 301 );
 			exit;
 		}
 	}
@@ -184,7 +184,7 @@ function dark_matter_preview_redirect() {
 			$redirect = dark_matter_redirect_url( $original_domain, $current_blog->https );
 
 			if ( false !== $redirect ) {
-				wp_redirect( $redirect );
+				wp_redirect( $redirect, 301 );
 				exit;
 			}
 		}
