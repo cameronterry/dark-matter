@@ -11,7 +11,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 	}
 
 	/** We ensure we have a clean domain and that there is no trailing slash. */
-	$domain = strtok( $domain, '/' );
+	$domain = untrailingslashit( $domain );
 	$request = strtok( $_SERVER['REQUEST_URI'], '?' );
 
 	/**
@@ -25,7 +25,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 	}
 
 	/** Now performance the checks on the domain and protocol. */
-	$domains_match = ( strtolower( $domain ) === strtolower( $_SERVER['HTTP_HOST'] ) );
+	$domains_match = ( strtolower( strtok( $domain, '/' ) ) === strtolower( $_SERVER['HTTP_HOST'] ) );
 	$protocols_match = true;
 
 	if ( $is_https ) {
