@@ -81,6 +81,7 @@ Google Analytics) with over 60 websites.
 = 1.0.0 Release Candidate 8 =
 
 * Tightened the domain detection when determining redirects.
+* Added support for Github Updater plugin for those who feel overly adventurous...
 * [Fix] The non-www. version of a primary domain will now redirect to the www. version of the primary domain.
 * [Fix] Now issues 301 (permanent) redirects for secondary and admin domains rather than 302.
 
