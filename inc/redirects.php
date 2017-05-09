@@ -44,7 +44,7 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 	 * portion of the URL or the whole thing needs reworked to be the primary
 	 * domain.
 	 */
-	if ( false === $domains_match ) {
+	if ( false === $domains_match || false === $protocols_match ) {
 		/**
 		 * Check to make sure Path is not just a forward slash and handle the
 		 * URL reconstruction appropriately.
@@ -70,18 +70,6 @@ function dark_matter_redirect_url( $domain, $is_https ) {
 
 		/** Construct the final redirect URL with the primary domain. */
 		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, $path . $querystring );
-	}
-	else if ( false === $protocols_match ) {
-		if ( '/' !== substr( $request, 0, 1 ) ) {
-			$request = '/' . $request;
-		}
-
-		/**
-		 * Someone has attempted to access the URL on the HTTP version of the blog
-		 * and it is currently set to accept only HTTPS (or vice versa). Then this
-		 * handles that redirect.
-		 */
-		$redirect_url = sprintf( '%1$s%2$s%3$s', $scheme, $domain, trailingslashit( $request ) . $querystring );
 	}
 
 	if ( empty( $redirect_url ) ) {
