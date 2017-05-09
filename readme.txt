@@ -84,6 +84,8 @@ Google Analytics) with over 60 websites.
 * Added support for Github Updater plugin for those who feel overly adventurous...
 * [Fix] The non-www. version of a primary domain will now redirect to the www. version of the primary domain.
 * [Fix] Now issues 301 (permanent) redirects for secondary and admin domains rather than 302.
+* [Fix] Made sure the URL reconstruction for protocol mismatch is the same as domain mismatch.
+  * This should stop certain situations resulting in a "Too Many Redirects" error.
 
 = 1.0.0 Release Candidate 7 =
 
