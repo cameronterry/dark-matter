@@ -10,7 +10,9 @@ function dark_matter_api_add_domain( $domain = '', $is_primary = false, $is_http
 		return false;
 	}
 
-	dark_matter_api_unset_domain_primary();
+	if ( $is_primary ) {
+		dark_matter_api_unset_domain_primary();
+	}
 
 	$insert = $wpdb->insert( $wpdb->dmtable, array(
 		'blog_id' => get_current_blog_id(),
