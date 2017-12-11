@@ -38,8 +38,12 @@ add_action( 'wp_head', 'dark_matter_sso_wp_head' );
  */
 function dark_matter_sso_create_token() {
 	if ( 'dmsso' === filter_input( INPUT_GET, 'action' ) ) {
+
+		header( 'Content-Type: text/javascript' );
+
+		echo "// dm_sso" . PHP_EOL;
+
 		if ( is_user_logged_in() ) {
-			header( 'Content-Type: text/javascript' );
 
 			/**
 			 * Construct an authentication token which is passed back along with an
