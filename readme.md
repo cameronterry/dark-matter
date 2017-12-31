@@ -50,9 +50,10 @@ Dark Matter may work but the developers have yet to test it.
   * 5.5.x
   * 5.6.x
   * 7.0.x
+  * 7.1.x
 * WordPress;
-  * 4.6.x
-  * 4.7.x
+  * 4.8.x
+  * 4.9.x
 
 ## Reporting problems
 
