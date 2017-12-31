@@ -10,7 +10,6 @@
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * GitHub Plugin URI: https://github.com/cameronterry/dark-matter
- * GitHub Branch: 1.0.x
  *
  * Dark Matter is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
