@@ -1,8 +1,8 @@
 # WARNING
 
 **Whilst the terms and conditions of this plugin do not ask you to surrender
-your soul to us... but once it has finished breaking your site it might feel
-that it has!**
+your soul to us... once it has finished breaking your site, it might as well
+feel that it has!**
 
 # Dark Matter
 
@@ -79,7 +79,7 @@ that responses are not always instant.
 
 ## Contributing
 
-Please ensure you have **What Dark Matter does and does not** first and make
+Please ensure you have read**What Dark Matter does and does not** first and make
 sure to read the notes below. But don't be dissuaded, pull requests are welcome
 :-)
 
