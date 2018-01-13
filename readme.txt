@@ -2,8 +2,8 @@
 Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 4.5
-Tested up to: 4.7.4
-Stable tag: 1.0.0 RC8
+Tested up to: 4.9.1
+Stable tag: 1.0.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -77,6 +77,22 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 1.0.0 - Kapteyn =
+
+Jacobus Cornelius Kapteyn was a Dutch astronomer who was the first to suggest the existence of "dark matter" in his paper [First Attempt at a Theory of the Arrangement and Motion of the Sidereal System](http://adsabs.harvard.edu/abs/1922ApJ....55..302K) in 1922.
+
+* First release.
+* [New] New setting "Allow Logins?" is now available. When enabled;
+  * Allows visitors to log in to the primary mapped domain without logging in through the admin domain.
+  * Stops the check for the single sign-on session with the admin domain, causing scenarios where users log in and get logged out immediately.
+  * Ensures that functionality for WooCommerce and Membership plugins functions without modification.
+
+= 1.0.0 Release Candidate 9 =
+
+* Fixes an issue that was causing the primary domain to become unset. (Thanks @svandragt)
+* Ensures that at a minimum, the single sign-on JavaScript returns at least a JavaScript comment and a mime-type header rather than blank. (Thanks @svandragt)
+* Added some rudimentary assets for the plugin banner and icon.
 
 = 1.0.0 Release Candidate 8 =
 
