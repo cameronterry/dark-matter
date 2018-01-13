@@ -8,7 +8,7 @@ function dark_matter_settings_init() {
 
 	add_settings_section( 'dark_matter_blog_section', 'Dark Matter Blog Settings', 'dark_matter_blog_section_title', 'dark_matter_blog' );
 
-	add_settings_field( 'dark_matter_allow_logins', 'Allow Logins?', 'dark_matter_allow_logins_checkbox', 'dark_matter_blog', 'dark_matter_blog_section' );
+	add_settings_field( 'dark_matter_allow_logins', 'Allow Login on domains?', 'dark_matter_allow_logins_checkbox', 'dark_matter_blog', 'dark_matter_blog_section' );
 }
 add_action( 'admin_init', 'dark_matter_settings_init' );
 
@@ -18,6 +18,8 @@ function dark_matter_blog_section_title() { ?>
 
 function dark_matter_allow_logins_checkbox() { ?>
 	<input name="dark_matter_allow_logins" type="checkbox" value="yes" <?php checked( 'yes', get_option( 'dark_matter_allow_logins' , 'no' ) ); ?> />
+	<p class="description"><?php _e( 'Dark Matter logs out users on the mapped domains if they are not logged in on the admin domain.', 'dark-matter' ); ?></p>
+	<p class="description"><?php _e( 'Check this box to disable that behaviour. Useful for websites with membership like functionality.', 'dark-matter' ); ?></p>
 <?php }
 
 function dark_matter_blog_admin_menu() {
