@@ -3,6 +3,23 @@
 /** A bit of security for those who are too clever for their own good. */
 defined( 'ABSPATH' ) or die();
 
+function dark_matter_settings_init() {
+	register_setting( 'dark_matter_blog', 'dark_matter_allow_logins' );
+
+	add_settings_section( 'dark_matter_blog_section', 'Dark Matter Blog Settings', 'dark_matter_blog_section_title', 'dark_matter_blog' );
+
+	add_settings_field( 'dark_matter_allow_logins', 'Allow Logins?', 'dark_matter_allow_logins_checkbox', 'dark_matter_blog', 'dark_matter_blog_section' );
+}
+add_action( 'admin_init', 'dark_matter_settings_init' );
+
+function dark_matter_blog_section_title() { ?>
+	<h2><?php _e( 'Blog Settings', 'dark-matter' ); ?></h2>
+<?php }
+
+function dark_matter_allow_logins_checkbox() { ?>
+	<input name="dark_matter_allow_logins" type="checkbox" value="yes" <?php checked( 'yes', get_option( 'dark_matter_allow_logins' , 'no' ) ); ?> />
+<?php }
+
 function dark_matter_blog_admin_menu() {
 	if ( false === is_main_site() ) {
 		add_options_page( __( 'Domain Mapping', 'dark-matter' ), __( 'Domain Mapping', 'dark-matter' ), 'activate_plugins', 'dark_matter_blog_settings', 'dark_matter_blog_domain_mapping' );
@@ -16,12 +33,19 @@ function dark_matter_blog_domain_mapping() {
 	if ( false === current_user_can( 'activate_plugins' ) ) {
 		wp_die( __( 'Insufficient permissions.', 'dark-matter' ) );
 	}
-
 ?>
 	<div class="wrap dark-matter-blog">
 		<h1><?php _e( 'Domain Mapping for this Blog', 'dark-matter' ); ?></h1>
+		<form method="post" action="options.php">
+			<?php
+				settings_fields( 'dark_matter_blog' );
+				do_settings_sections( 'dark_matter_blog' );
+
+				submit_button();
+			?>
+		</form>
 		<h2><?php _e( 'Mapped Domains', 'dark-matter' ); ?></h2>
-		<table id="dark-matter-blog-domains" data-delete-nonce="<?php echo( wp_create_nonce( 'delete_nonce' ) ); ?>" data-primary-nonce="<?php echo( wp_create_nonce( 'primary_nonce' ) ); ?>">
+		<table id="dark-matter-blog-domains" class="domains" data-delete-nonce="<?php echo( wp_create_nonce( 'delete_nonce' ) ); ?>" data-primary-nonce="<?php echo( wp_create_nonce( 'primary_nonce' ) ); ?>">
 			<thead>
 				<tr>
 					<th>#</th>
