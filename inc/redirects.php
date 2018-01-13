@@ -134,6 +134,14 @@ function dark_matter_main_redirect() {
 			return;
 		}
 
+		/** If Allow Logins is enabled, then disable redirects for log out. */
+		if ( 'wp-login.php' === $pagenow && 'yes' === get_option( 'dark_matter_allow_logins' , 'no' ) ) {
+			/** Make sure it is only the logout action. */
+			if ( isset( $_GET['action'] ) && 'logout' === $_GET['action'] ) {
+				return;
+			}
+		}
+
 		$original_domain = dark_matter_api_get_domain_original();
 		$redirect = dark_matter_redirect_url( $original_domain, defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN || is_ssl() );
 
