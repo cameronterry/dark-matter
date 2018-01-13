@@ -24,33 +24,33 @@ defined( 'ABSPATH' ) or die();
  * including the header otherwise people will end up in an infinite loop.
  */
 function dark_matter_sso_wp_head() {
-	if ( is_main_site() ) {
-		return;
-	}
+    if ( is_main_site() ) {
+        return;
+    }
 
-	/**
-	 * Check to see if the user is logged in to the current website on the mapped
-	 * domain. We then check the setting "Allow Logins?" to see if it is enabled.
-	 * In this scenario, the administrator has decided to let users log in only to
-	 * the map domain in some scenarios; likely utilising a Membership-like or
-	 * WooCommerce style plugin.
-	 */
-	if ( is_user_logged_in() && 'yes' === get_option( 'dark_matter_allow_logins' , 'no' ) ) {
-		$user = wp_get_current_user();
+    /**
+     * Check to see if the user is logged in to the current website on the mapped
+     * domain. We then check the setting "Allow Logins?" to see if it is enabled.
+     * In this scenario, the administrator has decided to let users log in only to
+     * the map domain in some scenarios; likely utilising a Membership-like or
+     * WooCommerce style plugin.
+     */
+    if ( is_user_logged_in() && 'yes' === get_option( 'dark_matter_allow_logins' , 'no' ) ) {
+        $user = wp_get_current_user();
 
-		/**
-		 * Finally we check the user role to see if the user can edit content and
-		 * apply the default functionality for Contributor's and above. The logic
-		 * is like this because any one with Administrative or Content curation
-		 * ability will have access to the /wp-admin/ area which is on the admin
-		 * domain. Therefore ... users will need to login through the admin first.
-		 */
-		if ( is_a( $user, 'WP_User' ) && false === current_user_can( 'edit_posts' ) ) {
-			return;
-		}
-	}
+        /**
+         * Finally we check the user role to see if the user can edit content and
+         * apply the default functionality for Contributor's and above. The logic
+         * is like this because any one with Administrative or Content curation
+         * ability will have access to the /wp-admin/ area which is on the admin
+         * domain. Therefore ... users will need to login through the admin first.
+         */
+        if ( is_a( $user, 'WP_User' ) && false === current_user_can( 'edit_posts' ) ) {
+            return;
+        }
+    }
 
-	?><script type="text/javascript" src="<?php echo( network_site_url( sprintf( '/wp-login.php?action=%1$s', false === is_user_logged_in() ? 'dmsso' : 'dmcheck' ) ) ); ?>"></script><?php
+    ?><script type="text/javascript" src="<?php echo( network_site_url( sprintf( '/wp-login.php?action=%1$s', false === is_user_logged_in() ? 'dmsso' : 'dmcheck' ) ) ); ?>"></script><?php
 }
 add_action( 'wp_head', 'dark_matter_sso_wp_head' );
 
@@ -59,45 +59,45 @@ add_action( 'wp_head', 'dark_matter_sso_wp_head' );
  * blog.
  */
 function dark_matter_sso_create_token() {
-	if ( 'dmsso' === filter_input( INPUT_GET, 'action' ) ) {
+    if ( 'dmsso' === filter_input( INPUT_GET, 'action' ) ) {
 
-		header( 'Content-Type: text/javascript' );
+        header( 'Content-Type: text/javascript' );
 
-		echo "// dm_sso" . PHP_EOL;
+        echo "// dm_sso" . PHP_EOL;
 
-		if ( is_user_logged_in() ) {
+        if ( is_user_logged_in() ) {
 
-			/**
-			 * Construct an authentication token which is passed back along with an
-			 * action flag to tell the front end to
-			 */
-			$url = add_query_arg( array(
-				'__dm_action' => 'authorise',
-				'auth' => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) )
-			), $_SERVER['HTTP_REFERER'] );
+            /**
+             * Construct an authentication token which is passed back along with an
+             * action flag to tell the front end to
+             */
+            $url = add_query_arg( array(
+                '__dm_action' => 'authorise',
+                'auth' => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) )
+            ), $_SERVER['HTTP_REFERER'] );
 
-			printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
-		}
+            printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
+        }
 
-		/**
-		 * End the request here as we do not want to process the rest of the
-		 * wp-login.php page as it is not needed.
-		 */
-		die();
-	}
-	else if ( 'dmcheck' === filter_input( INPUT_GET, 'action' ) ) {
-		header( 'Content-Type: text/javascript' );
+        /**
+         * End the request here as we do not want to process the rest of the
+         * wp-login.php page as it is not needed.
+         */
+        die();
+    }
+    else if ( 'dmcheck' === filter_input( INPUT_GET, 'action' ) ) {
+        header( 'Content-Type: text/javascript' );
 
-		if ( false === is_user_logged_in() ) {
-			$url = add_query_arg( array(
-				'__dm_action' => 'logout'
-			), $_SERVER['HTTP_REFERER'] );
+        if ( false === is_user_logged_in() ) {
+            $url = add_query_arg( array(
+                '__dm_action' => 'logout'
+            ), $_SERVER['HTTP_REFERER'] );
 
-			printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
-		}
+            printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
+        }
 
-		die();
-	}
+        die();
+    }
 }
 add_action( 'login_init', 'dark_matter_sso_create_token' );
 
@@ -105,39 +105,39 @@ add_action( 'login_init', 'dark_matter_sso_create_token' );
  * Stage 3) Validate the authentication token and log the User in.
  */
 function dark_matter_validate_sso_validate_token() {
-	/**
-	 * First check to see if the authorise action is provided in the URL.
-	 */
-	if ( 'authorise' === filter_input( INPUT_GET, '__dm_action' ) ) {
-		/**
-		 * Validate the token provided in the URL.
-		 */
-		$user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth' ), 'auth' );
+    /**
+     * First check to see if the authorise action is provided in the URL.
+     */
+    if ( 'authorise' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        /**
+         * Validate the token provided in the URL.
+         */
+        $user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth' ), 'auth' );
 
-		/**
-		 * Check if the validate token worked and we have a User ID. It will
-		 * display an error message or login the User if all works out well.
-		 */
-		if ( false === $user_id ) {
-			wp_die( 'Oops! Something went wrong with logging in.' );
-		}
-		else {
-			/**
-			 * Create the Login session cookie and redirect the user to the
-			 * current page with the URL querystrings for Domain Mapping SSO
-			 * removed.
-			 */
-			wp_set_auth_cookie( $user_id );
-			wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ) );
+        /**
+         * Check if the validate token worked and we have a User ID. It will
+         * display an error message or login the User if all works out well.
+         */
+        if ( false === $user_id ) {
+            wp_die( 'Oops! Something went wrong with logging in.' );
+        }
+        else {
+            /**
+             * Create the Login session cookie and redirect the user to the
+             * current page with the URL querystrings for Domain Mapping SSO
+             * removed.
+             */
+            wp_set_auth_cookie( $user_id );
+            wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ) );
 
-			die();
-		}
-	}
-	else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
-		wp_logout();
-		wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ) );
+            die();
+        }
+    }
+    else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        wp_logout();
+        wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ) );
 
-		die();
-	}
+        die();
+    }
 }
 add_action( 'plugins_loaded', 'dark_matter_validate_sso_validate_token' );

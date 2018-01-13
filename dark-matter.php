@@ -46,13 +46,13 @@ $wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
 $mapped_domain = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
 
 if ( false === empty( $mapped_domain ) ) {
-	$current_blog->https = boolval( $mapped_domain->is_https );
-	$current_blog->primary_domain = $mapped_domain->domain;
+    $current_blog->https = boolval( $mapped_domain->is_https );
+    $current_blog->primary_domain = $mapped_domain->domain;
 }
 
 /** Check to see if the Original Domain is present and if not, set it. */
 if ( false === property_exists( $current_blog, 'original_domain' ) ) {
-	$current_blog->original_domain = $current_blog->domain . $current_blog->path;
+    $current_blog->original_domain = $current_blog->domain . $current_blog->path;
 }
 
 /**
@@ -73,52 +73,52 @@ require_once( DM_PATH . '/sso/index.php' );
  * to the correct destination.
  */
 function dark_matter_activate() {
-	$destination = WP_CONTENT_DIR . '/sunrise.php';
-	$source = DM_PATH . '/sunrise.php';
+    $destination = WP_CONTENT_DIR . '/sunrise.php';
+    $source = DM_PATH . '/sunrise.php';
 
-	if ( is_writable( WP_CONTENT_DIR ) && false === file_exists( $destination ) && is_readable( $source ) ) {
-		@copy( $source, $destination );
-	}
+    if ( is_writable( WP_CONTENT_DIR ) && false === file_exists( $destination ) && is_readable( $source ) ) {
+        @copy( $source, $destination );
+    }
 }
 register_activation_hook( __FILE__, 'dark_matter_activate' );
 
 function dark_matter_enqueue_scripts( $hook ) {
-	if ( 'settings_page_dark_matter_blog_settings' === $hook ) {
-		wp_enqueue_style( 'dark-matter-css', plugin_dir_url( __FILE__ ) . 'ui/css/blog.css', null, DM_VERSION );
-	}
+    if ( 'settings_page_dark_matter_blog_settings' === $hook ) {
+        wp_enqueue_style( 'dark-matter-css', plugin_dir_url( __FILE__ ) . 'ui/css/blog.css', null, DM_VERSION );
+    }
 }
 add_action( 'admin_enqueue_scripts', 'dark_matter_enqueue_scripts' );
 
 function dark_matter_maybe_create_tables() {
-	global $wpdb;
+    global $wpdb;
 
-	/** As dbDelta function is called before the upgrade file is included. */
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+    /** As dbDelta function is called before the upgrade file is included. */
+    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 
-	$charset_collate = $wpdb->get_charset_collate();
+    $charset_collate = $wpdb->get_charset_collate();
 
-	$sql = "CREATE TABLE `{$wpdb->dmtable}` (
-		id BIGINT(20) NOT NULL AUTO_INCREMENT,
-		blog_id BIGINT(20) NOT NULL,
-		is_primary TINYINT(4) DEFAULT '0',
-		domain VARCHAR(255) NOT NULL,
-		active TINYINT(4) DEFAULT '1',
-		is_https TINYINT(4) DEFAULT '0',
-		PRIMARY KEY  (id)
-	) $charset_collate;";
+    $sql = "CREATE TABLE `{$wpdb->dmtable}` (
+        id BIGINT(20) NOT NULL AUTO_INCREMENT,
+        blog_id BIGINT(20) NOT NULL,
+        is_primary TINYINT(4) DEFAULT '0',
+        domain VARCHAR(255) NOT NULL,
+        active TINYINT(4) DEFAULT '1',
+        is_https TINYINT(4) DEFAULT '0',
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
 
-	dbDelta( $sql );
+    dbDelta( $sql );
 }
 
 function dark_matter_maybe_upgrade() {
-	if ( is_network_admin() ) {
-		if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
-			dark_matter_maybe_create_tables();
-		}
-	}
+    if ( is_network_admin() ) {
+        if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
+            dark_matter_maybe_create_tables();
+        }
+    }
 }
 
 function dark_matter_plugins_loaded() {
-	dark_matter_maybe_upgrade();
+    dark_matter_maybe_upgrade();
 }
 add_action( 'plugins_loaded', 'dark_matter_plugins_loaded' );
