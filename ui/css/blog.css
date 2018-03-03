@@ -1,44 +1,44 @@
 .dark-matter-blog {}
 
-  .dark-matter-blog table {
-    border-spacing:0;
-    border-collapse:collapse;
-    width:100%;
-  }
-
-    .dark-matter-blog table > tbody > tr > td {
-      background-color:#FFFFFF;
-      border-bottom:1px solid #DDDDDD;
-      line-height:1.42857143;
-      padding:8px;
-      text-align:left;
-      vertical-align:middle;
+    .dark-matter-blog table.domains {
+        border-spacing:0;
+        border-collapse:collapse;
+        width:100%;
     }
 
-    .dark-matter-blog table > tbody > tr > th {
-      background-color:#FFFFFF;
-      border-bottom:1px solid #DDDDDD;
-      line-height:1.42857143;
-      padding:8px;
-      text-align:left;
-      vertical-align:middle;
+    .dark-matter-blog table.domains > tbody > tr > td {
+        background-color:#FFFFFF;
+        border-bottom:1px solid #DDDDDD;
+        line-height:1.42857143;
+        padding:8px;
+        text-align:left;
+        vertical-align:middle;
     }
 
-    .dark-matter-blog table > thead > tr > th {
-      background-color:#0073AA;
-      color:#FFFFFF;
-      line-height:1.42857143;
-      padding:8px;
-      text-align:left;
-      vertical-align:bottom;
+    .dark-matter-blog table.domains > tbody > tr > th {
+        background-color:#FFFFFF;
+        border-bottom:1px solid #DDDDDD;
+        line-height:1.42857143;
+        padding:8px;
+        text-align:left;
+        vertical-align:middle;
     }
 
-    .dark-matter-blog table > tbody > tr.success > td,
-    .dark-matter-blog table > tbody > tr.success > th {
-      background-color:#DFF0D8;
+    .dark-matter-blog table.domains > thead > tr > th {
+        background-color:#0073AA;
+        color:#FFFFFF;
+        line-height:1.42857143;
+        padding:8px;
+        text-align:left;
+        vertical-align:bottom;
     }
 
-    .dark-matter-blog table > tbody > tr.warning > td,
-    .dark-matter-blog table > tbody > tr.warning > th {
-      background-color:#F2DEDE;
+    .dark-matter-blog table.domains > tbody > tr.success > td,
+    .dark-matter-blog table.domains > tbody > tr.success > th {
+        background-color:#DFF0D8;
+    }
+
+    .dark-matter-blog table.domains > tbody > tr.warning > td,
+    .dark-matter-blog table.domains > tbody > tr.warning > th {
+        background-color:#F2DEDE;
     }

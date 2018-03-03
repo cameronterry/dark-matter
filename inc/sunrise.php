@@ -4,11 +4,11 @@
 defined( 'ABSPATH' ) or die();
 
 if ( defined( 'COOKIE_DOMAIN' ) ) {
-	wp_die( __( "Dark Matter's single sign on will not work if a COOKIE_DOMAIN is defined.", 'dark-matter' ) );
+    wp_die( __( "Dark Matter's single sign on will not work if a COOKIE_DOMAIN is defined.", 'dark-matter' ) );
 }
 
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
-	define( 'SUNRISE_LOADED', true );
+    define( 'SUNRISE_LOADED', true );
 }
 
 global $wpdb;
@@ -31,21 +31,21 @@ $mapped_domain = $wpdb->get_row( $dark_matter_sql );
  * integer then we can proceed to construct the $current_blog global variable.
  */
 if ( false === empty( $mapped_domain ) ) {
-	/** Set the domain for the Cookie setting to the mapped domain. */
-	define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
+    /** Set the domain for the Cookie setting to the mapped domain. */
+    define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
 
-	/** Set a constant to indicate that a mapped domain is in use. */
-	define( 'DOMAIN_MAPPING', true );
+    /** Set a constant to indicate that a mapped domain is in use. */
+    define( 'DOMAIN_MAPPING', true );
 
-	$current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d", $mapped_domain->blog_id ) );
-	$current_blog->original_domain = $current_blog->domain . $current_blog->path;
-	$current_blog->domain = $_SERVER[ 'HTTP_HOST' ];
-	$current_blog->path = '/';
-	$current_blog->https = boolval( $mapped_domain->is_https );
+    $current_blog = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM $wpdb->blogs WHERE blog_id = %d", $mapped_domain->blog_id ) );
+    $current_blog->original_domain = $current_blog->domain . $current_blog->path;
+    $current_blog->domain = $_SERVER[ 'HTTP_HOST' ];
+    $current_blog->path = '/';
+    $current_blog->https = boolval( $mapped_domain->is_https );
 
-	$blog_id = $mapped_domain->blog_id;
-	$site_id = $current_blog->site_id;
+    $blog_id = $mapped_domain->blog_id;
+    $site_id = $current_blog->site_id;
 
-	$current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->site} WHERE id = %s LIMIT 1", $site_id ) );
+    $current_site = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->site} WHERE id = %s LIMIT 1", $site_id ) );
     $current_site->blog_id = $wpdb->get_var( $wpdb->prepare( "SELECT * FROM {$wpdb->blogs} WHERE domain = %s AND path = %s LIMIT 1", $current_site->domain, $current_site->path ) );
 }
