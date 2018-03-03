@@ -102,12 +102,21 @@ function dark_matter_main_redirect() {
     /** Do not redirect the Cron URL. */
     if ( defined( 'DOING_CRON' ) ) {
         return;
-    }
+	}
 
-    /** Also do not redirect for the version 1.x.x of the WP REST API. */
-    if ( defined( 'JSON_API_VERSION' ) && ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-json/' ) || ( defined( 'JSON_REQUEST' ) && JSON_REQUEST ) ) ) {
-        return;
-    }
+	/**
+	 * Do not redirect REST API calls. Why is it implemented this way rather than
+	 * some simplified method using constants? It appears that the form of REST
+	 * API that made it WordPress Core does not set a constant until after the
+	 * hook, "parse_request". Which is a lot later than this one.
+	 * 
+	 * So with that ... forced to resort to good ol' fashioned URI checking :-/
+	 * 
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/default-filters.php#L402 Hook to rest_api_loaded().
+	 */
+	if ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-json/' ) ) {
+		return;
+	}
 
     /** If a request on XML-RPC, then also exit. */
     if ( defined( 'XMLRPC_REQUEST' ) ) {
