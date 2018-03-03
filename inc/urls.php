@@ -139,7 +139,7 @@ function dark_matter_admin_pre_option_home( $value ) {
  * depends on getting the mapped domain gets it correctly.
  */
 if ( is_admin() || ( defined( 'DOING_CRON' ) && DOING_CRON ) && property_exists( $current_blog, 'primary_domain' ) ) {
-    add_filter( 'pre_option_home', 'dark_matter_admin_pre_option_home' );
+    add_filter( 'home_url', 'dark_matter_home_url', 10, 4 );
 
     add_filter( 'comment_row_actions', 'dark_matter_post_row_actions' );
     add_filter( 'post_row_actions', 'dark_matter_post_row_actions' );
@@ -150,6 +150,14 @@ if ( is_admin() || ( defined( 'DOING_CRON' ) && DOING_CRON ) && property_exists(
     add_filter( 'get_comment_author_url', 'dark_matter_api_map_permalink' );
 
     add_filter( 'preview_post_link', 'dark_matter_api_unmap_permalink' );
+}
+
+function dark_matter_home_url( $url, $path, $scheme, $blog_id ) {
+    if ( 'rest' !== $scheme ) {
+        return dark_matter_api_map_permalink( $url );
+    }
+
+    return $url;
 }
 
 function dark_matter_allowed_redirect_hosts( $allowed_hosts ) {
