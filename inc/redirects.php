@@ -87,7 +87,7 @@ function dark_matter_main_redirect() {
 	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		return;
 	}
-	
+
     /** If Preview, then exit and let the wp action hook handle it. */
     if ( array_key_exists( 'preview', $_GET ) || array_key_exists( 'p', $_GET ) ) {
         return;
@@ -104,10 +104,21 @@ function dark_matter_main_redirect() {
         return;
     }
 
-    /** Also do not redirect for the version 1.x.x of the WP REST API. */
-    if ( defined( 'JSON_API_VERSION' ) && ( false !== strpos( $_SERVER['REQUEST_URI'], 'wp-json/' ) || ( defined( 'JSON_REQUEST' ) && JSON_REQUEST ) ) ) {
-        return;
-    }
+    /**
+	 * Do not redirect REST API calls. Why is it implemented this way rather than
+	 * some simplified method using constants? It appears that the form of REST
+	 * API that made it WordPress Core does not set a constant until after the
+	 * hook, "parse_request". Which is a lot later than this one.
+	 *
+	 * So with that ... forced to resort to good ol' fashioned URI checking :-/
+	 *
+	 * @link https://github.com/WordPress/WordPress/blob/4.9.4/wp-includes/default-filters.php#L402 Hook to rest_api_loaded().
+	 */
+    $rest_url_prefix = trailingslashit( rest_get_url_prefix() );
+
+    if ( false !== strpos( $_SERVER['REQUEST_URI'], $rest_url_prefix ) ) {
+		return;
+	}
 
     /** If a request on XML-RPC, then also exit. */
     if ( defined( 'XMLRPC_REQUEST' ) ) {
