@@ -5,7 +5,7 @@
  * Description: A domain mapping plugin from Project Dark Matter.
  * Version: 1.0.0
  * Author: Cameron Terry
- * Author URI: https://cameronterry.supernovawp.com/
+ * Author URI: https://cameronterry.co.uk/
  * Text Domain: dark-matter
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,10 +27,13 @@
  */
 
 /** A bit of security for those who are too clever for their own good. */
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '1.0.0' );
 define( 'DM_DB_VERSION', '20170109' );
 
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+    require_once DM_PATH . '/cli/domain.php';
+}
