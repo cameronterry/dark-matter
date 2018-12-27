@@ -84,6 +84,43 @@ class DarkMatter_Domains {
     }
 
     /**
+     * Retrieve a domain for a specific Site in WordPress.
+     *
+     * @param  string    $fqdn FQDN to search for.
+     * @return DM_Domain       Domain object.
+     */
+    public function get( $fqdn = '' ) {
+        if ( ! empty( $fqdn ) ) {
+            return false;
+        }
+
+        /**
+         * Attempt to retrieve the domain from cache.
+         */
+        $cache_key = md5( $fqdn );
+        $_domain   = wp_cache_get( $cache_key, 'dark-matter' );
+
+        /**
+         * If the domain cannot be retrieved from cache, attempt to retrieve it
+         * from the database.
+         */
+        if ( ! $_domain ) {
+            $_domain = $this->wpdb->prepare( "SELECT * FROM {$this->dm_table} WHERE domain = %s", $fqdn );
+
+            if ( empty( $_domain ) ) {
+                return null;
+            }
+
+            /**
+             * Update the cache.
+             */
+            wp_cache_add( $cache_key, $_domain, 'dark-matter' );
+        }
+
+        return new DM_Domain( $_domain );
+    }
+
+    /**
      * Check if a domain exists. This checks against all websites and is not
      * site specific.
      *
