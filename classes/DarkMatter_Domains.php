@@ -22,7 +22,7 @@ class DarkMatter_Domains {
      *
      * @return void
      */
-    public function __constructor() {
+    public function __construct() {
         global $wpdb;
 
         /**
@@ -160,6 +160,8 @@ class DarkMatter_Domains {
         if ( ! empty( $fqdn ) ) {
             return false;
         }
+
+        return false;
     }
 
     /**
