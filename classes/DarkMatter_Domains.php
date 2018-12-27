@@ -37,18 +37,36 @@ class DarkMatter_Domains {
         $this->wpdb = $wpdb;
     }
 
+    /**
+     * Add a domain for a specific Site in WordPress.
+     *
+     * @param  string  $domain FQDN to be added.
+     * @return boolean         True on success. False otherwise.
+     */
     public function add( $domain = '' ) {
         if ( ! empty( $domain ) ) {
             return false;
         }
     }
 
+    /**
+     * Delete a domain for a specific Site in WordPress.
+     *
+     * @param  string  $domain FQDN to be deleted.
+     * @return boolean         True on success. False otherwise.
+     */
     public function delete( $domain = '' ) {
         if ( ! empty( $domain ) ) {
             return false;
         }
     }
 
+    /**
+     * Find a domain for a specific Site in WordPress.
+     *
+     * @param  string    $domain FQDN to search for.
+     * @return DM_Domain         Domain object.
+     */
     public function find( $domain = '' ) {
         if ( ! empty( $domain ) ) {
             return false;
@@ -64,25 +82,51 @@ class DarkMatter_Domains {
          */
     }
 
+    /**
+     * Check if a domain exists. This checks against all websites and is not
+     * site specific.
+     *
+     * @param  string  $domain FQDN to search for.
+     * @return boolean         True if found. False otherwise.
+     */
     public function is_exist( $domain = '' ) {
         if ( ! empty( $domain ) ) {
             return false;
         }
     }
 
+    /**
+     * Check if a domain is reserved. This checks against all websites and is
+     * not site specific.
+     *
+     * @param  string  $domain FQDN to search for.
+     * @return boolean         True if the domain is reserved. False otherwise.
+     */
     public function is_reserved( $domain = '' ) {
         if ( ! empty( $domain ) ) {
             return false;
         }
     }
 
+    /**
+     * Add a reserved domain for the Network in WordPress.
+     *
+     * @param  string  $domain FQDN to be added.
+     * @return boolean         True on success. False otherwise.
+     */
     public function reserve( $domain = '' ) {
         if ( ! empty( $domain ) ) {
             return false;
         }
     }
 
-    public function update( $domain = '' ) {
+    /**
+     * Find a domain for a specific Site in WordPress.
+     *
+     * @param  string  $dm_domain Domain object which is to be updated.
+     * @return boolean            True on success. False on failure.
+     */
+    public function update( $dm_domain ) {
         if ( ! empty( $domain ) ) {
             return false;
         }
