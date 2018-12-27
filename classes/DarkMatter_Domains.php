@@ -105,7 +105,7 @@ class DarkMatter_Domains {
          * from the database.
          */
         if ( ! $_domain ) {
-            $_domain = $this->wpdb->prepare( "SELECT * FROM {$this->dm_table} WHERE domain = %s", $fqdn );
+            $_domain = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->dm_table} WHERE domain = %s", $fqdn ) );
 
             if ( empty( $_domain ) ) {
                 return null;
