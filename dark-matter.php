@@ -31,8 +31,11 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '1.0.0' );
+define( 'DM_VERSION', '2.0.0' );
 define( 'DM_DB_VERSION', '20170109' );
+
+require_once DM_PATH . '/classes/DarkMatter_Domains.php';
+require_once DM_PATH . '/classes/DM_Domain.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
     require_once DM_PATH . '/cli/domain.php';
