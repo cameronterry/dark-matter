@@ -81,7 +81,7 @@ class DarkMatter_Domains {
      * @return boolean       True on success. False otherwise.
      */
     public function delete( $fqdn = '' ) {
-        if ( ! empty( $fqdn ) ) {
+        if ( empty( $fqdn ) ) {
             return false;
         }
     }
@@ -93,7 +93,7 @@ class DarkMatter_Domains {
      * @return DM_Domain       Domain object.
      */
     public function find( $fqdn = '' ) {
-        if ( ! empty( $fqdn ) ) {
+        if ( empty( $fqdn ) ) {
             return false;
         }
 
@@ -115,7 +115,7 @@ class DarkMatter_Domains {
      * @return DM_Domain       Domain object.
      */
     public function get( $fqdn = '' ) {
-        if ( ! empty( $fqdn ) ) {
+        if ( empty( $fqdn ) ) {
             return false;
         }
 
@@ -153,7 +153,7 @@ class DarkMatter_Domains {
      * @return boolean         True if found. False otherwise.
      */
     public function is_exist( $fqdn = '' ) {
-        if ( ! empty( $fqdn ) ) {
+        if ( empty( $fqdn ) ) {
             return false;
         }
 
@@ -170,7 +170,7 @@ class DarkMatter_Domains {
      * @return boolean       True if the domain is reserved. False otherwise.
      */
     public function is_reserved( $fqdn = '' ) {
-        if ( ! empty( $fqdn ) ) {
+        if ( empty( $fqdn ) ) {
             return false;
         }
     }
@@ -182,7 +182,7 @@ class DarkMatter_Domains {
      * @return boolean       True on success. False otherwise.
      */
     public function reserve( $fqdn = '' ) {
-        if ( ! empty( $fqdn ) ) {
+        if ( empty( $fqdn ) ) {
             return false;
         }
 
