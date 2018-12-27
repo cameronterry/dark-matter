@@ -40,13 +40,38 @@ class DarkMatter_Domains {
     /**
      * Add a domain for a specific Site in WordPress.
      *
-     * @param  string  $domain FQDN to be added.
-     * @return boolean         True on success. False otherwise.
+     * @param  string            $domain FQDN to be added.
+     * @return DM_Domain|boolean         True on success. False otherwise.
      */
-    public function add( $fqdn = '' ) {
-        if ( ! empty( $fqdn ) ) {
+    public function add( $fqdn = '', $is_primary = false, $is_https = false ) {
+        if ( empty( $fqdn ) ) {
             return false;
         }
+
+        /**
+         * Check that the FQDN is not already stored in the database.
+         */
+        if ( $this->is_exist( $fqdn ) ) {
+            return false;
+        }
+
+        $_domain = array(
+            'active'     => true,
+            'blog_id'    => get_current_blog_id(),
+            'domain'     => $fqdn,
+            'is_primary' => ( ! $is_primary ? false : true ),
+            'is_https'   => ( ! $is_https ? false : true ),
+        );
+
+        $result = $this->wpdb->insert( $this->dm_table, $_domain, array(
+            '%d', '%d', '%s', '%d', '%d',
+        ) );
+
+        if ( $result ) {
+            return new DM_Domain( (object) $_domain );
+        }
+
+        return false;
     }
 
     /**
