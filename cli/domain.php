@@ -2,8 +2,6 @@
 
 defined( 'ABSPATH' ) || die;
 
-use WP_CLI;
-
 class DarkMatter_Domain_CLI {
     /**
      * Add a domain to a site on the WordPress Network.
@@ -27,14 +25,54 @@ class DarkMatter_Domain_CLI {
      *
      *      wp --url="sites.my.com/siteone" darkmatter domain add www.primarydomain.com --primary --https
      */
-    public function add() {
-        /** Check to make sure the domain isn't reserved. */
+    public function add( $args, $assoc_args ) {
+        if ( empty( $args[0] ) ) {
+            WP_CLI::error( __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+        }
 
-        /** Check to make sure the domain isn't already assigned to a site. */
+        $fqdn = $args[0];
 
-        /** Check to make sure another domain isn't set to Primary (can be overridden by the --force flag). */
+        $opts = wp_parse_args( $assoc_args, [
+            'force'   => false,
+            'https'   => false,
+            'primary' => false,
+        ] );
 
-        /** Add the domain. */
+        $db = DarkMatter_Domains::instance();
+
+        var_dump( $db->is_exist( $fqdn ) );die;
+
+        /**
+         * Check to make sure the domain isn't reserved.
+         */
+        if ( $db->is_reserved( $fqdn ) ) {
+            WP_CLI::error( __( 'The domain has been reserved by WordPress Network administrators.', 'dark-matter' ) );
+        }
+
+        /**
+         * Check to make sure the domain isn't already assigned to a site.
+         */
+        if ( $db->is_exist( $fqdn ) ) {
+            WP_CLI::error( __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
+        }
+
+        /**
+         * Check to make sure another domain isn't set to Primary (can be overridden by the --force flag).
+         */
+        if ( $db->is_exist( $fqdn ) && ! $opts['force'] ) {
+            WP_CLI::error( __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
+        }
+
+        /**
+         * Add the domain.
+         */
+        $result = $db->add( $fqdn, $opts['primary'], $opts['https'] );
+
+        if ( false === $result ) {
+            WP_CLI::error( __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
+        }
+
+        WP_CLI::success( $fqdn . __( ': was added.', 'dark-matter' ) );
     }
 
     /**
