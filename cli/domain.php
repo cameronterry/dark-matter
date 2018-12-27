@@ -40,8 +40,6 @@ class DarkMatter_Domain_CLI {
 
         $db = DarkMatter_Domains::instance();
 
-        var_dump( $db->is_exist( $fqdn ) );die;
-
         /**
          * Check to make sure the domain isn't reserved.
          */
