@@ -43,8 +43,8 @@ class DarkMatter_Domains {
      * @param  string  $domain FQDN to be added.
      * @return boolean         True on success. False otherwise.
      */
-    public function add( $domain = '' ) {
-        if ( ! empty( $domain ) ) {
+    public function add( $fqdn = '' ) {
+        if ( ! empty( $fqdn ) ) {
             return false;
         }
     }
@@ -52,11 +52,11 @@ class DarkMatter_Domains {
     /**
      * Delete a domain for a specific Site in WordPress.
      *
-     * @param  string  $domain FQDN to be deleted.
-     * @return boolean         True on success. False otherwise.
+     * @param  string  $fqdn FQDN to be deleted.
+     * @return boolean       True on success. False otherwise.
      */
-    public function delete( $domain = '' ) {
-        if ( ! empty( $domain ) ) {
+    public function delete( $fqdn = '' ) {
+        if ( ! empty( $fqdn ) ) {
             return false;
         }
     }
@@ -64,17 +64,18 @@ class DarkMatter_Domains {
     /**
      * Find a domain for a specific Site in WordPress.
      *
-     * @param  string    $domain FQDN to search for.
-     * @return DM_Domain         Domain object.
+     * @param  string    $fqdn FQDN to search for.
+     * @return DM_Domain       Domain object.
      */
-    public function find( $domain = '' ) {
-        if ( ! empty( $domain ) ) {
+    public function find( $fqdn = '' ) {
+        if ( ! empty( $fqdn ) ) {
             return false;
         }
 
         /**
          * Attempt to find the Domain from Object Cache.
          */
+
 
         /**
          * Load from the database. Starting with domain mapping table and then
@@ -86,11 +87,11 @@ class DarkMatter_Domains {
      * Check if a domain exists. This checks against all websites and is not
      * site specific.
      *
-     * @param  string  $domain FQDN to search for.
+     * @param  string  $fqdn FQDN to search for.
      * @return boolean         True if found. False otherwise.
      */
-    public function is_exist( $domain = '' ) {
-        if ( ! empty( $domain ) ) {
+    public function is_exist( $fqdn = '' ) {
+        if ( ! empty( $fqdn ) ) {
             return false;
         }
     }
@@ -99,11 +100,11 @@ class DarkMatter_Domains {
      * Check if a domain is reserved. This checks against all websites and is
      * not site specific.
      *
-     * @param  string  $domain FQDN to search for.
-     * @return boolean         True if the domain is reserved. False otherwise.
+     * @param  string  $fqdn FQDN to search for.
+     * @return boolean       True if the domain is reserved. False otherwise.
      */
-    public function is_reserved( $domain = '' ) {
-        if ( ! empty( $domain ) ) {
+    public function is_reserved( $fqdn = '' ) {
+        if ( ! empty( $fqdn ) ) {
             return false;
         }
     }
@@ -111,11 +112,11 @@ class DarkMatter_Domains {
     /**
      * Add a reserved domain for the Network in WordPress.
      *
-     * @param  string  $domain FQDN to be added.
-     * @return boolean         True on success. False otherwise.
+     * @param  string  $fqdn FQDN to be added.
+     * @return boolean       True on success. False otherwise.
      */
-    public function reserve( $domain = '' ) {
-        if ( ! empty( $domain ) ) {
+    public function reserve( $fqdn = '' ) {
+        if ( ! empty( $fqdn ) ) {
             return false;
         }
     }
