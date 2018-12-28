@@ -66,7 +66,7 @@ class DarkMatter_Domain_CLI {
          */
         $result = $db->add( $fqdn, $opts['primary'], $opts['https'] );
 
-        if ( false === $result ) {
+        if ( ! $result ) {
             WP_CLI::error( __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
         }
 
@@ -96,12 +96,45 @@ class DarkMatter_Domain_CLI {
      *
      *      wp --url="sites.my.com/siteone" darkmatter domain remove www.primarydomain.com --force
      */
-    public function remove() {
-        /** Check to make sure the domain is assigned to the site. */
+    public function remove( $args, $assoc_args ) {
+        if ( empty( $args[0] ) ) {
+            WP_CLI::error( __( 'Please include a fully qualified domain name to be removed.', 'dark-matter' ) );
+        }
 
-        /** Check to make sure the domain is not Primary (can be overridden by the --force flag). */
+        $fqdn = $args[0];
 
-        /** Remove the domain. */
+        $opts = wp_parse_args( $assoc_args, [
+            'force' => false,
+        ] );
+
+        $db = DarkMatter_Domains::instance();
+
+        /**
+         * Check to make sure the domain is assigned to the site.
+         */
+        $_domain = $db->get( $fqdn );
+
+        if ( ! $_domain || get_current_blog_id() !== $_domain->blog_id ) {
+            WP_CLI::error( __( 'The domain cannot be found.', 'dark-matter' ) );
+        }
+
+        /**
+         * Check to make sure the domain is not Primary (can be overridden by the --force flag).
+         */
+        if ( $_domain->is_primary && ! $opts['force'] ) {
+            WP_CLI::error( __( 'You cannot delete a primary domain. Use --force flag if you really want to and know what you are doing.', 'dark-matter' ) );
+        }
+
+        /**
+         * Remove the domain.
+         */
+        $result = $db->delete( $fqdn );
+
+        if ( ! $result ) {
+            WP_CLI::error( __( 'Sorry, the domain could not be removed. An unknown error occurred.', 'dark-matter' ) );
+        }
+
+        WP_CLI::success( $fqdn . __( ': has been removed from this site', 'dark-matter' ) );
     }
 
     /**
