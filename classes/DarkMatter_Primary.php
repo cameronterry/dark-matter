@@ -48,7 +48,7 @@ class DarkMatter_Primary {
         /**
          * Attempt to retrieve the domain from cache.
          */
-        $cache_key      = md5( $fqdn ) . '-primary';
+        $cache_key      = $site_id . '-primary';
         $primary_domain = wp_cache_get( $cache_key, 'dark-matter' );
 
         /**
