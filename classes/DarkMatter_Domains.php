@@ -108,19 +108,36 @@ class DarkMatter_Domains {
     /**
      * Delete a domain for a specific Site in WordPress.
      *
-     * @param  string  $fqdn FQDN to be deleted.
-     * @return boolean       True on success. False otherwise.
+     * @param  string           $fqdn FQDN to be deleted.
+     * @return WP_Error|boolean       True on success. False otherwise.
      */
-    public function delete( $fqdn = '' ) {
+    public function delete( $fqdn = '', $force = true ) {
         if ( empty( $fqdn ) ) {
-            return false;
+            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be removed.', 'dark-matter' ) );
         }
 
         /**
          * Cannot delete what does not exist.
          */
         if ( ! $this->is_exist( $fqdn ) ) {
-            return false;
+            return new WP_Error( 'exists', __( 'The domain cannot be found.', 'dark-matter' ) );
+        }
+
+        /**
+         * Check to make sure the domain is assigned to the site.
+         */
+        $_domain = $this->get( $fqdn );
+
+        if ( ! $_domain || get_current_blog_id() !== $_domain->blog_id ) {
+            return new WP_Error( 'not found', __( 'The domain cannot be found.', 'dark-matter' ) );
+        }
+
+        /**
+         * Check to make sure that the domain is not a primary and if it is that
+         * the force flag has been provided.
+         */
+        if ( $_domain->is_primary && ! $force ) {
+            return new WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
         }
 
         $result = $this->wpdb->delete( $this->dm_table, array(
@@ -134,7 +151,7 @@ class DarkMatter_Domains {
             return true;
         }
 
-        return false;
+        return new WP_Error( 'unknown', __( 'Sorry, the domain could not be deleted. An unknown error occurred.', 'dark-matter' ) );;
     }
 
     /**
