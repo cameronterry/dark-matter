@@ -4,6 +4,39 @@ defined( 'ABSPATH' ) || die;
 
 class DarkMatter_Primary {
     /**
+     * The Domain Mapping table name for use by the various methods.
+     *
+     * @var string
+     */
+    private $dmtable = '';
+
+    /**
+     * Reference to the global $wpdb and is more for code cleaniness.
+     *
+     * @var boolean
+     */
+    private $wpdb = false;
+
+    /**
+     * Constructor
+     *
+     * @return void
+     */
+    public function __construct() {
+        global $wpdb;
+
+        /**
+         * Setup the table name for use throughout the methods.
+         */
+        $this->dm_table = $wpdb->base_prefix . 'domain_mapping';
+
+        /**
+         * Store a reference to $wpdb as it will be used a lot.
+         */
+        $this->wpdb = $wpdb;
+    }
+
+    /**
      * Retrieve the Primary domain for a Site.
      *
      * @param  integer           $site_id Site ID to retrieve the primary domain for.
