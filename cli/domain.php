@@ -54,11 +54,17 @@ class DarkMatter_Domain_CLI {
             WP_CLI::error( __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
         }
 
+        $dm_primary = DarkMatter_Primary::instance();
+
+        $primary_domain = $dm_primary->get();
+
         /**
          * Check to make sure another domain isn't set to Primary (can be overridden by the --force flag).
          */
-        if ( $db->is_exist( $fqdn ) && ! $opts['force'] ) {
+        if ( ! empty( $primary_domain ) && ! $opts['force'] ) {
             WP_CLI::error( __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
+        } else {
+            $dm_primary->unset();
         }
 
         /**
