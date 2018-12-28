@@ -55,6 +55,21 @@ class DarkMatter_Domains {
             return new WP_Error( 'exists', __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
         }
 
+        if ( $is_primary ) {
+            $dm_primary = DarkMatter_Primary::instance();
+
+            $primary_domain = $dm_primary->get();
+
+            /**
+             * Check to make sure another domain isn't set to Primary (can be overridden by the --force flag).
+             */
+            if ( ! empty( $primary_domain ) && ! $force ) {
+                return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
+            } else {
+                $dm_primary->unset();
+            }
+        }
+
         $_domain = array(
             'active'     => true,
             'blog_id'    => get_current_blog_id(),
