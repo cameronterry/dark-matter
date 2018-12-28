@@ -68,6 +68,9 @@ class DarkMatter_Domains {
         ) );
 
         if ( $result ) {
+            $cache_key = md5( $fqdn );
+            wp_cache_add( $cache_key, $_domain, 'dark-matter' );
+
             return new DM_Domain( (object) $_domain );
         }
 
