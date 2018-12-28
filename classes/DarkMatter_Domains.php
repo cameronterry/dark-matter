@@ -55,9 +55,9 @@ class DarkMatter_Domains {
             return new WP_Error( 'exists', __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
         }
 
-        if ( $is_primary ) {
-            $dm_primary = DarkMatter_Primary::instance();
+        $dm_primary = DarkMatter_Primary::instance();
 
+        if ( $is_primary ) {
             $primary_domain = $dm_primary->get();
 
             /**
@@ -89,10 +89,15 @@ class DarkMatter_Domains {
             $cache_key = md5( $fqdn );
 
             /**
-             * Update the domain object prior to update the cache.
+             * Update the domain object prior to priming the cache for both the
+             * domain object and the primary domain if necessary.
              */
             $_domain['id'] = $this->wpdb->insert_id;
             wp_cache_add( $cache_key, $_domain, 'dark-matter' );
+
+            if ( $is_primary ) {
+                $dm_primary->set( get_current_blog_id(), $fqdn );
+            }
 
             return new DM_Domain( (object) $_domain );
         }
