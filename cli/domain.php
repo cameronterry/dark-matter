@@ -38,42 +38,20 @@ class DarkMatter_Domain_CLI {
             'primary' => false,
         ] );
 
-        $db = DarkMatter_Domains::instance();
-
-        /**
-         * Check to make sure the domain isn't reserved.
-         */
-        if ( $db->is_reserved( $fqdn ) ) {
-            WP_CLI::error( __( 'The domain has been reserved by WordPress Network administrators.', 'dark-matter' ) );
-        }
-
-        /**
-         * Check to make sure the domain isn't already assigned to a site.
-         */
-        if ( $db->is_exist( $fqdn ) ) {
-            WP_CLI::error( __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
-        }
-
-        $dm_primary = DarkMatter_Primary::instance();
-
-        $primary_domain = $dm_primary->get();
-
-        /**
-         * Check to make sure another domain isn't set to Primary (can be overridden by the --force flag).
-         */
-        if ( ! empty( $primary_domain ) && ! $opts['force'] ) {
-            WP_CLI::error( __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
-        } else {
-            $dm_primary->unset();
-        }
-
         /**
          * Add the domain.
          */
+        $db = DarkMatter_Domains::instance();
         $result = $db->add( $fqdn, $opts['primary'], $opts['https'] );
 
-        if ( ! $result ) {
-            WP_CLI::error( __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
+        if ( is_wp_error( $result ) ) {
+            $error_msg = $result->get_error_message();
+
+            if ( '' === $result->get_error_code() ) {
+                $error_msg = __( 'You cannot add this domain as the primary domain without using the --force flag.', 'dark-matter' );
+            }
+
+            WP_CLI::error( $error_msg );
         }
 
         WP_CLI::success( $fqdn . __( ': was added.', 'dark-matter' ) );
