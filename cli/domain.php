@@ -108,7 +108,7 @@ class DarkMatter_Domain_CLI {
             WP_CLI::error( $error_msg );
         }
 
-        WP_CLI::success( $fqdn . __( ': has been removed from this site', 'dark-matter' ) );
+        WP_CLI::success( $fqdn . __( ': has been removed.', 'dark-matter' ) );
     }
 
     /**
