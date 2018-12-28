@@ -68,7 +68,15 @@ class DarkMatter_Domains {
         ) );
 
         if ( $result ) {
+            /**
+             * Create the cache key.
+             */
             $cache_key = md5( $fqdn );
+
+            /**
+             * Update the domain object prior to update the cache.
+             */
+            $_domain['id'] = $this->wpdb->insert_id;
             wp_cache_add( $cache_key, $_domain, 'dark-matter' );
 
             return new DM_Domain( (object) $_domain );
