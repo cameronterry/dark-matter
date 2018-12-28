@@ -73,6 +73,31 @@ class DarkMatter_Primary {
     }
 
     /**
+     * Unset the primary domain for a given Site.
+     *
+     * @param  integer $site_id Site ID to unset the primary domain for.
+     * @return boolean          True on success. False otherwise.
+     */
+    public function unset( $site_id = 0 ) {
+        $site_id = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
+
+        $result = $this->wpdb->update( $this->dm_table, array(
+            'is_primary' => false,
+        ), array(
+            'blog_id' => $site_id,
+        ) );
+
+        if ( ! $result ) {
+            return false;
+        }
+
+        $cache_key = $site_id . '-primary';
+        wp_cache_delete( $cache_key, 'dark-matter' );
+
+        return true;
+    }
+
+    /**
      * Return the Singleton Instance of the class.
      *
      * @return void
