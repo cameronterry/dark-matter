@@ -136,8 +136,12 @@ class DarkMatter_Domains {
          * Check to make sure that the domain is not a primary and if it is that
          * the force flag has been provided.
          */
-        if ( $_domain->is_primary && ! $force ) {
-            return new WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
+        if ( $_domain->is_primary ) {
+            if ( $force ) {
+                DarkMatter_Primary::instance()->unset();
+            } else {
+                return new WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
+            }
         }
 
         $result = $this->wpdb->delete( $this->dm_table, array(
