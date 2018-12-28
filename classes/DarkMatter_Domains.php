@@ -181,16 +181,16 @@ class DarkMatter_Domains {
      * site specific.
      *
      * @param  string  $fqdn FQDN to search for.
-     * @return boolean         True if found. False otherwise.
+     * @return boolean       True if found. False otherwise.
      */
     public function is_exist( $fqdn = '' ) {
         if ( empty( $fqdn ) ) {
             return false;
         }
 
-        $_domain = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT id FROM {$this->dm_table} WHERE domain = %s", $fqdn ) );
+        $_domain = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT id FROM {$this->dm_table} WHERE domain = %s LIMIT 1", $fqdn ) );
 
-        return ! empty( $_domain );
+        return ( $_domain !== null );
     }
 
     /**
@@ -204,6 +204,8 @@ class DarkMatter_Domains {
         if ( empty( $fqdn ) ) {
             return false;
         }
+
+        return false;
     }
 
     /**
