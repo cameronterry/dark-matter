@@ -87,6 +87,26 @@ class DarkMatter_Domains {
         if ( empty( $fqdn ) ) {
             return false;
         }
+
+        /**
+         * Cannot delete what does not exist.
+         */
+        if ( ! $this->is_exist( $fqdn ) ) {
+            return false;
+        }
+
+        $result = $this->wpdb->delete( $this->dm_table, array(
+            'domain' => $fqdn,
+        ), array( '%s' ) );
+
+        if ( false === $result ) {
+            $cache_key = md5( $fqdn );
+            wp_cache_delete( $cache_key, 'dark-matter' );
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
