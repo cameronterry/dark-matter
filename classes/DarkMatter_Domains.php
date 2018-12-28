@@ -40,19 +40,19 @@ class DarkMatter_Domains {
     /**
      * Add a domain for a specific Site in WordPress.
      *
-     * @param  string            $domain FQDN to be added.
-     * @return DM_Domain|boolean         True on success. False otherwise.
+     * @param  string             $domain FQDN to be added.
+     * @return DM_Domain|WP_Error         True on success. False otherwise.
      */
-    public function add( $fqdn = '', $is_primary = false, $is_https = false ) {
+    public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true ) {
         if ( empty( $fqdn ) ) {
-            return false;
+            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
         }
 
         /**
          * Check that the FQDN is not already stored in the database.
          */
         if ( $this->is_exist( $fqdn ) ) {
-            return false;
+            return new WP_Error( 'exists', __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
         }
 
         $_domain = array(
@@ -82,7 +82,7 @@ class DarkMatter_Domains {
             return new DM_Domain( (object) $_domain );
         }
 
-        return false;
+        return new WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
     }
 
     /**
