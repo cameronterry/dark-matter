@@ -99,7 +99,7 @@ class DarkMatter_Domains {
             'domain' => $fqdn,
         ), array( '%s' ) );
 
-        if ( false === $result ) {
+        if ( $result ) {
             $cache_key = md5( $fqdn );
             wp_cache_delete( $cache_key, 'dark-matter' );
 
@@ -165,7 +165,7 @@ class DarkMatter_Domains {
             wp_cache_add( $cache_key, $_domain, 'dark-matter' );
         }
 
-        return new DM_Domain( $_domain );
+        return new DM_Domain( (object) $_domain );
     }
 
     /**
