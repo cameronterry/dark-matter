@@ -62,7 +62,7 @@ class DarkMatter_Primary {
                 return false;
             }
 
-            wp_cache_add( $cache_key, $primary_domain, 'dark-matter' );
+            $this->set( $site_id, $primary_domain );
         }
 
         /**
@@ -70,6 +70,20 @@ class DarkMatter_Primary {
          */
         $db = DarkMatter_Domains::instance();
         return $db->get( $primary_domain );
+    }
+
+    /**
+     * Helper function to the set the cache for the primary domain for a Site.
+     *
+     * @param  integer $site_id Site ID to set the primary domain cache for.
+     * @param  string  $domain  Domain to be stored in the cache.
+     * @return void
+     */
+    public function set( $site_id = 0, $domain = '' ) {
+        $site_id   = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
+        $cache_key = $site_id . '-primary';
+
+        wp_cache_set( $cache_key, $domain, 'dark-matter' );
     }
 
     /**
