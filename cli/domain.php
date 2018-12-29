@@ -122,9 +122,11 @@ class DarkMatter_Domain_CLI {
      * [--force]
      * : Force Dark Matter to update the domain.
      *
-     * [--https]
-     * : Set the protocol to be HTTPS. This is only needed when used with the
-     * --primary flag and is ignored otherwise.
+     * [--use-http]
+     * : Set the protocol to be HTTP.
+     *
+     * [--use-https]
+     * : Set the protocol to be HTTPS.
      *
      * [--primary]
      * : Set the domain to be the primary domain for the Site, the one which
@@ -141,10 +143,70 @@ class DarkMatter_Domain_CLI {
      *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --primary
      *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --secondary
      */
-    public function set() {
-        /** Check the domain exists for the Site. */
+    public function set( $args, $assoc_args ) {
+        if ( empty( $args[0] ) ) {
+            WP_CLI::error( __( 'Please include a fully qualified domain name to be removed.', 'dark-matter' ) );
+        }
 
-        /** Check to make sure the domain is not Primary (can be overridden by the --force flag). */
+        $fqdn = $args[0];
+
+        $opts = wp_parse_args( $assoc_args, [
+            'force'     => false,
+            'use-http'  => null,
+            'use-https' => null,
+            'primary'   => null,
+            'secondary' => null,
+        ] );
+
+        /**
+         * Ensure that contradicting options are not being supplied.
+         */
+        if ( $opts['use-http'] && $opts['use-https'] ) {
+            WP_CLI::error( __( 'A domain cannot be both HTTP and HTTPS.', 'dark-matter' ) );
+        }
+
+        if ( $opts['primary'] && $opts['secondary'] ) {
+            WP_CLI::error( __( 'A domain cannot be both primary and secondary.', 'dark-matter' ) );
+        }
+
+        /**
+         * Determine if we are switching between HTTP and HTTPS.
+         */
+        $is_https = $opts['use-https'];
+
+        if ( $opts['use-http'] ) {
+            $is_https = false;
+        }
+
+        /**
+         * Determine if we are switching between primary and secondary.
+         */
+        $is_primary = $opts['primary'];
+
+        if ( $opts['secondary'] ) {
+            $is_primary = false;
+        }
+
+        /**
+         * Update the records.
+         */
+        $db = DarkMatter_Domains::instance();
+        $result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'] );
+
+        /**
+         * Handle the output for errors and success.
+         */
+        if ( is_wp_error( $result ) ) {
+            $error_msg = $result->get_error_message();
+
+            if ( 'primary' === $result->get_error_code() ) {
+                $error_msg = __( 'You cannot modify the primary domain. Use --force flag if you really want to and know what you are doing.', 'dark-matter' );
+            }
+
+            WP_CLI::error( $error_msg );
+        }
+
+        WP_CLI::success( $fqdn . __( ': successfully updated.', 'dark-matter' ) );
     }
 }
 WP_CLI::add_command( 'darkmatter domain', 'DarkMatter_Domain_CLI' );
