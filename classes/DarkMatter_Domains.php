@@ -40,12 +40,16 @@ class DarkMatter_Domains {
     /**
      * Add a domain for a specific Site in WordPress.
      *
-     * @param  string             $domain FQDN to be added.
-     * @return DM_Domain|WP_Error         True on success. False otherwise.
+     * @param  string             $fqdn       Domain to be updated.
+     * @param  boolean            $is_primary Primary domain setting.
+     * @param  boolean            $is_https   HTTPS protocol setting.
+     * @param  boolean            $force      Whether the update should be forced.
+     * @param  integer            $id         Domain record ID. Used for updating records rather than adding.
+     * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
-    public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true ) {
+    public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $id = 0 ) {
         if ( empty( $fqdn ) ) {
-            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+            return new WP_Error( 'empty', __( 'The fully qualified domain name is empty.', 'dark-matter' ) );
         }
 
         /**
@@ -64,7 +68,7 @@ class DarkMatter_Domains {
              * Check to make sure another domain isn't set to Primary (can be overridden by the --force flag).
              */
             if ( ! empty( $primary_domain ) && ! $force ) {
-                return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
+                return new WP_Error( 'primary', __( 'You cannot make this domain the primary domain without using the force flag.', 'dark-matter' ) );
             } else {
                 $dm_primary->unset();
             }
@@ -78,9 +82,19 @@ class DarkMatter_Domains {
             'is_https'   => ( ! $is_https ? false : true ),
         );
 
-        $result = $this->wpdb->insert( $this->dm_table, $_domain, array(
-            '%d', '%d', '%s', '%d', '%d',
-        ) );
+        /**
+         * Determine if we need to update a pre-existing domain or adding a
+         * brand new domain.
+         */
+        if ( empty( $id ) ) {
+            $result = $this->wpdb->insert( $this->dm_table, $_domain, array(
+                '%d', '%d', '%s', '%d', '%d',
+            ) );
+        } else {
+            $result = $this->wpdb->update( $this->dm_table, $_domain, array(
+                'id' => $id,
+            ) );
+        }
 
         if ( $result ) {
             /**
@@ -93,7 +107,7 @@ class DarkMatter_Domains {
              * domain object and the primary domain if necessary.
              */
             $_domain['id'] = $this->wpdb->insert_id;
-            wp_cache_add( $cache_key, $_domain, 'dark-matter' );
+            wp_cache_set( $cache_key, $_domain, 'dark-matter' );
 
             if ( $is_primary ) {
                 $dm_primary->set( get_current_blog_id(), $fqdn );
@@ -102,7 +116,7 @@ class DarkMatter_Domains {
             return new DM_Domain( (object) $_domain );
         }
 
-        return new WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
+        return new WP_Error( 'unknown', __( 'An unknown error occurred.', 'dark-matter' ) );
     }
 
     /**
