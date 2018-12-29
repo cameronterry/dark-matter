@@ -38,6 +38,24 @@ class DarkMatter_Domains {
     }
 
     /**
+     * Perform basic checks before committing to a action performed by a method.
+     *
+     * @param  string           $fqdn Fully qualified domain name.
+     * @return WP_Error|boolean       True on pass. WP_Error on failure.
+     */
+    private function _basic_check( $fqdn = '' ) {
+        if ( empty( $fqdn ) ) {
+            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+        }
+
+        if ( is_main_site() ) {
+            return new WP_Error( 'root', __( 'Domains cannot be mapped to the main / root Site.', 'dark-matter' ) );
+        }
+
+        return true;
+    }
+
+    /**
      * Add a domain for a specific Site in WordPress.
      *
      * @param  string             $fqdn       Domain to be updated.
@@ -48,8 +66,10 @@ class DarkMatter_Domains {
      * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
     public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true ) {
-        if ( empty( $fqdn ) ) {
-            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+        $check = $this->_basic_check( $fqdn );
+
+        if ( is_wp_error( $check ) ) {
+            return $check;
         }
 
         /**
@@ -116,8 +136,10 @@ class DarkMatter_Domains {
      * @return WP_Error|boolean       True on success. False otherwise.
      */
     public function delete( $fqdn = '', $force = true ) {
-        if ( empty( $fqdn ) ) {
-            return new WP_Error( 'empty', __( 'The fully qualified domain name is empty.', 'dark-matter' ) );
+        $check = $this->_basic_check( $fqdn );
+
+        if ( is_wp_error( $check ) ) {
+            return $check;
         }
 
         /**
@@ -274,8 +296,10 @@ class DarkMatter_Domains {
      * @return boolean            True on success. False on failure.
      */
     public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true ) {
-        if ( empty( $fqdn ) ) {
-            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+        $check = $this->_basic_check( $fqdn );
+
+        if ( is_wp_error( $check ) ) {
+            return $check;
         }
 
         $current = $this->get( $fqdn );
