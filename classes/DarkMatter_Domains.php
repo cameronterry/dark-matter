@@ -269,10 +269,79 @@ class DarkMatter_Domains {
      * @param  string  $dm_domain Domain object which is to be updated.
      * @return boolean            True on success. False on failure.
      */
-    public function update( $dm_domain ) {
-        if ( ! empty( $domain ) ) {
-            return false;
+    public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true ) {
+        if ( empty( $fqdn ) ) {
+            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
         }
+
+        $current = $this->get( $fqdn );
+
+        if ( ! $current ) {
+            return new WP_Error( 'not found', __( 'Cannot find the domain to update.', 'dark-matter' ) );
+        }
+
+        $dm_primary = DarkMatter_Primary::instance();
+
+        $_domain = array(
+            'active'     => true,
+            'blog_id'    => $current->blog_id,
+            'domain'     => $fqdn,
+        );
+
+        /**
+         * Determine if there is an attempt to update the "is primary" field.
+         */
+        if ( null !== $is_primary && $is_primary !== $current->is_primary ) {
+            /**
+             * Any update to the "is primary" requires the force flag.
+             */
+            if ( ! $force ) {
+                return new WP_Error( 'primary', __( 'You cannot update the primary flag without setting the force parameter to true', 'dark-matter' ) );
+            }
+
+            $_domain['is_primary'] = $is_primary;
+        }
+
+        if ( null !== $is_https ) {
+            $_domain['is_https'] = $is_https;
+        }
+
+        $result = $this->wpdb->update( $this->dm_table, $_domain, array(
+            'id' => $current->id,
+        ) );
+
+        if ( $result ) {
+            /**
+             * Create the cache key.
+             */
+            $cache_key = md5( $fqdn );
+
+            /**
+             * Update the domain object prior to updating the cache for both the
+             * domain object and the primary domain if necessary.
+             */
+            $_domain['id'] = $current->id;
+            wp_cache_set( $cache_key, $_domain, 'dark-matter' );
+
+            /**
+             * Handle changes to the primary setting if required.
+             */
+            if ( $is_primary && ! $current->is_primary ) {
+                $current_primary = $dm_primary->get( $current->blog_id );
+
+                if ( $current_primary && $current_primary->domain !== $_domain['domain'] ) {
+                    $dm_primary->unset( $current->blog_id );
+                }
+
+                $dm_primary->set( $current->blog_id, $fqdn );
+            } else if ( false === $is_primary && $current->is_primary ) {
+                $dm_primary->unset( $current->blog_id );
+            }
+
+            return new DM_Domain( (object) $_domain );
+        }
+
+        return new WP_Error( 'unknown', __( 'Sorry, the domain could not be updated. An unknown error occurred.', 'dark-matter' ) );
     }
 
     /**
