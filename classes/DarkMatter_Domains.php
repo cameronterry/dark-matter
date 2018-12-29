@@ -127,7 +127,7 @@ class DarkMatter_Domains {
      */
     public function delete( $fqdn = '', $force = true ) {
         if ( empty( $fqdn ) ) {
-            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be removed.', 'dark-matter' ) );
+            return new WP_Error( 'empty', __( 'The fully qualified domain name is empty.', 'dark-matter' ) );
         }
 
         /**
