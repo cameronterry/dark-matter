@@ -40,8 +40,12 @@ class DarkMatter_Domains {
     /**
      * Add a domain for a specific Site in WordPress.
      *
-     * @param  string             $domain FQDN to be added.
-     * @return DM_Domain|WP_Error         True on success. False otherwise.
+     * @param  string             $fqdn       Domain to be updated.
+     * @param  boolean            $is_primary Primary domain setting.
+     * @param  boolean            $is_https   HTTPS protocol setting.
+     * @param  boolean            $force      Whether the update should be forced.
+     * @param  integer            $id         Domain record ID. Used for updating records rather than adding.
+     * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
     public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true ) {
         if ( empty( $fqdn ) ) {
