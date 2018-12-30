@@ -50,7 +50,7 @@ class DarkMatter_Reserve {
             return $check;
         }
 
-        if ( $this->is_exists( $fqdn ) ) {
+        if ( $this->is_exist( $fqdn ) ) {
             return new WP_Error( 'exists', __( 'The Domain is already Reserved.', 'dark-matter' ) );
         }
 
@@ -84,7 +84,7 @@ class DarkMatter_Reserve {
             return $check;
         }
 
-        if ( ! $this->is_exists( $fqdn ) ) {
+        if ( ! $this->is_exist( $fqdn ) ) {
             return new WP_Error( 'missing', __( 'The Domain is not found in the Reserved list.', 'dark-matter' ) );
         }
 
@@ -147,7 +147,7 @@ class DarkMatter_Reserve {
      * @param  string  $fqdn Domain to check.
      * @return boolean       True if found. False otherwise.
      */
-    public function is_exists( $fqdn = '' ) {
+    public function is_exist( $fqdn = '' ) {
         if ( empty( $fqdn ) ) {
             return false;
         }
