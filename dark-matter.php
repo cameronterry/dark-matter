@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || die;
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '2.0.0' );
-define( 'DM_DB_VERSION', '20170109' );
+define( 'DM_DB_VERSION', '20181230' );
 
 require_once DM_PATH . '/classes/DM_Database.php';
 require_once DM_PATH . '/classes/DM_Domain.php';
