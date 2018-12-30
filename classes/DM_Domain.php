@@ -55,5 +55,11 @@ class DM_Domain {
         foreach ( get_object_vars( $domain ) as $key => $value ) {
             $this->$key = $value;
         }
+
+        $this->id         = (int) $this->id;
+        $this->blog_id    = (int) $this->blog_id;
+        $this->is_primary = (bool) $this->is_primary;
+        $this->active     = (bool) $this->active;
+        $this->is_https   = (bool) $this->is_https;
     }
 }
