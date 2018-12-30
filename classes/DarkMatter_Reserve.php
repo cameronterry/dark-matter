@@ -36,6 +36,34 @@ class DarkMatter_Reserve {
      * @return array List of reserve domains.
      */
     public function get() {
+        /**
+         * Attempt to retreive the domain from cache.
+         */
+        $reserve_domains = wp_cache_get( 'reserved', 'dark-matter' );
+
+        if ( $reserve_domains ) {
+            return $reserve_domains;
+        }
+
+        /**
+         * Then attempt to retrieve the domains from the database, assuming
+         * there is any.
+         */
+        global $wpdb;
+        $reserve_domains = $wpdb->get_rows( "SELECT domain FROM {$this->reserve_table} ORDER BY domain" );
+
+        if ( ! empty( $reserve_domains ) ) {
+            $reserve_domains = array();
+        }
+
+        /**
+         * May seem peculiar to cache an empty array here but as this will
+         * likely be a slow changing data set, then it's pointless to keep
+         * pounding the database unnecessarily.
+         */
+        wp_cache_add( $cache_key, $reserve_domains, 'dark-matter' );
+
+        return $reserve_domains;
     }
 
     public function is_exists( $fqdn = '' ) {
