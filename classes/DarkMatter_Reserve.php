@@ -24,7 +24,23 @@ class DarkMatter_Reserve {
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function add( $fqdn = '' ) {
+        if ( $this->is_exists( $fqdn ) ) {
+            return new WP_Error( 'exists', __( 'The Domain is already Reserved.', 'dark-matter' ) );
+        }
 
+        /**
+         * Add the domain to the database.
+         */
+        global $wpdb;
+        $result = $wpdb->insert( $this->reserve_table, array(
+            'domain' => $fqdn,
+        ), array( '%s' ) );
+
+        if ( ! $result ) {
+            return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Reserved list.', 'dark-matter' ) );
+        }
+
+        return true;
     }
 
     /**
