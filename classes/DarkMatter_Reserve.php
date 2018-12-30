@@ -4,6 +4,13 @@ defined( 'ABSPATH' ) || die;
 
 class DarkMatter_Reserve {
     /**
+     * Reserve table name for database operations.
+     *
+     * @var string
+     */
+    private $reserve_table = '';
+
+    /**
      * Constructor.
      */
     public function __construct() {
@@ -27,7 +34,20 @@ class DarkMatter_Reserve {
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function delete( $fqdn = '' ) {
+        if ( ! $this->is_exists( $fqdn ) ) {
+            return new WP_Error( 'missing', __( 'The Domain is not found in the Reserved Domains.', 'dark-matter' ) );
+        }
 
+        global $wpdb;
+        $result = $wpdb->delete( $this->reserve_domain, array(
+            'domain' => $fqdn
+        ), array( '%s' ) );
+
+        if ( ! $result ) {
+            return new WP_Error();
+        }
+
+        return true;
     }
 
     /**
