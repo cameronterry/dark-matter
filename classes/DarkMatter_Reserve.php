@@ -40,6 +40,8 @@ class DarkMatter_Reserve {
             return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Reserved list.', 'dark-matter' ) );
         }
 
+        $this->refresh_cache();
+
         return true;
     }
 
@@ -65,6 +67,8 @@ class DarkMatter_Reserve {
         if ( ! $result ) {
             return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Reserved list.', 'dark-matter' ) );
         }
+
+        $this->refresh_cache();
 
         return true;
     }
@@ -119,6 +123,16 @@ class DarkMatter_Reserve {
         $reserve_domains = $this->get();
 
         return in_array( $fqdn, $reserve_domains );
+    }
+
+    /**
+     * Helper method to refresh the cache for Reserved domains.
+     *
+     * @return void
+     */
+    public function refresh_cache() {
+        wp_cache_delete( 'reserved', 'dark-matter' );
+        $this->get();
     }
 
     /**
