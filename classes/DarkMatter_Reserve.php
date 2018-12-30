@@ -21,9 +21,9 @@ class DarkMatter_Reserve {
     }
 
     /**
-     * Add a domain to the Reserve list.
+     * Delete a domain to the Reserve list.
      *
-     * @param  string           $fqdn Domain to be added to the reserve list.
+     * @param  string           $fqdn Domain to be deleted to the reserve list.
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function delete( $fqdn = '' ) {
@@ -66,6 +66,12 @@ class DarkMatter_Reserve {
         return $reserve_domains;
     }
 
+    /**
+     * Check if a domain has been reserved.
+     *
+     * @param  string  $fqdn Domain to check.
+     * @return boolean       True if found. False otherwise.
+     */
     public function is_exists( $fqdn = '' ) {
         if ( empty( $fqdn ) ) {
             return false;
