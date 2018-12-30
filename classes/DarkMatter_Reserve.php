@@ -35,16 +35,16 @@ class DarkMatter_Reserve {
      */
     public function delete( $fqdn = '' ) {
         if ( ! $this->is_exists( $fqdn ) ) {
-            return new WP_Error( 'missing', __( 'The Domain is not found in the Reserved Domains.', 'dark-matter' ) );
+            return new WP_Error( 'missing', __( 'The Domain is not found in the Reserved list.', 'dark-matter' ) );
         }
 
         global $wpdb;
-        $result = $wpdb->delete( $this->reserve_domain, array(
+        $result = $wpdb->delete( $this->reserve_table, array(
             'domain' => $fqdn
         ), array( '%s' ) );
 
         if ( ! $result ) {
-            return new WP_Error();
+            return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Reserved list.', 'dark-matter' ) );
         }
 
         return true;
