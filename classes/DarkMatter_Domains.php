@@ -28,8 +28,7 @@ class DarkMatter_Domains {
         /**
          * Setup the table name for use throughout the methods.
          */
-        $this->dm_table      = $wpdb->base_prefix . 'domain_mapping';
-        $this->reserve_table = $wpdb->base_prefix . 'domain_reserve';
+        $this->dm_table = $wpdb->base_prefix . 'domain_mapping';
 
         /**
          * Store a reference to $wpdb as it will be used a lot.
