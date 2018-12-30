@@ -41,4 +41,5 @@ require_once DM_PATH . '/classes/DarkMatter_Primary.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
     require_once DM_PATH . '/cli/domain.php';
+    require_once DM_PATH . '/cli/reserve.php';
 }
