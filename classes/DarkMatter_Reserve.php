@@ -29,6 +29,10 @@ class DarkMatter_Reserve {
             return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
         }
 
+        if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $fqdn ) {
+            return new WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
+        }
+
         $domains = DarkMatter_Domains::instance();
         if ( $domains->is_exist( $fqdn ) ) {
             return new WP_Error( 'used', __( 'This domain is in use.', 'dark-matter' ) );
