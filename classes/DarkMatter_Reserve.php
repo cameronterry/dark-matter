@@ -19,12 +19,37 @@ class DarkMatter_Reserve {
     }
 
     /**
+     * Perform basic checks before committing to a action performed by a method.
+     *
+     * @param  string           $fqdn Fully qualified domain name.
+     * @return WP_Error|boolean       True on pass. WP_Error on failure.
+     */
+    private function _basic_checks( $fqdn ) {
+        if ( empty( $fqdn ) ) {
+            return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+        }
+
+        $domains = DarkMatter_Domains::instance();
+        if ( $domains->is_exist( $fqdn ) ) {
+            return new WP_Error( 'used', __( 'This domain is in use.', 'dark-matter' ) );
+        }
+
+        return true;
+    }
+
+    /**
      * Add a domain to the Reserve list.
      *
      * @param  string           $fqdn Domain to be added to the reserve list.
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function add( $fqdn = '' ) {
+        $check = $this->_basic_checks( $fqdn );
+
+        if ( is_wp_error( $check ) ) {
+            return $check;
+        }
+
         if ( $this->is_exists( $fqdn ) ) {
             return new WP_Error( 'exists', __( 'The Domain is already Reserved.', 'dark-matter' ) );
         }
@@ -53,6 +78,12 @@ class DarkMatter_Reserve {
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function delete( $fqdn = '' ) {
+        $check = $this->_basic_checks( $fqdn );
+
+        if ( is_wp_error( $check ) ) {
+            return $check;
+        }
+
         if ( ! $this->is_exists( $fqdn ) ) {
             return new WP_Error( 'missing', __( 'The Domain is not found in the Reserved list.', 'dark-matter' ) );
         }
