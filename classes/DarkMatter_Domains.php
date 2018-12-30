@@ -47,6 +47,22 @@ class DarkMatter_Domains {
             return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
         }
 
+        /**
+         * Ensure that the URL is purely a domian. In order for the parse_url()
+         * to work, the domain must be prefixed with a double forward slash.
+         */
+        if ( false === stripos( $fqdn, '//' ) ) {
+            $domain_parts = parse_url( '//' . ltrim( $fqdn, '/' ) );
+        } else {
+            $domain_parts = parse_url( $fqdn );
+        }
+
+        if ( empty( $domain_parts['path'] ) || empty( $domain_parts['port'] ) || empty( $domain_parts['query'] ) ) {
+            return new WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
+        }
+
+        $fqdn = $domain_parts['host'];
+
         if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $fqdn ) {
             return new WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
         }
@@ -60,7 +76,7 @@ class DarkMatter_Domains {
             return new WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
         }
 
-        return true;
+        return $fqdn;
     }
 
     /**
@@ -74,10 +90,10 @@ class DarkMatter_Domains {
      * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
     public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true ) {
-        $check = $this->_basic_check( $fqdn );
+        $fqdn = $this->_basic_check( $fqdn );
 
-        if ( is_wp_error( $check ) ) {
-            return $check;
+        if ( is_wp_error( $fqdn ) ) {
+            return $fqdn;
         }
 
         /**
@@ -144,10 +160,10 @@ class DarkMatter_Domains {
      * @return WP_Error|boolean       True on success. False otherwise.
      */
     public function delete( $fqdn = '', $force = true ) {
-        $check = $this->_basic_check( $fqdn );
+        $fqdn = $this->_basic_check( $fqdn );
 
-        if ( is_wp_error( $check ) ) {
-            return $check;
+        if ( is_wp_error( $fqdn ) ) {
+            return $fqdn;
         }
 
         /**
@@ -304,10 +320,10 @@ class DarkMatter_Domains {
      * @return boolean            True on success. False on failure.
      */
     public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true ) {
-        $check = $this->_basic_check( $fqdn );
+        $fqdn = $this->_basic_check( $fqdn );
 
-        if ( is_wp_error( $check ) ) {
-            return $check;
+        if ( is_wp_error( $fqdn ) ) {
+            return $fqdn;
         }
 
         $current = $this->get( $fqdn );

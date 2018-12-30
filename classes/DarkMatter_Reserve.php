@@ -29,6 +29,22 @@ class DarkMatter_Reserve {
             return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
         }
 
+        /**
+         * Ensure that the URL is purely a domian. In order for the parse_url()
+         * to work, the domain must be prefixed with a double forward slash.
+         */
+        if ( false === stripos( $fqdn, '//' ) ) {
+            $domain_parts = parse_url( '//' . ltrim( $fqdn, '/' ) );
+        } else {
+            $domain_parts = parse_url( $fqdn );
+        }
+
+        if ( empty( $domain_parts['path'] ) || empty( $domain_parts['port'] ) || empty( $domain_parts['query'] ) ) {
+            return new WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
+        }
+
+        $fqdn = $domain_parts['host'];
+
         if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $fqdn ) {
             return new WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
         }
@@ -38,7 +54,7 @@ class DarkMatter_Reserve {
             return new WP_Error( 'used', __( 'This domain is in use.', 'dark-matter' ) );
         }
 
-        return true;
+        return $fqdn;
     }
 
     /**
@@ -48,10 +64,10 @@ class DarkMatter_Reserve {
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function add( $fqdn = '' ) {
-        $check = $this->_basic_checks( $fqdn );
+        $fqdn = $this->_basic_checks( $fqdn );
 
-        if ( is_wp_error( $check ) ) {
-            return $check;
+        if ( is_wp_error( $fqdn ) ) {
+            return $fqdn;
         }
 
         if ( $this->is_exist( $fqdn ) ) {
@@ -82,10 +98,10 @@ class DarkMatter_Reserve {
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function delete( $fqdn = '' ) {
-        $check = $this->_basic_checks( $fqdn );
+        $fqdn = $this->_basic_checks( $fqdn );
 
-        if ( is_wp_error( $check ) ) {
-            return $check;
+        if ( is_wp_error( $fqdn ) ) {
+            return $fqdn;
         }
 
         if ( ! $this->is_exist( $fqdn ) ) {
