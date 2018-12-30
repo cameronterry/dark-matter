@@ -14,6 +14,7 @@ class DarkMatter_Reserve {
      * Constructor.
      */
     public function __construct() {
+        global $wpdb;
         $this->reserve_table = $wpdb->base_prefix . 'domain_reserve';
     }
 
@@ -93,9 +94,9 @@ class DarkMatter_Reserve {
          * there is any.
          */
         global $wpdb;
-        $reserve_domains = $wpdb->get_rows( "SELECT domain FROM {$this->reserve_table} ORDER BY domain" );
+        $reserve_domains = $wpdb->get_col( "SELECT domain FROM {$this->reserve_table} ORDER BY domain" );
 
-        if ( ! empty( $reserve_domains ) ) {
+        if ( empty( $reserve_domains ) ) {
             $reserve_domains = array();
         }
 
