@@ -34,6 +34,7 @@ define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '2.0.0' );
 define( 'DM_DB_VERSION', '20170109' );
 
+require_once DM_PATH . '/classes/DM_Database.php';
 require_once DM_PATH . '/classes/DM_Domain.php';
 
 require_once DM_PATH . '/classes/DarkMatter_Domains.php';
