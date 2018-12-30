@@ -54,6 +54,9 @@ class DarkMatter_Reserve {
             return new WP_Error( 'missing', __( 'The Domain is not found in the Reserved list.', 'dark-matter' ) );
         }
 
+        /**
+         * Remove the domain to the database.
+         */
         global $wpdb;
         $result = $wpdb->delete( $this->reserve_table, array(
             'domain' => $fqdn
@@ -97,7 +100,7 @@ class DarkMatter_Reserve {
          * likely be a slow changing data set, then it's pointless to keep
          * pounding the database unnecessarily.
          */
-        wp_cache_add( $cache_key, $reserve_domains, 'dark-matter' );
+        wp_cache_add( 'reserved', $reserve_domains, 'dark-matter' );
 
         return $reserve_domains;
     }
