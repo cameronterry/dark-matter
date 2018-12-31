@@ -36,29 +36,6 @@ if ( ! $dm_domain ) {
 }
 
 /**
- * If the domain is not Primary, then we will attempt to find it and redirect.
- */
-if ( ! $dm_domain->is_primary ) {
-    require_once $dirname . '/classes/DarkMatter_Primary.php';
-
-    $primary_domain = DarkMatter_Primary::instance()->get( $dm_domain->blog_id );
-
-    /**
-     * Redirect to the primary domain if we have one.
-     */
-    if ( $primary_domain ) {
-        header( 'Location: http' . ( $primary_domain->is_https ? 's' : '' ) . '://' . $primary_domain->domain );
-        die;
-    }
-
-    /**
-     * If we do not have a primary domain, then we act like nothing has happened
-     * and let WordPress' default behaviour take over.
-     */
-    return;
-}
-
-/**
  * Load and prepare the Blog data.
  */
 global $current_blog;
