@@ -23,42 +23,55 @@ $dirname = str_replace( '/inc', '', dirname( __FILE__ ) );
  */
 require_once $dirname . '/classes/DM_Domain.php';
 require_once $dirname . '/classes/DarkMatter_Domains.php';
+require_once $dirname . '/classes/DarkMatter_Primary.php';
 
 /**
  * Attempt to find the Site.
  */
 $fqdn = $_SERVER['HTTP_HOST'];
 
+global $dm_domain;
 $dm_domain = DarkMatter_Domains::instance()->get( $fqdn );
 
-if ( ! $dm_domain ) {
-    return;
+global $dm_original_path; $dm_original_path = '';
+
+if ( $dm_domain ) {
+    /**
+     * Load and prepare the Blog data.
+     */
+    global $current_blog;
+    $current_blog = get_site( $dm_domain->blog_id );
+
+    /**
+     * Get the original URL before re-adjusting to the mapped domain for WordPress.
+     */
+    $dm_original_path = $current_blog->path;
+    var_dump( $dm_original_path );
+
+    $current_blog->domain = $dm_domain->domain;
+    $current_blog->path   = '/';
+
+    /**
+     * Load and prepare the WordPress Network.
+     */
+    global $current_site;
+    $current_site = WP_Network::get_instance( $current_blog->site_id );
+
+    define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
+    define( 'DOMAIN_MAPPING', true );
+
+    if ( empty( $current_site->blog_id ) ) {
+        $current_site->blog_id = get_main_site_id( $current_site->id );
+    }
+
+    /**
+     * Set the other necessary globals to ensure WordPress functions correctly.
+     */
+    global $blog_id; $blog_id = $current_blog->blog_id;
+    global $site_id; $site_id = $current_blog->site_id;
 }
 
 /**
- * Load and prepare the Blog data.
+ * Determine if we should perform a redirect.
  */
-global $current_blog;
-$current_blog = get_site( $dm_domain->blog_id );
-
-$current_blog->domain = $dm_domain->domain;
-$current_blog->path   = '/';
-
-/**
- * Load and prepare the WordPress Network.
- */
-global $current_site;
-$current_site = WP_Network::get_instance( $current_blog->site_id );
-
-define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
-define( 'DOMAIN_MAPPING', true );
-
-if ( empty( $current_site->blog_id ) ) {
-    $current_site->blog_id = get_main_site_id( $current_site->id );
-}
-
-/**
- * Set the other necessary globals to ensure WordPress functions correctly.
- */
-global $blog_id; $blog_id = $current_blog->blog_id;
-global $site_id; $site_id = $current_blog->site_id;
+require_once $dirname . '/inc/redirect.php';
