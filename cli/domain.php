@@ -11,6 +11,10 @@ class DarkMatter_Domain_CLI {
      * <domain>
      * : The domain you wish to add.
      *
+     * [--force]
+     * : Force Dark Matter to add the domain. This is required if you wish to
+     * remove a Primary domain from a Site.
+     *
      * [--https]
      * : Sets the protocol to be HTTPS. This is only needed when used with the --primary flag and is ignored otherwise.
      *
