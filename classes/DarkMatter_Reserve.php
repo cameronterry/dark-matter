@@ -39,7 +39,7 @@ class DarkMatter_Reserve {
             $domain_parts = parse_url( $fqdn );
         }
 
-        if ( empty( $domain_parts['path'] ) || empty( $domain_parts['port'] ) || empty( $domain_parts['query'] ) ) {
+        if ( ! empty( $domain_parts['path'] ) || ! empty( $domain_parts['port'] ) || ! empty( $domain_parts['query'] ) ) {
             return new WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
         }
 
