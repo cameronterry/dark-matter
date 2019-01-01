@@ -38,6 +38,7 @@ wp_cache_add_global_groups( 'dark-matter' );
 
 require_once DM_PATH . '/classes/DM_Database.php';
 require_once DM_PATH . '/classes/DM_Domain.php';
+require_once DM_PATH . '/classes/DM_URL.php';
 
 require_once DM_PATH . '/classes/DarkMatter_Domains.php';
 require_once DM_PATH . '/classes/DarkMatter_Primary.php';
