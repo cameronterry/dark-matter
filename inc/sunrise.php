@@ -12,6 +12,10 @@ if ( defined( 'COOKIE_DOMAIN' ) ) {
 
 wp_cache_add_global_groups( 'dark-matter' );
 
+if ( false === defined( 'SUNRISE_LOADED' ) ) {
+    define( 'SUNRISE_LOADED', true );
+}
+
 /**
  * Cannot utilise plugin_dir_path() as the inner function used is not available
  * and this is preferable to include more files than is realistically needed.
