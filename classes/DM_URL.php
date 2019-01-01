@@ -73,17 +73,6 @@ class DM_URL {
 
         add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
         add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
-
-        // add_filter( 'admin_url', 'dark_matter_api_unmap_permalink' );
-        // add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
-        // add_filter( 'pre_option_home', 'dark_matter_map_url' );
-        // add_filter( 'the_content', 'dark_matter_map_content' );
-        // add_filter( 'stylesheet_uri', 'dark_matter_map_content' );
-        // add_filter( 'stylesheet_directory_uri', 'dark_matter_map_content' );
-        // add_filter( 'template_directory_uri', 'dark_matter_map_content' );
-        // add_filter( 'plugins_url', 'dark_matter_map_content' );
-        // add_filter( 'upload_dir', 'dark_matter_map_content' );
-        // add_filter( 'wp_get_attachment_url', 'dark_matter_map_content' );
     }
 
     /**
