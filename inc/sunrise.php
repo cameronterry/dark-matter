@@ -33,20 +33,12 @@ $fqdn = $_SERVER['HTTP_HOST'];
 global $dm_domain;
 $dm_domain = DarkMatter_Domains::instance()->get( $fqdn );
 
-global $dm_original_path; $dm_original_path = '';
-
 if ( $dm_domain ) {
     /**
      * Load and prepare the Blog data.
      */
     global $current_blog;
     $current_blog = get_site( $dm_domain->blog_id );
-
-    /**
-     * Get the original URL before re-adjusting to the mapped domain for WordPress.
-     */
-    $dm_original_path = $current_blog->path;
-    var_dump( $dm_original_path );
 
     $current_blog->domain = $dm_domain->domain;
     $current_blog->path   = '/';
