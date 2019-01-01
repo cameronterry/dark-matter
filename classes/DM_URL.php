@@ -63,6 +63,7 @@ class DM_URL {
         add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
 
         add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
+        add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
 
         // add_filter( 'admin_url', 'dark_matter_api_unmap_permalink' );
         // add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
@@ -96,10 +97,20 @@ class DM_URL {
     /**
      * Handle the Uploads URL mappings when and where appropriate.
      *
-     * @param  array $uploads Array of upload directory data with keys of 'path', 'url', 'subdir, 'basedir', and 'error'.
+     * @param  array $uploads Array of upload directory data with keys of 'path', 'url', 'subdir, 'basedir', 'baseurl', and 'error'.
      * @return array          Array of upload directory data with the values with URLs mapped as appropriate.
      */
-    public function upload( $uploads ) {}
+    public function upload( $uploads ) {
+        if ( ! empty( $uploads['url'] ) ) {
+            $uploads['url'] = $this->map( $uploads['url'] );
+        }
+
+        if ( ! empty( $uploads['baseurl'] ) ) {
+            $uploads['baseurl'] = $this->map( $uploads['baseurl'] );
+        }
+
+        return $uploads;
+    }
 
     /**
      * Return the Singleton Instance of the class.
