@@ -6,7 +6,16 @@ class DM_URL {
     /**
      * Constructor.
      */
-    public function __construct() {}
+    public function __construct() {
+        /**
+         * This is the earliest possible action we can start to prepare the
+         * setup for the mapping logic. This is because the WP->parse_request()
+         * method utilises home_url() which means for requests permitted on both
+         * the unmapped and mapped domain - like REST API and XMLRPC - will not
+         * be properly detected for the rewrite rules.
+         */
+        add_action( 'parse_request', array( $this, 'prepare' ) );
+    }
 
     /**
      * Map the primary domain on the passed in value if it contains the unmapped
@@ -42,6 +51,27 @@ class DM_URL {
         $domain = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain;
 
         return preg_replace( "#https?://{$unmapped}#", $domain, $value );
+    }
+
+    /**
+     * Setup the actions to handle the URL mappings.
+     *
+     * @return void
+     */
+    public function prepare() {
+        add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+        add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
+
+        // add_filter( 'admin_url', 'dark_matter_api_unmap_permalink' );
+        // add_filter( 'pre_option_siteurl', 'dark_matter_map_url' );
+        // add_filter( 'pre_option_home', 'dark_matter_map_url' );
+        // add_filter( 'the_content', 'dark_matter_map_content' );
+        // add_filter( 'stylesheet_uri', 'dark_matter_map_content' );
+        // add_filter( 'stylesheet_directory_uri', 'dark_matter_map_content' );
+        // add_filter( 'template_directory_uri', 'dark_matter_map_content' );
+        // add_filter( 'plugins_url', 'dark_matter_map_content' );
+        // add_filter( 'upload_dir', 'dark_matter_map_content' );
+        // add_filter( 'wp_get_attachment_url', 'dark_matter_map_content' );
     }
 
     /**
