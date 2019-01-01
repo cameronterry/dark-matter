@@ -62,6 +62,15 @@ class DM_URL {
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
 
+        if ( is_admin() ) {
+            return;
+        }
+
+        add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
+
+        add_filter( 'script_loader_tag', array( $this, 'map' ), -10, 4 );
+        add_filter( 'style_loader_tag', array( $this, 'map' ), -10, 4 );
+
         add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
         add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
 
