@@ -109,7 +109,7 @@ function darkmatter_maybe_redirect() {
         $url  = str_ireplace( $path, '/', $url );
     }
 
-    var_dump( $url );
+    header( 'Location:' . $url, true, 301 );
     die;
 }
 
