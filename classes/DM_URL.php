@@ -8,6 +8,14 @@ class DM_URL {
      */
     public function __construct() {
         /**
+         * Disable all the URL mapping if viewing through Customizer. This is to
+         * ensure maximum functionality by retaining the Admin URL.
+         */
+        if ( ! empty( $_GET['customize_changeset_uuid'] ) ) {
+            return;
+        }
+
+        /**
          * This is the earliest possible action we can start to prepare the
          * setup for the mapping logic. This is because the WP->parse_request()
          * method utilises home_url() which means for requests permitted on both
