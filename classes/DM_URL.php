@@ -45,6 +45,23 @@ class DM_URL {
     }
 
     /**
+     * Handle Home URL and Site URL mappings when and where appropriate.
+     *
+     * @param  string  $url     The complete site URL including scheme and path.
+     * @param  string  $path    Path relative to the site URL. Blank string if no path is specified.
+     * @param  string  $scheme  Scheme to give $url. Currently 'http', 'https', 'login', 'login_post', 'admin', 'relative', 'rest', 'rpc', or null.
+     * @param  integer $blog_id Site ID, or null for the current site.
+     * @return string           Mapped URL unless a specific scheme which should be ignored.
+     */
+    public function siteurl( $url = '', $path = '', $scheme = null, $blog_id = 0 ) {
+        if ( null === $scheme || in_array( $scheme, array( 'http', 'https' ) ) ) {
+            return $this->map( $url );
+        }
+
+        return $url;
+    }
+
+    /**
      * Return the Singleton Instance of the class.
      *
      * @return void
