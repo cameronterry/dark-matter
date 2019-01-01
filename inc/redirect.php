@@ -77,8 +77,6 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
-    var_dump( $GLOBALS );die;
-
     /**
      * Retrieve the original blog details. We use this technique rather than
      * some thing pre-loaded from sunrise.php as not all requests will have
@@ -90,7 +88,7 @@ function darkmatter_maybe_redirect() {
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
 
-    if ( $host !== $primary->domain || is_ssl() === $primary->is_https ) {
+    if ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
         $url = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain . '/' . $request;
     }
 
