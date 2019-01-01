@@ -77,13 +77,7 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
-    /**
-     * Retrieve the original blog details. We use this technique rather than
-     * some thing pre-loaded from sunrise.php as not all requests will have
-     * populated the global variables by this point. For instance; if you call a
-     * URL on the unmapped domain, then the globals will be empty.
-     */
-    $original_blog = get_site( get_current_blog_id() );
+    global $original_blog;
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();

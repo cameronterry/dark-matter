@@ -37,8 +37,9 @@ if ( $dm_domain ) {
     /**
      * Load and prepare the Blog data.
      */
-    global $current_blog;
-    $current_blog = get_site( $dm_domain->blog_id );
+    global $current_blog, $original_blog;
+    $current_blog  = get_site( $dm_domain->blog_id );
+    $original_blog = clone $current_blog;
 
     $current_blog->domain = $dm_domain->domain;
     $current_blog->path   = '/';
