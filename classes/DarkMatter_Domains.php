@@ -242,6 +242,15 @@ class DarkMatter_Domains {
         }
 
         /**
+         * If the domain provided is the DOMAIN_CURRENT_SITE / network domain,
+         * then there is no point doing a database look up as it is clearly not
+         * a mapped URL.
+         */
+        if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $fqdn ) {
+            return false;
+        }
+
+        /**
          * Attempt to retrieve the domain from cache.
          */
         $cache_key = md5( $fqdn );
