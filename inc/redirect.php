@@ -65,6 +65,13 @@ if (
  * @return void
  */
 function darkmatter_maybe_redirect() {
+    /**
+     * Do not perform redirects if it is the main site.
+     */
+    if ( is_main_site() ) {
+        return;
+    }
+
     $request = ltrim( $_SERVER['REQUEST_URI'], '/' );
 
     /**
@@ -81,6 +88,13 @@ function darkmatter_maybe_redirect() {
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
+
+    /**
+     * If there is no primary domain, there is nothing to do.
+     */
+    if ( ! $primary ) {
+        return;
+    }
 
     if ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
         $url = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain . '/' . $request;
