@@ -101,6 +101,40 @@ class DM_URL {
     }
 
     /**
+     * Map the primary domain on the passed in value if it contains the unmapped
+     * URL and the Site has a primary domain.
+     *
+     * @param  mixed $value Potentially a value containing the site's unmapped URL.
+     * @return mixed        If unmapped URL is found, then returns the primary URL. Untouched otherwise.
+     */
+    public function unmap( $value = '' ) {
+        /**
+         * Ensure that we are working with a string.
+         */
+        if ( ! is_string( $value ) ) {
+            return $value;
+        }
+
+        /**
+         * Retrieve the current blog.
+         */
+        $blog    = get_site();
+        $primary = DarkMatter_Primary::instance()->get();
+
+        $unmapped = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . untrailingslashit( $blog->domain . $blog->path );
+
+        /**
+         * If there is no primary domain or the primary domain cannot be found
+         * then we return the value as-is.
+         */
+        if ( empty( $primary ) || false === stripos( $value, $primary->domain ) ) {
+            return $value;
+        }
+
+        return preg_replace( "#https?://{$primary->domain}#", $unmapped, $value );
+    }
+
+    /**
      * Handle the Uploads URL mappings when and where appropriate.
      *
      * @param  array $uploads Array of upload directory data with keys of 'path', 'url', 'subdir, 'basedir', 'baseurl', and 'error'.
