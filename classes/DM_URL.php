@@ -68,12 +68,15 @@ class DM_URL {
      */
     public function prepare() {
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-        add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
+
+        add_filter( 'post_link', array( $this, 'map' ), -10, 1 );
+        add_filter( 'preview_post_link', array( $this, 'unmap' ), -10, 1 );
 
         if ( is_admin() ) {
             return;
         }
 
+        add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
 
         add_filter( 'script_loader_tag', array( $this, 'map' ), -10, 4 );
