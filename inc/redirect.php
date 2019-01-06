@@ -84,7 +84,7 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
-    global $original_blog;
+    $original_blog = get_site();
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
@@ -92,7 +92,7 @@ function darkmatter_maybe_redirect() {
     /**
      * If there is no primary domain, there is nothing to do.
      */
-    if ( ! $primary ) {
+    if ( ! $primary || ! $original_blog ) {
         return;
     }
 
