@@ -22,7 +22,7 @@ class DM_URL {
          * the unmapped and mapped domain - like REST API and XMLRPC - will not
          * be properly detected for the rewrite rules.
          */
-        add_action( 'parse_request', array( $this, 'prepare' ) );
+        add_action( 'muplugins_loaded', array( $this, 'prepare' ), -10 );
     }
 
     /**
@@ -67,15 +67,14 @@ class DM_URL {
      * @return void
      */
     public function prepare() {
-        add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-
         add_filter( 'post_link', array( $this, 'map' ), -10, 1 );
-        add_filter( 'preview_post_link', array( $this, 'unmap' ), -10, 1 );
+        add_filter( 'preview_post_link', array( $this, 'unmap' ), 0, 1 );
 
-        if ( is_admin() ) {
+        if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() ) ) {
             return;
         }
 
+        add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
 
