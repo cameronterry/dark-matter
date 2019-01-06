@@ -69,6 +69,7 @@ class DM_URL {
     public function prepare() {
         add_filter( 'post_link', array( $this, 'map' ), -10, 1 );
         add_filter( 'preview_post_link', array( $this, 'unmap' ), 0, 1 );
+        add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
 
         if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() ) ) {
             return;
@@ -81,7 +82,6 @@ class DM_URL {
         add_filter( 'script_loader_tag', array( $this, 'map' ), -10, 4 );
         add_filter( 'style_loader_tag', array( $this, 'map' ), -10, 4 );
 
-        add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
         add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
     }
 
