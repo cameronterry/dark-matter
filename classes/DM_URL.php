@@ -67,11 +67,16 @@ class DM_URL {
      * @return void
      */
     public function prepare() {
-        add_filter( 'post_link', array( $this, 'map' ), -10, 1 );
-        add_filter( 'preview_post_link', array( $this, 'unmap' ), 0, 1 );
         add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
 
-        if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() ) ) {
+        if ( ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] ) ) {
+            return;
+        }
+
+        add_filter( 'preview_post_link', array( $this, 'unmap' ), 0, 1 );
+        add_filter( 'post_link', array( $this, 'map' ), -10, 1 );
+
+        if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )  ) {
             return;
         }
 

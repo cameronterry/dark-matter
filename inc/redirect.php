@@ -54,6 +54,11 @@ if (
          * Customizer is presented in an <iframe> over the unmapped domain.
          */
         ! empty( $_GET['customize_changeset_uuid'] )
+    ||
+        /**
+         *
+         */
+        ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] )
 ) {
     return;
 }
@@ -122,28 +127,7 @@ function darkmatter_maybe_redirect() {
 }
 
 /**
- * Determine if we should perform a redirect in the case of previews. This is
- * done this way to prevent abuse - third parties - or mistakes in the redirect.
- *
- * @return void
+ * We use "muplugins_loaded" action (introduced in WordPress 2.8.0) rather than
+ * the "ms_loaded" (introduced in WordPress 4.6.0).
  */
-function darkmatter_maybe_preview_redirect() {
-    if ( ! is_preview() ) {
-        darkmatter_maybe_redirect();
-    }
-}
-
-/**
- * Previews have to be handled different from every other request. This is due
- * to not being able to determine the request is "preview" until much later in
- * the lifecycle of WordPress.
- */
-if ( ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] ) ) {
-    add_action( 'wp', 'darkmatter_maybe_preview_redirect', 50 );
-} else {
-    /**
-     * We use "muplugins_loaded" action (introduced in WordPress 2.8.0) rather than
-     * the "ms_loaded" (introduced in WordPress 4.6.0).
-     */
-    add_action( 'muplugins_loaded', 'darkmatter_maybe_redirect', 20 );
-}
+add_action( 'muplugins_loaded', 'darkmatter_maybe_redirect', 20 );
