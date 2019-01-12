@@ -29,10 +29,11 @@ class DM_URL {
      * Map the primary domain on the passed in value if it contains the unmapped
      * URL and the Site has a primary domain.
      *
-     * @param  mixed $value Potentially a value containing the site's unmapped URL.
-     * @return mixed        If unmapped URL is found, then returns the primary URL. Untouched otherwise.
+     * @param  mixed   $value Potentially a value containing the site's unmapped URL.
+     * @param  integer $value Site (Blog) ID for the URL which is being mapped.
+     * @return string         If unmapped URL is found, then returns the primary URL. Untouched otherwise.
      */
-    public function map( $value = '' ) {
+    public function map( $value = '', $blog_id = 0 ) {
         /**
          * Ensure that we are working with a string.
          */
@@ -43,8 +44,8 @@ class DM_URL {
         /**
          * Retrieve the current blog.
          */
-        $blog    = get_site();
-        $primary = DarkMatter_Primary::instance()->get();
+        $blog    = get_site( $blog_id );
+        $primary = DarkMatter_Primary::instance()->get( $blog_id );
 
         $unmapped = untrailingslashit( $blog->domain . $blog->path );
 
@@ -77,6 +78,7 @@ class DM_URL {
         add_filter( 'post_link', array( $this, 'map' ), -10, 1 );
 
         if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )  ) {
+            add_action( 'admin_init', [ $this, 'prepare_admin' ] );
             return;
         }
 
@@ -91,6 +93,17 @@ class DM_URL {
     }
 
     /**
+     * Some filters need to be handled later in the process when running in the
+     * admin area. This handles the preparation work for mapping URLs for Admni
+     * only requests.
+     *
+     * @return void
+     */
+    function prepare_admin() {
+        add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+    }
+
+    /**
      * Handle Home URL and Site URL mappings when and where appropriate.
      *
      * @param  string  $url     The complete site URL including scheme and path.
@@ -101,7 +114,12 @@ class DM_URL {
      */
     public function siteurl( $url = '', $path = '', $scheme = null, $blog_id = 0 ) {
         if ( null === $scheme || in_array( $scheme, array( 'http', 'https' ) ) ) {
-            return $this->map( $url );
+            /**
+             * We pass in the potential URL along with the Blog ID. This covers
+             * when the `get_home_url()` and `home_url()` are called from within
+             * a `switch_blog()` context.
+             */
+            return $this->map( $url, $blog_id );
         }
 
         return $url;
