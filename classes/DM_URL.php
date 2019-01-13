@@ -74,9 +74,6 @@ class DM_URL {
             return;
         }
 
-        add_filter( 'preview_post_link', array( $this, 'unmap' ), 0, 1 );
-        add_filter( 'post_link', array( $this, 'map' ), -10, 1 );
-
         if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )  ) {
             add_action( 'admin_init', [ $this, 'prepare_admin' ] );
             return;
@@ -114,6 +111,26 @@ class DM_URL {
      */
     public function siteurl( $url = '', $path = '', $scheme = null, $blog_id = 0 ) {
         if ( null === $scheme || in_array( $scheme, array( 'http', 'https' ) ) ) {
+            /**
+             * Determine if there is any query string paramters present.
+             */
+            $query = wp_parse_url( $url, PHP_URL_QUERY );
+
+            if ( ! empty( $query ) ) {
+                /**
+                 * Retrieve and construct an array of the various query strings.
+                 */
+                parse_str( $query, $parts );
+
+                /**
+                 * Determine if the URL we are attempting to map is a Preview
+                 * URL, which is to remain on the Admin domain.
+                 */
+                if ( ! empty( $parts['p'] ) || ! empty( $parts['preview'] ) ) {
+                    return $url;
+                }
+            }
+
             /**
              * We pass in the potential URL along with the Blog ID. This covers
              * when the `get_home_url()` and `home_url()` are called from within
