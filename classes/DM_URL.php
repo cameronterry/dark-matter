@@ -41,6 +41,10 @@ class DM_URL {
             return $value;
         }
 
+        if ( ! is_int( $blog_id ) ) {
+            $blog_id = 0;
+        }
+
         /**
          * Retrieve the current blog.
          */
