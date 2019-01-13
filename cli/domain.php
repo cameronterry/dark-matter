@@ -128,6 +128,12 @@ class DarkMatter_Domain_CLI {
      * <domain>
      * : The domain you wish to update.
      *
+     * [--enable]
+     * : Enable the domain on the Site.
+     *
+     * [--disable]
+     * : Disable the domain on the Site.
+     *
      * [--force]
      * : Force Dark Matter to update the domain.
      *
@@ -160,6 +166,8 @@ class DarkMatter_Domain_CLI {
         $fqdn = $args[0];
 
         $opts = wp_parse_args( $assoc_args, [
+            'disable'   => false,
+            'enable'    => false,
             'force'     => false,
             'use-http'  => null,
             'use-https' => null,
@@ -176,6 +184,10 @@ class DarkMatter_Domain_CLI {
 
         if ( $opts['primary'] && $opts['secondary'] ) {
             WP_CLI::error( __( 'A domain cannot be both primary and secondary.', 'dark-matter' ) );
+        }
+
+        if ( $opts['enable'] && $opts['disable'] ) {
+            WP_CLI::error( __( 'A domain cannot be both enabled and disabled.', 'dark-matter' ) );
         }
 
         /**
@@ -197,10 +209,19 @@ class DarkMatter_Domain_CLI {
         }
 
         /**
+         * Determine if we are switching between enabled and disabled.
+         */
+        $active = $opts['enable'];
+
+        if ( $opts['disable'] ) {
+            $active = false;
+        }
+
+        /**
          * Update the records.
          */
         $db = DarkMatter_Domains::instance();
-        $result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'] );
+        $result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'], $active );
 
         /**
          * Handle the output for errors and success.
