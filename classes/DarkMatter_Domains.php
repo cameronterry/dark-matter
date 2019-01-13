@@ -377,6 +377,12 @@ class DarkMatter_Domains {
 
         if ( $result ) {
             /**
+             * Stitch together the current domain record with the updates for the
+             * cache.
+             */
+            $_domain = wp_parse_args( $_domain, $current->to_array() );
+
+            /**
              * Create the cache key.
              */
             $cache_key = md5( $fqdn );
