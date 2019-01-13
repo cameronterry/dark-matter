@@ -25,7 +25,7 @@ class DM_Database {
             require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
             $this->upgrade_domains();
-            $this->upgrade_reserve();
+            $this->upgrade_restrict();
         }
     }
 
@@ -56,11 +56,11 @@ class DM_Database {
      *
      * @return void
      */
-    public function upgrade_reserve() {
+    public function upgrade_restrict() {
         global $wpdb;
         $charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE `{$wpdb->base_prefix}domain_reserve` (
+        $sql = "CREATE TABLE `{$wpdb->base_prefix}domain_restrict` (
             id BIGINT(20) NOT NULL AUTO_INCREMENT,
             domain VARCHAR(255) NOT NULL,
             PRIMARY KEY  (id)
