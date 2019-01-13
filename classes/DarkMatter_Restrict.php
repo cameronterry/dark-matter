@@ -2,7 +2,7 @@
 
 defined( 'ABSPATH' ) || die;
 
-class DarkMatter_Reserve {
+class DarkMatter_Restrict {
     /**
      * Reserve table name for database operations.
      *
