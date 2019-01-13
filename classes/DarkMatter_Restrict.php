@@ -4,18 +4,18 @@ defined( 'ABSPATH' ) || die;
 
 class DarkMatter_Restrict {
     /**
-     * Reserve table name for database operations.
+     * Restrict table name for database operations.
      *
      * @var string
      */
-    private $reserve_table = '';
+    private $restrict_table = '';
 
     /**
      * Constructor.
      */
     public function __construct() {
         global $wpdb;
-        $this->reserve_table = $wpdb->base_prefix . 'domain_reserve';
+        $this->restrict_table = $wpdb->base_prefix . 'domain_restrict';
     }
 
     /**
@@ -58,7 +58,7 @@ class DarkMatter_Restrict {
     }
 
     /**
-     * Add a domain to the Reserve list.
+     * Add a domain to the Restrict list.
      *
      * @param  string           $fqdn Domain to be added to the reserve list.
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
@@ -78,12 +78,12 @@ class DarkMatter_Restrict {
          * Add the domain to the database.
          */
         global $wpdb;
-        $result = $wpdb->insert( $this->reserve_table, array(
+        $result = $wpdb->insert( $this->restrict_table, array(
             'domain' => $fqdn,
         ), array( '%s' ) );
 
         if ( ! $result ) {
-            return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Reserved list.', 'dark-matter' ) );
+            return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
         }
 
         $this->refresh_cache();
@@ -92,9 +92,9 @@ class DarkMatter_Restrict {
     }
 
     /**
-     * Delete a domain to the Reserve list.
+     * Delete a domain to the Restrict list.
      *
-     * @param  string           $fqdn Domain to be deleted to the reserve list.
+     * @param  string           $fqdn Domain to be deleted to the restrict list.
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function delete( $fqdn = '' ) {
@@ -105,19 +105,19 @@ class DarkMatter_Restrict {
         }
 
         if ( ! $this->is_exist( $fqdn ) ) {
-            return new WP_Error( 'missing', __( 'The Domain is not found in the Reserved list.', 'dark-matter' ) );
+            return new WP_Error( 'missing', __( 'The Domain is not found in the Restrict list.', 'dark-matter' ) );
         }
 
         /**
          * Remove the domain to the database.
          */
         global $wpdb;
-        $result = $wpdb->delete( $this->reserve_table, array(
+        $result = $wpdb->delete( $this->restrict_table, array(
             'domain' => $fqdn
         ), array( '%s' ) );
 
         if ( ! $result ) {
-            return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Reserved list.', 'dark-matter' ) );
+            return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
         }
 
         $this->refresh_cache();
@@ -126,18 +126,18 @@ class DarkMatter_Restrict {
     }
 
     /**
-     * Retrieve all reserve domains.
+     * Retrieve all restrict domains.
      *
-     * @return array List of reserve domains.
+     * @return array List of restrict domains.
      */
     public function get() {
         /**
          * Attempt to retreive the domain from cache.
          */
-        $reserve_domains = wp_cache_get( 'reserved', 'dark-matter' );
+        $restrict_domains = wp_cache_get( 'restrictd', 'dark-matter' );
 
-        if ( $reserve_domains ) {
-            return $reserve_domains;
+        if ( $restrict_domains ) {
+            return $restrict_domains;
         }
 
         /**
@@ -145,10 +145,10 @@ class DarkMatter_Restrict {
          * there is any.
          */
         global $wpdb;
-        $reserve_domains = $wpdb->get_col( "SELECT domain FROM {$this->reserve_table} ORDER BY domain" );
+        $restricted_domains = $wpdb->get_col( "SELECT domain FROM {$this->restrict_table} ORDER BY domain" );
 
-        if ( empty( $reserve_domains ) ) {
-            $reserve_domains = array();
+        if ( empty( $restricted_domains ) ) {
+            $restricted_domains = array();
         }
 
         /**
@@ -156,13 +156,13 @@ class DarkMatter_Restrict {
          * likely be a slow changing data set, then it's pointless to keep
          * pounding the database unnecessarily.
          */
-        wp_cache_add( 'reserved', $reserve_domains, 'dark-matter' );
+        wp_cache_add( 'restricted', $restricted_domains, 'dark-matter' );
 
-        return $reserve_domains;
+        return $restricted_domains;
     }
 
     /**
-     * Check if a domain has been reserved.
+     * Check if a domain has been restricted.
      *
      * @param  string  $fqdn Domain to check.
      * @return boolean       True if found. False otherwise.
@@ -172,18 +172,18 @@ class DarkMatter_Restrict {
             return false;
         }
 
-        $reserve_domains = $this->get();
+        $restricted_domains = $this->get();
 
-        return in_array( $fqdn, $reserve_domains );
+        return in_array( $fqdn, $restricted_domains );
     }
 
     /**
-     * Helper method to refresh the cache for Reserved domains.
+     * Helper method to refresh the cache for Restricted domains.
      *
      * @return void
      */
     public function refresh_cache() {
-        wp_cache_delete( 'reserved', 'dark-matter' );
+        wp_cache_delete( 'restricted', 'dark-matter' );
         $this->get();
     }
 
