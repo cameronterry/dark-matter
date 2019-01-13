@@ -62,4 +62,13 @@ class DM_Domain {
         $this->active     = (bool) $this->active;
         $this->is_https   = (bool) $this->is_https;
     }
+
+    /**
+     * Converts this object to an array.
+     *
+     * @return array Object as array.
+     */
+    public function to_array() {
+        return get_object_vars( $this );
+    }
 }
