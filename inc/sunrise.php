@@ -37,7 +37,7 @@ $fqdn = $_SERVER['HTTP_HOST'];
 global $dm_domain;
 $dm_domain = DarkMatter_Domains::instance()->get( $fqdn );
 
-if ( $dm_domain && $dm_domain->is_primary ) {
+if ( $dm_domain && $dm_domain->is_primary && $dm_domain->active ) {
     /**
      * Load and prepare the Blog data.
      */
