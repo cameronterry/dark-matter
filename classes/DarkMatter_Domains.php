@@ -86,10 +86,10 @@ class DarkMatter_Domains {
      * @param  boolean            $is_primary Primary domain setting.
      * @param  boolean            $is_https   HTTPS protocol setting.
      * @param  boolean            $force      Whether the update should be forced.
-     * @param  integer            $id         Domain record ID. Used for updating records rather than adding.
+     * @param  boolean            $active     Default is active. Set to false if you wish to add a domain but not make it active.
      * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
-    public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true ) {
+    public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true ) {
         $fqdn = $this->_basic_check( $fqdn );
 
         if ( is_wp_error( $fqdn ) ) {
@@ -119,7 +119,7 @@ class DarkMatter_Domains {
         }
 
         $_domain = array(
-            'active'     => true,
+            'active'     => ( ! $active ? false : true ),
             'blog_id'    => get_current_blog_id(),
             'domain'     => $fqdn,
             'is_primary' => ( ! $is_primary ? false : true ),
@@ -325,10 +325,14 @@ class DarkMatter_Domains {
     /**
      * Find a domain for a specific Site in WordPress.
      *
-     * @param  string  $dm_domain Domain object which is to be updated.
+     * @param  string             $fqdn       Domain to be updated.
+     * @param  boolean            $is_primary Primary domain setting.
+     * @param  boolean            $is_https   HTTPS protocol setting.
+     * @param  boolean            $force      Whether the update should be forced.
+     * @param  boolean            $active     Default is active. Set to false if you wish to add a domain but not make it active.
      * @return boolean            True on success. False on failure.
      */
-    public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true ) {
+    public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true ) {
         $fqdn = $this->_basic_check( $fqdn );
 
         if ( is_wp_error( $fqdn ) ) {
@@ -344,7 +348,7 @@ class DarkMatter_Domains {
         $dm_primary = DarkMatter_Primary::instance();
 
         $_domain = array(
-            'active'     => true,
+            'active'     => ( ! $active ? false : true ),
             'blog_id'    => $current->blog_id,
             'domain'     => $fqdn,
         );
