@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || die;
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '2.0.0' );
-define( 'DM_DB_VERSION', '20181230' );
+define( 'DM_DB_VERSION', '20190114' );
 
 wp_cache_add_global_groups( 'dark-matter' );
 
@@ -42,9 +42,9 @@ require_once DM_PATH . '/classes/DM_URL.php';
 
 require_once DM_PATH . '/classes/DarkMatter_Domains.php';
 require_once DM_PATH . '/classes/DarkMatter_Primary.php';
-require_once DM_PATH . '/classes/DarkMatter_Reserve.php';
+require_once DM_PATH . '/classes/DarkMatter_Restrict.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
     require_once DM_PATH . '/cli/domain.php';
-    require_once DM_PATH . '/cli/reserve.php';
+    require_once DM_PATH . '/cli/restrict.php';
 }
