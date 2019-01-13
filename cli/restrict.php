@@ -2,19 +2,19 @@
 
 defined( 'ABSPATH' ) || die;
 
-class DarkMatter_Reserve_CLI {
+class DarkMatter_Restrict_CLI {
     /**
-     * Add a domain to the reserve for the WordPress Network.
+     * Add a domain to the restrict for the WordPress Network.
      *
      * ### OPTIONS
      *
      * <domain>
-     * : The domain you wish to add to the reserve list.
+     * : The domain you wish to add to the restrict list.
      *
      * ### EXAMPLES
-     * Add a domain to the reserve list.
+     * Add a domain to the restrict list.
      *
-     *      wp darkmatter reserve add www.example.com
+     *      wp darkmatter restrict add www.example.com
      */
     public function add( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
@@ -23,28 +23,28 @@ class DarkMatter_Reserve_CLI {
 
         $fqdn = $args[0];
 
-        $reserved = DarkMatter_Reserve::instance();
-        $result   = $reserved->add( $fqdn );
+        $restricted = DarkMatter_Restrict::instance();
+        $result     = $restricted->add( $fqdn );
 
         if ( is_wp_error( $result ) ) {
             WP_CLI::error( $result->get_error_message() );
         }
 
-        WP_CLI::success( $fqdn . __( ': is now reserved.', 'dark-matter' ) );
+        WP_CLI::success( $fqdn . __( ': is now restricted.', 'dark-matter' ) );
     }
 
     /**
-     * Remove a domain to the reserve for the WordPress Network.
+     * Remove a domain to the restrict for the WordPress Network.
      *
      * ### OPTIONS
      *
      * <domain>
-     * : The domain you wish to remove to the reserve list.
+     * : The domain you wish to remove to the restrict list.
      *
      * ### EXAMPLES
-     * Remove a domain to the reserve list.
+     * Remove a domain to the restrict list.
      *
-     *      wp darkmatter reserve remove www.example.com
+     *      wp darkmatter restrict remove www.example.com
      */
     public function remove( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
@@ -53,14 +53,14 @@ class DarkMatter_Reserve_CLI {
 
         $fqdn = $args[0];
 
-        $reserved = DarkMatter_Reserve::instance();
-        $result   = $reserved->delete( $fqdn );
+        $restricted = DarkMatter_Restrict::instance();
+        $result     = $restricted->delete( $fqdn );
 
         if ( is_wp_error( $result ) ) {
             WP_CLI::error( $result->get_error_message() );
         }
 
-        WP_CLI::success( $fqdn . __( ': is no longer reserved.', 'dark-matter' ) );
+        WP_CLI::success( $fqdn . __( ': is no longer restricted.', 'dark-matter' ) );
     }
 }
-WP_CLI::add_command( 'darkmatter reserve', 'DarkMatter_Reserve_CLI' );
+WP_CLI::add_command( 'darkmatter restrict', 'DarkMatter_Restrict_CLI' );
