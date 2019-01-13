@@ -11,6 +11,10 @@ class DarkMatter_Domain_CLI {
      * <domain>
      * : The domain you wish to add.
      *
+     * [--disable]
+     * : Allows you to add a domain, primary or secondary, to the Site without
+     * it being used immediately.
+     *
      * [--force]
      * : Force Dark Matter to add the domain. This is required if you wish to
      * remove a Primary domain from a Site.
@@ -37,6 +41,7 @@ class DarkMatter_Domain_CLI {
         $fqdn = $args[0];
 
         $opts = wp_parse_args( $assoc_args, [
+            'disable' => false,
             'force'   => false,
             'https'   => false,
             'primary' => false,
@@ -46,7 +51,7 @@ class DarkMatter_Domain_CLI {
          * Add the domain.
          */
         $db = DarkMatter_Domains::instance();
-        $result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'] );
+        $result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'] );
 
         if ( is_wp_error( $result ) ) {
             $error_msg = $result->get_error_message();
