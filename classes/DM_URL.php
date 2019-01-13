@@ -70,15 +70,28 @@ class DM_URL {
     public function prepare() {
         add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
 
+        /**
+         * We only wish to affect `the_content` for Previews and nothing else.
+         */
         if ( ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] ) ) {
             return;
         }
 
+        /**
+         * Treat the Admin area slightly differently. This is because we do not
+         * wish to modify all URLs to the mapped primary domain as this will
+         * affect database and cache updates to ensure compatibility if the
+         * domain mapping is changed or removed.
+         */
         if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )  ) {
             add_action( 'admin_init', [ $this, 'prepare_admin' ] );
             return;
         }
 
+        /**
+         * Every thing here is designed to ensure all URLs throughout WordPress
+         * is consistent. This is the public serving / theme powered code.
+         */
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
