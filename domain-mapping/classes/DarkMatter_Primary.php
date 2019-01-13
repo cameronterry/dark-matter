@@ -59,10 +59,23 @@ class DarkMatter_Primary {
             $primary_domain = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT domain FROM {$this->dm_table} WHERE is_primary = 1 AND blog_id = %s", $site_id ) );
 
             if ( empty( $primary_domain ) ) {
+                /**
+                 * Set the cached value for Primary Domain to "none". This will
+                 * stop spurious database queries for some thing that has not
+                 * been setup up.
+                 */
+                wp_cache_set( $cache_key, 'none', 'dark-matter' );
                 return false;
             }
 
             $this->set( $site_id, $primary_domain );
+        }
+
+        /**
+         * Return false if the cache value is "none".
+         */
+        if ( 'none' === $primary_domain ) {
+            return false;
         }
 
         /**
