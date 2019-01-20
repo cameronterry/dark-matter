@@ -277,6 +277,41 @@ class DarkMatter_Domains {
     }
 
     /**
+     * Retrieve a List of domains. If the Site ID is empty or this is called
+     * from the root Site, then this will return all domains mapped on the
+     * Network.
+     *
+     * @param  integer $site_id Site ID to retrieve mapped domains for.
+     * @return array            An array of DM_Domain objects. Returns an empty array if no mapped domains found or on error.
+     */
+    public function get_domains( $site_id = 0 ) {
+        global $wpdb;
+
+        $_domains = null;
+
+        if ( empty( $site_id ) || is_main_site() ) {
+            $_domains = $wpdb->get_col( "SELECT domain FROM {$this->dm_table} ORDER BY blog_id, is_primary DESC, domain" );
+        } else {
+            $_domains = $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM {$this->dm_table} WHERE blog_id = %d ORDER BY is_primary DESC, domain", $site_id ) );
+        }
+
+        if ( empty( $_domains ) ) {
+            return [];
+        }
+
+        /**
+         * Retrieve the domain details from the cache. If the cache is
+         */
+        $domains = [];
+
+        foreach ( $_domains as $_domain ) {
+            $domains[] = $this->get( $_domain );
+        }
+
+        return $domains;
+    }
+
+    /**
      * Check if a domain exists. This checks against all websites and is not
      * site specific.
      *
