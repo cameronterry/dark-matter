@@ -97,6 +97,34 @@ class DarkMatter_Primary {
     }
 
     /**
+     * Retrieve all primary domains for the Network.
+     *
+     * @return array Array of DM_Domain objects of the Primary domains for each Site in the Network.
+     */
+    public function get_all() {
+        global $wpdb;
+
+        $_domains = $wpdb->get_col( "SELECT domain FROM {$this->dm_table} WHERE is_primary = 1 ORDER BY blog_id DESC, domain" );
+
+        if ( empty( $_domains ) ) {
+            return array();
+        }
+
+        $db = DarkMatter_Domains::instance();
+
+        /**
+         * Retrieve the DM_Domain objects for each of the primary domains.
+         */
+        $domains = array();
+
+        foreach ( $_domains as $_domain ) {
+            $domains[] = $db->get( $_domain );
+        }
+
+        return $domains;
+    }
+
+    /**
      * Helper function to the set the cache for the primary domain for a Site.
      *
      * @param  integer $site_id Site ID to set the primary domain cache for.
