@@ -67,6 +67,101 @@ class DarkMatter_Domain_CLI {
     }
 
     /**
+     * List a domain for the current Site. If the the URL is omitted and the
+     * command is run on the root Site, it will list all domains available for
+     * the whole network.
+     *
+     * ### OPTIONS
+     *
+     * [--format]
+     * : Determine which format that should be returned. Defaults to "table" and
+     * accepts "json", "csv", "yaml", and "count".
+     *
+     * ### EXAMPLES
+     * List all domains for a specific Site.
+     *
+     *      wp --url="sites.my.com/siteone" darkmatter domain list
+     *
+     * Get all domains for a specific Site in JSON format.
+     *
+     *      wp --url="sites.my.com/siteone" darkmatter domain list --format=json
+     *
+     * List all domains for all Sites.
+     *
+     *      wp darkmatter domain list
+     */
+    public function list( $args, $assoc_args ) {
+        /**
+         * Handle and validate the format flag if provided.
+         */
+        $opts = wp_parse_args( $assoc_args, [
+            'format' => 'table',
+        ] );
+
+        if ( ! in_array( $opts['format'], array( 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
+            $opts['format'] = 'table';
+        }
+
+        $db = DarkMatter_Domains::instance();
+
+        /**
+         * Retrieve the current Blog ID. However this will be set to null if
+         * this is the root Site to retrieve all domains.
+         */
+        $site_id = get_current_blog_id();
+
+        if ( is_main_site() ) {
+            $site_id = null;
+        }
+
+        $domains = $db->get_domains( $site_id );
+
+        /**
+         * Filter out and format the columns and values appropriately.
+         */
+        $domains = array_map( function ( $domain ) {
+            $no_val  = __( 'No', 'dark-matter' );
+            $yes_val = __( 'Yes', 'dark-matter' );
+
+            $columns = array(
+                'F.Q.D.N.' => $domain->domain,
+                'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
+                'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
+                'Active'   => ( $domain->active ? $yes_val : $no_val ),
+            );
+
+            /**
+             * If the query is the root Site and we are displaying all domains,
+             * then we retrieve and include the Site Name.
+             */
+            $site = get_site( $domain->blog_id );
+
+            if ( empty( $site ) ) {
+                $columns['Site'] = __( 'Unknown.', 'dark-matter' );
+            } else {
+                $columns['Site'] = $site->blogname;
+            }
+
+            return $columns;
+        }, $domains );
+
+        /**
+         * Determine which headers to use for the Display.
+         */
+        $display = [
+            'F.Q.D.N.', 'Primary', 'Protocol', 'Active',
+        ];
+
+        if ( is_main_site() ) {
+            $display = [
+                'F.Q.D.N.', 'Site', 'Primary', 'Protocol', 'Active',
+            ];
+        }
+
+        WP_CLI\Utils\format_items( $opts['format'], $domains, $display );
+    }
+
+    /**
      * Remove a specific domain on a Site on the WordPress Network.
      *
      * ### OPTIONS
