@@ -77,6 +77,10 @@ class DarkMatter_Domain_CLI {
      * : Determine which format that should be returned. Defaults to "table" and
      * accepts "json", "csv", "yaml", and "count".
      *
+     * [--primary]
+     * : Filter the results to return only the Primary domains. This will ignore
+     * the --url parameter.
+     *
      * ### EXAMPLES
      * List all domains for a specific Site.
      *
@@ -95,26 +99,31 @@ class DarkMatter_Domain_CLI {
          * Handle and validate the format flag if provided.
          */
         $opts = wp_parse_args( $assoc_args, [
-            'format' => 'table',
+            'format'  => 'table',
+            'primary' => false,
         ] );
 
         if ( ! in_array( $opts['format'], array( 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
             $opts['format'] = 'table';
         }
 
-        $db = DarkMatter_Domains::instance();
+        if ( $opts['primary'] ) {
+            $db = DarkMatter_Primary::instance();
+            $domains = $db->get_all();
+        } else {
+            /**
+             * Retrieve the current Blog ID. However this will be set to null if
+             * this is the root Site to retrieve all domains.
+             */
+            $site_id = get_current_blog_id();
 
-        /**
-         * Retrieve the current Blog ID. However this will be set to null if
-         * this is the root Site to retrieve all domains.
-         */
-        $site_id = get_current_blog_id();
+            if ( is_main_site() ) {
+                $site_id = null;
+            }
 
-        if ( is_main_site() ) {
-            $site_id = null;
+            $db = DarkMatter_Domains::instance();
+            $domains = $db->get_domains( $site_id );
         }
-
-        $domains = $db->get_domains( $site_id );
 
         /**
          * Filter out and format the columns and values appropriately.
