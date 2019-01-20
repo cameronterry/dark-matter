@@ -294,7 +294,7 @@ class DarkMatter_Domains {
         /**
          * Retrieve the domain details from the cache. If the cache is
          */
-        $domains = [];
+        $domains = array();
 
         foreach ( $_domains as $_domain ) {
             $domains[] = $this->get( $_domain );
