@@ -211,30 +211,22 @@ class DarkMatter_Domains {
     /**
      * Find a domain for a specific Site in WordPress.
      *
-     * @param  string    $fqdn FQDN to search for.
-     * @return DM_Domain       Domain object.
+     * @param  string            $fqdn FQDN to search for.
+     * @return DM_Domain|boolean       Domain object. False on failure or not found.
      */
     public function find( $fqdn = '' ) {
         if ( empty( $fqdn ) ) {
-            return false;
+            return null;
         }
 
-        /**
-         * Attempt to find the Domain from Object Cache.
-         */
-
-
-        /**
-         * Load from the database. Starting with domain mapping table and then
-         * checking the Reserve table.
-         */
+        return $this->get( $fqdn );
     }
 
     /**
      * Retrieve a domain for a specific Site in WordPress.
      *
-     * @param  string    $fqdn FQDN to search for.
-     * @return DM_Domain       Domain object.
+     * @param  string            $fqdn FQDN to search for.
+     * @return DM_Domain|boolean       Domain object. False otherwise.
      */
     public function get( $fqdn = '' ) {
         if ( empty( $fqdn ) ) {
@@ -264,7 +256,7 @@ class DarkMatter_Domains {
             $_domain = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->dm_table} WHERE domain = %s", $fqdn ) );
 
             if ( empty( $_domain ) ) {
-                return null;
+                return false;
             }
 
             /**
