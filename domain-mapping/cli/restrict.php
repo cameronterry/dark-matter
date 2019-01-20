@@ -34,6 +34,61 @@ class DarkMatter_Restrict_CLI {
     }
 
     /**
+     * Retrieve a list of all Restricted domains for the Network.
+     *
+     * ### OPTIONS
+     *
+     * * [--format]
+     * : Determine which format that should be returned. Defaults to "table" and
+     * accepts "ids", "json", "csv", "yaml", and "count".
+     *
+     * ### EXAMPLES
+     * List all domains for the Network.
+     *
+     *      wp darkmatter restrict list
+     *
+     * List all domains for the Network in JSON format.
+     *
+     *      wp darkmatter restrict list --format=json
+     *
+     * Return all restricted domains for the Network as a string separated by
+     * spaces.
+     *
+     *      wp darkmatter restrict list --format=ids
+     */
+    public function list( $args, $assoc_args ) {
+        /**
+         * Handle and validate the format flag if provided.
+         */
+        $opts = wp_parse_args( $assoc_args, [
+            'format'  => 'table',
+        ] );
+
+        if ( ! in_array( $opts['format'], array( 'ids', 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
+            $opts['format'] = 'table';
+        }
+
+        $db = DarkMatter_Restrict::instance();
+
+        $restricted = $db->get();
+
+        /**
+         * Only format the return array if "ids" is not specified.
+         */
+        if ( 'ids' !== $opts['format'] ) {
+            $restricted = array_map( function ( $domain ) {
+                return array(
+                    'F.Q.D.N.' => $domain,
+                );
+            }, $restricted );
+        }
+
+        WP_CLI\Utils\format_items( $opts['format'], $restricted, [
+            'F.Q.D.N.'
+        ] );
+    }
+
+    /**
      * Remove a domain to the restrict for the WordPress Network.
      *
      * ### OPTIONS
