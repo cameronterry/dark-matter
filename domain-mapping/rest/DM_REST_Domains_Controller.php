@@ -2,7 +2,8 @@
 
 class DM_REST_Domains_Controller extends WP_REST_Posts_Controller {
     public function __construct() {
-        $this->namespace = 'darkmatter/domains';
+        $this->namespace = 'dm/v1';
+        $this->rest_base = 'domains';
     }
 
     public function create_item( $request ) {
