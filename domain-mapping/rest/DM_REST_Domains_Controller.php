@@ -10,7 +10,7 @@ class DM_REST_Domains_Controller extends WP_REST_Posts_Controller {
     }
 
     public function create_item_permissions_check( $request ) {
-
+        return current_user_can( 'upgrade_network' );
     }
 
     public function delete_item( $request ) {
@@ -18,7 +18,7 @@ class DM_REST_Domains_Controller extends WP_REST_Posts_Controller {
     }
 
     public function delete_item_permissions_check( $request ) {
-
+        return current_user_can( 'upgrade_network' );
     }
 
     public function get_item( $request ) {
@@ -30,7 +30,7 @@ class DM_REST_Domains_Controller extends WP_REST_Posts_Controller {
     }
 
     public function get_items_permissions_check( $request ) {
-
+        return current_user_can( 'upgrade_network' );
     }
 
     protected function prepare_item_for_database( $request ) {
@@ -50,6 +50,6 @@ class DM_REST_Domains_Controller extends WP_REST_Posts_Controller {
     }
 
     public function update_item_permissions_check( $request ) {
-
+        return current_user_can( 'upgrade_network' );
     }
 }
