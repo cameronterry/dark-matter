@@ -53,3 +53,14 @@ class DM_REST_Domains_Controller extends WP_REST_Posts_Controller {
         return current_user_can( 'upgrade_network' );
     }
 }
+
+/**
+ * Setup the REST Controller for Domains for use.
+ *
+ * @return void
+ */
+function dark_matter_domains_rest() {
+    $controller = new DM_REST_Domains_Controller();
+    $controller->register_routes();
+}
+add_action( 'rest_api_init', 'dark_matter_domains_rest' );
