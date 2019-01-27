@@ -44,12 +44,4 @@ class DM_REST_Restricted_Controller extends WP_REST_Posts_Controller {
     public function register_routes() {
 
     }
-
-    public function update_item( $request ) {
-
-    }
-
-    public function update_item_permissions_check( $request ) {
-
-    }
 }
