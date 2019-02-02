@@ -75,8 +75,33 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return $schema;
     }
 
+    /**
+     * Return a list of Domains.
+     *
+     * @param  WP_REST_Request        $request Current request.
+     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     */
     public function get_items( $request ) {
+        $site_id = ( isset( $request['site_id'] ) ? $request['site_id'] : get_current_blog_id() );
 
+        $db = DarkMatter_Domains::instance();
+
+        $response = array();
+
+        $result = $db->get_domains( $site_id );
+
+        if ( is_wp_error( $result ) ) {
+            return rest_ensure_response( $result );
+        }
+
+        /**
+         * Process the domains and prepare each for the JSON response.
+         */
+        foreach ( $result as $dm_domain ) {
+            $response[] = $this->prepare_item_for_response( $dm_domain, $request );
+        }
+
+        return rest_ensure_response( $response );
     }
 
     public function get_items_permissions_check( $request ) {
