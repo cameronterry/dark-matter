@@ -48,10 +48,6 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
         return current_user_can( 'upgrade_network' );
     }
 
-    public function get_item( $request ) {
-
-    }
-
     /**
      * Return the Restricted domains as a list in REST response.
      *
