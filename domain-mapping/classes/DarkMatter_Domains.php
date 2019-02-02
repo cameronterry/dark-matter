@@ -281,10 +281,10 @@ class DarkMatter_Domains {
 
         $_domains = null;
 
-        if ( empty( $site_id ) || is_main_site() ) {
-            $_domains = $wpdb->get_col( "SELECT domain FROM {$this->dm_table} ORDER BY blog_id, is_primary DESC, domain" );
-        } else {
+        if ( ! empty( $site_id ) ) {
             $_domains = $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM {$this->dm_table} WHERE blog_id = %d ORDER BY is_primary DESC, domain", $site_id ) );
+        } else {
+            $_domains = $wpdb->get_col( "SELECT domain FROM {$this->dm_table} ORDER BY blog_id, is_primary DESC, domain" );
         }
 
         if ( empty( $_domains ) ) {
