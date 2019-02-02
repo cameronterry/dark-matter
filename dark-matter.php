@@ -44,6 +44,7 @@ require_once DM_PATH . '/domain-mapping/classes/DarkMatter_Domains.php';
 require_once DM_PATH . '/domain-mapping/classes/DarkMatter_Primary.php';
 require_once DM_PATH . '/domain-mapping/classes/DarkMatter_Restrict.php';
 
+require_once DM_PATH . '/domain-mapping/rest/DM_REST_Domains_Controller.php';
 require_once DM_PATH . '/domain-mapping/rest/DM_REST_Restricted_Controller.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
