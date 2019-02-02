@@ -1,6 +1,9 @@
 <?php
 
 class DM_REST_Restricted_Controller extends WP_REST_Controller {
+    /**
+     * Constructor.
+     */
     public function __construct() {
         $this->namespace = 'dm/v1';
         $this->rest_base = 'restricted';
@@ -36,6 +39,12 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
         return $response;
     }
 
+    /**
+     * Checks if a given request has access to add a Restricted domain.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     */
     public function create_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
     }
@@ -67,6 +76,12 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
         ) );
     }
 
+    /**
+     * Checks if a given request has access to delete Restricted domains.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     */
     public function delete_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
     }
@@ -83,12 +98,15 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
         return rest_ensure_response( $db->get() );
     }
 
+    /**
+     * Checks if a given request has access to retrieve a list Restricted
+     * domains.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     */
     public function get_items_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
-    }
-
-    protected function prepare_item_for_database( $request ) {
-
     }
 
     /**
