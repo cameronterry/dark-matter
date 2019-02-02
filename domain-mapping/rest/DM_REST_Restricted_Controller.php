@@ -46,10 +46,6 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 
     }
 
-    public function prepare_item_for_response( $item, $request ) {
-
-    }
-
     /**
      * Register REST API routes for Restricted domains.
      *
