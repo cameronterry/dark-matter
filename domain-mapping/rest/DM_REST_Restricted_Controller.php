@@ -26,8 +26,16 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 
     }
 
+    /**
+     * Return the Restricted domains as a list in REST response.
+     *
+     * @param  WP_REST_Request        $request Current request.
+     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     */
     public function get_items( $request ) {
+        $db = DarkMatter_Restrict::instance();
 
+        return rest_ensure_response( $db->get() );
     }
 
     public function get_items_permissions_check( $request ) {
@@ -42,8 +50,17 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 
     }
 
+    /**
+     * Register REST API routes for Restricted domains.
+     *
+     * @return void
+     */
     public function register_routes() {
-
+        register_rest_route( $this->namespace, $this->rest_base, [
+            'methods'  => WP_REST_Server::READABLE,
+            'callback' => array( $this, 'get_items' ),
+            'permission_callback' => array( $this, 'get_items_permissions_check' ),
+        ] );
     }
 }
 
