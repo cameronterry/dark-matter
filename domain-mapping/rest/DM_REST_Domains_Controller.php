@@ -82,7 +82,19 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
      */
     public function get_items( $request ) {
-        $site_id = ( isset( $request['site_id'] ) ? $request['site_id'] : get_current_blog_id() );
+        $site_id = null;
+
+        /**
+         * Handle the processing of the Site ID parameter if it is provided. If
+         * not, then set the $site_id to the Current Blog ID unless it is the
+         * main site calling this endpoint. For the main site, we return all the
+         * Domains for all Sites on the WordPress Network.
+         */
+        if ( isset( $request['site_id'] ) ) {
+            $site_id = $request['site_id'];
+        } else if ( ! is_main_site() ) {
+            $site_id = get_current_blog_id();
+        }
 
         $db = DarkMatter_Domains::instance();
 
