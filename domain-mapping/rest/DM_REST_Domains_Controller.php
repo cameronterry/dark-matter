@@ -112,7 +112,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         }
 
         if ( in_array( 'is_active', $fields, true ) ) {
-            $data['is_active'] = $item->is_active;
+            $data['is_active'] = $item->active;
         }
 
         if ( in_array( 'is_https', $fields, true ) ) {
