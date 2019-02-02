@@ -127,7 +127,27 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
     }
 
     public function register_routes() {
+        register_rest_route( $this->namespace, $this->rest_base, array(
+            'methods'             => WP_REST_Server::READABLE,
+            'callback'            => array( $this, 'get_items' ),
+            'permission_callback' => array( $this, 'get_items_permissions_check' ),
+            'schema'              => array( $this, 'get_item_schema' ),
+        ) );
 
+        register_rest_route( $this->namespace, $this->rest_base . '/(?P<site_id>[\d]+)', array(
+            'args' => array(
+                'site_id' => array(
+                    'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
+                    'type'        => 'integer',
+                ),
+            ),
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_items' ),
+                'permission_callback' => array( $this, 'get_items_permissions_check' ),
+                'schema'              => array( $this, 'get_item_schema' ),
+            )
+        ) );
     }
 
     public function update_item( $request ) {
