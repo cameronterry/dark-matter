@@ -26,6 +26,55 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
     }
 
+    /**
+     * JSON Schema definition for Domain.
+     *
+     * @return array JSON Schema definition.
+     */
+    public function get_item_schema() {
+        $schema = array(
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'Domain',
+            'type'       => 'object',
+            'properties' => array(
+                'id'         => array(
+                    'description' => __( 'Unique identifier for the object.', 'dark-matter' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+                'domain'     => array(
+                    'description' => __( 'Domain name.', 'dark-matter' ),
+                    'type'        => 'string',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'is_primary' => array(
+                    'description' => __( 'Domain is the primary domain for the Site.', 'dark-matter' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'is_active'  => array(
+                    'description' => __( 'Domain is currently being used.', 'dark-matter' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'is_https'   => array(
+                    'description' => __( 'Domain is to be available on the HTTPS protocol.', 'dark-matter' ),
+                    'type'        => 'boolean',
+                    'context'     => array( 'view', 'edit' ),
+                ),
+                'blog_id'    => array(
+                    'description' => __( 'Site ID the domain is assigned against.', 'dark-matter' ),
+                    'type'        => 'integer',
+                    'context'     => array( 'view', 'edit' ),
+                    'readonly'    => true,
+                ),
+            ),
+        );
+
+        return $schema;
+    }
+
     public function get_items( $request ) {
 
     }
