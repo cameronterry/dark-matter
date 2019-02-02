@@ -87,8 +87,43 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
     }
 
+    /**
+     * Prepares a single domain output for response.
+     *
+     * @param  DM_Domain       $item    Domain object to be prepared for response.
+     * @param  WP_REST_Request $request Current request.
+     * @return array                    Prepared item for REST response.
+     */
     public function prepare_item_for_response( $item, $request ) {
+        $fields = $this->get_fields_for_response( $request );
 
+        $data = array();
+
+        if ( in_array( 'id', $fields, true ) ) {
+            $data['id'] = $item->id;
+        }
+
+        if ( in_array( 'domain', $fields, true ) ) {
+            $data['domain'] = $item->domain;
+        }
+
+        if ( in_array( 'is_primary', $fields, true ) ) {
+            $data['is_primary'] = $item->is_primary;
+        }
+
+        if ( in_array( 'is_active', $fields, true ) ) {
+            $data['is_active'] = $item->is_active;
+        }
+
+        if ( in_array( 'is_https', $fields, true ) ) {
+            $data['is_https'] = $item->is_https;
+        }
+
+        if ( in_array( 'blog_id', $fields, true ) ) {
+            $data['blog_id'] = $item->blog_id;
+        }
+
+        return $data;
     }
 
     public function register_routes() {
