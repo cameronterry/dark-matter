@@ -71,7 +71,7 @@ class DarkMatter_Restrict {
         }
 
         if ( $this->is_exist( $fqdn ) ) {
-            return new WP_Error( 'exists', __( 'The Domain is already Reserved.', 'dark-matter' ) );
+            return new WP_Error( 'exists', __( 'The Domain is already Restricted.', 'dark-matter' ) );
         }
 
         /**
