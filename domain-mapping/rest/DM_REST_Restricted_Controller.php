@@ -6,8 +6,34 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
         $this->rest_base = 'restricted';
     }
 
+    /**
+     * Add a domain to the Restricted domains list.
+     *
+     * @param  WP_REST_Request        $request Current request.
+     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     */
     public function create_item( $request ) {
+        $db = DarkMatter_Restrict::instance();
 
+        $domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
+
+        $result = $db->add( $domain );
+
+        /**
+         * Return errors as-is. This is maintain consistency and parity with the
+         * WP CLI commands.
+         */
+        if ( is_wp_error( $result ) ) {
+            return rest_ensure_response( $result );
+        }
+
+        $response = rest_ensure_response( array(
+            'domain' => $domain,
+        ) );
+
+        $response->set_status( '201' );
+
+        return $response;
     }
 
     public function create_item_permissions_check( $request ) {
@@ -52,6 +78,12 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
+        register_rest_route( $this->namespace, $this->rest_base, [
+            'methods'  => WP_REST_Server::CREATABLE,
+            'callback' => array( $this, 'create_item' ),
+            'permission_callback' => array( $this, 'create_item_permissions_check' ),
+        ] );
+
         register_rest_route( $this->namespace, $this->rest_base, [
             'methods'  => WP_REST_Server::READABLE,
             'callback' => array( $this, 'get_items' ),
