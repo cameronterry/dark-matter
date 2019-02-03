@@ -40,9 +40,9 @@ require_once DM_PATH . '/domain-mapping/classes/DM_Database.php';
 require_once DM_PATH . '/domain-mapping/classes/DM_Domain.php';
 require_once DM_PATH . '/domain-mapping/classes/DM_URL.php';
 
-require_once DM_PATH . '/domain-mapping/classes/DarkMatter_Domains.php';
-require_once DM_PATH . '/domain-mapping/classes/DarkMatter_Primary.php';
-require_once DM_PATH . '/domain-mapping/classes/DarkMatter_Restrict.php';
+require_once DM_PATH . '/domain-mapping/api/DarkMatter_Domains.php';
+require_once DM_PATH . '/domain-mapping/api/DarkMatter_Primary.php';
+require_once DM_PATH . '/domain-mapping/api/DarkMatter_Restrict.php';
 
 require_once DM_PATH . '/domain-mapping/rest/DM_REST_Domains_Controller.php';
 require_once DM_PATH . '/domain-mapping/rest/DM_REST_Restricted_Controller.php';
