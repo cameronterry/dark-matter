@@ -71,7 +71,7 @@ class DarkMatter_Domains {
             return new WP_Error( 'root', __( 'Domains cannot be mapped to the main / root Site.', 'dark-matter' ) );
         }
 
-        $reserve = DarkMatter_Reserve::instance();
+        $reserve = DarkMatter_Restrict::instance();
         if ( $reserve->is_exist( $fqdn ) ) {
             return new WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
         }
