@@ -173,6 +173,22 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
+        register_rest_route( $this->namespace, $this->rest_base . '/(?P<domain>.+)', array(
+            'args' => array(
+                'domain' => array(
+                    'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
+                    'format'      => 'uri',
+                    'type'        => 'string',
+                ),
+            ),
+            array(
+                'methods'             => WP_REST_Server::READABLE,
+                'callback'            => array( $this, 'get_item' ),
+                'permission_callback' => array( $this, 'get_items_permissions_check' ),
+                'schema'              => array( $this, 'get_item_schema' ),
+            )
+        ) );
+
         register_rest_route( $this->namespace, $this->rest_base_plural, array(
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => array( $this, 'get_items' ),
