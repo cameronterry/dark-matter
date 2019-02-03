@@ -86,8 +86,43 @@ class DM_SSO_Cookie {
         die();
     }
 
+    /**
+     * Adds the <script> tag which references the admin action(s) for handling
+     * cross-domain login and logout.
+     *
+     * @return void
+     */
     public function head_script() {
+        if ( is_main_site() ) {
+            return;
+        }
 
+        $script_url = add_query_arg( [
+            'action' => 'dark_matter_' . ( false === is_user_logged_in() ? 'dmsso' : 'dmcheck' )
+        ], network_site_url( '/wp-admin/admin-post.php' ) );
+
+        /**
+         * Check to see if the user is logged in to the current website on the mapped
+         * domain. We then check the setting "Allow Logins?" to see if it is enabled.
+         * In this scenario, the administrator has decided to let users log in only to
+         * the map domain in some scenarios; likely utilising a Membership-like or
+         * WooCommerce style plugin.
+         */
+        if ( is_user_logged_in() && 'yes' === get_option( 'dark_matter_allow_logins' , 'no' ) ) {
+            $user = wp_get_current_user();
+
+            /**
+             * Finally we check the user role to see if the user can edit content and
+             * apply the default functionality for Contributor's and above. The logic
+             * is like this because any one with Administrative or Content curation
+             * ability will have access to the /wp-admin/ area which is on the admin
+             * domain. Therefore ... users will need to login through the admin first.
+             */
+            if ( is_a( $user, 'WP_User' ) && false === current_user_can( 'edit_posts' ) ) {
+                return;
+            }
+        }
+        ?><script type="text/javascript" src="<?php echo( esc_url( $script_url ) ); ?>"></script><?php
     }
 
     /**
