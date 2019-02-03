@@ -357,7 +357,7 @@ class DarkMatter_Domains {
      * @param  boolean            $is_https   HTTPS protocol setting.
      * @param  boolean            $force      Whether the update should be forced.
      * @param  boolean            $active     Default is active. Set to false if you wish to add a domain but not make it active.
-     * @return boolean            True on success. False on failure.
+     * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
     public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true ) {
         $fqdn = $this->_basic_check( $fqdn );
