@@ -42,6 +42,12 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return $response;
     }
 
+    /**
+     * Checks if a given request has access to add a domain.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     */
     public function create_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
     }
@@ -76,6 +82,12 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return $response;
     }
 
+    /**
+     * Checks if a given request has access to delete a domain.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     */
     public function delete_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
     }
@@ -209,6 +221,12 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return rest_ensure_response( $response );
     }
 
+    /**
+     * Checks if a given request has access to get a domain or list of domains.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     */
     public function get_items_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
     }
@@ -393,6 +411,12 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return $response;
     }
 
+    /**
+     * Checks if a given request has access to update a domain.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     */
     public function update_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
     }
