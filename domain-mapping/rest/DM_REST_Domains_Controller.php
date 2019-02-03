@@ -513,7 +513,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         /**
          * Prepare response for successfully adding a domain.
          */
-        $response = rest_ensure_response( $result );
+        $response = $this->prepare_item_for_response( $result, $request );
+        $response = rest_ensure_response( $response );
 
         return $response;
     }
