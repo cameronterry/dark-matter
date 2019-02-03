@@ -57,6 +57,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
         $result = $db->delete( $request['domain'], $request['force'] );
 
+        /**
+         * Return errors as-is. This is maintain consistency and parity with the
+         * WP CLI commands.
+         */
         if ( is_wp_error( $result ) ) {
             return rest_ensure_response( $result );
         }
@@ -87,6 +91,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
         $result = $db->get( $request['domain'] );
 
+        /**
+         * Return errors as-is. This is maintain consistency and parity with the
+         * WP CLI commands.
+         */
         if ( is_wp_error( $result ) ) {
             return rest_ensure_response( $result );
         }
@@ -175,6 +183,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
         $result = $db->get_domains( $site_id );
 
+        /**
+         * Return errors as-is. This is maintain consistency and parity with the
+         * WP CLI commands.
+         */
         if ( is_wp_error( $result ) ) {
             return rest_ensure_response( $result );
         }
