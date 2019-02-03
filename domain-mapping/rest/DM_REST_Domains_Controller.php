@@ -10,8 +10,36 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         $this->rest_base_plural = 'domains';
     }
 
+    /**
+     * Add a domain to the Site.
+     *
+     * @param  WP_REST_Request        $request Current request.
+     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     */
     public function create_item( $request ) {
+        $db = DarkMatter_Domains::instance();
 
+        $item = $this->prepare_item_for_database( $request );
+
+        $result = $db->add( $item['fqdn'], $item['is_primary'], $item['is_https'], $request['force'], $item['active'] );
+
+        /**
+         * Return errors as-is. This is maintain consistency and parity with the
+         * WP CLI commands.
+         */
+        if ( is_wp_error( $result ) ) {
+            return rest_ensure_response( $result );
+        }
+
+        /**
+         * Prepare response for successfully adding a domain.
+         */
+        $response = rest_ensure_response( $result );
+
+        $response->set_status( 201 );
+        $response->header( 'Location', rest_url( sprintf( '%s/%s/%d', $this->namespace, $this->rest_base, $result->domain ) ) );
+
+        return $response;
     }
 
     public function create_item_permissions_check( $request ) {
@@ -165,8 +193,27 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return current_user_can( 'upgrade_network' );
     }
 
+    /**
+     * Prepare item for adding to the database.
+     *
+     * @param  WP_REST_Request $request Current request.
+     * @return array                    Data provided by the call to the endpoint.
+     */
     protected function prepare_item_for_database( $request ) {
+        $item = array(
+            'fqdn'       => '',
+            'is_primary' => false,
+            'is_https'   => false,
+            'active'     => false,
+        );
 
+        foreach ( $item as $key => $default ) {
+            if ( ! empty( $request[ $key ] ) ) {
+                $item[ $key ] = $request[ $key ];
+            }
+        }
+
+        return $item;
     }
 
     /**
@@ -214,6 +261,40 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
+        register_rest_route( $this->namespace, $this->rest_base, array(
+            'methods'             => WP_REST_Server::CREATABLE,
+            'callback'            => array( $this, 'create_item' ),
+            'permission_callback' => array( $this, 'create_item_permissions_check' ),
+            'args'                => array(
+                'fqdn'  => array(
+                    'default'     => '',
+                    'description' => __( 'FQDN to be added to the site.', 'dark-matter' ),
+                    'required'    => true,
+                    'type'        => 'string',
+                ),
+                'is_primary' => array(
+                    'default'     => false,
+                    'description' => __( 'Set the new domain to be the primary for the Site.', 'dark-matter' ),
+                    'type'        => 'boolean',
+                ),
+                'is_https' => array(
+                    'default'     => false,
+                    'description' => __( 'Set the protocol to be HTTPS.', 'dark-matter' ),
+                    'type'        => 'boolean',
+                ),
+                'active' => array(
+                    'default'     => true,
+                    'description' => __( 'Set the domain to be active.', 'dark-matter' ),
+                    'type'        => 'boolean',
+                ),
+                'force' => array(
+                    'default'     => false,
+                    'description' => __( 'Force Dark Matter to add the domain. This is required if you wish to remove a Primary domain from a Site.', 'dark-matter' ),
+                    'type'        => 'boolean',
+                ),
+            ),
+        ) );
+
         register_rest_route( $this->namespace, $this->rest_base . '/(?P<domain>.+)', array(
             'args' => array(
                 'domain' => array(
