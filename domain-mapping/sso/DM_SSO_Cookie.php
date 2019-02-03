@@ -90,8 +90,46 @@ class DM_SSO_Cookie {
 
     }
 
+    /**
+     * Handle the validation of the login token and logging in of a user. Also
+     * handle the logout if that action is provided.
+     *
+     * @return void
+     */
     public function validate_token() {
+        /**
+         * First check to see if the authorise action is provided in the URL.
+         */
+        if ( 'authorise' === filter_input( INPUT_GET, '__dm_action' ) ) {
+            /**
+             * Validate the token provided in the URL.
+             */
+            $user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth' ), 'auth' );
 
+            /**
+             * Check if the validate token worked and we have a User ID. It will
+             * display an error message or login the User if all works out well.
+             */
+            if ( false === $user_id ) {
+                wp_die( 'Oops! Something went wrong with logging in.' );
+            }
+            else {
+                /**
+                 * Create the Login session cookie and redirect the user to the
+                 * current page with the URL querystrings for Domain Mapping SSO
+                 * removed.
+                 */
+                wp_set_auth_cookie( $user_id );
+                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ) );
+                die();
+            }
+        }
+        else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
+            wp_logout();
+            wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ) );
+
+            die();
+        }
     }
 
     /**
