@@ -26,8 +26,27 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return current_user_can( 'upgrade_network' );
     }
 
+    /**
+     * Return the Restricted domains as a list in REST response.
+     *
+     * @param  WP_REST_Request        $request Current request.
+     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     */
     public function get_item( $request ) {
+        $db = DarkMatter_Domains::instance();
 
+        $result = $db->get( $request['domain'] );
+
+        if ( is_wp_error( $result ) ) {
+            return rest_ensure_response( $result );
+        }
+
+        /**
+         * Handle the response for the REST endpoint.
+         */
+        $response = $this->prepare_item_for_response( $result, $request );
+
+        return rest_ensure_response( $response );
     }
 
     /**
