@@ -30,7 +30,35 @@ class DM_SSO_Cookie {
         add_action( 'plugins_loaded', array( $this, 'validate_token' ) );
     }
 
+    /**
+     * Create the JavaScript output include for logging a user in to the admin
+     * when on the Mapped domain. This is ultimately what makes the Admin Bar
+     * appear.
+     *
+     * @return void
+     */
     public function login_token() {
+        header( 'Content-Type: text/javascript' );
+
+        /**
+         * Ensure that the JavaScript is never empty.
+         */
+        echo "// dm_sso" . PHP_EOL;
+
+        if ( is_user_logged_in() ) {
+            /**
+             * Construct an authentication token which is passed back along with an
+             * action flag to tell the front end to
+             */
+            $url = add_query_arg( array(
+                '__dm_action' => 'authorise',
+                'auth' => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) )
+            ), $_SERVER['HTTP_REFERER'] );
+
+            printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
+        }
+
+        die();
     }
 
     public function logout_token() {
