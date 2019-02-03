@@ -196,7 +196,6 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
             'args' => array(
                 'domain' => array(
                     'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
-                    'format'      => 'uri',
                     'type'        => 'string',
                 ),
             ),
