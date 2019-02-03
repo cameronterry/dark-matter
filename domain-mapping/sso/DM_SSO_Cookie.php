@@ -61,7 +61,29 @@ class DM_SSO_Cookie {
         die();
     }
 
+    /**
+     * Create the JavaScript output for handling the logout functionality.
+     * Without this, users can end up in a state where they are logged out of
+     * the Admin domain but remain perpetually logged in to the Mapped domains.
+     *
+     * @return void
+     */
     public function logout_token() {
+        header( 'Content-Type: text/javascript' );
+
+        /**
+         * Ensure that the JavaScript is never empty.
+         */
+        echo "// dm_sso" . PHP_EOL;
+
+        if ( false === is_user_logged_in() ) {
+            $url = add_query_arg( array(
+                '__dm_action' => 'logout'
+            ), $_SERVER['HTTP_REFERER'] );
+            printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
+        }
+
+        die();
     }
 
     public function head_script() {
