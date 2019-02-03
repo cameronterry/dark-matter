@@ -164,11 +164,92 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
                     'required'    => false,
                     'type'        => 'boolean',
                 ),
-                'blog_id'    => array(
+                'site'       => array(
                     'description' => __( 'Site ID the domain is assigned against.', 'dark-matter' ),
-                    'type'        => 'integer',
+                    'type'        => 'object',
                     'context'     => array( 'view', 'edit' ),
                     'readonly'    => true,
+                    'properties'  => array(
+                        'blog_id'      => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Site ID.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'integer',
+                        ),
+                        'site_id'      => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'The ID of the site\'s parent network.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'integer',
+                        ),
+                        'domain'       => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Domain of the site.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'string',
+                        ),
+                        'path'         => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Path of the site.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'string',
+                        ),
+                        'registered'   => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'The date on which the site was created or registered.', 'dark-matter' ),
+                            'format'      => 'date-time',
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'string',
+                        ),
+                        'last_updated' => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'The date and time on which site settings were last updated.', 'dark-matter' ),
+                            'format'      => 'date-time',
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'string',
+                        ),
+                        'public'       => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Whether the site should be treated as public.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'integer',
+                        ),
+                        'archived'     => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Whether the site should be treated as archived.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'boolean',
+                        ),
+                        'mature'       => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Whether the site should be treated as mature.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'boolean',
+                        ),
+                        'spam'         => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Whether the site should be treated as spam.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'boolean',
+                        ),
+                        'deleted'      => array(
+                            'context'     => array( 'view', 'edit' ),
+                            'description' => __( 'Whether the site should be treated as deleted.', 'dark-matter' ),
+                            'readonly'    => true,
+                            'required'    => false,
+                            'type'        => 'boolean',
+                        ),
+                    ),
                 ),
             ),
         );
@@ -304,8 +385,34 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
             $data['is_https'] = $item->is_https;
         }
 
-        if ( in_array( 'blog_id', $fields, true ) ) {
-            $data['blog_id'] = $item->blog_id;
+        if ( in_array( 'site', $fields, true ) ) {
+            $site_data = get_site( $item->blog_id );
+
+            if ( ! empty( $site_data ) ) {
+                $data['site'] = $site_data->to_array();
+
+                $data['site']['blog_id']  = absint( $data['site']['blog_id'] );
+                $data['site']['site_id']  = absint( $data['site']['site_id'] );
+                $data['site']['public']   = absint( $data['site']['public'] );
+                $data['site']['archived'] = boolval( $data['site']['archived'] );
+                $data['site']['mature']   = boolval( $data['site']['mature'] );
+                $data['site']['spam']     = boolval( $data['site']['spam'] );
+                $data['site']['deleted']  = boolval( $data['site']['deleted'] );
+
+                if ( '0000-00-00 00:00:00' === $data['site']['registered'] ) {
+                    $data['site']['registered'] = null;
+                } else {
+                    $data['site']['registered'] = mysql_to_rfc3339( $data['site']['registered'] );
+                }
+
+                if ( '0000-00-00 00:00:00' === $data['site']['last_updated'] ) {
+                    $data['site']['last_updated'] = null;
+                } else {
+                    $data['site']['last_updated'] = mysql_to_rfc3339( $data['site']['last_updated'] );
+                }
+            } else {
+                $data['site'] = null;
+            }
         }
 
         return $data;
