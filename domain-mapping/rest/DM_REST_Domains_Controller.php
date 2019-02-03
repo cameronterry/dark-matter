@@ -1,9 +1,13 @@
 <?php
 
 class DM_REST_Domains_Controller extends WP_REST_Controller {
+    /**
+     * Constructor.
+     */
     public function __construct() {
-        $this->namespace = 'dm/v1';
-        $this->rest_base = 'domains';
+        $this->namespace        = 'dm/v1';
+        $this->rest_base        = 'domain';
+        $this->rest_base_plural = 'domains';
     }
 
     public function create_item( $request ) {
@@ -163,15 +167,20 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return $data;
     }
 
+    /**
+     * Register the routes for the REST API.
+     *
+     * @return void
+     */
     public function register_routes() {
-        register_rest_route( $this->namespace, $this->rest_base, array(
+        register_rest_route( $this->namespace, $this->rest_base_plural, array(
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => array( $this, 'get_items' ),
             'permission_callback' => array( $this, 'get_items_permissions_check' ),
             'schema'              => array( $this, 'get_item_schema' ),
         ) );
 
-        register_rest_route( $this->namespace, $this->rest_base . '/(?P<site_id>[\d]+)', array(
+        register_rest_route( $this->namespace, $this->rest_base_plural . '/(?P<site_id>[\d]+)', array(
             'args' => array(
                 'site_id' => array(
                     'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
