@@ -182,3 +182,5 @@ class DM_SSO_Cookie {
         return $instance;
     }
 }
+
+DM_SSO_Cookie::instance();
