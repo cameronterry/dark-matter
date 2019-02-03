@@ -18,8 +18,30 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         return current_user_can( 'upgrade_network' );
     }
 
+    /**
+     * Delete a domain.
+     *
+     * @param  WP_REST_Request        $request Current request.
+     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     */
     public function delete_item( $request ) {
+        $db = DarkMatter_Domains::instance();
 
+        $result = $db->delete( $request['domain'], $request['force'] );
+
+        if ( is_wp_error( $result ) ) {
+            return rest_ensure_response( $result );
+        }
+
+        /**
+         * Handle the response for the REST endpoint.
+         */
+        $response = rest_ensure_response( array(
+            'deleted' => true,
+            'domain'  => $request['domain'],
+        ) );
+
+        return $response;
     }
 
     public function delete_item_permissions_check( $request ) {
@@ -204,7 +226,19 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
                 'callback'            => array( $this, 'get_item' ),
                 'permission_callback' => array( $this, 'get_items_permissions_check' ),
                 'schema'              => array( $this, 'get_item_schema' ),
-            )
+            ),
+            array(
+                'methods'             => WP_REST_Server::DELETABLE,
+                'callback'            => array( $this, 'delete_item' ),
+                'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+                'args'                => array(
+                    'force' => array(
+                        'default'     => false,
+                        'description' => __( 'Force Dark Matter to remove the domain. This is required if you wish to remove a Primary domain from a Site.', 'dark-matter' ),
+                        'type'        => 'boolean',
+                    ),
+                ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, $this->rest_base_plural, array(
