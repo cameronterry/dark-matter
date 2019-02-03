@@ -21,7 +21,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
         $item = $this->prepare_item_for_database( $request );
 
-        $result = $db->add( $item['fqdn'], $item['is_primary'], $item['is_https'], $request['force'], $item['active'] );
+        $result = $db->add( $item['domain'], $item['is_primary'], $item['is_https'], $request['force'], $item['is_active'] );
 
         /**
          * Return errors as-is. This is maintain consistency and parity with the
@@ -119,30 +119,38 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
             'type'       => 'object',
             'properties' => array(
                 'id'         => array(
-                    'description' => __( 'Unique identifier for the object.', 'dark-matter' ),
-                    'type'        => 'integer',
                     'context'     => array( 'view', 'edit' ),
+                    'description' => __( 'Unique identifier for the object.', 'dark-matter' ),
                     'readonly'    => true,
+                    'type'        => 'integer',
                 ),
                 'domain'     => array(
-                    'description' => __( 'Domain name.', 'dark-matter' ),
-                    'type'        => 'string',
                     'context'     => array( 'view', 'edit' ),
+                    'default'     => '',
+                    'description' => __( 'Domain name.', 'dark-matter' ),
+                    'required'    => true,
+                    'type'        => 'string',
                 ),
                 'is_primary' => array(
-                    'description' => __( 'Domain is the primary domain for the Site.', 'dark-matter' ),
-                    'type'        => 'boolean',
                     'context'     => array( 'view', 'edit' ),
+                    'default'     => false,
+                    'description' => __( 'Domain is the primary domain for the Site.', 'dark-matter' ),
+                    'required'    => false,
+                    'type'        => 'boolean',
                 ),
                 'is_active'  => array(
-                    'description' => __( 'Domain is currently being used.', 'dark-matter' ),
-                    'type'        => 'boolean',
                     'context'     => array( 'view', 'edit' ),
+                    'default'     => true,
+                    'description' => __( 'Domain is currently being used.', 'dark-matter' ),
+                    'required'    => false,
+                    'type'        => 'boolean',
                 ),
                 'is_https'   => array(
-                    'description' => __( 'Domain is to be available on the HTTPS protocol.', 'dark-matter' ),
-                    'type'        => 'boolean',
                     'context'     => array( 'view', 'edit' ),
+                    'default'     => false,
+                    'description' => __( 'Domain is to be available on the HTTPS protocol.', 'dark-matter' ),
+                    'required'    => false,
+                    'type'        => 'boolean',
                 ),
                 'blog_id'    => array(
                     'description' => __( 'Site ID the domain is assigned against.', 'dark-matter' ),
@@ -213,10 +221,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      */
     protected function prepare_item_for_database( $request ) {
         $item = array(
-            'fqdn'       => '',
+            'domain'     => '',
             'is_primary' => false,
             'is_https'   => false,
-            'active'     => false,
+            'is_active'  => false,
         );
 
         foreach ( $item as $key => $default ) {
@@ -277,34 +285,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => array( $this, 'create_item' ),
             'permission_callback' => array( $this, 'create_item_permissions_check' ),
-            'args'                => array(
-                'fqdn'  => array(
-                    'default'     => '',
-                    'description' => __( 'FQDN to be added to the site.', 'dark-matter' ),
-                    'required'    => true,
-                    'type'        => 'string',
-                ),
-                'is_primary' => array(
-                    'default'     => false,
-                    'description' => __( 'Set the new domain to be the primary for the Site.', 'dark-matter' ),
-                    'type'        => 'boolean',
-                ),
-                'is_https' => array(
-                    'default'     => false,
-                    'description' => __( 'Set the protocol to be HTTPS.', 'dark-matter' ),
-                    'type'        => 'boolean',
-                ),
-                'active' => array(
-                    'default'     => true,
-                    'description' => __( 'Set the domain to be active.', 'dark-matter' ),
-                    'type'        => 'boolean',
-                ),
-                'force' => array(
-                    'default'     => false,
-                    'description' => __( 'Force Dark Matter to add the domain. This is required if you wish to remove a Primary domain from a Site.', 'dark-matter' ),
-                    'type'        => 'boolean',
-                ),
-            ),
+            'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
         ) );
 
         register_rest_route( $this->namespace, $this->rest_base . '/(?P<domain>.+)', array(
