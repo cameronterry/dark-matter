@@ -133,21 +133,21 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
                 ),
                 'is_primary' => array(
                     'context'     => array( 'view', 'edit' ),
-                    'default'     => false,
+                    'default'     => null,
                     'description' => __( 'Domain is the primary domain for the Site.', 'dark-matter' ),
                     'required'    => false,
                     'type'        => 'boolean',
                 ),
                 'is_active'  => array(
                     'context'     => array( 'view', 'edit' ),
-                    'default'     => true,
+                    'default'     => null,
                     'description' => __( 'Domain is currently being used.', 'dark-matter' ),
                     'required'    => false,
                     'type'        => 'boolean',
                 ),
                 'is_https'   => array(
                     'context'     => array( 'view', 'edit' ),
-                    'default'     => false,
+                    'default'     => null,
                     'description' => __( 'Domain is to be available on the HTTPS protocol.', 'dark-matter' ),
                     'required'    => false,
                     'type'        => 'boolean',
@@ -222,15 +222,33 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
     protected function prepare_item_for_database( $request ) {
         $item = array(
             'domain'     => '',
-            'is_primary' => false,
-            'is_https'   => false,
-            'is_active'  => false,
+            'is_primary' => null,
+            'is_https'   => null,
+            'is_active'  => null,
         );
 
+        $method = $request->get_method();
+
         foreach ( $item as $key => $default ) {
-            if ( ! empty( $request[ $key ] ) ) {
-                $item[ $key ] = $request[ $key ];
+            $value = $default;
+
+            if ( isset( $request[ $key ] ) ) {
+                $value = $request[ $key ];
             }
+
+            if ( WP_REST_Server::CREATABLE === $method && null === $value && 'is_primary' === $key ) {
+                $value = false;
+            }
+
+            if ( WP_REST_Server::CREATABLE === $method && null === $value && 'is_https' === $key ) {
+                $value = false;
+            }
+
+            if ( WP_REST_Server::CREATABLE === $method && null === $value && 'is_active' === $key ) {
+                $value = true;
+            }
+
+            $item[ $key ] = $value;
         }
 
         return $item;
@@ -292,6 +310,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
             'args' => array(
                 'domain' => array(
                     'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
+                    'required'    => true,
                     'type'        => 'string',
                 ),
             ),
@@ -326,6 +345,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
             'args' => array(
                 'site_id' => array(
                     'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
+                    'required'    => true,
                     'type'        => 'integer',
                 ),
             ),
