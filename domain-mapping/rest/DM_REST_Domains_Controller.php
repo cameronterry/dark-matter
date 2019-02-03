@@ -332,6 +332,12 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
                     ),
                 ),
             ),
+            array(
+                'methods'             => WP_REST_Server::EDITABLE,
+                'callback'            => array( $this, 'update_item' ),
+                'permission_callback' => array( $this, 'update_item_permissions_check' ),
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+            ),
         ) );
 
         register_rest_route( $this->namespace, $this->rest_base_plural, array(
@@ -358,8 +364,33 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         ) );
     }
 
+    /**
+     * Update a domain for a Site.
+     *
+     * @param  WP_REST_Request        $request Current request.
+     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     */
     public function update_item( $request ) {
+        $db = DarkMatter_Domains::instance();
 
+        $item = $this->prepare_item_for_database( $request );
+
+        $result = $db->update( $item['domain'], $item['is_primary'], $item['is_https'], $request['force'], $item['is_active'] );
+
+        /**
+         * Return errors as-is. This is maintain consistency and parity with the
+         * WP CLI commands.
+         */
+        if ( is_wp_error( $result ) ) {
+            return rest_ensure_response( $result );
+        }
+
+        /**
+         * Prepare response for successfully adding a domain.
+         */
+        $response = rest_ensure_response( $result );
+
+        return $response;
     }
 
     public function update_item_permissions_check( $request ) {
