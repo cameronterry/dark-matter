@@ -32,13 +32,13 @@ class DM_UI {
      * @return void
      */
     public function enqueue() {
-        wp_register_script( 'dark-matter-domains', plugins_url() . '/build/index.js', [], DM_VERSION, true );
+        wp_register_script( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/index.js', [], DM_VERSION, true );
 
         wp_enqueue_script( 'dark-matter-domains' );
     }
 
     /**
-     * Very basic HTML output for the page.
+     * Very basic HTML output for the
      *
      * @return void
      */

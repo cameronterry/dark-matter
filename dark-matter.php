@@ -34,6 +34,8 @@ define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DM_VERSION', '2.0.0' );
 define( 'DM_DB_VERSION', '20190114' );
 
+define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
 wp_cache_add_global_groups( 'dark-matter' );
 
 require_once DM_PATH . '/domain-mapping/classes/DM_Database.php';
