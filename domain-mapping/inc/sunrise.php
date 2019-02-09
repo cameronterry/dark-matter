@@ -43,6 +43,15 @@ if ( $dm_domain && $dm_domain->is_primary && $dm_domain->active ) {
      */
     global $current_blog, $original_blog;
     $current_blog  = get_site( $dm_domain->blog_id );
+
+    /**
+     * Dark Matter will disengage if the website is no longer public or is
+     * archived or deleted.
+     */
+    if ( (int) $current_blog->public > 0 && $current_blog->archived !== '0' && $current_blog->deleted !== '0' ) {
+        return;
+    }
+
     $original_blog = clone $current_blog;
 
     $current_blog->domain = $dm_domain->domain;
