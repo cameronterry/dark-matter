@@ -1,2 +1,5 @@
-const message = <h1>Test JSX!</h1>;
-console.log("Hello World!");
+import React from 'react';
+import { render } from 'react-dom';
+import DomainMapping from './Components/DomainMapping';
+
+render( <DomainMapping />, document.querySelector( '#root' ) );
