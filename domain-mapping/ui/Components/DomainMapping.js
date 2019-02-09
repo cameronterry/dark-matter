@@ -2,10 +2,39 @@ import React from 'react';
 import DomainRow from './DomainRow';
 
 class DomainMapping extends React.Component {
+  constructor( props ) {
+    super( props );
+
+    this.state = {
+      domains : []
+    };
+  }
+
+  /**
+   * Retrieve the domains for the Site from the REST API. We use jQuery's AJAX
+   * mechanism as this is already in WordPress and doesn't require a separate
+   * dependency / library liks Axios ... for now ...
+   */
+  componentDidMount() {
+    window.jQuery.ajax( {
+			url : window.dmSettings.rest_root + 'dm/v1/domains',
+			dataType : 'json',
+			method : 'GET',
+			beforeSend : function ( xhr ) {
+				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+			},
+			success : function( data ) {
+				this.setState( {
+          domains: data
+        } );
+			}.bind( this )
+		} );
+  }
+
   render() {
     const rows = [];
 
-    this.props.domains.forEach( ( domain ) => {
+    this.state.domains.forEach( ( domain ) => {
       rows.push( <DomainRow key={domain.id} domain={domain} /> );
     } );
 
