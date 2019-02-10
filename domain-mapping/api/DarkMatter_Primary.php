@@ -84,15 +84,6 @@ class DarkMatter_Primary {
         $db = DarkMatter_Domains::instance();
         $_domain = $db->get( $primary_domain );
 
-        /**
-         * Determine if the domain is active. If it's not, then return false.
-         * The logic is currently done like this so that if there is a primary
-         * domain, the database is protected by the cache detection.
-         */
-        if ( ! $_domain->active ) {
-            return false;
-        }
-
         return $_domain;
     }
 
