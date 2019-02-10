@@ -97,7 +97,7 @@ function darkmatter_maybe_redirect() {
     /**
      * If there is no primary domain, there is nothing to do.
      */
-    if ( ! $primary || ! $original_blog ) {
+    if ( ! $primary || ! $original_blog || $primary->active ) {
         return;
     }
 
