@@ -2,6 +2,11 @@ import React from 'react';
 import DomainRow from './DomainRow';
 
 class DomainMapping extends React.Component {
+  /**
+   * Constructor.
+   *
+   * @param {object} props
+   */
   constructor( props ) {
     super( props );
 
@@ -11,11 +16,17 @@ class DomainMapping extends React.Component {
   }
 
   /**
-   * Retrieve the domains for the Site from the REST API. We use jQuery's AJAX
-   * mechanism as this is already in WordPress and doesn't require a separate
-   * dependency / library liks Axios ... for now ...
+   * Retrieve the domains for the Site from the REST API.
    */
   componentDidMount() {
+    this.getData();
+  }
+
+  getData() {
+    /**
+     * We use jQuery's AJAX mechanism as this is already in WordPress and
+     * doesn't require a separate dependency / library liks Axios ... for now.
+     */
     window.jQuery.ajax( {
 			url : window.dmSettings.rest_root + 'dm/v1/domains',
 			dataType : 'json',
@@ -31,6 +42,9 @@ class DomainMapping extends React.Component {
 		} );
   }
 
+  /**
+   * Render.
+   */
   render() {
     const rows = [];
 
