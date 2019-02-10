@@ -1,6 +1,9 @@
 import React from 'react';
 
 class DomainDisplayPrimary extends React.Component {
+  /**
+   * Render component.
+   */
   render() {
     const url = ( this.props.is_https ? 'https://' : 'http://' ) + this.props.domain;
 
