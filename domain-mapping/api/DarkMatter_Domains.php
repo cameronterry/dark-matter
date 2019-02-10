@@ -427,13 +427,13 @@ class DarkMatter_Domains {
             if ( $is_primary && ! $current->is_primary ) {
                 $current_primary = $dm_primary->get( $current->blog_id );
 
-                if ( $current_primary && $current_primary->domain !== $_domain['domain'] ) {
-                    $dm_primary->unset( $current->blog_id );
+                if ( ! empty( $current_primary ) ) {
+                    $this->update( $current_primary->domain, false, null, true, $current_primary->active );
                 }
 
-                $dm_primary->set( $current->blog_id, $fqdn );
+                $dm_primary->set( $current->blog_id, $current->domain );
             } else if ( false === $is_primary && $current->is_primary ) {
-                $dm_primary->unset( $current->blog_id );
+                $dm_primary->unset( $current->blog_id, $current->domain );
             }
 
             return new DM_Domain( (object) $_domain );
