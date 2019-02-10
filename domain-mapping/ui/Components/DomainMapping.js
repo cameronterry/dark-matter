@@ -49,7 +49,7 @@ class DomainMapping extends React.Component {
     const rows = [];
 
     this.state.domains.forEach( ( domain ) => {
-      rows.push( <DomainRow key={domain.id} domain={domain} /> );
+      rows.push( <DomainRow key={ domain.id } domain={ domain } update={ this.update } /> );
     } );
 
     return (
