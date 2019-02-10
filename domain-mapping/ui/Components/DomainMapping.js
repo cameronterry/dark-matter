@@ -22,6 +22,20 @@ class DomainMapping extends React.Component {
     this.getData();
   }
 
+  delete = ( domain ) => {
+    window.jQuery.ajax( {
+			url : window.dmSettings.rest_root + 'dm/v1/domain/' + domain,
+			dataType : 'json',
+			method : 'DELETE',
+			beforeSend : function ( xhr ) {
+				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+			},
+			success : function () {
+				this.getData();
+			}.bind( this )
+		} );
+  }
+
   getData() {
     /**
      * We use jQuery's AJAX mechanism as this is already in WordPress and
@@ -49,7 +63,7 @@ class DomainMapping extends React.Component {
     const rows = [];
 
     this.state.domains.forEach( ( domain ) => {
-      rows.push( <DomainRow key={ domain.id } domain={ domain } update={ this.update } /> );
+      rows.push( <DomainRow key={ domain.id } delete={ this.delete } domain={ domain } update={ this.update } /> );
     } );
 
     return (
@@ -72,6 +86,11 @@ class DomainMapping extends React.Component {
     );
   }
 
+  /**
+   * Handle the update of the Domain and send a request to the REST API for the
+   * database changes. If successful, then retrieve the new data set from the
+   * REST API.
+   */
   update = ( data ) => {
     data.force = true,
 
