@@ -1,16 +1,24 @@
 import React from 'react';
 
 class DomainDisplaySecondary extends React.Component {
+  handleProtocol = () => {
+    let data = { ...this.props.data };
+
+    data.is_https = ! data.is_https;
+
+    this.props.update( data );
+  }
+
   render() {
-    const url = ( this.props.is_https ? 'https://' : 'http://' ) + this.props.domain;
+    const url = ( this.props.data.is_https ? 'https://' : 'http://' ) + this.props.data.domain;
 
     return (
       <td>
         <p>
-          <a href={ url }>{ this.props.domain }</a>
+          <a href={ url }>{ this.props.data.domain }</a>
         </p>
         <a href="#">Set as Primary</a> |
-        <a href="#">Change to { this.props.is_https ? 'HTTP' : 'HTTPS' }</a> |
+        <a href="#" onClick={ this.handleProtocol }>Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }</a> |
         <a href="#" className="submitdelete">Delete</a>
       </td>
     );
