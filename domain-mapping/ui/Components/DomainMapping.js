@@ -71,6 +71,26 @@ class DomainMapping extends React.Component {
       </div>
     );
   }
+
+  update = ( data ) => {
+    data.force = true,
+
+    delete data.site;
+
+    window.jQuery.ajax( {
+      url : window.dmSettings.rest_root + 'dm/v1/domain/' + data.domain,
+      data : data,
+			dataType : 'json',
+			method : 'PUT',
+			beforeSend : function ( xhr ) {
+				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+			},
+			success : function () {
+        console.log( this );
+        this.getData();
+			}.bind( this )
+		} );
+  }
 }
 
 export default DomainMapping;
