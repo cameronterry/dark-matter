@@ -12,7 +12,7 @@ class DomainRow extends React.Component {
         { this.props.domain.is_primary ?
           <DomainDisplayPrimary domain={ this.props.domain.domain } is_https={ this.props.domain.is_https } />
           :
-          <DomainDisplaySecondary domain={ this.props.domain.domain } is_https={ this.props.domain.is_https } />
+          <DomainDisplaySecondary data={ this.props.domain } update={ this.props.update } delete={ this.props.delete } />
         }
         <td>{ ( this.props.domain.is_primary ? 'Yes' : 'No' ) }</td>
         <td>{ ( this.props.domain.active ? 'Yes' : 'No' ) }</td>
