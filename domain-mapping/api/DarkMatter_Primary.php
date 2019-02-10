@@ -120,32 +120,57 @@ class DarkMatter_Primary {
      *
      * @param  integer $site_id Site ID to set the primary domain cache for.
      * @param  string  $domain  Domain to be stored in the cache.
+     * @param  boolean $db      Set to true to perform a database update.
      * @return void
      */
-    public function set( $site_id = 0, $domain = '' ) {
+    public function set( $site_id = 0, $domain = '', $db = false ) {
         $site_id   = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
         $cache_key = $site_id . '-primary';
+
+        if ( $db ) {
+            $result = $this->wpdb->update( $this->dm_table, array(
+                'is_primary' => true,
+            ), array(
+                'domain' => $domain,
+            ) );
+        }
 
         wp_cache_set( $cache_key, $domain, 'dark-matter' );
     }
 
     /**
-     * Unset the primary domain for a given Site.
+     * Unset the primary domain for a given Site. By default, will change all
+     * records with is_primary set to true.
      *
      * @param  integer $site_id Site ID to unset the primary domain for.
+     * @param  string  $domain  Optional. If provided, will only affect that domain's record.
+     * @param  boolean $db      Set to true to perform a database update.
      * @return boolean          True on success. False otherwise.
      */
-    public function unset( $site_id = 0 ) {
+    public function unset( $site_id = 0, $domain = '', $db = false ) {
         $site_id = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
 
-        $result = $this->wpdb->update( $this->dm_table, array(
-            'is_primary' => false,
-        ), array(
-            'blog_id' => $site_id,
-        ) );
+        if ( $db ) {
+            /**
+             * Construct the where clause.
+             */
+            $where = array(
+                'blog_id' => $site_id,
+            );
 
-        if ( ! $result ) {
-            return false;
+            if ( ! empty( $domain ) ) {
+                $where['domain'] = $domain;
+            }
+
+            $result = $this->wpdb->update( $this->dm_table, array(
+                'is_primary' => false,
+            ), $where, array(
+                '%d',
+            ) );
+
+            if ( false === $result ) {
+                return false;
+            }
         }
 
         $cache_key = $site_id . '-primary';
