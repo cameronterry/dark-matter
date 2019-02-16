@@ -21,6 +21,13 @@ class DomainMapping extends React.Component {
     };
   }
 
+  /**
+   * Helper method to add a notice to Messages.
+   *
+   * @param {string} domain FQDN which the notice is applied to.
+   * @param {string} text   Message to be displayed in the notice.
+   * @param {string} type   Two types; "success" or "error".
+   */
   addNotice( domain, text, type ) {
     this.setState( {
       messages: [
@@ -42,6 +49,17 @@ class DomainMapping extends React.Component {
     this.getData();
   }
 
+  async delete( domain ) {
+    const result = await this.api.delete( domain );
+
+    this.addNotice( domain, ( result.code ? result.message : 'has been deleted.' ), ( result.code ? 'error' : 'success' ) );
+
+    this.getData();
+  }
+
+  /**
+   * Handle the removal of the Notice from state.
+   */
   dimissNotice = ( id, index ) => {
     this.setState( {
       messages: [
@@ -62,6 +80,10 @@ class DomainMapping extends React.Component {
     } );
   }
 
+  handleDelete = ( domain ) => {
+    this.delete( domain );
+  }
+
   /**
    * Render the component.
    */
@@ -70,7 +92,7 @@ class DomainMapping extends React.Component {
     const rows = [];
 
     this.state.domains.forEach( ( domain ) => {
-      rows.push( <DomainRow key={ domain.id } delete={ this.delete } domain={ domain } update={ this.update } /> );
+      rows.push( <DomainRow key={ domain.id } delete={ this.handleDelete } domain={ domain } update={ this.handleUpdate } /> );
     } );
 
     this.state.messages.forEach( ( message, index ) => {
