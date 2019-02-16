@@ -1,3 +1,8 @@
+/**
+ * We use jQuery's AJAX mechanism as this is already in WordPress and
+ * doesn't require a separate dependency / library liks Axios ... for now.
+ */
+
 class Domains {
   /**
    * Handle adding a Domain and send a request to the REST API for the database
@@ -13,7 +18,7 @@ class Domains {
 				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
 			},
 			success : function () {
-				this.getData();
+				this.getAll();
 			}.bind( this )
 		} );
   }
@@ -32,7 +37,7 @@ class Domains {
 				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
 			},
 			success : function () {
-				this.getData();
+				this.getAll();
 			}.bind( this )
 		} );
   }
@@ -40,24 +45,17 @@ class Domains {
   /**
    * Retrieve all the domains for a specific website.
    */
-  getAll() {
-    /**
-     * We use jQuery's AJAX mechanism as this is already in WordPress and
-     * doesn't require a separate dependency / library liks Axios ... for now.
-     */
-    window.jQuery.ajax( {
+  async getAll() {
+    let result = await window.jQuery.ajax( {
 			url : window.dmSettings.rest_root + 'dm/v1/domains',
 			dataType : 'json',
 			method : 'GET',
 			beforeSend : function ( xhr ) {
 				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-			},
-			success : function( data ) {
-				this.setState( {
-          domains: data
-        } );
-			}.bind( this )
-		} );
+			}
+    } );
+
+    return result;
   }
 
   /**
@@ -79,8 +77,7 @@ class Domains {
 				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
 			},
 			success : function () {
-        console.log( this );
-        this.getData();
+        this.getAll();
 			}.bind( this )
 		} );
   }
