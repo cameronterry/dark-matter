@@ -63,23 +63,30 @@ class Domains {
    * database changes. If successful, then retrieve the new data set from the
    * REST API.
    */
-  update = ( data ) => {
+  async update( data ) {
     data.force = true,
 
     delete data.site;
 
-    window.jQuery.ajax( {
-      url : window.dmSettings.rest_root + 'dm/v1/domain/' + data.domain,
-      data : data,
-			dataType : 'json',
-			method : 'PUT',
-			beforeSend : function ( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-			},
-			success : function () {
-        this.getAll();
-			}.bind( this )
-		} );
+    let result = null;
+
+    try {
+      result = await window.jQuery.ajax( {
+        url : window.dmSettings.rest_root + 'dm/v1/domain/' + data.domain,
+        data : data,
+        dataType : 'json',
+        method : 'PUT',
+        beforeSend : function ( xhr ) {
+          xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+        }
+      } );
+    } catch ( error ) {
+      if ( error.responseJSON ) {
+        result = error.responseJSON;
+      }
+    }
+
+    return result;
   }
 }
 
