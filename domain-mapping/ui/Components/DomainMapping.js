@@ -16,12 +16,36 @@ class DomainMapping extends React.Component {
   }
 
   /**
+   * Handle adding a Domain and send a request to the REST API for the database
+   * changes. If successful, then retrieve the new data set from the REST API.
+   */
+  add = ( data ) => {
+    window.jQuery.ajax( {
+			url : window.dmSettings.rest_root + 'dm/v1/domains',
+      data : data,
+      dataType : 'json',
+			method : 'post',
+			beforeSend : function ( xhr ) {
+				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+			},
+			success : function () {
+				this.getData();
+			}.bind( this )
+		} );
+  }
+
+  /**
    * Retrieve the domains for the Site from the REST API.
    */
   componentDidMount() {
     this.getData();
   }
 
+  /**
+   * Handle deleting the Domain and send a request to the REST API for the
+   * database changes. If successful, then retrieve the new data set from the
+   * REST API.
+   */
   delete = ( domain ) => {
     window.jQuery.ajax( {
 			url : window.dmSettings.rest_root + 'dm/v1/domain/' + domain,
@@ -36,6 +60,9 @@ class DomainMapping extends React.Component {
 		} );
   }
 
+  /**
+   * Retrieve all the domains for a specific website.
+   */
   getData() {
     /**
      * We use jQuery's AJAX mechanism as this is already in WordPress and
@@ -57,7 +84,7 @@ class DomainMapping extends React.Component {
   }
 
   /**
-   * Render.
+   * Render the component.
    */
   render() {
     const rows = [];
@@ -68,7 +95,8 @@ class DomainMapping extends React.Component {
 
     return (
       <div className="wrap">
-        <h1>Domains</h1>
+        <h1 className="wp-heading-inline">Domains</h1>
+        <a href="#" className="page-title-action">Add New</a>
         <table className="wp-list-table widefat fixed striped users">
           <thead>
             <tr>
