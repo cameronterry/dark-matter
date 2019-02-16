@@ -1,5 +1,6 @@
 // node module that let's us do file system stuffs...
-const path = require('path');
+const path = require( 'path' );
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 
 // Webpack expects an exported object with all the configurations, so we export an object here
 module.exports = [
@@ -22,10 +23,34 @@ module.exports = [
           query: {
             presets: ['@babel/preset-env', '@babel/preset-react']
           }
+        },
+        {
+          test: /\.s?[ac]ss$/,
+          use: [
+              MiniCssExtractPlugin.loader,
+              {
+                loader: 'css-loader',
+                options: {
+                  url: false,
+                  sourceMap: true
+                }
+              },
+              {
+                loader: 'sass-loader',
+                options: {
+                  sourceMap: true,
+                }
+              }
+          ],
         }
       ]
     },
     // Webpack yells at you if you don't choose a mode...
-    mode: 'development'
+    mode: 'development',
+    plugins: [
+      new MiniCssExtractPlugin( {
+        filename: 'style.css'
+      } )
+    ]
   }
 ];
