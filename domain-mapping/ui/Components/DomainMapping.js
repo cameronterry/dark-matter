@@ -1,4 +1,6 @@
 import React from 'react';
+
+import Domains from '../API/Domains';
 import DomainRow from './DomainRow';
 
 class DomainMapping extends React.Component {
@@ -10,6 +12,8 @@ class DomainMapping extends React.Component {
   constructor( props ) {
     super( props );
 
+    this.api = new Domains();
+
     this.state = {
       domains : []
     };
@@ -20,6 +24,19 @@ class DomainMapping extends React.Component {
    */
   componentDidMount() {
     this.getData();
+  }
+
+  /**
+   * Method for retrieve all the domains from the REST API.
+   */
+  async getData() {
+    const result = await this.api.getAll();
+
+    console.log( result );
+
+    this.setState( {
+      domains: result
+    } );
   }
 
   /**
