@@ -9,6 +9,13 @@ class DM_UI {
      * Constructor
      */
     public function __construct() {
+        /**
+         * The root website cannot be mapped.
+         */
+        if ( is_main_site() ) {
+            return;
+        }
+
         add_action( 'admin_menu', [ $this, 'admin_menu' ] );
     }
 
