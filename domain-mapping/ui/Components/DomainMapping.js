@@ -21,6 +21,20 @@ class DomainMapping extends React.Component {
     };
   }
 
+  addNotice( domain, text, type ) {
+    this.setState( {
+      messages: [
+        ...this.state.messages,
+        {
+          id: new Date().getTime(),
+          domain: domain,
+          text: text,
+          type: type
+        }
+      ]
+    } );
+  }
+
   /**
    * Retrieve the domains for the Site from the REST API.
    */
@@ -86,29 +100,17 @@ class DomainMapping extends React.Component {
     );
   }
 
+  /**
+   * Perform the update call to the REST API.
+   *
+   * @param {object} data
+   */
   async update( data ) {
-    let messages = [ ...this.state.messages ];
     const result = await this.api.update( data );
 
-    if ( result.code ) {
-      messages.push( {
-        id: new Date().getTime(),
-        domain: data.domain,
-        text: result.message,
-        type: 'error',
-      } );
-    } else {
-      messages.push( {
-        id: new Date().getTime(),
-        domain: data.domain,
-        text: 'Successfully updated',
-        type: 'success'
-      } );
-    }
+    this.addNotice( data.domain, ( result.code ? result.message : 'Successfully updated' ), ( result.code ? 'error' : 'success' ) );
 
-    this.setState( {
-      messages: messages
-    } );
+    this.getData();
   }
 }
 
