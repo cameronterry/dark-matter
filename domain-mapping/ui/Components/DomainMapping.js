@@ -16,7 +16,8 @@ class DomainMapping extends React.Component {
     this.api = new Domains();
 
     this.state = {
-      domains : []
+      domains : [],
+      messages : []
     };
   }
 
@@ -25,6 +26,15 @@ class DomainMapping extends React.Component {
    */
   componentDidMount() {
     this.getData();
+  }
+
+  dimissNotice = ( id, index ) => {
+    this.setState( {
+      messages: [
+        ...this.state.messages.slice( 0, index ),
+        ...this.state.messages.slice( index + 1 )
+      ]
+    } );
   }
 
   /**
@@ -49,8 +59,8 @@ class DomainMapping extends React.Component {
       rows.push( <DomainRow key={ domain.id } delete={ this.delete } domain={ domain } update={ this.update } /> );
     } );
 
-    this.state.messages.forEach( ( message ) => {
-      messages.push( <Message message={ message.text } type={ message.type } /> );
+    this.state.messages.forEach( ( message, index ) => {
+      messages.push( <Message key={ message.id } dismiss={ this.dimissNotice } index={ index } notice={ message } /> );
     } );
 
     return (
@@ -74,6 +84,31 @@ class DomainMapping extends React.Component {
         </table>
       </div>
     );
+  }
+
+  async update( data ) {
+    let messages = [ ...this.state.messages ];
+    const result = await this.api.update( data );
+
+    if ( result.code ) {
+      messages.push( {
+        id: new Date().getTime(),
+        domain: data.domain,
+        text: result.message,
+        type: 'error',
+      } );
+    } else {
+      messages.push( {
+        id: new Date().getTime(),
+        domain: data.domain,
+        text: 'Successfully updated',
+        type: 'success'
+      } );
+    }
+
+    this.setState( {
+      messages: messages
+    } );
   }
 }
 
