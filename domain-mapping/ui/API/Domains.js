@@ -28,18 +28,25 @@ class Domains {
    * database changes. If successful, then retrieve the new data set from the
    * REST API.
    */
-  delete = ( domain ) => {
-    window.jQuery.ajax( {
-			url : window.dmSettings.rest_root + 'dm/v1/domain/' + domain,
-			dataType : 'json',
-			method : 'DELETE',
-			beforeSend : function ( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-			},
-			success : function () {
-				this.getAll();
-			}.bind( this )
-		} );
+  async delete( domain ) {
+    let result = null;
+
+    try {
+      result = await window.jQuery.ajax( {
+        url : window.dmSettings.rest_root + 'dm/v1/domain/' + domain,
+        dataType : 'json',
+        method : 'DELETE',
+        beforeSend : function ( xhr ) {
+          xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+        }
+      } );
+    } catch ( error ) {
+      if ( error.responseJSON ) {
+        result = error.responseJSON;
+      }
+    }
+
+    return result;
   }
 
   /**
