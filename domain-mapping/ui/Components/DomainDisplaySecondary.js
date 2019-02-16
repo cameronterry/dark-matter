@@ -38,12 +38,14 @@ class DomainDisplaySecondary extends React.Component {
     const url = ( this.props.data.is_https ? 'https://' : 'http://' ) + this.props.data.domain;
 
     return (
-      <td>
+      <td className="domain-options">
         <p>
           <a href={ url }>{ this.props.data.domain }</a>
         </p>
-        <a href="#" onClick={ this.handlePrimary }>Set as Primary</a> |
-        <a href="#" onClick={ this.handleProtocol }>Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }</a> |
+        <a href="#" onClick={ this.handlePrimary }>Set as Primary</a>
+        <span>|</span>
+        <a href="#" onClick={ this.handleProtocol }>Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }</a>
+        <span>|</span>
         <a href="#" className="submitdelete" onClick={ this.handleDelete }>Delete</a>
       </td>
     );

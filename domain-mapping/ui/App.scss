@@ -1,9 +1,16 @@
 .wp-list-table {
-    .submitdelete {
-        color:#AA0000;
+    .domain-options {
+        span {
+            color: #DDDDDD;
+            padding: 0 4px;
+        }
 
-        &:hover {
-            color:#dc3232;
+        .submitdelete {
+            color: #AA0000;
+    
+            &:hover {
+                color: #dc3232;
+            }
         }
     }
 }
