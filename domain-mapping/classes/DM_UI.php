@@ -47,6 +47,8 @@ class DM_UI {
         ) );
 
         wp_enqueue_script( 'dark-matter-domains' );
+
+        wp_enqueue_style( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/style.css', [], DM_VERSION );
     }
 
     /**
