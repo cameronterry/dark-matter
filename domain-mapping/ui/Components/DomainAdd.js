@@ -24,6 +24,19 @@ class DomainAdd extends React.Component {
   }
 
   /**
+   * Helper method to make the AJAX call to add the domain to the database.
+   */
+  async addDomain() {
+    let result = await this.api.add( this.state.domain );
+
+    this.props.addNoticeAndRefresh( this.state.domain.domain, ( result.code ? 'Cannot add domain. ' + result.message : 'has been added.' ), ( result.code ? 'error' : 'success' ) );
+
+    if ( ! result.code ) {
+      this.reset();
+    }
+  }
+
+  /**
    * Handle the change event for each of the form elements.
    *
    * @param {object} event Event Information.
@@ -81,7 +94,7 @@ class DomainAdd extends React.Component {
   handleSubmit = ( event ) => {
     event.preventDefault();
 
-    console.log( this.state );
+    this.addDomain();
   }
 
   /**
