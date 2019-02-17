@@ -427,7 +427,7 @@ class DarkMatter_Domains {
             if ( $is_primary && ! $current->is_primary ) {
                 $current_primary = $dm_primary->get( $current->blog_id );
 
-                if ( ! empty( $current_primary ) ) {
+                if ( ! empty( $current_primary ) && $current->domain !== $current_primary->domain ) {
                     $this->update( $current_primary->domain, false, null, true, $current_primary->active );
                 }
 
