@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Dark Matter ===
 Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0.3
