@@ -1,5 +1,6 @@
 import React from 'react';
 
+import DomainAdd from './DomainAdd';
 import Domains from '../API/Domains';
 import DomainRow from './DomainRow';
 import Message from './Message';
@@ -133,6 +134,7 @@ class DomainMapping extends React.Component {
             { rows }
           </tbody>
         </table>
+        <DomainAdd />
       </div>
     );
   }
