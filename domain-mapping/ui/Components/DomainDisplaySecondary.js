@@ -40,6 +40,7 @@ class DomainDisplaySecondary extends React.Component {
   handleProtocol = ( event ) => {
     event.preventDefault();
 
+    let data = { ...this.props.data };
     let value = ! data.is_https;
 
     /**
@@ -54,7 +55,6 @@ class DomainDisplaySecondary extends React.Component {
       }
     }
 
-    let data = { ...this.props.data };
     data.is_https = value;
 
     this.props.update( data );
