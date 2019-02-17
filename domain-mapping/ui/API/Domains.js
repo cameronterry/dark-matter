@@ -13,7 +13,7 @@ class Domains {
 
     try {
       result = await window.jQuery.ajax( {
-        url : window.dmSettings.rest_root + 'dm/v1/domains',
+        url : window.dmSettings.rest_root + 'dm/v1/domain',
         data : data,
         dataType : 'json',
         method : 'post',
