@@ -49,6 +49,11 @@ class DomainMapping extends React.Component {
     this.getData();
   }
 
+  /**
+   * Performs the delete call to the REST API and handle the error message.
+   *
+   * @param {string} domain FQDN to be deleted.
+   */
   async delete( domain ) {
     const result = await this.api.delete( domain );
 
@@ -80,8 +85,18 @@ class DomainMapping extends React.Component {
     } );
   }
 
+  /**
+   * Handle the Delete of a domain.
+   */
   handleDelete = ( domain ) => {
     this.delete( domain );
+  }
+
+  /**
+   * Handle the update for a domain.
+   */
+  handleUpdate = ( data ) => {
+    this.update( data );
   }
 
   /**
