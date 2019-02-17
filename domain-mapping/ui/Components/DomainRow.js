@@ -9,7 +9,15 @@ class DomainRow extends React.Component {
   handleDelete = ( event ) => {
     event.preventDefault();
 
-    let confirm = window.confirm( 'Are you sure you wish to delete ' + this.props.domain.domain + '?' );
+    let message = '';
+
+    if ( this.props.domain.is_primary ) {
+      message = 'Deleting the primary domain will stop any domain mapping for this Site. You will need to manually set another domain as primary. Do you wish to proceed?';
+    } else {
+      message = 'Are you sure you wish to delete ' + this.props.domain.domain + '?';
+    }
+
+    let confirm = window.confirm( message );
 
     if ( ! confirm ) {
       return;
@@ -69,7 +77,7 @@ class DomainRow extends React.Component {
     return (
       <tr>
         { this.props.domain.is_primary ?
-          <DomainDisplayPrimary data={ this.props.domain } protocol={ this.handleProtocol } delete={ this.props.handleDelete } />
+          <DomainDisplayPrimary data={ this.props.domain } protocol={ this.handleProtocol } delete={ this.handleDelete } />
           :
           <DomainDisplaySecondary data={ this.props.domain } primary={ this.handlePrimary } protocol={ this.handleProtocol } delete={ this.handleDelete } />
         }
