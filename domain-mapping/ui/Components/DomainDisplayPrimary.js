@@ -17,6 +17,7 @@ class DomainDisplayPrimary extends React.Component {
             :
             <a href="#" onClick={ this.props.activate }>Activate</a>
         }
+        <span>|</span>
         <a href="#" onClick={ this.props.protocol }>Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }</a>
         <span>|</span>
         <a href="#" className="submitdelete" onClick={ this.props.delete }>Delete</a>
