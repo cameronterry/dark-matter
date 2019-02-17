@@ -44,6 +44,19 @@ class DomainMapping extends React.Component {
   }
 
   /**
+   * Helper method to add a notice to Messages and Refresh the table.
+   *
+   * @param {string} domain FQDN which the notice is applied to.
+   * @param {string} text   Message to be displayed in the notice.
+   * @param {string} type   Two types; "success" or "error".
+   */
+  addNoticeAndRefresh = ( domain, text, type ) => {
+    this.addNotice( domain, text, type );
+
+    this.getData();
+  }
+
+  /**
    * Retrieve the domains for the Site from the REST API.
    */
   componentDidMount() {
@@ -134,7 +147,7 @@ class DomainMapping extends React.Component {
             { rows }
           </tbody>
         </table>
-        <DomainAdd />
+        <DomainAdd addNoticeAndRefresh={ this.addNoticeAndRefresh } />
       </div>
     );
   }
