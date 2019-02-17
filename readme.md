@@ -74,50 +74,6 @@ wp darkmatter restrict list --format=json
 wp darkmatter restrict list --format=ids
 ```
 
-## What Dark Matter does and does not
-
-The following is the list of implementation decisions taken and specifically
-built for during Dark Matter's development.
-
-The following is considered the **tenets** which will govern decisions on what
-feature requests / bugs are considered and what feature requests / bugs are
-rejected.
-
-* **Does**;
-  * The admin area is on a separate domain (Admin domain) from the front-end (Primary Domain - also Auxillary Domain).
-  * A basic single-sign on solution to show the Admin bar on "primary domains".
-  * Customizer and Preview work on the "Admin domain" with no redirection.
-  * Provide per blog administrator users the ability to map a domain for their website.
-  * WP REST API works on both "Admin domain" and "primary domain", so that it can be used in the Admin area and front-end.
-* **Does not**;
-  * Provide any domain mapping options for the root website.
-  * For the admin area to work on the "primary domain" (it will use the "Admin domain" always.)
-  * Permit a single website to work on multiple domains.
-  * Enable protocol on a per Post / Page basis.
-  * Tested to work with a single installation running multiple WordPress Networks.
-
-## Version Support
-
-The following is the list of current version support that Dark Matter is
-currently catering for. If the version you are using is not listed below, then
-Dark Matter may work but the developers have yet to test it.
-
-* Apache HTTPD;
-  * 2.4.x
-* IIS (Internet Information Services);
-  * Not tested to date.
-* Nginx;
-  * 1.4.x (Ubuntu 14.04)
-  * 1.10.x (Ubuntu 16.04)
-* PHP;
-  * 5.5.x
-  * 5.6.x
-  * 7.0.x
-  * 7.1.x
-* WordPress;
-  * 4.8.x
-  * 4.9.x
-
 ## Reporting problems
 
 You can use the Issues system here on Github to report problems with the Dark
