@@ -11,6 +11,69 @@ Networks, designed to work out of the box as-is with no setup. Unlike other
 plugins such as Donncha's "WordPress MU Domain Mapping" and WPMU Dev's premium
 domain mapping plugin, Dark Matter offers virtually no options.
 
+## CLI Commands
+
+### Add / Update / Remove Domains
+
+Examples of adding, removing and updating a domain for a Site.
+
+```
+wp --url="sites.my.com/siteone" darkmatter domain add www.example.com --primary --https
+wp --url="sites.my.com/siteone" darkmatter domain remove www.example.com
+wp --url="sites.my.com/siteone" darkmatter domain remove www.example.com --force
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --primary
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --secondary
+```
+
+### Listing Domains
+
+Examples of listing domains for a Site.
+
+```
+wp --url="sites.my.com/siteone" darkmatter domain list
+wp --url="sites.my.com/siteone" darkmatter domain list --format=json
+```
+
+Examples of listing domains for the entire Network.
+
+```
+wp darkmatter domain list
+wp darkmatter domain list --format=csv
+```
+
+Retrieve all the primary domains for the Network.
+
+```
+wp darkmatter domain list --primary
+```
+
+### Reserving Domains
+
+Reserving a domain. This allows an administrator to setup the primary and / or secondary domains but stop Dark Matter performing redirects and rewrites. Please note; domains are enabled by default.
+
+```
+wp --url="sites.my.com/siteone" darkmatter domain add www.example.com --primary --https --disable
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --enable
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --disable
+```
+
+### Restricting Domains
+
+Examples of adding and removing a restricted domains for a Network. This permits administrators to stop domains from being used for a WordPress website; useful for organisations which use multiple CMS.
+
+```
+wp darkmatter restrict add www.example.com
+wp darkmatter restrict remove www.example.com
+```
+
+Examples of retrieving a list of all restricted domains for a Network.
+
+```
+wp darkmatter restrict list
+wp darkmatter restrict list --format=json
+wp darkmatter restrict list --format=ids
+```
+
 ## What Dark Matter does and does not
 
 The following is the list of implementation decisions taken and specifically
