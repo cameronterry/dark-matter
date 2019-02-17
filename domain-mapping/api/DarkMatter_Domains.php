@@ -147,7 +147,21 @@ class DarkMatter_Domains {
                 $dm_primary->set( get_current_blog_id(), $fqdn );
             }
 
-            return new DM_Domain( (object) $_domain );
+            $dm_domain = new DM_Domain( (object) $_domain );
+
+            /**
+             * Fire action when a domain is added.
+             *
+             * Fires after a domain is successfully added to the database. This
+             * is also post insertion to the cache.
+             *
+             * @since 2.0.0
+             *
+             * @param DM_Domain $dm_domain Domain object of the newly added Domain.
+             */
+            do_action( 'darkmatter_domain_add', $dm_domain );
+
+            return $dm_domain;
         }
 
         return new WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
