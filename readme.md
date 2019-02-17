@@ -97,12 +97,6 @@ include as much as the following as you possibly can;
 All issues reported are taken seriously and are checked, but please bear in mind
 that responses are not always instant.
 
-## Contributing
-
-Please ensure you have read**What Dark Matter does and does not** first and make
-sure to read the notes below. But don't be dissuaded, pull requests are welcome
-:-)
-
 ### Syntax
 
 Dark Matter does not have a coding style guide but there are several rules which
