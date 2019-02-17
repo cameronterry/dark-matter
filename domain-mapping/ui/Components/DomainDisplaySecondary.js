@@ -12,6 +12,12 @@ class DomainDisplaySecondary extends React.Component {
         <p>
           <a href={ url }>{ this.props.data.domain }</a>
         </p>
+        { this.props.data.is_active ?
+          <a href="#" onClick={ this.props.activate }>Deactivate</a>
+            :
+            <a href="#" onClick={ this.props.activate }>Activate</a>
+        }
+        <span>|</span>
         <a href="#" onClick={ this.props.primary }>Set as Primary</a>
         <span>|</span>
         <a href="#" onClick={ this.props.protocol }>Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }</a>
