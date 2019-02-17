@@ -131,7 +131,6 @@ class DomainMapping extends React.Component {
     return (
       <div className="wrap">
         <h1 className="wp-heading-inline">Domains</h1>
-        <a href="#" className="page-title-action">Add New</a>
         <hr className="wp-header-end" />
         { messages }
         <table className="wp-list-table widefat fixed striped users">
