@@ -121,3 +121,8 @@ Google Analytics) with over 60 websites.
     * Some edge cases, Dark Matter may not engage and WordPress will redirect to the root website on the Network.
   * 1.x.x version of **sunrise.php** will error on update as the require path has changed in the new folder structure of 2.0.0.
 
+== Upgrade Notice ==
+
+= 2.0.0 = 
+
+There is backward compatibility issues upgrading. Please ensure you read the release notes for 2.0.0 before upgrading!
