@@ -17,7 +17,7 @@ class DomainAdd extends React.Component {
       domain: {
         domain: '',
         is_primary: false,
-        active: true,
+        is_active: true,
         is_https: false,
       }
     };
@@ -111,10 +111,10 @@ class DomainAdd extends React.Component {
             </tr>
             <tr>
               <th scope="row">
-                <label htmlFor="active">Is Active?</label>
+                <label htmlFor="is_active">Is Active?</label>
               </th>
               <td>
-                <input name="active" type="checkbox" value="yes" onChange={ this.handleCheckboxChange } checked={ this.state.domain.active } />
+                <input name="is_active" type="checkbox" value="yes" onChange={ this.handleCheckboxChange } checked={ this.state.domain.is_active } />
               </td>
             </tr>
             <tr>
@@ -122,16 +122,14 @@ class DomainAdd extends React.Component {
                 Protocol
               </th>
               <td>
-                <div onChange={ this.handleProtocol }>
-                  <p>
-                    <input type="radio" name="is_https" id="protocol-http" value="http" checked={ ! this.state.domain.is_https } />
-                    <label htmlFor="protocol-http">HTTP</label>
-                  </p>
-                  <p>
-                    <input type="radio" name="is_https" id="protocol-https" value="https" checked={ this.state.domain.is_https } />
-                    <label htmlFor="protocol-https">HTTPS</label>
-                  </p>
-                </div>
+                <p>
+                  <input type="radio" name="is_https" id="protocol-http" value="http" onChange={ this.handleProtocol } checked={ ! this.state.domain.is_https } />
+                  <label htmlFor="protocol-http">HTTP</label>
+                </p>
+                <p>
+                  <input type="radio" name="is_https" id="protocol-https" value="https" onChange={ this.handleProtocol } checked={ this.state.domain.is_https } />
+                  <label htmlFor="protocol-https">HTTPS</label>
+                </p>
               </td>
             </tr>
           </tbody>
@@ -151,7 +149,7 @@ class DomainAdd extends React.Component {
       domain: {
         domain: '',
         is_primary: false,
-        active: true,
+        is_active: true,
         is_https: false,
       }
     } );
