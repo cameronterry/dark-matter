@@ -8,19 +8,26 @@ class Domains {
    * Handle adding a Domain and send a request to the REST API for the database
    * changes. If successful, then retrieve the new data set from the REST API.
    */
-  add = ( data ) => {
-    window.jQuery.ajax( {
-			url : window.dmSettings.rest_root + 'dm/v1/domains',
-      data : data,
-      dataType : 'json',
-			method : 'post',
-			beforeSend : function ( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-			},
-			success : function () {
-				this.getAll();
-			}.bind( this )
-		} );
+  async add( data ) {
+    let result = null;
+
+    try {
+      result = await window.jQuery.ajax( {
+        url : window.dmSettings.rest_root + 'dm/v1/domains',
+        data : data,
+        dataType : 'json',
+        method : 'post',
+        beforeSend : function ( xhr ) {
+          xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+        }
+      } );
+    } catch ( error ) {
+      if ( error.responseJSON ) {
+        result = error.responseJSON;
+      }
+    }
+
+    return result;
   }
 
   /**
