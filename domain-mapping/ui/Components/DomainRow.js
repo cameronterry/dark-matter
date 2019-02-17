@@ -4,6 +4,18 @@ import DomainDisplaySecondary from './DomainDisplaySecondary';
 
 class DomainRow extends React.Component {
   /**
+   * Handle the Activating / Deactivating of domains.
+   */
+  handleActivate = ( event ) => {
+    event.preventDefault();
+
+    let data = { ...this.props.domain };
+    data.is_active = ! data.is_active;
+
+    this.props.update( data );
+  }
+
+  /**
    * Handle the Deleting of the domain.
    */
   handleDelete = ( event ) => {
@@ -77,9 +89,9 @@ class DomainRow extends React.Component {
     return (
       <tr>
         { this.props.domain.is_primary ?
-          <DomainDisplayPrimary data={ this.props.domain } protocol={ this.handleProtocol } delete={ this.handleDelete } />
+          <DomainDisplayPrimary data={ this.props.domain } activate={ this.handleActivate } protocol={ this.handleProtocol } delete={ this.handleDelete } />
           :
-          <DomainDisplaySecondary data={ this.props.domain } primary={ this.handlePrimary } protocol={ this.handleProtocol } delete={ this.handleDelete } />
+          <DomainDisplaySecondary data={ this.props.domain } activate={ this.handleActivate } primary={ this.handlePrimary } protocol={ this.handleProtocol } delete={ this.handleDelete } />
         }
         <td>{ ( this.props.domain.is_primary ? 'Yes' : 'No' ) }</td>
         <td>{ ( this.props.domain.is_active ? 'Yes' : 'No' ) }</td>
