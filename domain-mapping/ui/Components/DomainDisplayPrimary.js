@@ -5,16 +5,16 @@ class DomainDisplayPrimary extends React.Component {
    * Render component.
    */
   render() {
-    const url = ( this.props.is_https ? 'https://' : 'http://' ) + this.props.domain;
+    const url = ( this.props.data.is_https ? 'https://' : 'http://' ) + this.props.data.domain;
 
     return (
       <td className="domain-options">
         <p>
-          <strong><a href={ url }>{ this.props.domain }</a></strong>
+          <strong><a href={ url }>{ this.props.data.domain }</a></strong>
         </p>
-        <a href="#">Change to { this.props.is_https ? 'HTTP' : 'HTTPS' }</a>
+        <a href="#" onClick={ this.props.protocol }>Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }</a>
         <span>|</span>
-        <a href="#" className="submitdelete">Delete</a>
+        <a href="#" className="submitdelete" onClick={ this.props.delete }>Delete</a>
       </td>
     );
   }
