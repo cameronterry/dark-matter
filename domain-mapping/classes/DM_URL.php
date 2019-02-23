@@ -117,7 +117,7 @@ class DM_URL {
          * old AJAX. Therefore we check the referer to ensure it's the admin
          * side rather than the front-end.
          */
-        if ( wp_doing_ajax() && false !== stripos( wp_get_referer(), '/wp-admin/' ) ) {
+        if ( wp_doing_ajax() && false !== stripos( wp_get_referer(), '/wp-admin/' ) && 'sample-permalink' !== $_POST['action'] ) {
             return;
         }
 
