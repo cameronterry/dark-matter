@@ -90,7 +90,7 @@ class DM_URL {
          * domain mapping is changed or removed.
          */
         if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )  ) {
-            add_action( 'admin_init', [ $this, 'prepare_admin' ] );
+            add_action( 'admin_init', array( $this, 'prepare_admin' ) );
             return;
         }
 
