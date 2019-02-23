@@ -76,7 +76,18 @@ class DarkMatter_Domains {
             return new WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
         }
 
-        return $fqdn;
+        /**
+         * Allow for additional checks beyond the in-built Dark Matter ones.
+         *
+         * Ensure that in the case of an error, it should return a WP_Error
+         * object. This is used when providing error messages to the CLI and
+         * REST API endpoints.
+         *
+         * @since 2.0.0
+         *
+         * @param string $fqdn Fully qualified domain name.
+         */
+        return apply_filters( 'darkmatter_domain_basic_check', $fqdn );
     }
 
     /**
