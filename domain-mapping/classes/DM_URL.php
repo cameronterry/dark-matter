@@ -114,6 +114,17 @@ class DM_URL {
      * @return void
      */
     function prepare_admin() {
+        /**
+         * This is to prevent the Classic Editor's AJAX action for inserting a
+         * link from putting the mapped domain in to the database. However, we
+         * cannot rely on `is_admin()` as this is always true for calls to the
+         * old AJAX. Therefore we check the referer to ensure it's the admin
+         * side rather than the front-end.
+         */
+        if ( wp_doing_ajax() && false !== stripos( wp_get_referer(), '/wp-admin/' ) ) {
+            return;
+        }
+
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
     }
 
