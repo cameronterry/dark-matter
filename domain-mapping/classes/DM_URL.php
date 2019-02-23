@@ -23,6 +23,12 @@ class DM_URL {
          * be properly detected for the rewrite rules.
          */
         add_action( 'muplugins_loaded', array( $this, 'prepare' ), -10 );
+
+        /**
+         * Jetpack compatibility. This filter ensures that Jetpack gets the
+         * correct domain for the home URL.
+         */
+        add_action( 'jetpack_sync_home_url', array( $this, 'map' ), 10, 1 );
     }
 
     /**
