@@ -135,6 +135,17 @@ class DarkMatter_Primary {
             ) );
         }
 
+        /**
+         * Fires when a domain is set to be the primary for a Site.
+         *
+         * @since 2.0.0
+         *
+         * @param  string  $domain  Domain that is set to primary domain.
+         * @param  integer $site_id Site ID.
+         * @param  boolean $db      States if the change performed a database update.
+         */
+        do_action( 'darkmatter_primary_set', $domain, $site_id, $db );
+
         wp_cache_set( $cache_key, $domain, 'dark-matter' );
     }
 
