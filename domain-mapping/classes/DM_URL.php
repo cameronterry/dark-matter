@@ -41,15 +41,11 @@ class DM_URL {
             return $value;
         }
 
-        if ( ! is_int( absint( $blog_id ) ) ) {
-            $blog_id = 0;
-        }
-
         /**
          * Retrieve the current blog.
          */
-        $blog    = get_site( $blog_id );
-        $primary = DarkMatter_Primary::instance()->get( $blog_id );
+        $blog    = get_site( absint( $blog_id ) );
+        $primary = DarkMatter_Primary::instance()->get( $blog->blog_id );
 
         $unmapped = untrailingslashit( $blog->domain . $blog->path );
 
