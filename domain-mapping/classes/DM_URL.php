@@ -134,6 +134,15 @@ class DM_URL {
      * @return string           Mapped URL unless a specific scheme which should be ignored.
      */
     public function siteurl( $url = '', $path = '', $scheme = null, $blog_id = 0 ) {
+        global $wp_customize;
+
+        /**
+         * Ensure we are not in Customizer.
+         */
+        if ( is_a( $wp_customize, 'WP_Customize_Manager' ) ) {
+            return $url;
+        }
+
         if ( null === $scheme || in_array( $scheme, array( 'http', 'https' ) ) ) {
             /**
              * Determine if there is any query string paramters present.
