@@ -403,9 +403,9 @@ class DarkMatter_Domains {
             return $fqdn;
         }
 
-        $current = $this->get( $fqdn );
+        $domain_before = $this->get( $fqdn );
 
-        if ( ! $current ) {
+        if ( ! $domain_before ) {
             return new WP_Error( 'not found', __( 'Cannot find the domain to update.', 'dark-matter' ) );
         }
 
@@ -413,14 +413,14 @@ class DarkMatter_Domains {
 
         $_domain = array(
             'active'     => ( ! $active ? false : true ),
-            'blog_id'    => $current->blog_id,
+            'blog_id'    => $domain_before->blog_id,
             'domain'     => $fqdn,
         );
 
         /**
          * Determine if there is an attempt to update the "is primary" field.
          */
-        if ( null !== $is_primary && $is_primary !== $current->is_primary ) {
+        if ( null !== $is_primary && $is_primary !== $domain_before->is_primary ) {
             /**
              * Any update to the "is primary" requires the force flag.
              */
@@ -436,7 +436,7 @@ class DarkMatter_Domains {
         }
 
         $result = $this->wpdb->update( $this->dm_table, $_domain, array(
-            'id' => $current->id,
+            'id' => $domain_before->id,
         ) );
 
         if ( $result ) {
@@ -444,7 +444,7 @@ class DarkMatter_Domains {
              * Stitch together the current domain record with the updates for the
              * cache.
              */
-            $_domain = wp_parse_args( $_domain, $current->to_array() );
+            $_domain = wp_parse_args( $_domain, $domain_before->to_array() );
 
             /**
              * Create the cache key.
@@ -455,25 +455,26 @@ class DarkMatter_Domains {
              * Update the domain object prior to updating the cache for both the
              * domain object and the primary domain if necessary.
              */
-            $_domain['id'] = $current->id;
+            $_domain['id'] = $domain_before->id;
             wp_cache_set( $cache_key, $_domain, 'dark-matter' );
 
             /**
              * Handle changes to the primary setting if required.
              */
-            if ( $is_primary && ! $current->is_primary ) {
-                $current_primary = $dm_primary->get( $current->blog_id );
+            if ( $is_primary && ! $domain_before->is_primary ) {
+                $current_primary = $dm_primary->get( $domain_before->blog_id );
 
-                if ( ! empty( $current_primary ) && $current->domain !== $current_primary->domain ) {
+                if ( ! empty( $current_primary ) && $domain_before->domain !== $current_primary->domain ) {
                     $this->update( $current_primary->domain, false, null, true, $current_primary->active );
                 }
 
-                $dm_primary->set( $current->blog_id, $current->domain );
-            } else if ( false === $is_primary && $current->is_primary ) {
-                $dm_primary->unset( $current->blog_id, $current->domain );
+                $dm_primary->set( $domain_before->blog_id, $domain_before->domain );
+            } else if ( false === $is_primary && $domain_before->is_primary ) {
+                $dm_primary->unset( $domain_before->blog_id, $domain_before->domain );
             }
 
-            return new DM_Domain( (object) $_domain );
+            $domain_after = new DM_Domain( (object) $_domain );
+            return $domain_after;
         }
 
         return new WP_Error( 'unknown', __( 'Sorry, the domain could not be updated. An unknown error occurred.', 'dark-matter' ) );
