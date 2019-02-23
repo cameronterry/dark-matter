@@ -227,6 +227,18 @@ class DarkMatter_Domains {
             $cache_key = md5( $fqdn );
             wp_cache_delete( $cache_key, 'dark-matter' );
 
+            /**
+             * Fire action when a domain is deleted.
+             *
+             * Fires after a domain is successfully deleted to the database.
+             * This is also after the domain is deleted from cache.
+             *
+             * @since 2.0.0
+             *
+             * @param DM_Domain $_domain Domain object that was deleted.
+             */
+            do_action( 'darkmatter_domain_delete', $_domain );
+
             return true;
         }
 
