@@ -318,7 +318,11 @@ class DarkMatter_Domain_CLI {
         /**
          * Determine if we are switching between enabled and disabled.
          */
-        $active = $opts['enable'];
+        $active = $domain_before->active;
+
+        if ( $opts['enable'] ) {
+            $active = true;
+        }
 
         if ( $opts['disable'] ) {
             $active = false;
