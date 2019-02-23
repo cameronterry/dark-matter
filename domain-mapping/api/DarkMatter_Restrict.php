@@ -131,6 +131,15 @@ class DarkMatter_Restrict {
 
         $this->refresh_cache();
 
+        /**
+         * Fires when a domain is deleted from the restricted list.
+         *
+         * @since 2.0.0
+         *
+         * @param string $fqdn Domain name that was restricted.
+         */
+        do_action( 'darkmatter_restrict_delete', $fqdn );
+
         return true;
     }
 
