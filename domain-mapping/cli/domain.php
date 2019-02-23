@@ -269,6 +269,9 @@ class DarkMatter_Domain_CLI {
 
         $fqdn = $args[0];
 
+        $db = DarkMatter_Domains::instance();
+        $domain_before = $db->get( $fqdn );
+
         $opts = wp_parse_args( $assoc_args, [
             'disable'   => false,
             'enable'    => false,
@@ -324,7 +327,6 @@ class DarkMatter_Domain_CLI {
         /**
          * Update the records.
          */
-        $db = DarkMatter_Domains::instance();
         $result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'], $active );
 
         /**
