@@ -474,6 +474,17 @@ class DarkMatter_Domains {
             }
 
             $domain_after = new DM_Domain( (object) $_domain );
+
+            /**
+             * Fires when a domain is updated.
+             *
+             * @since 2.0.0
+             *
+             * @param DM_Domain $domain_after  Domain object after the changes have been applied successfully.
+             * @param DM_Domain $domain_before Domain object before.
+             */
+            do_action( 'darkmatter_domain_updated', $domain_after, $domain_before );
+
             return $domain_after;
         }
 
