@@ -41,7 +41,7 @@ class DM_URL {
             return $value;
         }
 
-        if ( ! is_int( $blog_id ) ) {
+        if ( ! is_int( absint( $blog_id ) ) ) {
             $blog_id = 0;
         }
 
