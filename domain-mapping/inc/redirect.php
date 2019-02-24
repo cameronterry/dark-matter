@@ -95,9 +95,10 @@ function darkmatter_maybe_redirect() {
     $primary = DarkMatter_Primary::instance()->get();
 
     /**
-     * If there is no primary domain, there is nothing to do.
+     * If there is no primary domain, there is nothing to do. Also make sure the
+     * domain is active.
      */
-    if ( ! $primary || ! $original_blog || $primary->active ) {
+    if ( ! $primary || ! $original_blog || absint( $original_blog->public ) < 1 || ! $primary->active ) {
         return;
     }
 

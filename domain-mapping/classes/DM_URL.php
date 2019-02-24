@@ -23,6 +23,12 @@ class DM_URL {
          * be properly detected for the rewrite rules.
          */
         add_action( 'muplugins_loaded', array( $this, 'prepare' ), -10 );
+
+        /**
+         * Jetpack compatibility. This filter ensures that Jetpack gets the
+         * correct domain for the home URL.
+         */
+        add_action( 'jetpack_sync_home_url', array( $this, 'map' ), 10, 1 );
     }
 
     /**
@@ -41,15 +47,11 @@ class DM_URL {
             return $value;
         }
 
-        if ( ! is_int( $blog_id ) ) {
-            $blog_id = 0;
-        }
-
         /**
          * Retrieve the current blog.
          */
-        $blog    = get_site( $blog_id );
-        $primary = DarkMatter_Primary::instance()->get( $blog_id );
+        $blog    = get_site( absint( $blog_id ) );
+        $primary = DarkMatter_Primary::instance()->get( $blog->blog_id );
 
         $unmapped = untrailingslashit( $blog->domain . $blog->path );
 
@@ -88,7 +90,7 @@ class DM_URL {
          * domain mapping is changed or removed.
          */
         if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )  ) {
-            add_action( 'admin_init', [ $this, 'prepare_admin' ] );
+            add_action( 'admin_init', array( $this, 'prepare_admin' ) );
             return;
         }
 
@@ -114,6 +116,17 @@ class DM_URL {
      * @return void
      */
     function prepare_admin() {
+        /**
+         * This is to prevent the Classic Editor's AJAX action for inserting a
+         * link from putting the mapped domain in to the database. However, we
+         * cannot rely on `is_admin()` as this is always true for calls to the
+         * old AJAX. Therefore we check the referer to ensure it's the admin
+         * side rather than the front-end.
+         */
+        if ( wp_doing_ajax() && false !== stripos( wp_get_referer(), '/wp-admin/' ) && ( empty( $_POST['action'] ) || 'sample-permalink' !== $_POST['action'] ) ) {
+            return;
+        }
+
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
     }
 
@@ -127,6 +140,15 @@ class DM_URL {
      * @return string           Mapped URL unless a specific scheme which should be ignored.
      */
     public function siteurl( $url = '', $path = '', $scheme = null, $blog_id = 0 ) {
+        global $wp_customize;
+
+        /**
+         * Ensure we are not in Customizer.
+         */
+        if ( is_a( $wp_customize, 'WP_Customize_Manager' ) ) {
+            return $url;
+        }
+
         if ( null === $scheme || in_array( $scheme, array( 'http', 'https' ) ) ) {
             /**
              * Determine if there is any query string paramters present.
