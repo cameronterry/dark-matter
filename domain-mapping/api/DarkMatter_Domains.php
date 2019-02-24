@@ -111,9 +111,11 @@ class DarkMatter_Domains {
             /**
              * Check to make sure another domain isn't set to Primary (can be overridden by the --force flag).
              */
-            if ( ! empty( $primary_domain ) && ! $force ) {
-                return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
-            } else {
+            if ( ! empty( $primary_domain ) ) {
+                if ( ! $force ) {
+                    return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
+                }
+
                 $this->update( $primary_domain->domain, false, null, $primary_domain->active );
             }
         }
