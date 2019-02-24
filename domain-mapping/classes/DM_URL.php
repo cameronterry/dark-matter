@@ -123,7 +123,12 @@ class DM_URL {
          * old AJAX. Therefore we check the referer to ensure it's the admin
          * side rather than the front-end.
          */
-        if ( wp_doing_ajax() && false !== stripos( wp_get_referer(), '/wp-admin/' ) && ( empty( $_POST['action'] ) || 'sample-permalink' !== $_POST['action'] ) ) {
+        if ( wp_doing_ajax()
+            &&
+                false !== stripos( wp_get_referer(), '/wp-admin/' )
+            &&
+                ( empty( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'query-attachments', 'sample-permalink', 'upload-attachment' ) ) )
+        ) {
             return;
         }
 
