@@ -114,7 +114,7 @@ class DarkMatter_Domains {
             if ( ! empty( $primary_domain ) && ! $force ) {
                 return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
             } else {
-                $dm_primary->unset();
+                $this->update( $primary_domain->domain, false, null, $primary_domain->active );
             }
         }
 
