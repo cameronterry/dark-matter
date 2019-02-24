@@ -97,6 +97,15 @@ class DM_SSO_Cookie {
             return;
         }
 
+        /**
+         * Determine if the mapped domain is HTTPS and if so, ensure that the
+         * Admin domain is also HTTPS. If it isn't, then we cannot do the third
+         * party cookie authentication due to the differing protocols.
+         */
+        if ( is_ssl() && ( ! defined( 'FORCE_SSL_ADMIN' ) || ! FORCE_SSL_ADMIN ) ) {
+            return;
+        }
+
         $script_url = add_query_arg( [
             'action' => 'dark_matter_' . ( false === is_user_logged_in() ? 'dmsso' : 'dmcheck' )
         ], network_site_url( '/wp-admin/admin-post.php' ) );
