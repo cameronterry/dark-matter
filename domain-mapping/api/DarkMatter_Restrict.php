@@ -154,6 +154,16 @@ class DarkMatter_Restrict {
          */
         $restrict_domains = wp_cache_get( 'restrictd', 'dark-matter' );
 
+        /**
+         * Fires after the domains have been retrieved from cache (if available)
+         * and before the database is used to retrieve the Restricted domains.
+         *
+         * @since 2.0.0
+         *
+         * @param array $restricted_domains Restricted domains retrieved from Object Cache.
+         */
+        $restrict_domains = apply_filters( 'darkmatter_restricted_get', $restrict_domains );
+
         if ( $restrict_domains ) {
             return $restrict_domains;
         }
