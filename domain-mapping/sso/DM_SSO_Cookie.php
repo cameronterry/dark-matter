@@ -117,7 +117,7 @@ class DM_SSO_Cookie {
          * the map domain in some scenarios; likely utilising a Membership-like or
          * WooCommerce style plugin.
          */
-        if ( is_user_logged_in() && 'yes' === get_option( 'dark_matter_allow_logins' , 'no' ) ) {
+        if ( is_user_logged_in() && apply_filters( 'darkmatter_allow_logins', false ) ) {
             $user = wp_get_current_user();
 
             /**
