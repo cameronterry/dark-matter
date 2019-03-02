@@ -128,7 +128,12 @@ function darkmatter_maybe_redirect() {
 }
 
 /**
- * We use "muplugins_loaded" action (introduced in WordPress 2.8.0) rather than
+ * We use `muplugins_loaded` action (introduced in WordPress 2.8.0) rather than
  * the "ms_loaded" (introduced in WordPress 4.6.0).
+ *
+ * A hook on `muplugins_loaded` is used to ensure that WordPress has loaded the
+ * Blog / Site globals. This is specifically useful when some one goes to the
+ * Admin domain URL - http://my.sites.com/two/ - which is to redirect to the
+ * primary domain - http://example.com.
  */
 add_action( 'muplugins_loaded', 'darkmatter_maybe_redirect', 20 );
