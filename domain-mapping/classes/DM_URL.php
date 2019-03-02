@@ -154,7 +154,13 @@ class DM_URL {
             return $url;
         }
 
-        if ( null === $scheme || in_array( $scheme, array( 'http', 'https' ) ) ) {
+        $valid_schemes = array( 'http', 'https' );
+
+        if ( apply_filters( 'darkmatter_allow_logins', false ) ) {
+            $valid_schemes[] = 'login';
+        }
+
+        if ( null === $scheme || in_array( $scheme, $valid_schemes ) ) {
             /**
              * Determine if there is any query string paramters present.
              */
