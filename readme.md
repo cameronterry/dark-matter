@@ -11,49 +11,68 @@ Networks, designed to work out of the box as-is with no setup. Unlike other
 plugins such as Donncha's "WordPress MU Domain Mapping" and WPMU Dev's premium
 domain mapping plugin, Dark Matter offers virtually no options.
 
-## What Dark Matter does and does not
+## CLI Commands
 
-The following is the list of implementation decisions taken and specifically
-built for during Dark Matter's development.
+### Add / Update / Remove Domains
 
-The following is considered the **tenets** which will govern decisions on what
-feature requests / bugs are considered and what feature requests / bugs are
-rejected.
+Examples of adding, removing and updating a domain for a Site.
 
-* **Does**;
-  * The admin area is on a separate domain (Admin domain) from the front-end (Primary Domain - also Auxillary Domain).
-  * A basic single-sign on solution to show the Admin bar on "primary domains".
-  * Customizer and Preview work on the "Admin domain" with no redirection.
-  * Provide per blog administrator users the ability to map a domain for their website.
-  * WP REST API works on both "Admin domain" and "primary domain", so that it can be used in the Admin area and front-end.
-* **Does not**;
-  * Provide any domain mapping options for the root website.
-  * For the admin area to work on the "primary domain" (it will use the "Admin domain" always.)
-  * Permit a single website to work on multiple domains.
-  * Enable protocol on a per Post / Page basis.
-  * Tested to work with a single installation running multiple WordPress Networks.
+```
+wp --url="sites.my.com/siteone" darkmatter domain add www.example.com --primary --https
+wp --url="sites.my.com/siteone" darkmatter domain remove www.example.com
+wp --url="sites.my.com/siteone" darkmatter domain remove www.example.com --force
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --primary
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --secondary
+```
 
-## Version Support
+### Listing Domains
 
-The following is the list of current version support that Dark Matter is
-currently catering for. If the version you are using is not listed below, then
-Dark Matter may work but the developers have yet to test it.
+Examples of listing domains for a Site.
 
-* Apache HTTPD;
-  * 2.4.x
-* IIS (Internet Information Services);
-  * Not tested to date.
-* Nginx;
-  * 1.4.x (Ubuntu 14.04)
-  * 1.10.x (Ubuntu 16.04)
-* PHP;
-  * 5.5.x
-  * 5.6.x
-  * 7.0.x
-  * 7.1.x
-* WordPress;
-  * 4.8.x
-  * 4.9.x
+```
+wp --url="sites.my.com/siteone" darkmatter domain list
+wp --url="sites.my.com/siteone" darkmatter domain list --format=json
+```
+
+Examples of listing domains for the entire Network.
+
+```
+wp darkmatter domain list
+wp darkmatter domain list --format=csv
+```
+
+Retrieve all the primary domains for the Network.
+
+```
+wp darkmatter domain list --primary
+```
+
+### Reserving Domains
+
+Reserving a domain. This allows an administrator to setup the primary and / or secondary domains but stop Dark Matter performing redirects and rewrites. Please note; domains are enabled by default.
+
+```
+wp --url="sites.my.com/siteone" darkmatter domain add www.example.com --primary --https --disable
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --enable
+wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --disable
+```
+
+### Restricting Domains
+
+Examples of adding and removing a restricted domains for a Network. This permits administrators to stop domains from being used for a WordPress website; useful for organisations which use multiple CMS.
+
+```
+wp darkmatter restrict add www.example.com
+wp darkmatter restrict remove www.example.com
+```
+
+Examples of retrieving a list of all restricted domains for a Network.
+
+```
+wp darkmatter restrict list
+wp darkmatter restrict list --format=json
+wp darkmatter restrict list --format=ids
+```
 
 ## Reporting problems
 
@@ -77,12 +96,6 @@ include as much as the following as you possibly can;
 
 All issues reported are taken seriously and are checked, but please bear in mind
 that responses are not always instant.
-
-## Contributing
-
-Please ensure you have read**What Dark Matter does and does not** first and make
-sure to read the notes below. But don't be dissuaded, pull requests are welcome
-:-)
 
 ### Syntax
 

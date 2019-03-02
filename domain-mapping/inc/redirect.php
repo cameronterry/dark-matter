@@ -56,9 +56,9 @@ if (
         ! empty( $_GET['customize_changeset_uuid'] )
     ||
         /**
-         *
+         * Do not redirect Previews
          */
-        ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] )
+        ( ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] ) )
 ) {
     return;
 }
