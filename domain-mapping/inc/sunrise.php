@@ -37,16 +37,11 @@ $fqdn = $_SERVER['HTTP_HOST'];
 global $dm_domain;
 $dm_domain = DarkMatter_Domains::instance()->get( $fqdn );
 
-if ( $dm_domain && ! $dm_domain->is_primary && $dm_domain->active ) {
+if ( $dm_domain && $dm_domain->active ) {
     /**
-     * Retrieve the Primary so that we can perform the redirect.
+     * Prepare all the global variables. This is require irrespective of whether
+     * it is a primary or secondary domain.
      */
-    $primary = DarkMatter_Primary::instance()->get( $dm_domain->blog_id );
-
-    if ( ! $primary ) {
-        return;
-    }
-
     global $current_blog, $original_blog;
     $current_blog  = get_site( $dm_domain->blog_id );
 
@@ -55,12 +50,6 @@ if ( $dm_domain && ! $dm_domain->is_primary && $dm_domain->active ) {
 
     global $blog_id; $blog_id = $current_blog->blog_id;
     global $site_id; $site_id = $current_blog->site_id;
-} else if ( $dm_domain && $dm_domain->is_primary && $dm_domain->active ) {
-    /**
-     * Load and prepare the Blog data.
-     */
-    global $current_blog, $original_blog;
-    $current_blog  = get_site( $dm_domain->blog_id );
 
     /**
      * Dark Matter will disengage if the website is no longer public or is
@@ -70,29 +59,35 @@ if ( $dm_domain && ! $dm_domain->is_primary && $dm_domain->active ) {
         return;
     }
 
-    $original_blog = clone $current_blog;
-
-    $current_blog->domain = $dm_domain->domain;
-    $current_blog->path   = '/';
-
     /**
-     * Load and prepare the WordPress Network.
+     * If the primary domain, then update the WP_Site properties to match the
+     * mapped domain and not the admin domain.
      */
-    global $current_site;
-    $current_site = WP_Network::get_instance( $current_blog->site_id );
+    if ( $dm_domain->is_primary ) {
+        $original_blog = clone $current_blog;
 
-    define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
-    define( 'DOMAIN_MAPPING', true );
+        $current_blog->domain = $dm_domain->domain;
+        $current_blog->path   = '/';
 
-    if ( empty( $current_site->blog_id ) ) {
-        $current_site->blog_id = get_main_site_id( $current_site->id );
+        /**
+         * Load and prepare the WordPress Network.
+         */
+        global $current_site;
+        $current_site = WP_Network::get_instance( $current_blog->site_id );
+
+        define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
+        define( 'DOMAIN_MAPPING', true );
+
+        if ( empty( $current_site->blog_id ) ) {
+            $current_site->blog_id = get_main_site_id( $current_site->id );
+        }
+
+        /**
+         * Set the other necessary globals to ensure WordPress functions correctly.
+         */
+        global $blog_id; $blog_id = $current_blog->blog_id;
+        global $site_id; $site_id = $current_blog->site_id;
     }
-
-    /**
-     * Set the other necessary globals to ensure WordPress functions correctly.
-     */
-    global $blog_id; $blog_id = $current_blog->blog_id;
-    global $site_id; $site_id = $current_blog->site_id;
 }
 
 /**
