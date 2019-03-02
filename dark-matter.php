@@ -38,6 +38,8 @@ define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 wp_cache_add_global_groups( 'dark-matter' );
 
+require_once DM_PATH . '/domain-mapping/inc/compat.php';
+
 require_once DM_PATH . '/domain-mapping/classes/DM_Database.php';
 require_once DM_PATH . '/domain-mapping/classes/DM_Domain.php';
 require_once DM_PATH . '/domain-mapping/classes/DM_URL.php';
