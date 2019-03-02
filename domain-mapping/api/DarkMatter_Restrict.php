@@ -88,6 +88,15 @@ class DarkMatter_Restrict {
 
         $this->refresh_cache();
 
+        /**
+         * Fires when a domain is added to the restricted list.
+         *
+         * @since 2.0.0
+         *
+         * @param string $fqdn Domain name that was restricted.
+         */
+        do_action( 'darkmatter_restrict_add', $fqdn );
+
         return true;
     }
 
@@ -122,6 +131,15 @@ class DarkMatter_Restrict {
 
         $this->refresh_cache();
 
+        /**
+         * Fires when a domain is deleted from the restricted list.
+         *
+         * @since 2.0.0
+         *
+         * @param string $fqdn Domain name that was restricted.
+         */
+        do_action( 'darkmatter_restrict_delete', $fqdn );
+
         return true;
     }
 
@@ -135,6 +153,16 @@ class DarkMatter_Restrict {
          * Attempt to retreive the domain from cache.
          */
         $restrict_domains = wp_cache_get( 'restrictd', 'dark-matter' );
+
+        /**
+         * Fires after the domains have been retrieved from cache (if available)
+         * and before the database is used to retrieve the Restricted domains.
+         *
+         * @since 2.0.0
+         *
+         * @param array $restricted_domains Restricted domains retrieved from Object Cache.
+         */
+        $restrict_domains = apply_filters( 'darkmatter_restricted_get', $restrict_domains );
 
         if ( $restrict_domains ) {
             return $restrict_domains;

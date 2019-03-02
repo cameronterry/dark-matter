@@ -76,7 +76,18 @@ class DarkMatter_Domains {
             return new WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
         }
 
-        return $fqdn;
+        /**
+         * Allow for additional checks beyond the in-built Dark Matter ones.
+         *
+         * Ensure that in the case of an error, it should return a WP_Error
+         * object. This is used when providing error messages to the CLI and
+         * REST API endpoints.
+         *
+         * @since 2.0.0
+         *
+         * @param string $fqdn Fully qualified domain name.
+         */
+        return apply_filters( 'darkmatter_domain_basic_check', $fqdn );
     }
 
     /**
@@ -149,7 +160,21 @@ class DarkMatter_Domains {
                 $dm_primary->set( get_current_blog_id(), $fqdn );
             }
 
-            return new DM_Domain( (object) $_domain );
+            $dm_domain = new DM_Domain( (object) $_domain );
+
+            /**
+             * Fire action when a domain is added.
+             *
+             * Fires after a domain is successfully added to the database. This
+             * is also post insertion to the cache.
+             *
+             * @since 2.0.0
+             *
+             * @param DM_Domain $dm_domain Domain object of the newly added Domain.
+             */
+            do_action( 'darkmatter_domain_add', $dm_domain );
+
+            return $dm_domain;
         }
 
         return new WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
@@ -203,6 +228,18 @@ class DarkMatter_Domains {
         if ( $result ) {
             $cache_key = md5( $fqdn );
             wp_cache_delete( $cache_key, 'dark-matter' );
+
+            /**
+             * Fire action when a domain is deleted.
+             *
+             * Fires after a domain is successfully deleted to the database.
+             * This is also after the domain is deleted from cache.
+             *
+             * @since 2.0.0
+             *
+             * @param DM_Domain $_domain Domain object that was deleted.
+             */
+            do_action( 'darkmatter_domain_delete', $_domain );
 
             return true;
         }
@@ -368,9 +405,9 @@ class DarkMatter_Domains {
             return $fqdn;
         }
 
-        $current = $this->get( $fqdn );
+        $domain_before = $this->get( $fqdn );
 
-        if ( ! $current ) {
+        if ( ! $domain_before ) {
             return new WP_Error( 'not found', __( 'Cannot find the domain to update.', 'dark-matter' ) );
         }
 
@@ -378,14 +415,14 @@ class DarkMatter_Domains {
 
         $_domain = array(
             'active'     => ( ! $active ? false : true ),
-            'blog_id'    => $current->blog_id,
+            'blog_id'    => $domain_before->blog_id,
             'domain'     => $fqdn,
         );
 
         /**
          * Determine if there is an attempt to update the "is primary" field.
          */
-        if ( null !== $is_primary && $is_primary !== $current->is_primary ) {
+        if ( null !== $is_primary && $is_primary !== $domain_before->is_primary ) {
             /**
              * Any update to the "is primary" requires the force flag.
              */
@@ -401,7 +438,7 @@ class DarkMatter_Domains {
         }
 
         $result = $this->wpdb->update( $this->dm_table, $_domain, array(
-            'id' => $current->id,
+            'id' => $domain_before->id,
         ) );
 
         if ( $result ) {
@@ -409,7 +446,7 @@ class DarkMatter_Domains {
              * Stitch together the current domain record with the updates for the
              * cache.
              */
-            $_domain = wp_parse_args( $_domain, $current->to_array() );
+            $_domain = wp_parse_args( $_domain, $domain_before->to_array() );
 
             /**
              * Create the cache key.
@@ -420,25 +457,37 @@ class DarkMatter_Domains {
              * Update the domain object prior to updating the cache for both the
              * domain object and the primary domain if necessary.
              */
-            $_domain['id'] = $current->id;
+            $_domain['id'] = $domain_before->id;
             wp_cache_set( $cache_key, $_domain, 'dark-matter' );
 
             /**
              * Handle changes to the primary setting if required.
              */
-            if ( $is_primary && ! $current->is_primary ) {
-                $current_primary = $dm_primary->get( $current->blog_id );
+            if ( $is_primary && ! $domain_before->is_primary ) {
+                $current_primary = $dm_primary->get( $domain_before->blog_id );
 
-                if ( ! empty( $current_primary ) && $current->domain !== $current_primary->domain ) {
+                if ( ! empty( $current_primary ) && $domain_before->domain !== $current_primary->domain ) {
                     $this->update( $current_primary->domain, false, null, true, $current_primary->active );
                 }
 
-                $dm_primary->set( $current->blog_id, $current->domain );
-            } else if ( false === $is_primary && $current->is_primary ) {
-                $dm_primary->unset( $current->blog_id, $current->domain );
+                $dm_primary->set( $domain_before->blog_id, $domain_before->domain );
+            } else if ( false === $is_primary && $domain_before->is_primary ) {
+                $dm_primary->unset( $domain_before->blog_id, $domain_before->domain );
             }
 
-            return new DM_Domain( (object) $_domain );
+            $domain_after = new DM_Domain( (object) $_domain );
+
+            /**
+             * Fires when a domain is updated.
+             *
+             * @since 2.0.0
+             *
+             * @param DM_Domain $domain_after  Domain object after the changes have been applied successfully.
+             * @param DM_Domain $domain_before Domain object before.
+             */
+            do_action( 'darkmatter_domain_updated', $domain_after, $domain_before );
+
+            return $domain_after;
         }
 
         return new WP_Error( 'unknown', __( 'Sorry, the domain could not be updated. An unknown error occurred.', 'dark-matter' ) );
