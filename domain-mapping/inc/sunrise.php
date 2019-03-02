@@ -37,7 +37,25 @@ $fqdn = $_SERVER['HTTP_HOST'];
 global $dm_domain;
 $dm_domain = DarkMatter_Domains::instance()->get( $fqdn );
 
-if ( $dm_domain && $dm_domain->is_primary && $dm_domain->active ) {
+if ( $dm_domain && ! $dm_domain->is_primary && $dm_domain->active ) {
+    /**
+     * Retrieve the Primary so that we can perform the redirect.
+     */
+    $primary = DarkMatter_Primary::instance()->get( $dm_domain->blog_id );
+
+    if ( ! $primary ) {
+        return;
+    }
+
+    global $current_blog, $original_blog;
+    $current_blog  = get_site( $dm_domain->blog_id );
+
+    global $current_site;
+    $current_site = WP_Network::get_instance( $current_blog->site_id );
+
+    global $blog_id; $blog_id = $current_blog->blog_id;
+    global $site_id; $site_id = $current_blog->site_id;
+} else if ( $dm_domain && $dm_domain->is_primary && $dm_domain->active ) {
     /**
      * Load and prepare the Blog data.
      */
