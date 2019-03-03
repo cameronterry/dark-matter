@@ -12,9 +12,14 @@ defined( 'ABSPATH' ) or die();
 function dark_matter_compat_allow_logins() {
     if (
         /**
-         * Detect if WooCommerce is installed as this needs to allow logins.
+         * Detect if WooCommerce is installed.
          */
         class_exists( 'WooCommerce' )
+    ||
+        /**
+         * Detect if bbPress is installed.
+         */
+        class_exists( 'bbPress' )
     ) {
         add_filter( 'darkmatter_allow_logins', '__return_true' );
     }
