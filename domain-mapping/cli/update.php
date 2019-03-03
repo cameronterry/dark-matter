@@ -4,6 +4,18 @@ defined( 'ABSPATH' ) || die;
 
 class DarkMatter_Dropin_CLI {
     /**
+     * Helper command to see if the Sunrise dropin plugin within Dark Matter is
+     * the same version as in use on the current WordPress installation.
+     *
+     * ### Examples
+     * Check to see if the Sunrise dropin is the latest version.
+     *
+     *      wp darkmatter dropin check
+     */
+    public function check( $args, $assoc_args ) {
+    }
+
+    /**
      * Upgrade the Sunrise dropin plugin to the latest version within the Dark
      * Matter plugin.
      *
