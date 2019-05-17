@@ -60,10 +60,9 @@ class DomainAdd extends React.Component {
    */
   handleCheckboxChange = ( event ) => {
     const name = event.target.name;
-    const value = ( 'yes' === event.target.value );
 
     let domain = { ...this.state.domain };
-    domain[ name ] = value;
+    domain[ name ] = event.target.checked;
 
     this.setState( {
       domain : domain
