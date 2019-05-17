@@ -99,7 +99,15 @@ class DM_URL {
          * affect database and cache updates to ensure compatibility if the
          * domain mapping is changed or removed.
          */
-        if ( is_admin() || false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )  ) {
+        if (
+                is_admin()
+            ||
+                (
+                    ! $this->is_mapped()
+                &&
+                    false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )
+                )
+        ) {
             add_action( 'admin_init', array( $this, 'prepare_admin' ) );
             return;
         }
