@@ -157,6 +157,11 @@ class DM_URL {
 
         $valid_schemes = array( 'http', 'https' );
 
+        if ( ! is_admin() ) {
+            $valid_schemes[] = 'json';
+            $valid_schemes[] = 'rest';
+        }
+
         if ( apply_filters( 'darkmatter_allow_logins', false ) ) {
             $valid_schemes[] = 'login';
         }
