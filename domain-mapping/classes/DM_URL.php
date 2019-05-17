@@ -32,6 +32,16 @@ class DM_URL {
     }
 
     /**
+     * Determines if the requested domain is mapped using the DOMAIN_MAPPING
+     * constant from sunrise.php.
+     *
+     * @return boolean True if the domain is the Primary domain. False if the Admin domain.
+     */
+    private function is_mapped() {
+        return ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+    }
+
+    /**
      * Map the primary domain on the passed in value if it contains the unmapped
      * URL and the Site has a primary domain.
      *
