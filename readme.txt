@@ -1,9 +1,9 @@
 === Dark Matter ===
 Contributors: cameronterry
 Tags: domain mapping, multisite
-Requires at least: 5.0.3
+Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.0.3
+Tested up to: 5.2
 Stable tag: 2.0.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -119,6 +119,7 @@ Google Analytics) with over 60 websites.
     * Previously Dark Matter would utilise the next available secondary domain.
     * New version in the case of the Admin domain will not redirect and in the case of a domain found but not primary, will redirect to the Admin domain.
     * Some edge cases, Dark Matter may not engage and WordPress will redirect to the root website on the Network.
+  * 1.x.x functions no longer exist. If you have use these, you will need to update your code accordingly.
   * 1.x.x version of **sunrise.php** will error on update as the require path has changed in the new folder structure of 2.0.0.
 
 == Upgrade Notice ==
