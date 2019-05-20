@@ -17,7 +17,10 @@ class DM_Advanced_Cache {
      * @return string         HTML, either from Cache or by WordPress.
      */
     public function cache_output( $output = '' ) {
-        $debug = <<<HTML
+        $debug = '';
+
+        if ( false !== strpos( $this->cache['output'], '<head' ) ) {
+            $debug = <<<HTML
 <!--
 ________  ________  ________  ___  __            _____ ______   ________  _________  _________  _______   ________
 |\   ___ \|\   __  \|\   __  \|\  \|\  \         |\   _ \  _   \|\   __  \|\___   ___\\___   ___\\  ___ \ |\   __  \
@@ -28,6 +31,7 @@ ________  ________  ________  ___  __            _____ ______   ________  ______
     \|_______|\|__|\|__|\|__|\|__|\|__| \|__|        \|__|     \|__|\|__|\|__|    \|__|      \|__|  \|_______|\|__|\|__|
 -->
 HTML;
+        }
 
         return $output . $debug;
     }
