@@ -102,7 +102,7 @@ class DM_SSO_Cookie {
          * Admin domain is also HTTPS. If it isn't, then we cannot do the third
          * party cookie authentication due to the differing protocols.
          */
-        if ( is_ssl() && ( ! defined( 'FORCE_SSL_ADMIN' ) || ! FORCE_SSL_ADMIN ) ) {
+        if ( ( ! defined( 'FORCE_SSL_ADMIN' ) || ! FORCE_SSL_ADMIN ) && is_ssl() ) {
             return;
         }
 
