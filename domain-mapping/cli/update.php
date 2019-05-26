@@ -59,7 +59,7 @@ class DarkMatter_Dropin_CLI {
             WP_CLI::error( __( 'The /wp-content/ directory needs to be writable by the current user in order to update.', 'dark-matter' ) );
         }
 
-        if ( file_exists( $destination ) && false === $opts['force'] ) {
+        if ( false === $opts['force'] && file_exists( $destination ) ) {
             WP_CLI::error( __( 'Sunrise is already present. Use the --force flag to override.', 'dark-matter' ) );
         }
 
