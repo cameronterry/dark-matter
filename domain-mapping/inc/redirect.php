@@ -22,22 +22,22 @@ if (
         /**
          * Do not attempt to redirect during the CLI command.
          */
-        defined( 'WP_CLI' ) && WP_CLI
+        ( defined( 'WP_CLI' ) && WP_CLI )
     ||
         /**
          * AJAX requests can be used on both the mapped and unmapped domains.
          */
-        defined( 'DOING_AJAX' ) && DOING_AJAX
+        ( defined( 'DOING_AJAX' ) && DOING_AJAX )
     ||
         /**
          * Do not attempt to redirect during the execution of cron.
          */
-        defined( 'DOING_CRON' ) && DOING_CRON
+        ( defined( 'DOING_CRON' ) && DOING_CRON )
     ||
         /**
          * XMLRPC Requests can be used on both the mapped and unmapped domains.
          */
-        defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST
+        ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST )
     ||
         /**
          * REST API can be used on both the mapped and unmapped domains.
