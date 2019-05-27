@@ -29,6 +29,10 @@ class DM_Advanced_Cache {
         $debug = '';
 
         if ( false !== strpos( $this->cache['output'], '<head' ) ) {
+        if ( ! $this->do_cache() ) {
+            return $output;
+        }
+
             $debug = <<<HTML
 <!--
 ________  ________  ________  ___  __            _____ ______   ________  _________  _________  _______   ________
@@ -43,6 +47,21 @@ HTML;
         }
 
         return $output . $debug;
+    }
+
+    /**
+     * Determine if the current response should be cached.
+     *
+     * @return boolean Return true if the current response should be cached. False if it should not.
+     */
+    public function do_cache() {
+        $cache = true;
+
+        if ( 5 === ( $this->status_code / 100 ) ) {
+            $cache = false;
+        }
+
+        return $cache;
     }
 
     /**
