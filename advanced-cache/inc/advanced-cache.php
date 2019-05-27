@@ -28,11 +28,11 @@ class DM_Advanced_Cache {
     public function cache_output( $output = '' ) {
         $debug = '';
 
-        if ( false !== strpos( $this->cache['output'], '<head' ) ) {
         if ( ! $this->do_cache() ) {
             return $output;
         }
 
+        if ( false !== strpos( $output, '<head' ) ) {
             $debug = <<<HTML
 <!--
 ________  ________  ________  ___  __            _____ ______   ________  _________  _________  _______   ________
