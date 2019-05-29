@@ -132,7 +132,7 @@ class DM_SSO_Cookie {
                 return;
             }
         }
-        ?><script type="text/javascript" src="<?php echo( esc_url( $script_url ) ); ?>"></script><?php
+        ?><script defer type="text/javascript" src="<?php echo( esc_url( $script_url ) ); ?>"></script><?php
     }
 
     /**
