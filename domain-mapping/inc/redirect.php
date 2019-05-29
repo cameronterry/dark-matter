@@ -85,18 +85,20 @@ function darkmatter_maybe_redirect() {
     $filename = basename( $request );
     $filename = strtok( $filename, '?' );
 
-    /**
-     * If Allow Logins is enabled, then the `wp-login.php` request is to be made
-     * available on both the primary mapped domain and admin domain.
-     */
-    if ( apply_filters( 'darkmatter_allow_logins', false ) && in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) ) ) {
-        return;
-    }
+    $is_login = in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) );
 
     $original_blog = get_site();
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
+
+    /**
+     * If Allow Logins is enabled, then the `wp-login.php` request is to be made
+     * available on both the primary mapped domain and admin domain.
+     */
+    if ( ! apply_filters( 'darkmatter_allow_logins', false ) && $is_login && $host === $original_blog->domain ) {
+        return;
+    }
 
     /**
      * If there is no primary domain, there is nothing to do. Also make sure the
@@ -106,8 +108,23 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
-    if ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
+    if ( $is_login && $host !== $original_blog->domain ) {
+        $is_ssl_admin = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN );
+
+        $url = 'http' . ( $is_ssl_admin ? 's' : '' ) . '://' . $original_blog->domain . $original_blog->path . $request;
+    }
+    else if ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
         $url = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain . '/' . $request;
+
+        /**
+         * Make sure the Path - if this is a sub-folder Network - is removed from
+         * the URL. For sub-domain Networks, the path will be a single forward slash
+         * (/).
+         */
+        if ( '/' !== $original_blog->path ) {
+            $path = '/' . trim( $original_blog->path, '/' ) . '/';
+            $url  = str_ireplace( $path, '/', $url );
+        }
     }
 
     /**
@@ -115,16 +132,6 @@ function darkmatter_maybe_redirect() {
      */
     if ( empty( $url ) ) {
         return;
-    }
-
-    /**
-     * Make sure the Path - if this is a sub-folder Network - is removed from
-     * the URL. For sub-domain Networks, the path will be a single forward slash
-     * (/).
-     */
-    if ( '/' !== $original_blog->path ) {
-        $path = '/' . trim( $original_blog->path, '/' ) . '/';
-        $url  = str_ireplace( $path, '/', $url );
     }
 
     header( 'Location:' . $url, true, 301 );
