@@ -85,7 +85,11 @@ function darkmatter_maybe_redirect() {
     $filename = basename( $request );
     $filename = strtok( $filename, '?' );
 
-    if ( in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) ) ) {
+    /**
+     * If Allow Logins is enabled, then the `wp-login.php` request is to be made
+     * available on both the primary mapped domain and admin domain.
+     */
+    if ( apply_filters( 'darkmatter_allow_logins', false ) && in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) ) ) {
         return;
     }
 
