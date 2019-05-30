@@ -32,6 +32,40 @@ class DM_URL {
     }
 
     /**
+     * Handle the mapping of Admin URLs for the public-serving side when viewed
+     * on a primary domain. This is specifically to ensure compatibility with
+     * plugins which utilise the `admin-ajax.php` and `admin-post.php` URLs for
+     * functionality, such as form postbacks and other such functionality on the
+     * public-serving side.
+     *
+     * @param  string   $url     The complete admin area URL including scheme and path.
+     * @param  string   $path    Path relative to the admin area URL. Blank string if no path is specified.
+     * @param  int|null $blog_id Site ID, or null for the current site.
+     * @return string            URL which is mapped if appropriate, unchanged otherwise.
+     */
+    public function adminurl( $url = '', $path = '', $blog_id = 0 ) {
+        $filename = basename( $path );
+
+        /**
+         * This will cover a number of requests which are only `/wp-admin/` with
+         * no file in the $path.
+         */
+        if ( empty( $filename ) ) {
+            return $url;
+        }
+
+        $valid_paths = array(
+            'admin-ajax.php', 'admin-post.php'
+        );
+
+        if ( in_array( $filename, $valid_paths ) ) {
+            return $this->map( $url, $blog_id );
+        }
+
+        return $url;
+    }
+
+    /**
      * Determines if the requested domain is mapped using the DOMAIN_MAPPING
      * constant from sunrise.php.
      *
@@ -116,6 +150,7 @@ class DM_URL {
          * Every thing here is designed to ensure all URLs throughout WordPress
          * is consistent. This is the public serving / theme powered code.
          */
+        add_filter( 'admin_url', array( $this, 'adminurl' ), -10, 3 );
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
