@@ -235,7 +235,7 @@ class DM_URL {
                  * Determine if the URL we are attempting to map is a Preview
                  * URL, which is to remain on the Admin domain.
                  */
-                if ( ! empty( $parts['p'] ) || ! empty( $parts['preview'] ) ) {
+                if ( ! empty( $parts['p'] ) || ! empty( $parts['page_id'] ) || ! empty( $parts['preview'] ) ) {
                     return $url;
                 }
             }

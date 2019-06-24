@@ -52,7 +52,7 @@ if (
         /**
          * Do not redirect Previews
          */
-        ( ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] ) )
+        ( ! empty( $_GET['preview'] ) || ! empty( $_GET['page_id'] ) || ! empty( $_GET['p'] ) )
 ) {
     return;
 }
