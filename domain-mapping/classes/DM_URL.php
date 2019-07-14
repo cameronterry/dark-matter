@@ -206,8 +206,8 @@ class DM_URL {
          * The Preview link in the metabox of Post Publish cannot be handled by the home_url hook. This is because it
          * uses get_permalink() to retrieve the URL before appending the "preview=true" query string parameter.
          *
-         * @link Preview Metabox call to get Preview URL. https://github.com/WordPress/WordPress/blob/5.2.2/wp-admin/includes/meta-boxes.php#L57
-         * @link Query string parameter "preview=true" being added to the URL. https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312
+         * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-admin/includes/meta-boxes.php#L57 Preview Metabox call to get Preview URL.
+         * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312 Query string parameter "preview=true" being added to the URL.
          */
         add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
     }
