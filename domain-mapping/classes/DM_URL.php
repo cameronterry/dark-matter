@@ -295,8 +295,6 @@ class DM_URL {
         $blog    = get_site();
         $primary = DarkMatter_Primary::instance()->get();
 
-        $unmapped = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . untrailingslashit( $blog->domain . $blog->path );
-
         /**
          * If there is no primary domain or the primary domain cannot be found
          * then we return the value as-is.
@@ -304,6 +302,8 @@ class DM_URL {
         if ( empty( $primary ) || false === stripos( $value, $primary->domain ) ) {
             return $value;
         }
+
+        $unmapped = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . untrailingslashit( $blog->domain . $blog->path );
 
         return preg_replace( "#https?://{$primary->domain}#", $unmapped, $value );
     }
