@@ -3,9 +3,9 @@
  * Plugin Name: Dark Matter
  * Plugin URI: https://cameronterry.supernovawp.com/dark-matter/
  * Description: A domain mapping plugin from Project Dark Matter.
- * Version: 1.0.0
+ * Version: 2.0.0
  * Author: Cameron Terry
- * Author URI: https://cameronterry.supernovawp.com/
+ * Author URI: https://cameronterry.co.uk/
  * Text Domain: dark-matter
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,98 +27,38 @@
  */
 
 /** A bit of security for those who are too clever for their own good. */
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '1.0.0' );
-define( 'DM_DB_VERSION', '20170109' );
+define( 'DM_VERSION', '2.0.0-beta1' );
+define( 'DM_DB_VERSION', '20190114' );
 
-/**
- * Dark Matter Prepare
- */
-global $current_blog, $wpdb;
+define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
-/** Set the property for the Domain Mapping table. */
-$wpdb->dmtable = $wpdb->base_prefix . 'domain_mapping';
+wp_cache_add_global_groups( 'dark-matter' );
 
-/** Set the primary domain for the Current Blog. */
-$mapped_domain = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->dmtable} WHERE blog_id = %s AND is_primary = 1 LIMIT 0, 1", $current_blog->blog_id ) );
+require_once DM_PATH . '/domain-mapping/inc/compat.php';
 
-if ( false === empty( $mapped_domain ) ) {
-    $current_blog->https = boolval( $mapped_domain->is_https );
-    $current_blog->primary_domain = $mapped_domain->domain;
+require_once DM_PATH . '/domain-mapping/classes/DM_Database.php';
+require_once DM_PATH . '/domain-mapping/classes/DM_Domain.php';
+require_once DM_PATH . '/domain-mapping/classes/DM_URL.php';
+
+if ( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI ) {
+    require_once DM_PATH . '/domain-mapping/classes/DM_UI.php';
 }
 
-/** Check to see if the Original Domain is present and if not, set it. */
-if ( false === property_exists( $current_blog, 'original_domain' ) ) {
-    $current_blog->original_domain = $current_blog->domain . $current_blog->path;
+require_once DM_PATH . '/domain-mapping/api/DarkMatter_Domains.php';
+require_once DM_PATH . '/domain-mapping/api/DarkMatter_Primary.php';
+require_once DM_PATH . '/domain-mapping/api/DarkMatter_Restrict.php';
+
+require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
+
+require_once DM_PATH . '/domain-mapping/rest/DM_REST_Domains_Controller.php';
+require_once DM_PATH . '/domain-mapping/rest/DM_REST_Restricted_Controller.php';
+
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+    require_once DM_PATH . '/domain-mapping/cli/domain.php';
+    require_once DM_PATH . '/domain-mapping/cli/restrict.php';
+    require_once DM_PATH . '/domain-mapping/cli/update.php';
 }
-
-/**
- * Dark Matter plugin
- */
-require_once( DM_PATH . '/inc/api.php' );
-require_once( DM_PATH . '/inc/redirects.php' );
-require_once( DM_PATH . '/inc/urls.php' );
-
-require_once( DM_PATH . '/ui/actions.php' );
-require_once( DM_PATH . '/ui/blog.php' );
-require_once( DM_PATH . '/ui/nag.php' );
-
-require_once( DM_PATH . '/sso/index.php' );
-
-/**
- * When Dark Matter is activated, it will attempt to copy the sunrise.php file
- * to the correct destination.
- */
-function dark_matter_activate() {
-    $destination = WP_CONTENT_DIR . '/sunrise.php';
-    $source = DM_PATH . '/sunrise.php';
-
-    if ( is_writable( WP_CONTENT_DIR ) && false === file_exists( $destination ) && is_readable( $source ) ) {
-        @copy( $source, $destination );
-    }
-}
-register_activation_hook( __FILE__, 'dark_matter_activate' );
-
-function dark_matter_enqueue_scripts( $hook ) {
-    if ( 'settings_page_dark_matter_blog_settings' === $hook ) {
-        wp_enqueue_style( 'dark-matter-css', plugin_dir_url( __FILE__ ) . 'ui/css/blog.css', null, DM_VERSION );
-    }
-}
-add_action( 'admin_enqueue_scripts', 'dark_matter_enqueue_scripts' );
-
-function dark_matter_maybe_create_tables() {
-    global $wpdb;
-
-    /** As dbDelta function is called before the upgrade file is included. */
-    require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-
-    $charset_collate = $wpdb->get_charset_collate();
-
-    $sql = "CREATE TABLE `{$wpdb->dmtable}` (
-        id BIGINT(20) NOT NULL AUTO_INCREMENT,
-        blog_id BIGINT(20) NOT NULL,
-        is_primary TINYINT(4) DEFAULT '0',
-        domain VARCHAR(255) NOT NULL,
-        active TINYINT(4) DEFAULT '1',
-        is_https TINYINT(4) DEFAULT '0',
-        PRIMARY KEY  (id)
-    ) $charset_collate;";
-
-    dbDelta( $sql );
-}
-
-function dark_matter_maybe_upgrade() {
-    if ( is_network_admin() ) {
-        if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
-            dark_matter_maybe_create_tables();
-        }
-    }
-}
-
-function dark_matter_plugins_loaded() {
-    dark_matter_maybe_upgrade();
-}
-add_action( 'plugins_loaded', 'dark_matter_plugins_loaded' );

@@ -1,9 +1,10 @@
-=== Plugin Name ===
+=== Dark Matter ===
 Contributors: cameronterry
 Tags: domain mapping, multisite
-Requires at least: 4.5
-Tested up to: 4.9.1
-Stable tag: 1.0.0
+Requires at least: 5.0
+Requires PHP: 7.0.0
+Tested up to: 5.2
+Stable tag: 2.0.0 Beta1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,137 +79,51 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
-= 1.0.0 - Kapteyn =
+= 2.0.0 =
 
-Jacobus Cornelius Kapteyn was a Dutch astronomer who was the first to suggest the existence of "dark matter" in his paper [First Attempt at a Theory of the Arrangement and Motion of the Sidereal System](http://adsabs.harvard.edu/abs/1922ApJ....55..302K) in 1922.
+* New Features;
+  * Implements a new suite of WP CLI commands, see below. (https://github.com/cameronterry/dark-matter/issues/2)
+  * Includes a feature for setting up Restricted domains, preventing use. (https://github.com/cameronterry/dark-matter/issues/13)
+  * Field `is_active` is now included in the logic, allowed Sites to be prepped with a primary domain but activated at a later time. (https://github.com/cameronterry/dark-matter/issues/13)
+  * REST API content now updates to use the primary domain (if set). Previously the domain used in the content would be the admin domain, regardless of whether the called endpoint was the admin domain or primary domain.
+    * This also apples to XMLRPC endpoints.
+  * Implemented the use of Object Cache API to significantly reduce database queries and improve performance.
+    * For instance; even with a full page cache solution such as Batcache, at least two database queries - one to populate `$current_blog` (Site) and `$current_site` (Network) - on every request.
+    * Once the cache is primed for the domains, the number of queries from Dark Matter should be nil 99.9% of the time.
+  * Dark Matter is now available to be adjusted through custom REST API endpoints.
+    * Covers both Domains and Restricted domains.
+    * Domains has endpoints for retrieving all domains and domains for a specific website, as well as, adding, removing, and, updating domains.
+    * Restricted domains has endpoints for retrieving Restricted domains, as well as, adding and removing Restricted domains.
+    * All endpoints required authentication by a user who has Super Admin permissions.
+  * Domain mapping logic now resides in its own folder.
+  * All new admin user interface per Site to manage domains.
+    * Built in React and uses the new REST API.
+    * Can be disabled and hidden using the constant `define( 'DARKMATTER_HIDE_UI', true );`.
+* Improvements over version 1.0.0;
+  * Domains are now sanitized to ensure that is purely a domain and not a URL. (https://github.com/cameronterry/dark-matter/issues/29)
+  * Priming the `$current_blog` now utilises `WP_Site`. (https://github.com/cameronterry/dark-matter/issues/17)
+  * Better code structure in general.
+  * Ensured that the mapping to the primary domain does not occur whilst the site is viewed through Customizer UI.
+  * Streamlined the number of filters used to map the primary domain.
+  * Mapping on the `the_content` filter now occurs later, to catch all URLs, including those from additional implementations such as `srcset`.
+  * General Domain Mapping improvements.
+    * Home URL (`get_home_url()` and `home_url()`) now map appropriately within the context of `switch_blog()`.
+    * "Visit" link on the Network Admin > Sites page now maps to the primary domain for each site.
+    * "Visit Site" link on Admin Bar now maps to primary domain for the current site.
+    * "My Sites" on Admin Bar now maps to primary domain for each website in the dropdown.
+  * Redirects now occur at the `muplugins_loaded` action, much earlier in the process lowering the amount of WordPress which is loaded before sending a redirect header.
+    * Logic for determining redirects to the primary domain has been streamlined.
+  * Support for Gutenberg editor.
+* Backward Compatibility
+  * 2.0.0 will no longer find the first available domain if no primary domain is set.
+    * Previously Dark Matter would utilise the next available secondary domain.
+    * New version in the case of the Admin domain will not redirect and in the case of a domain found but not primary, will redirect to the Admin domain.
+    * Some edge cases, Dark Matter may not engage and WordPress will redirect to the root website on the Network.
+  * 1.x.x functions no longer exist. If you have use these, you will need to update your code accordingly.
+  * 1.x.x version of **sunrise.php** will error on update as the require path has changed in the new folder structure of 2.0.0.
 
-* First release.
-* [New] New setting "Allow Logins?" is now available. When enabled;
-  * Allows visitors to log in to the primary mapped domain without logging in through the admin domain.
-  * Stops the check for the single sign-on session with the admin domain, causing scenarios where users log in and get logged out immediately.
-  * Ensures that functionality for WooCommerce and Membership plugins functions without modification.
+== Upgrade Notice ==
 
-= 1.0.0 Release Candidate 9 =
+= 2.0.0 = 
 
-* Fixes an issue that was causing the primary domain to become unset. (Thanks @svandragt)
-* Ensures that at a minimum, the single sign-on JavaScript returns at least a JavaScript comment and a mime-type header rather than blank. (Thanks @svandragt)
-* Added some rudimentary assets for the plugin banner and icon.
-
-= 1.0.0 Release Candidate 8 =
-
-* Tightened the domain detection when determining redirects.
-* Added support for Github Updater plugin for those who feel overly adventurous...
-* [Fix] The non-www. version of a primary domain will now redirect to the www. version of the primary domain.
-* [Fix] Now issues 301 (permanent) redirects for secondary and admin domains rather than 302.
-* [Fix] Made sure the URL reconstruction for protocol mismatch is the same as domain mismatch.
-  * This should stop certain situations resulting in a "Too Many Redirects" error.
-
-= 1.0.0 Release Candidate 7 =
-
-* [Fix][Critical] Redirect is no longer occurs on cron jobs. This was causing issues for certain installations.
-
-= 1.0.0 Release Candidate 6 =
-
-* [Fix] The pre_option_home no longer fires on the page powering Customizer, meaning the IFrame loads on the Admin domain entirely. This should resolve;
-  * An authentication issue which sometimes results in a "Cheating huh?" error.
-  * A problem where Customizer couldn't load the IFrame if the Admin area is HTTPS and the mapped domain is HTTP due to browser security.
-* [Fix] Removed an unused variable in the Admin-side pre_option_home filter handler.
-* Removed a blank question in the FAQ of the readme file.
-
-= 1.0.0 Release Candidate 5 =
-
-* [Fix][Critical] An issue where Dark Matter would not catch all Admin requests to initiate the correct redirect.
-* [Fix] Redirects for direct PHP files - like wp-login.php - no longer erroneously contain a trailing forward slash.
-* [Fix] Improved the database version checking mechanism slightly for which, in some scenarios, may run more than once.
-* [Fix] The first column of the Domain Mapping UI no longer just displays the digit one (1) but now the Domain ID.
-* [Fix] Removed a breaking conditional when mapping "home" option on the admin side. This was causing issues with;
-  * The "Visit Site" link in the Admin bar on the admin area.
-  * Yoast SEO snippet preview when Editing a post / page.
-
-= 1.0.0 Release Candidate 4 =
-
-* Cleaned up and eliminated some code duplication on handling redirects from the admin actions for Add / Remove HTTPS, Make Primary, etc.
-* [New] Dark Matter will now warn Super Admins if the SUNRISE constant is not detected.
-* [Fix] admin_url() will no longer map to the primary domain if the URL contains "admin-ajax.php", as usage of this is common for AJAX powered plugins (for now).
-  * This only occurs if WordPress is viewed through a "mapped domain" (primary or not) and should leave the admin-side untouched.
-* [Fix] Redirects no longer erroneously contain a trailing forward slash after all the query string parameters.
-* [Fix] An issue where sub-folder Networks would not redirect properly if omitting the trailing forward slash.
-  * For example; wordpress.test/sitetwo would redirect to www.example.com/sitetwo instead of www.example.com
-* [Fix] If WP REST API v1.x.x is in use, then Dark Matter will no longer redirect to the primary domain.
-
-= 1.0.0 Release Candidate 1 =
-
-* pre_option_home now checks to make sure the URL is actually the one used for the domain mapping before changing it.
-* This should improve the issue where Network Admin "Visit Sites" was being mapped for all websites and not just the one the user is looking at.
-* Tidied up the readme.txt file to;
-  * Standardise on the usage of WordPress Network / Network rather than WordPress Multisite / Multiste.
-  * Line breaks now inline with Atom text editor.
-* [Bug] $wpdb is now explicitly global rather than implied in sunrise.php file.
-* [Bug] Fixed a bug with sub-folder WordPress Networks where redirecting from the Admin Domain to the Primary Domain would in some scenarios omit the forward slash between Domain and Request URI.
-* [Enhancement] Removed an unused parameter in dark_matter_api_get_domain().
-* [Enhancement] Removed some unnecessary wp_die() calls on admin actions as the logic meant they would never be reached.
-* [Enhancement] Removed an unused variable on dark_matter_blog_admin_menu() which was designed to catch the hook name. But the implementation changed direction.
-* [Enhancement] Removed unnecessary declaration of $path variable inside dark_matter_redirect_url() function.
-
-= 0.11.0 (Beta) =
-
-* Completely rewritten the redirects logic to fix the following issues;
-  * Post previews not working and being served from the mapped domain (rather than the admin domain).
-    * This is because the parse_query action runs too earlier and the is_preview() API returns "false" rather than "true".
-  * To ensure the Admin area redirects properly.
-  * To ensure the Login page is always served on the admin domain.
-* Fixed a bug where redirects from the admin domain to the mapped domain included an extra forward slash in the domain.
-  * This in turn caused a double-redirect; one from the admin domain to the mapped domain and then a second from the double-slashed version to the single-slashed version.
-
-= 0.10.0 (Beta) =
-
-* Fixed a typo with dark_matter_map_content() which prevented the logic handling array types (like upload_dir).
-* Put in additional logic in dark_matter_map_content() so that it doesn't accidentally convert booleans to strings.
-* The front-end redirect logic now detects if wp-login.php or wp-register.php is in use and exits, to let a more suitable process handle the redirection logic.
-* Moved the dark_matter_prepare action to execute immediately upon inclusion of the dark-matter.php file and BEFORE the rest of the plugin loads.
-  * This is so that actions and filters can be executed from being added in the scenario of a website not having a mapped domain.
-* API dark_matter_api_get_domain_primary() now returns null rather than the original domain.
-* Now checks to make sure we have a primary domain before attempting to change URLs.
-* XMLRPC requests are no longer redirected.
-  * This was preventing sites from connecting to WordPress.com for Jetpack functionality.
-  * Jetpack now connects but the debugger fails with a "Could not validate security token" if Jetpack is not connected. However, if once connected the debugger claims all is fine!
-* A lot of the fixes solves problems with sites which have no mapped domains.
-
-= 0.9.0 (Beta) =
-
-* Removed the Network Admin page as it is currently has no options or need.
-* Added the L10n API calls where relevant in the code for localisation.
-* Standardised indentation to tabs rather than spaces for all files.
-* Added a license block, as recommended in the WordPress.org Plugin Handbook.
-* Changed the sunrise.php so that grunt work version is in the dark-matter/inc/ folder and the one to be used inside wp-content/ references the one inside the plugin directory.
-  * This should make upgrades more seamless without manual intervention from site owners in the future.
-* Put in an activation hook which can copy the sunrise.php to the correct destination depending on file and folder read / write permissions.
-* Removed a superfluous check on version number when retrieving the primary domain.
-* Removed the sarcasm from the error message when someone has defined a "COOKIE_DOMAIN" value.
-
-= 0.8.0 (Beta) =
-
-* Front-end redirect is now executed on parse_query action rather than template_redirect.
-  * The way Yoast SEO sitemaps are generated means that template_redirect is never fired.
-  * It has the added bonus of being a [handful of actions before template_redirect](https://codex.wordpress.org/Plugin_API/Action_Reference#Actions_Run_During_a_Typical_Request), so means less of WordPress loads before issuing the redirect and is bit more efficient.
-* Fixed the logic inside the front-end redirect so that it no longer attempts to fix both a domain and protocol mismatch at the same time. Now it is one or the other.
-* Completed testing with Yoast SEO and Custom Post Type Permalinks plugins.
-
-= 0.7.0 (Beta) =
-
-* Added primary domain to the allowed_redirect_hosts, so that it passes the validation for wp_safe_redirect().
-* Set domain HTTPS API mechanism now respects the FORCE_SSL_ADMIN constant setting.
-* Fixed the issue which caused the options on the Settings -> Domain Mapping admin panel to redirect to the Dashboard upon save.
-* Fixed an issue in which the domain mapping would not fire or map correctly during a Cron job.
-* Fixed an issue on the front-end domain mapping which now points admin URLs to the correct domain.
-
-= 0.6.0 (Beta) =
-
-* Removed URL mapping from the filters "stylesheet_directory" and "template_directory" as these filters handle folder paths. Not URLs.
-* Fixed a regex bug with the URL mapping API not handling the difference between HTTP and HTTPS URLs.
-* Changed the upgrade mechanism to have a separate version number for the plugin itself and the database.
-  * This is to stop database upgrade procedure running when it is not needed.
-
-= 0.5.0 (Beta) =
-
-* Initial beta release.
+There is backward compatibility issues upgrading. Please ensure you read the release notes for 2.0.0 before upgrading!

@@ -1,0 +1,21 @@
+.notice {
+    position:relative;
+}
+
+.wp-list-table {
+    .domain-options {
+        span {
+            color: #DDDDDD;
+            padding: 0 4px;
+        }
+
+        .submitdelete {
+            color: #AA0000;
+    
+            &:hover {
+                color: #dc3232;
+            }
+        }
+    }
+}
+    
