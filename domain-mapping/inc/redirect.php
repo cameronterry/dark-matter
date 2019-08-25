@@ -97,6 +97,13 @@ function darkmatter_maybe_redirect() {
     }
 
     /**
+     * Dark Matter will disengage if the website is no longer public or is archived or deleted.
+     */
+    if ( (int) $original_blog->public < 0 || $original_blog->archived !== '0' || $original_blog->deleted !== '0' ) {
+        return;
+    }
+
+    /**
      * If Allow Logins is enabled, then the `wp-login.php` request is to be made
      * available on both the primary mapped domain and admin domain.
      */
