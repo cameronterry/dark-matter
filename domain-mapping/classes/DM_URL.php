@@ -30,6 +30,16 @@ class DM_URL {
         }
 
         /**
+         * Dark Matter will disengage if the website is no longer public or is
+         * archived or deleted.
+         */
+        $blog = get_site();
+
+        if ( (int) $blog->public < 0 || $blog->archived !== '0' || $blog->deleted !== '0' ) {
+            return;
+        }
+
+        /**
          * This is the earliest possible action we can start to prepare the
          * setup for the mapping logic. This is because the WP->parse_request()
          * method utilises home_url() which means for requests permitted on both
