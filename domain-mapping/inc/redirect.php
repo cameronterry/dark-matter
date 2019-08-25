@@ -83,14 +83,12 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
-    $is_admin = in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) );
-
     $original_blog = get_site();
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
 
-    if ( is_admin() ) {
+    if ( is_admin() || in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) ) ) {
         $is_admin = true;
     }
 
