@@ -79,6 +79,10 @@ function darkmatter_maybe_redirect() {
     $filename = basename( $request );
     $filename = strtok( $filename, '?' );
 
+    /**
+     * Check to see if the current request is an Admin Post action or an AJAX action. These two requests in Dark Matter
+     * can be on either the admin domain or the primary domain.
+     */
     if ( in_array( $filename, array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
         return;
     }
