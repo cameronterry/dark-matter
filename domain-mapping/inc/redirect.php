@@ -79,6 +79,10 @@ function darkmatter_maybe_redirect() {
     $filename = basename( $request );
     $filename = strtok( $filename, '?' );
 
+    if ( in_array( $filename, array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
+        return;
+    }
+
     $is_admin = in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) );
 
     $original_blog = get_site();
@@ -86,7 +90,7 @@ function darkmatter_maybe_redirect() {
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
 
-    if ( is_admin() && ! in_array( $filename, array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
+    if ( is_admin() ) {
         $is_admin = true;
     }
 
