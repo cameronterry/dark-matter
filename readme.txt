@@ -99,6 +99,19 @@ Google Analytics) with over 60 websites.
   * All new admin user interface per Site to manage domains.
     * Built in React and uses the new REST API.
     * Can be disabled and hidden using the constant `define( 'DARKMATTER_HIDE_UI', true );`.
+  * Allow Logins on Primary Domain option has been replaced with a filter, `darkmatter_allow_logins`.
+    * Auto-detects bbPress plugin if it is installed and active.
+    * Auto-detects WooCommerce plugin if it is installed and active.
+  * Added a suite of actions and filters to enable extensibility of the Dark Matter plugin.
+    * `darkmatter_domain_add` - fires after a domain is successfully added to the database and object cache.
+    * `darkmatter_domain_basic_check` - fires at the end of the checks for a domain. Enables additional checks which are environment specific.
+    * `darkmatter_domain_delete ` - fires after a domain is successfully deleted from the database and object cace.
+    * `darkmatter_domain_updated ` - fires after a domain is successfully updated.
+    * `darkmatter_primary_set ` - Fires after a domain is set as the primary domain for a site.
+    * `darkmatter_primary_unset` - Fires after a domain is unset as the primary domain for a site.
+    * `darkmatter_restrict_add` - Fires after a domain is successfully added to the Restricted list.
+    * `darkmatter_restrict_get` - Fires between the Restricted domains being returned from Object Cache and then going to the database.
+    * `darkmatter_restrict_delete` - Fires after a domain is successfully deleted to the Restricted list.
 * Improvements over version 1.0.0;
   * Domains are now sanitized to ensure that is purely a domain and not a URL. (https://github.com/cameronterry/dark-matter/issues/29)
   * Priming the `$current_blog` now utilises `WP_Site`. (https://github.com/cameronterry/dark-matter/issues/17)
@@ -106,8 +119,10 @@ Google Analytics) with over 60 websites.
   * Ensured that the mapping to the primary domain does not occur whilst the site is viewed through Customizer UI.
   * Streamlined the number of filters used to map the primary domain.
   * Mapping on the `the_content` filter now occurs later, to catch all URLs, including those from additional implementations such as `srcset`.
+  * Better handling of differences between HTTP and HTTPS settings for admin and mapped domains.
+    * For HTTPS mapped domains and HTTP admin domain, third party cookie authentication doesn't engage. But will for HTTPS admin domain and HTTP domains.
   * General Domain Mapping improvements.
-    * Home URL (`get_home_url()` and `home_url()`) now map appropriately within the context of `switch_blog()`.
+    * Home URL (`get_home_url()` and `home_url()`) now map appropriately within the context of `switch_to_blog()` (https://github.com/cameronterry/dark-matter/issues/3).
     * "Visit" link on the Network Admin > Sites page now maps to the primary domain for each site.
     * "Visit Site" link on Admin Bar now maps to primary domain for the current site.
     * "My Sites" on Admin Bar now maps to primary domain for each website in the dropdown.
