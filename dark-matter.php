@@ -7,6 +7,7 @@
  * Author: Cameron Terry
  * Author URI: https://cameronterry.co.uk/
  * Text Domain: dark-matter
+ * Network: True
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  * GitHub Plugin URI: https://github.com/cameronterry/dark-matter
