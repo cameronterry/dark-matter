@@ -79,6 +79,19 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.0.1 =
+
+* Fixed an issue causing `admin-post.php` requests to the Admin domain to be mistakenly redirected to Primary domain.
+  * This is one of the request types which is be allowed on both the Admin and Primary domains.
+* Fixed the version numbers to this release, 2.0.1, eliminating the beta flags.
+* Improved Dark Matter behaviour for Sites which are not public, archived or deleted in a WordPress Network.
+  * This only impacts sites using plugins which locked a site behind a login-gate; i.e. plugins such as More Privacy Options.
+  * Improved the logic to prevent incorrect redirects.
+  * Stopped Dark Matter mapping domains if the site is archived or deleted.
+  * It is worth noting that you may still need to `darkmatter_allow_logins` depending on your setup.
+* Ensured the 2.0.0 release notes in the readme.txt file to be accurate of all the changes.
+* Added the Network flag to the plugin header, so that Dark Matter can only be activated at the Network-level.
+
 = 2.0.0 =
 
 * New Features;
