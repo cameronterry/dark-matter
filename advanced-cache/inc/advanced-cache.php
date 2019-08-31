@@ -88,6 +88,20 @@ HTML;
     public function status_header( $header = '', $code = 0 ) {
         $this->status_code = absint( $code );
 
+        /**
+         * Set the response type property based on the status code. This will be used later for determining the best way
+         * for Dark Matter to respond.
+         */
+        if ( 200 === $this->status_code ) {
+            $this->response_type = 'page';
+        } elseif ( 404 === $this->status_code ) {
+            $this->response_type = 'notfound';
+        } elseif ( in_array( $this->status_code, [ 301, 302, 303, 307 ], true ) ) {
+            $this->response_type = 'redirect';
+        } elseif ( 5 === intval( $this->status_code / 100 ) ) {
+            $this->response_type = 'error';
+        }
+
         return $header;
     }
 
