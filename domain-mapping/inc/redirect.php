@@ -45,12 +45,6 @@ if (
         false !== strpos( $_SERVER['REQUEST_URI'], $rest_url_prefix )
     ||
         /**
-         * Do not redirect Admin area. For note; this returns false if the
-         * unmapped URL is called.
-         */
-        is_admin()
-    ||
-        /**
          * Customizer is presented in an <iframe> over the unmapped domain.
          */
         ! empty( $_GET['customize_changeset_uuid'] )
@@ -58,7 +52,7 @@ if (
         /**
          * Do not redirect Previews
          */
-        ( ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] ) )
+        ( ! empty( $_GET['preview'] ) || ! empty( $_GET['page_id'] ) || ! empty( $_GET['p'] ) )
 ) {
     return;
 }
@@ -85,18 +79,22 @@ function darkmatter_maybe_redirect() {
     $filename = basename( $request );
     $filename = strtok( $filename, '?' );
 
-    $is_login = in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) );
+    $is_admin = in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) );
 
     $original_blog = get_site();
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
 
+    if ( is_admin() && ! in_array( $filename, array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
+        $is_admin = true;
+    }
+
     /**
      * If Allow Logins is enabled, then the `wp-login.php` request is to be made
      * available on both the primary mapped domain and admin domain.
      */
-    if ( ! apply_filters( 'darkmatter_allow_logins', false ) && $is_login && $host === $original_blog->domain ) {
+    if ( ! apply_filters( 'darkmatter_allow_logins', false ) && $is_admin && $host === $original_blog->domain ) {
         return;
     }
 
@@ -108,7 +106,7 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
-    if ( $is_login && $host !== $original_blog->domain ) {
+    if ( $is_admin && $host !== $original_blog->domain ) {
         $is_ssl_admin = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN );
 
         $url = 'http' . ( $is_ssl_admin ? 's' : '' ) . '://' . $original_blog->domain . $original_blog->path . $request;

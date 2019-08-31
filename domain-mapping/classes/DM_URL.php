@@ -8,6 +8,20 @@ class DM_URL {
      */
     public function __construct() {
         /**
+         * Prevent accidental URL mapping on requests which are not GET requests for the admin area. For example; a POST
+         * request will include the postback for saving a post.
+         *
+         * A good example is the Yoast SEO plugin when detecting the internal links as part of the SEO score. This hooks
+         * on to the `save_post` action and then uses `home_url()` and `get_permalink()` as part of the process. If the
+         * URLs are mapped / unmapped here then it can cause the functionality to fail.
+         *
+         * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
+         */
+        if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
+            return;
+        }
+
+        /**
          * Disable all the URL mapping if viewing through Customizer. This is to
          * ensure maximum functionality by retaining the Admin URL.
          */
@@ -29,6 +43,40 @@ class DM_URL {
          * correct domain for the home URL.
          */
         add_action( 'jetpack_sync_home_url', array( $this, 'map' ), 10, 1 );
+    }
+
+    /**
+     * Handle the mapping of Admin URLs for the public-serving side when viewed
+     * on a primary domain. This is specifically to ensure compatibility with
+     * plugins which utilise the `admin-ajax.php` and `admin-post.php` URLs for
+     * functionality, such as form postbacks and other such functionality on the
+     * public-serving side.
+     *
+     * @param  string   $url     The complete admin area URL including scheme and path.
+     * @param  string   $path    Path relative to the admin area URL. Blank string if no path is specified.
+     * @param  int|null $blog_id Site ID, or null for the current site.
+     * @return string            URL which is mapped if appropriate, unchanged otherwise.
+     */
+    public function adminurl( $url = '', $path = '', $blog_id = 0 ) {
+        $filename = basename( $path );
+
+        /**
+         * This will cover a number of requests which are only `/wp-admin/` with
+         * no file in the $path.
+         */
+        if ( empty( $filename ) ) {
+            return $url;
+        }
+
+        $valid_paths = array(
+            'admin-ajax.php', 'admin-post.php'
+        );
+
+        if ( in_array( $filename, $valid_paths ) ) {
+            return $this->map( $url, $blog_id );
+        }
+
+        return $url;
     }
 
     /**
@@ -116,6 +164,7 @@ class DM_URL {
          * Every thing here is designed to ensure all URLs throughout WordPress
          * is consistent. This is the public serving / theme powered code.
          */
+        add_filter( 'admin_url', array( $this, 'adminurl' ), -10, 3 );
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
         add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
@@ -152,6 +201,15 @@ class DM_URL {
         }
 
         add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+
+        /**
+         * The Preview link in the metabox of Post Publish cannot be handled by the home_url hook. This is because it
+         * uses get_permalink() to retrieve the URL before appending the "preview=true" query string parameter.
+         *
+         * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-admin/includes/meta-boxes.php#L57 Preview Metabox call to get Preview URL.
+         * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312 Query string parameter "preview=true" being added to the URL.
+         */
+        add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
     }
 
     /**
@@ -200,7 +258,7 @@ class DM_URL {
                  * Determine if the URL we are attempting to map is a Preview
                  * URL, which is to remain on the Admin domain.
                  */
-                if ( ! empty( $parts['p'] ) || ! empty( $parts['preview'] ) ) {
+                if ( ! empty( $parts['p'] ) || ! empty( $parts['page_id'] ) || ! empty( $parts['preview'] ) ) {
                     return $url;
                 }
             }
@@ -237,8 +295,6 @@ class DM_URL {
         $blog    = get_site();
         $primary = DarkMatter_Primary::instance()->get();
 
-        $unmapped = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . untrailingslashit( $blog->domain . $blog->path );
-
         /**
          * If there is no primary domain or the primary domain cannot be found
          * then we return the value as-is.
@@ -246,6 +302,8 @@ class DM_URL {
         if ( empty( $primary ) || false === stripos( $value, $primary->domain ) ) {
             return $value;
         }
+
+        $unmapped = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . untrailingslashit( $blog->domain . $blog->path );
 
         return preg_replace( "#https?://{$primary->domain}#", $unmapped, $value );
     }
