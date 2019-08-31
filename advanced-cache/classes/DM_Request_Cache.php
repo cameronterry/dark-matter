@@ -18,8 +18,11 @@ class DM_Request_Cache {
      * @param string $url URL to retrieve the Request Cache Entry.
      */
     public function __construct( $url = '' ) {
-        $this->url_cache_key = $this->get_url_key();
-        $this->variant_key   = $this->get_variant_key();
+        $this->set_url_and_key();
+
+
+
+        $this->set_variant_key();
     }
 
     /**
@@ -37,15 +40,24 @@ class DM_Request_Cache {
     }
 
     /**
+     * Store the generate HTML in cache.
+     *
+     * @param string $output HTML to be added to the Request Cache entry.
+     */
+    public function set( $output = '' ) {
+
+    }
+
+    /**
      * Generates a URL Key for the Request. This can be used to retrieve
      *
      * @return string MD5 hash key.
      */
-    public function get_url_key() {
+    public function set_url_and_key() {
         $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
         $path = trim( strtok( $_SERVER['REQUEST_URI'], '?' ) );
 
-        return md5( $host . '/' . $path );
+        $this->url_cache_key = md5( $host . '/' . $path );
     }
 
     /**
@@ -53,16 +65,9 @@ class DM_Request_Cache {
      *
      * @return string MD5 hash key for the Variant.
      */
-    public function get_variant_key() {
-        return '';
-    }
+    public function set_variant_key() {
+        $variant = apply_filters( 'dark_matter_request_variant', '', $this->url, $this->url_cache_key );
 
-    /**
-     * Store the generate HTML in cache.
-     *
-     * @param string $output HTML to be added to the Request Cache entry.
-     */
-    public function set( $output = '' ) {
-
+        $this->variant_key = md5( strval( $variant ) );
     }
 }
