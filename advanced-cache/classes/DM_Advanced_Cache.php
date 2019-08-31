@@ -69,6 +69,28 @@ HTML;
             return false;
         }
 
+        /**
+         * Check Cookies to make sure that caching is suitable, i.e. do not cache if the User is logged in.
+         */
+        $cookies = $_COOKIE;
+        $bypass  = apply_filters( 'dark_matter_cookie_bypass', [] );
+
+        if ( ! empty( $cookies ) && is_array( $cookies ) ) {
+            foreach ( $cookies as $name => $value ) {
+                /**
+                 * Check for Login. We bypass the override options if the User is logged in.
+                 */
+                if ( 0 === stripos( $name, 'wp_' ) || 0 === stripos( $name, 'wordpress_' ) ) {
+                    return false;
+                }
+
+                /**
+                 * Check to see if the cookie is included in the Bypass set.
+                 */
+                if ( in_array( $name, $bypass ) ) {
+                    return false;
+                }
+            }
         }
 
         return true;
