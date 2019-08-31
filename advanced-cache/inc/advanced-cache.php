@@ -10,6 +10,20 @@ if ( ! empty( $_SERVER['REQUEST_METHOD'] ) && ! in_array( $_SERVER['REQUEST_METH
 
 class DM_Advanced_Cache {
     /**
+     * Determines the appropriate logic for response that WordPress has provided.
+     *
+     * @var string Type of request; `page`, `redirect`, `error`, `notfound`, and `unknown` are valid values.
+     */
+    private $response_type = 'page';
+
+    /**
+     * Stores the Status Code in state for use through Advanced Cache.
+     *
+     * @var int HTTP Status Code for the current request.
+     */
+    private $status_code = -1;
+
+    /**
      * Constructor
      */
     public function __construct() {
