@@ -8,12 +8,18 @@ class DM_Request_Cache {
     private $url_cache_key = '';
 
     /**
+     * @var string Key distinguishing the variant.
+     */
+    private $variant_key = '';
+
+    /**
      * DM_Request_Cache constructor.
      *
      * @param string $url URL to retrieve the Request Cache Entry.
      */
     public function __construct( $url = '' ) {
         $this->url_cache_key = $this->get_url_key();
+        $this->variant_key   = $this->get_variant_key();
     }
 
     /**
@@ -40,6 +46,15 @@ class DM_Request_Cache {
         $path = trim( strtok( $_SERVER['REQUEST_URI'], '?' ) );
 
         return md5( $host . '/' . $path );
+    }
+
+    /**
+     * Allows third parties to determine if the request should be treated differently from the standard caching logic.
+     *
+     * @return string MD5 hash key for the Variant.
+     */
+    public function get_variant_key() {
+        return '';
     }
 
     /**
