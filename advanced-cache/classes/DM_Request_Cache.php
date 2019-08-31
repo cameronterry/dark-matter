@@ -58,7 +58,7 @@ class DM_Request_Cache {
      *
      * @return string MD5 hash key.
      */
-    public function set_url_and_key() {
+    private function set_url_and_key() {
         $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
         $path = trim( strtok( $_SERVER['REQUEST_URI'], '?' ) );
 
@@ -71,7 +71,7 @@ class DM_Request_Cache {
      *
      * @return string MD5 hash key for the Variant.
      */
-    public function set_variant_key() {
+    private function set_variant_key() {
         $variant = apply_filters( 'dark_matter_request_variant', '', $this->url, $this->url_cache_key );
 
         $this->variant_key = md5( strval( $variant ) );
