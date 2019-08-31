@@ -3,6 +3,11 @@ defined( 'ABSPATH' ) || die;
 
 class DM_Request_Cache {
     /**
+     * @var string Request URL.
+     */
+    private $url = '';
+
+    /**
      * @var string Cache Key for the URL - minus any variants - of the Request.
      */
     private $url_cache_key = '';
@@ -57,7 +62,8 @@ class DM_Request_Cache {
         $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
         $path = trim( strtok( $_SERVER['REQUEST_URI'], '?' ) );
 
-        $this->url_cache_key = md5( $host . '/' . $path );
+        $this->url           = $host . '/' . $path;
+        $this->url_cache_key = md5( $this->url );
     }
 
     /**
