@@ -62,13 +62,16 @@ HTML;
      * @return boolean Return true if the current response should be cached. False if it should not.
      */
     public function do_cache() {
-        $cache = true;
-
-        if ( 5 === ( $this->status_code / 100 ) ) {
-            $cache = false;
+        /**
+         * Ensure the Response Type can be cached.
+         */
+        if ( 'page' !== $this->response_type ) {
+            return false;
         }
 
-        return $cache;
+        }
+
+        return true;
     }
 
     /**
