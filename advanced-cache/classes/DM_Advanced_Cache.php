@@ -20,6 +20,13 @@ class DM_Advanced_Cache {
      * Constructor
      */
     public function __construct() {
+        $key = $this->url_key();
+        $cache = wp_cache_get( $key, 'dark-matter-fullpage' );
+
+        if ( ! empty( $cache ) ) {
+            die( $cache );
+        }
+
         ob_start( array( $this, 'cache_output' ) );
 
         add_filter( 'status_header', array( $this, 'status_header' ), 10, 2 );
@@ -39,6 +46,8 @@ class DM_Advanced_Cache {
             return $output;
         }
 
+        $key = $this->url_key();
+
         if ( false !== strpos( $output, '<head' ) ) {
             $debug = <<<HTML
 <!--
@@ -53,7 +62,11 @@ ________  ________  ________  ___  __            _____ ______   ________  ______
 HTML;
         }
 
-        return $output . $debug;
+        $output = $output . $debug;
+
+        wp_cache_set( $key, $output, 'dark-matter-fullpage', 1 * MINUTE_IN_SECONDS );
+
+        return $output;
     }
 
     /**
