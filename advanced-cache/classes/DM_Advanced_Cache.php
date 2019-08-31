@@ -124,6 +124,18 @@ HTML;
     }
 
     /**
+     * Uses the various URL parameters to produce a key for caching.
+     *
+     * @return string MD5 hash of the URL most suitable for caching.
+     */
+    public function url_key() {
+        $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
+        $path = trim( strtok( $_SERVER['REQUEST_URI'], '?' ) );
+
+        return md5( $host . '/' . $path );
+    }
+
+    /**
      * Return the Singleton Instance of the class.
      *
      * @return void
