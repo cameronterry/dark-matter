@@ -25,9 +25,10 @@ class DM_Advanced_Cache {
      * Constructor
      */
     public function __construct() {
-        $this->request = new DM_Request_Cache();
+        $this->set_url();
 
-        $cached_html = $this->request->get();
+        $this->request = new DM_Request_Cache( $this->url );
+        $cached_html   = $this->request->get();
 
         if ( ! empty( $cached_html ) ) {
             die( $this->do_output( $cached_html ) );
@@ -121,6 +122,13 @@ HTML;
         }
 
         return $html . $debug;
+    }
+
+    public function set_url() {
+        $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
+        $path = trim( $_SERVER['REQUEST_URI'] );
+
+        $this->url = $host . '/' . $path;
     }
 
     /**

@@ -24,9 +24,13 @@ class DM_Request_Cache {
 
     /**
      * DM_Request_Cache constructor.
+     *
+     * @param string $url URL to work with for the Request Cache object.
      */
-    public function __construct() {
-        $this->set_url_and_key();
+    public function __construct( $url = '' ) {
+        $this->url = strtok( $url, '?' );
+
+        $this->set_url_key();
 
         $this->set_variant_key();
 
@@ -80,11 +84,7 @@ class DM_Request_Cache {
      *
      * @return string MD5 hash key.
      */
-    private function set_url_and_key() {
-        $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
-        $path = trim( strtok( $_SERVER['REQUEST_URI'], '?' ) );
-
-        $this->url           = $host . '/' . $path;
+    private function set_url_key() {
         $this->url_cache_key = md5( $this->url );
     }
 
