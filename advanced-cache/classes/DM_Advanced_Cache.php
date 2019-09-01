@@ -3,6 +3,11 @@ defined( 'ABSPATH' ) || die;
 
 class DM_Advanced_Cache {
     /**
+     * @var DM_Request_Cache Request Cache object.
+     */
+    private $request = null;
+
+    /**
      * Determines the appropriate logic for response that WordPress has provided.
      *
      * @var string Type of request; `page`, `redirect`, `error`, `notfound`, and `unknown` are valid values.
@@ -20,11 +25,12 @@ class DM_Advanced_Cache {
      * Constructor
      */
     public function __construct() {
-        $key = $this->url_key();
-        $cache = wp_cache_get( $key, 'dark-matter-fullpage' );
+        $this->request = new DM_Request_Cache();
 
-        if ( ! empty( $cache ) ) {
-            die( $cache );
+        $cached_html = $this->request->get();
+
+        if ( ! empty( $cached_html ) ) {
+            die( $cached_html );
         }
 
         ob_start( array( $this, 'cache_output' ) );
@@ -46,7 +52,7 @@ class DM_Advanced_Cache {
             return $output;
         }
 
-        $key = $this->url_key();
+        $this->request->set( $output );
 
         if ( false !== strpos( $output, '<head' ) ) {
             $debug = <<<HTML
@@ -62,11 +68,7 @@ ________  ________  ________  ___  __            _____ ______   ________  ______
 HTML;
         }
 
-        $output = $output . $debug;
-
-        wp_cache_set( $key, $output, 'dark-matter-fullpage', 1 * MINUTE_IN_SECONDS );
-
-        return $output;
+        return $output . $debug;
     }
 
     /**
@@ -134,18 +136,6 @@ HTML;
         }
 
         return $header;
-    }
-
-    /**
-     * Uses the various URL parameters to produce a key for caching.
-     *
-     * @return string MD5 hash of the URL most suitable for caching.
-     */
-    public function url_key() {
-        $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
-        $path = trim( strtok( $_SERVER['REQUEST_URI'], '?' ) );
-
-        return md5( $host . '/' . $path );
     }
 
     /**
