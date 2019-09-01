@@ -3,6 +3,11 @@ defined( 'ABSPATH' ) || die;
 
 class DM_Request_Cache {
     /**
+     * @var string Cache Key.
+     */
+    private $key = '';
+
+    /**
      * @var string Request URL.
      */
     private $url = '';
@@ -24,8 +29,6 @@ class DM_Request_Cache {
      */
     public function __construct( $url = '' ) {
         $this->set_url_and_key();
-
-
 
         $this->set_variant_key();
     }
@@ -50,16 +53,23 @@ class DM_Request_Cache {
      * @return string Cache Key, formatted using the MD5 of the base URL and the MD5 of the variant (if there is one).
      */
     public function get_key() {
-        $key = $this->url_cache_key;
+        /**
+         * Check to see if we have already generated the Key.
+         */
+        if ( ! empty( $this->key ) ) {
+            return $this->key;
+        }
+
+        $this->key = $this->url_cache_key;
 
         /**
          * Append the Variant Key if there is one.
          */
         if ( ! empty( $this->variant_key ) ) {
-            $key .= '-' . $this->variant_key;
+            $this->key .= '-' . $this->variant_key;
         }
 
-        return $key;
+        return $this->key;
     }
 
     /**
