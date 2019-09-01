@@ -45,6 +45,24 @@ class DM_Request_Cache {
     }
 
     /**
+     * Returns the cache key for storing the request.
+     *
+     * @return string Cache Key, formatted using the MD5 of the base URL and the MD5 of the variant (if there is one).
+     */
+    public function get_key() {
+        $key = $this->url_cache_key;
+
+        /**
+         * Append the Variant Key if there is one.
+         */
+        if ( ! empty( $this->variant_key ) ) {
+            $key .= '-' . $this->variant_key;
+        }
+
+        return $key;
+    }
+
+    /**
      * Store the generate HTML in cache.
      *
      * @param string $output HTML to be added to the Request Cache entry.
