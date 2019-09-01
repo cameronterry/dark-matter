@@ -35,6 +35,8 @@ class DM_Request_Cache {
 
     /**
      * Delete the Request Cache Entry.
+     *
+     * @return bool True on success. False otherwise.
      */
     public function delete() {
         return wp_cache_delete( $this->key, 'dark-matter-fullpage' );
@@ -42,6 +44,8 @@ class DM_Request_Cache {
 
     /**
      * Retrieve the Request Cache Entry - if available - and return it.
+     *
+     * @return bool|mixed HTML if available. False otherwise.
      */
     public function get() {
         return wp_cache_get( $this->key, 'dark-matter-fullpage' );
