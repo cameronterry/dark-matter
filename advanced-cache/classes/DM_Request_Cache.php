@@ -24,52 +24,27 @@ class DM_Request_Cache {
 
     /**
      * DM_Request_Cache constructor.
-     *
-     * @param string $url URL to retrieve the Request Cache Entry.
      */
-    public function __construct( $url = '' ) {
+    public function __construct() {
         $this->set_url_and_key();
 
         $this->set_variant_key();
+
+        $this->set_key();
     }
 
     /**
      * Delete the Request Cache Entry.
      */
     public function delete() {
-
+        return wp_cache_delete( $this->key, 'dark-matter-fullpage' );
     }
 
     /**
      * Retrieve the Request Cache Entry - if available - and return it.
      */
     public function get() {
-
-    }
-
-    /**
-     * Returns the cache key for storing the request.
-     *
-     * @return string Cache Key, formatted using the MD5 of the base URL and the MD5 of the variant (if there is one).
-     */
-    public function get_key() {
-        /**
-         * Check to see if we have already generated the Key.
-         */
-        if ( ! empty( $this->key ) ) {
-            return $this->key;
-        }
-
-        $this->key = $this->url_cache_key;
-
-        /**
-         * Append the Variant Key if there is one.
-         */
-        if ( ! empty( $this->variant_key ) ) {
-            $this->key .= '-' . $this->variant_key;
-        }
-
-        return $this->key;
+        return wp_cache_get( $this->key, 'dark-matter-fullpage' );
     }
 
     /**
@@ -79,6 +54,20 @@ class DM_Request_Cache {
      */
     public function set( $output = '' ) {
 
+    }
+
+    /**
+     * Sets the cache key for storing the request.
+     */
+    public function set_key() {
+        $this->key = $this->url_cache_key;
+
+        /**
+         * Append the Variant Key if there is one.
+         */
+        if ( ! empty( $this->variant_key ) ) {
+            $this->key .= '-' . $this->variant_key;
+        }
     }
 
     /**
