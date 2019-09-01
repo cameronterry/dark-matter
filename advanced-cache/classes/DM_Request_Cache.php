@@ -54,10 +54,11 @@ class DM_Request_Cache {
     /**
      * Store the generate HTML in cache.
      *
-     * @param string $output HTML to be added to the Request Cache entry.
+     * @param  string $output HTML to be added to the Request Cache entry.
+     * @return bool           True on success. False otherwise.
      */
     public function set( $output = '' ) {
-
+        return wp_cache_set( $this->key, $output, 'dark-matter-fullpage', 1 * MINUTE_IN_SECONDS );
     }
 
     /**
