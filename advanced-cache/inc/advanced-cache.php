@@ -32,4 +32,5 @@ wp_cache_add_global_groups( 'dark-matter-fullpage' );
  */
 $dirname = str_replace( '/inc', '', dirname( __FILE__ ) );
 
+require_once $dirname . '/classes/DM_Request_Cache.php';
 require_once $dirname . '/classes/DM_Advanced_Cache.php';
