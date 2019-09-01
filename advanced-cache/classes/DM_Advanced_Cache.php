@@ -47,8 +47,6 @@ class DM_Advanced_Cache {
      * @return string         HTML, either from Cache or by WordPress.
      */
     public function cache_output( $output = '' ) {
-        $debug = '';
-
         if ( ! $this->do_cache() ) {
             return $output;
         }
