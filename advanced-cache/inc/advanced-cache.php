@@ -33,7 +33,7 @@ wp_cache_add_global_groups( 'dark-matter-fullpage' );
 if ( defined( 'WP_CONTENT_DIR' ) ) {
     $extension = WP_CONTENT_DIR . '/mu-plugins/advanced-cache.php';
 
-    if ( file_exists( $extension ) ) {
+    if ( is_readable( $extension ) ) {
         include_once $extension;
     }
 }
