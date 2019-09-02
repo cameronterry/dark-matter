@@ -81,7 +81,7 @@ class DM_Request_Cache {
 
         $data = [
             'body'     => $output,
-            'headers'  => $headers,
+            'headers'  => $cache_headers,
             'redirect' => false,
         ];
 
