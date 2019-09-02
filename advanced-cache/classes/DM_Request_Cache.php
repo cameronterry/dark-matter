@@ -160,6 +160,10 @@ class DM_Request_Cache {
     private function set_variant_key() {
         $variant = apply_filters( 'dark_matter_request_variant', '', $this->url, $this->url_cache_key );
 
-        $this->variant_key = md5( strval( $variant ) );
+        if ( empty( $variant ) ) {
+            $this->variant_key = '';
+        } else {
+            $this->variant_key = md5( strval( $variant ) );
+        }
     }
 }
