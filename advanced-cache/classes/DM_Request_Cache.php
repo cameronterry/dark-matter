@@ -28,7 +28,7 @@ class DM_Request_Cache {
      * @param string $url URL to work with for the Request Cache object.
      */
     public function __construct( $url = '' ) {
-        $this->url = strtok( $url, '?' );
+        $this->url = $url;
 
         $this->set_url_key();
 
