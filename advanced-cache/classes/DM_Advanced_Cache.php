@@ -49,6 +49,54 @@ class DM_Advanced_Cache {
     }
 
     /**
+     * Action the Cached redirect request.
+     *
+     * @param  array $data Request Cache Entry.
+     * @return void
+     */
+    private function action_redirect( $data = [] ) {
+        /**
+         * Pull together the other headers from WordPress when it was cached as well as the Dark Matter headers.
+         */
+        $this->do_headers( $data['headers'] );
+
+        /**
+         * Determine which protocol PHP is using.
+         */
+        $protocol = 'HTTP/1.0';
+
+        if ( in_array( $_SERVER['SERVER_PROTOCOL'], [ 'HTTP/2.0', 'HTTP/1.1', 'HTTP/1.0' ], true ) ) {
+            $protocol = $_SERVER['SERVER_PROTOCOL'];
+        }
+
+        /**
+         * Generate the header which tells the browser that the request is a redirect.
+         */
+        $text = [
+            300 => 'Multiple Choices',
+            301 => 'Moved Permanently',
+            302 => 'Found',
+            303 => 'See Other',
+            304 => 'Not Modified',
+            305 => 'Use Proxy',
+            306 => 'Reserved',
+            307 => 'Temporary Redirect',
+        ];
+
+        if ( ! empty( $text[ $data['http_code'] ] ) ) {
+            header( $protocol . ' ' . $data['http_code'] . ' ' . $text[ $data['http_code'] ], true );
+        } else {
+            header( $protocol . ' 302 Found', true );
+        }
+
+        /**
+         * Finally, issue the location header telling the browser where to go.
+         */
+        header( 'Location: ' . $data['location'], true );
+        die;
+    }
+
+    /**
      * Handle the output caching for the request. This is done by utilising the
      * output buffering feature of PHP.
      *
