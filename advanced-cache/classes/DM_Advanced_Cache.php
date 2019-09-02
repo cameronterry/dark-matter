@@ -37,6 +37,10 @@ class DM_Advanced_Cache {
         $this->request = new DM_Request_Cache( $this->url );
         $cache_data    = $this->request->get();
 
+        if ( $cache_data['redirect'] ) {
+            $this->action_redirect( $cache_data );
+        }
+
         if ( ! empty( $cache_data ) ) {
             $this->do_headers( $cache_data['headers'] );
             die( $this->do_output( $cache_data['body'] ) );
