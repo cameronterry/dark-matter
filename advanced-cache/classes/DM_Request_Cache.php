@@ -90,16 +90,11 @@ class DM_Request_Cache {
         /**
          * Get the headers in to a consistent and more programmatically appeasing way to use.
          */
-        $cache_headers = [];
 
-        foreach ( $headers as $header ) {
-            list( $key, $value ) = array_map( 'trim', explode( ':', $header, 2 ) );
-            $cache_headers[ $key ] = $value;
-        }
 
         $data = [
             'body'     => $output,
-            'headers'  => $cache_headers,
+            'headers'  => $this->sanitize_headers( $headers ),
             'redirect' => false,
         ];
 
