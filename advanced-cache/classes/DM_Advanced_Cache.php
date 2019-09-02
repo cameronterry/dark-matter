@@ -72,7 +72,7 @@ class DM_Advanced_Cache {
         /**
          * Ensure the Response Type can be cached.
          */
-        if ( 'page' !== $this->response_type ) {
+        if ( ! in_array( $this->response_type, [ 'page' ], true ) ) {
             return false;
         }
 
