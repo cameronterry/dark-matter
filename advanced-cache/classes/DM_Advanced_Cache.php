@@ -56,6 +56,7 @@ class DM_Advanced_Cache {
      */
     public function cache_output( $output = '' ) {
         if ( ! $this->do_cache() ) {
+            header( 'X-DarkMatter-Cache: BYPASS' );
             return $output;
         }
 
