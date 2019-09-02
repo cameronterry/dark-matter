@@ -171,7 +171,7 @@ HTML;
      * @return integer           HTTP status code, unmodified.
      */
     public function redirect_status( $status = 0, $location = '' ) {
-        $this->url_redirect = $location;
+        $this->request->set_redirect( $status, $location, headers_list() );
 
         return $status;
     }
