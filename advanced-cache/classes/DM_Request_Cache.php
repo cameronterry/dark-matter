@@ -62,7 +62,7 @@ class DM_Request_Cache {
      * @return array|bool         Cache data on success. False otherwise.
      */
     public function set( $output = '', $headers = [] ) {
-        if ( ! empty( $output ) ) {
+        if ( empty( $output ) ) {
             return false;
         }
 
