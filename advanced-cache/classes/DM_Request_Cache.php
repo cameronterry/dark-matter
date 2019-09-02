@@ -56,6 +56,23 @@ class DM_Request_Cache {
     }
 
     /**
+     * Take headers and put them in a structure that is more consistent and more programmatically appeasing to use.
+     *
+     * @param  array $headers Raw headers.
+     * @return array          Sanitized headers.
+     */
+    private function sanitize_headers( $headers = [] ) {
+        $cache_headers = [];
+
+        foreach ( $headers as $header ) {
+            list( $key, $value ) = array_map( 'trim', explode( ':', $header, 2 ) );
+            $cache_headers[ $key ] = $value;
+        }
+
+        return $cache_headers;
+    }
+
+    /**
      * Store the generate HTML in cache.
      *
      * @param  string     $output  HTML to be added to the Request Cache entry.
