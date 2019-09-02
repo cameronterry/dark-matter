@@ -58,8 +58,9 @@ class DM_Request_Cache {
     /**
      * Store the generate HTML in cache.
      *
-     * @param  string     $output HTML to be added to the Request Cache entry.
-     * @return array|bool         Cache data on success. False otherwise.
+     * @param  string     $output  HTML to be added to the Request Cache entry.
+     * @param  array      $headers Headers to be added to Request Cache entry.
+     * @return array|bool          Cache data on success. False otherwise.
      */
     public function set( $output = '', $headers = [] ) {
         /**
