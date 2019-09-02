@@ -106,6 +106,29 @@ class DM_Advanced_Cache {
     }
 
     /**
+     *
+     * @param array $headers
+     */
+    public function do_headers( $headers = [] ) {
+        /**
+         * This is for a generated response.
+         */
+        if ( empty( $headers ) ) {
+            header( 'X-DarkMatter-Cache: MISS' );
+            return;
+        }
+
+        /**
+         * This is a cached response.
+         */
+        header( 'X-DarkMatter-Cache: HIT' );
+
+        foreach ( $headers as $name => $value ) {
+            header( "{$name}: {$value}", true );
+        }
+    }
+
+    /**
      * Produces the entire HTML output.
      *
      * @param  string $html HTML, either generated or from Cache.
