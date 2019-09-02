@@ -39,6 +39,15 @@ if ( defined( 'WP_CONTENT_DIR' ) ) {
 }
 
 /**
+ * Sanity check; as we offer extensibility, there will be a temptation to include WPDB. The problem with using database
+ * queries at this level, is that will nullify any performance and / or scalability benefits afforded by caching in the
+ * first place.
+ */
+if ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! empty( $GLOBALS['wpdb'] ) ) {
+    trigger_error( 'Please be aware that by using database calls for Advanced Cache removes any benefit of using it, both in performance and scalability.', E_WARNING );
+}
+
+/**
  * Cannot utilise plugin_dir_path() as the inner function used is not available and this is preferable to include more
  * files than is realistically needed.
  */
