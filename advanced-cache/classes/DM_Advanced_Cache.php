@@ -29,13 +29,6 @@ class DM_Advanced_Cache {
     private $url = '';
 
     /**
-     * URL Redirect. Only populates for instances where wp_redirect() and wp_safe_redirect() are called.
-     *
-     * @var string URL.
-     */
-    private $url_redirect = '';
-
-    /**
      * Constructor
      */
     public function __construct() {
