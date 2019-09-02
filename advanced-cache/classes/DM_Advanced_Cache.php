@@ -69,11 +69,13 @@ class DM_Advanced_Cache {
      * @return boolean Return true if the current response should be cached. False if it should not.
      */
     public function do_cache() {
+        $do_cache = true;
+
         /**
          * Ensure the Response Type can be cached.
          */
         if ( ! in_array( $this->response_type, [ 'page' ], true ) ) {
-            return false;
+            $do_cache = false;
         }
 
         /**
@@ -88,19 +90,19 @@ class DM_Advanced_Cache {
                  * Check for Login. We bypass the override options if the User is logged in.
                  */
                 if ( 0 === stripos( $name, 'wp_' ) || 0 === stripos( $name, 'wordpress_' ) ) {
-                    return false;
+                    $do_cache = false;
                 }
 
                 /**
                  * Check to see if the cookie is included in the Bypass set.
                  */
                 if ( in_array( $name, $bypass ) ) {
-                    return false;
+                    $do_cache = false;
                 }
             }
         }
 
-        return true;
+        return apply_filters( 'dark_matter_do_cache', $do_cache, $this->response_type, $this->status_code );
     }
 
     /**
