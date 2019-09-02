@@ -22,6 +22,13 @@ class DM_Advanced_Cache {
     private $status_code = -1;
 
     /**
+     * Current request URL.
+     *
+     * @var string URL.
+     */
+    private $url = '';
+
+    /**
      * Constructor
      */
     public function __construct() {
@@ -103,9 +110,9 @@ class DM_Advanced_Cache {
      * @return string       HTML, possibly with additional details from Dark Matter.
      */
     private function do_output( $html = '' ) {
-        $debug = '';
+        $head_pos = strpos( $html, '</body>' );
 
-        if ( false !== strpos( $html, '<head' ) ) {
+        if ( false !== $head_pos ) {
             $debug = <<<HTML
 <!--
 ________  ________  ________  ___  __            _____ ______   ________  _________  _________  _______   ________
@@ -117,9 +124,14 @@ ________  ________  ________  ___  __            _____ ______   ________  ______
     \|_______|\|__|\|__|\|__|\|__|\|__| \|__|        \|__|     \|__|\|__|\|__|    \|__|      \|__|  \|_______|\|__|\|__|
 -->
 HTML;
+
+            /**
+             * Insert the debug just before the closing <body> tag.
+             */
+            $html = substr_replace( $html, $debug, $head_pos, 0 );
         }
 
-        return $html . $debug;
+        return $html;
     }
 
     public function set_url() {
@@ -159,7 +171,7 @@ HTML;
     /**
      * Return the Singleton Instance of the class.
      *
-     * @return void
+     * @return bool|DM_Advanced_Cache
      */
     public static function instance() {
         static $instance = false;
