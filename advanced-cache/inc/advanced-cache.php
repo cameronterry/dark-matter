@@ -27,6 +27,18 @@ if ( ! is_object( $wp_object_cache ) ) {
 wp_cache_add_global_groups( 'dark-matter-fullpage' );
 
 /**
+ * Prior to loading the library and processing the cache, determine if the current installation includes a file for
+ * extending Dark Matter Fullpage Caching.
+ */
+if ( defined( 'WP_CONTENT_DIR' ) ) {
+    $extension = WP_CONTENT_DIR . '/mu-plugins/advanced-cache.php';
+
+    if ( file_exists( $extension ) ) {
+        include_once $extension;
+    }
+}
+
+/**
  * Cannot utilise plugin_dir_path() as the inner function used is not available and this is preferable to include more
  * files than is realistically needed.
  */
