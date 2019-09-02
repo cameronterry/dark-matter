@@ -35,10 +35,11 @@ class DM_Advanced_Cache {
         $this->set_url();
 
         $this->request = new DM_Request_Cache( $this->url );
-        $cached_html   = $this->request->get();
+        $cache_data    = $this->request->get();
 
-        if ( ! empty( $cached_html ) ) {
-            die( $this->do_output( $cached_html ) );
+        if ( ! empty( $cache_data ) ) {
+            $this->do_headers( $cache_data['headers'] );
+            die( $this->do_output( $cache_data['body'] ) );
         }
 
         ob_start( array( $this, 'cache_output' ) );
@@ -58,9 +59,10 @@ class DM_Advanced_Cache {
             return $output;
         }
 
-        $this->request->set( $output );
+        $data = $this->request->set( $output, headers_list() );
 
-        return $this->do_output( $output );
+        $this->do_headers();
+        return $this->do_output( $data['body'] );
     }
 
     /**
