@@ -52,6 +52,7 @@ class DM_Advanced_Cache {
         ob_start( array( $this, 'cache_output' ) );
 
         add_filter( 'status_header', array( $this, 'status_header' ), 10, 2 );
+        add_filter( 'wp_redirect_status', array( $this, 'redirect_status' ), 10, 2 );
     }
 
     /**
@@ -84,7 +85,7 @@ class DM_Advanced_Cache {
         /**
          * Ensure the Response Type can be cached.
          */
-        if ( ! in_array( $this->response_type, [ 'page' ], true ) ) {
+        if ( ! in_array( $this->response_type, [ 'page', 'redirect' ], true ) ) {
             $do_cache = false;
         }
 
@@ -167,6 +168,19 @@ HTML;
         }
 
         return $html;
+    }
+
+    /**
+     * Retrieve the destination for a redirect issued using the WordPress logic.
+     *
+     * @param  integer $status   HTTP status code for the Redirect (i.e. 301, 302, etc.)
+     * @param  string  $location Destination for the redirect to go to.
+     * @return integer           HTTP status code, unmodified.
+     */
+    public function redirect_status( $status = 0, $location = '' ) {
+        $this->url_redirect = $location;
+
+        return $status;
     }
 
     /**
