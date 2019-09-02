@@ -134,6 +134,9 @@ HTML;
         return $html;
     }
 
+    /**
+     * Set the URL from the current request and to be used in later processing.
+     */
     public function set_url() {
         $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
         $path = trim( $_SERVER['REQUEST_URI'] );
