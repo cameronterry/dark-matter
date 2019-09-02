@@ -106,6 +106,29 @@ class DM_Request_Cache {
     }
 
     /**
+     * Create / Update a Request Cache entry for a redirect.
+     *
+     * @param  integer    $http_code Redirect code such as 301 or 302.
+     * @param  string     $location  Destination for the redirect.
+     * @param  array      $headers   Headers to be added to Request Cache entry.
+     * @return array|bool            Cache data on success. False otherwise.
+     */
+    public function set_redirect( $http_code = 0, $location = '', $headers = [] ) {
+        $data = [
+            'body'      => '',
+            'headers'   => $this->sanitize_headers( $headers ),
+            'http_code' => $http_code,
+            'redirect'  => true,
+        ];
+
+        if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage' ) ) {
+            return $data;
+        }
+
+        return false;
+    }
+
+    /**
      * Sets the cache key for storing the request.
      */
     public function set_key() {
