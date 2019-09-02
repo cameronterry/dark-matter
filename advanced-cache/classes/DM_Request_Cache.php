@@ -118,6 +118,7 @@ class DM_Request_Cache {
             'body'      => '',
             'headers'   => $this->sanitize_headers( $headers ),
             'http_code' => $http_code,
+            'location'  => $location,
             'redirect'  => true,
         ];
 
