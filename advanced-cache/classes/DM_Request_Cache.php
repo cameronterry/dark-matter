@@ -58,11 +58,25 @@ class DM_Request_Cache {
     /**
      * Store the generate HTML in cache.
      *
-     * @param  string $output HTML to be added to the Request Cache entry.
-     * @return bool           True on success. False otherwise.
+     * @param  string     $output HTML to be added to the Request Cache entry.
+     * @return array|bool         Cache data on success. False otherwise.
      */
-    public function set( $output = '' ) {
-        return wp_cache_set( $this->key, $output, 'dark-matter-fullpage', 1 * MINUTE_IN_SECONDS );
+    public function set( $output = '', $headers = [] ) {
+        if ( ! empty( $output ) ) {
+            return false;
+        }
+
+        $data = [
+            'body'     => $output,
+            'headers'  => $headers,
+            'redirect' => false,
+        ];
+
+        if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage', 1 * MINUTE_IN_SECONDS ) ) {
+            return $data;
+        }
+
+        return false;
     }
 
     /**
