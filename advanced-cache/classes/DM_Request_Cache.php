@@ -62,8 +62,21 @@ class DM_Request_Cache {
      * @return array|bool         Cache data on success. False otherwise.
      */
     public function set( $output = '', $headers = [] ) {
+        /**
+         * No output, no caching.
+         */
         if ( empty( $output ) ) {
             return false;
+        }
+
+        /**
+         * Get the headers in to a consistent and more programmatically appeasing way to use.
+         */
+        $cache_headers = [];
+
+        foreach ( $headers as $header ) {
+            list( $key, $value ) = array_map( 'trim', explode( ':', $header, 2 ) );
+            $cache_headers[ $key ] = $value;
         }
 
         $data = [
