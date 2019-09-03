@@ -34,7 +34,7 @@ class DM_Request_Data {
         ];
 
         if ( is_array( $data ) ) {
-            $this->data = array_merge( $data, $this->data );
+            $this->data = array_merge_recursive( $this->data, $data );
         }
     }
 
@@ -44,8 +44,7 @@ class DM_Request_Data {
      * @return bool True on success. False otherwise.
      */
     public function save() {
-        $this->data['count']    = count( $this->variants );
-        $this->data['variants'] = $this->variants;
+        $this->data['count'] = count( $this->data['variants'] );
 
         return wp_cache_set( $this->key, $this->data, 'dark-matter-fullpage-data' );
     }
@@ -56,8 +55,8 @@ class DM_Request_Data {
      * @param string $variant_key Variant key to be added.
      */
     public function variant_add( $variant_key = '' ) {
-        if ( ! in_array( $variant_key, $this->variants, true ) ) {
-            $this->variants[] = $variant_key;
+        if ( ! in_array( $variant_key, $this->data['variants'], true ) ) {
+            $this->data['variants'][] = $variant_key;
         }
     }
 
@@ -67,10 +66,10 @@ class DM_Request_Data {
      * @param string $variant_key Variant key to be removed.
      */
     public function variant_remove( $variant_key = '' ) {
-        $pos = array_search( $variant_key, $this->variants, true );
+        $pos = array_search( $variant_key, $this->data['variants'], true );
 
         if ( false !== $pos ) {
-            unset( $this->variants[ $pos ] );
+            unset( $this->data['variants'][ $pos ] );
         }
     }
 }
