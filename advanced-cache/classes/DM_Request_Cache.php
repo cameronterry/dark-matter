@@ -155,7 +155,47 @@ class DM_Request_Cache {
      * @return string MD5 hash key.
      */
     private function set_url_key() {
-        $this->url_cache_key = md5( $this->url );
+        $query_string = parse_url( $this->url, PHP_URL_QUERY );
+
+        if ( empty( $query_string ) ) {
+            $this->url_cache_key = md5( $this->url );
+            return;
+        }
+
+        /**
+         * Populate and provide an override capability for ignoring query string parameters. This can be used to prevent
+         * thrashing of the full page cache by telling Dark Matter to ignore query string parameters.
+         */
+        $ignore_list = [ 'utm_campaign', 'utm_content', 'utm_medium', 'utm_source', 'utm_term' ];
+        $ignore_list = apply_filters( 'dark_matter_querystring_ignore', $ignore_list, $this->url );
+
+        /**
+         * Handle a special case value. If the $ignore_list array is the string "all", then Dark Matter will ignore all
+         * query strings and store the request under the base URL instead.
+         */
+        if ( 'all' === $ignore_list ) {
+            $this->url_cache_key = md5( $this->url_base );
+            return;
+        }
+
+        /**
+         * Process the query string parameters and remove those which are part of the ignore list.
+         */
+        parse_str( $query_string, $parameters );
+
+        foreach ( $parameters as $key => $value ) {
+            if ( in_array( $key, $ignore_list, true ) ) {
+                unset( $parameters[ $key ] );
+            }
+        }
+
+        $cache_key = $this->url_base;
+
+        if ( ! empty( $parameters ) ) {
+            $cache_key .= '?' . http_build_query( $parameters );
+        }
+
+        $this->url_cache_key = md5( $cache_key );
     }
 
     /**
