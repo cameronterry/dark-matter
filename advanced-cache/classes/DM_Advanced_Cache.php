@@ -37,6 +37,17 @@ class DM_Advanced_Cache {
         $this->request = new DM_Request_Cache( $this->url );
         $cache_data    = $this->request->get();
 
+        /**
+         * Ensure the Cache entry is 1) available and 2) of the correct format.
+         */
+        if ( empty( $cache_data ) || ! isset( $cache_data['redirect'] ) || ! isset( $cache_data['headers'] ) || ! isset( $cache_data['body'] ) ) {
+            ob_start( array( $this, 'cache_output' ) );
+
+            add_filter( 'status_header', array( $this, 'status_header' ), 10, 2 );
+            add_filter( 'wp_redirect_status', array( $this, 'redirect_status' ), 10, 2 );
+            return;
+        }
+
         if ( $cache_data['redirect'] ) {
             $this->action_redirect( $cache_data );
         }
@@ -45,11 +56,6 @@ class DM_Advanced_Cache {
             $this->do_headers( $cache_data['headers'] );
             die( $this->do_output( $cache_data['body'] ) );
         }
-
-        ob_start( array( $this, 'cache_output' ) );
-
-        add_filter( 'status_header', array( $this, 'status_header' ), 10, 2 );
-        add_filter( 'wp_redirect_status', array( $this, 'redirect_status' ), 10, 2 );
     }
 
     /**
