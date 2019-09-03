@@ -233,7 +233,7 @@ HTML;
      */
     public function set_url() {
         $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
-        $path = trim( $_SERVER['REQUEST_URI'] );
+        $path = ltrim( trim( $_SERVER['REQUEST_URI'] ), '/' );
 
         $this->url = $host . '/' . $path;
     }
