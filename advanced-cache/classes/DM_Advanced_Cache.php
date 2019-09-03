@@ -170,7 +170,7 @@ class DM_Advanced_Cache {
          * This is for a generated response.
          */
         if ( empty( $headers ) ) {
-            header( 'X-DarkMatter-Cache: MISS' );
+            header( 'X-DarkMatter-Cache: LOOKUP' );
             return;
         }
 
