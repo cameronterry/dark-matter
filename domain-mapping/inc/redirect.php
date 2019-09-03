@@ -79,15 +79,28 @@ function darkmatter_maybe_redirect() {
     $filename = basename( $request );
     $filename = strtok( $filename, '?' );
 
-    $is_admin = in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) );
+    /**
+     * Check to see if the current request is an Admin Post action or an AJAX action. These two requests in Dark Matter
+     * can be on either the admin domain or the primary domain.
+     */
+    if ( in_array( $filename, array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
+        return;
+    }
 
     $original_blog = get_site();
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
 
-    if ( is_admin() && ! in_array( $filename, array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
+    if ( is_admin() || in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) ) ) {
         $is_admin = true;
+    }
+
+    /**
+     * Dark Matter will disengage if the website is no longer public or is archived or deleted.
+     */
+    if ( (int) $original_blog->public < 0 || $original_blog->archived !== '0' || $original_blog->deleted !== '0' ) {
+        return;
     }
 
     /**

@@ -55,7 +55,7 @@ if ( $dm_domain && $dm_domain->active ) {
      * Dark Matter will disengage if the website is no longer public or is
      * archived or deleted.
      */
-    if ( (int) $current_blog->public > 0 && $current_blog->archived !== '0' && $current_blog->deleted !== '0' ) {
+    if ( (int) $current_blog->public < 0 || $current_blog->archived !== '0' || $current_blog->deleted !== '0' ) {
         return;
     }
 
