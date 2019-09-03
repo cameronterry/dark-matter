@@ -34,7 +34,7 @@ class DM_Request_Data {
         ];
 
         if ( is_array( $data ) ) {
-            $this->data = array_merge_recursive( $this->data, $data );
+            $this->data = array_merge( $this->data, $data );
         }
     }
 
