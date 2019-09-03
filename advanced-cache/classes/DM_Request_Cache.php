@@ -93,11 +93,6 @@ class DM_Request_Cache {
             return false;
         }
 
-        /**
-         * Get the headers in to a consistent and more programmatically appeasing way to use.
-         */
-
-
         $data = [
             'body'     => $output,
             'headers'  => $this->sanitize_headers( $headers ),
