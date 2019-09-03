@@ -8,6 +8,11 @@ class DM_Request_Cache {
     private $key = '';
 
     /**
+     * @var DM_Request_Data Request Cache Data.
+     */
+    private $request_data = null;
+
+    /**
      * @var string Request URL.
      */
     private $url = '';
@@ -41,6 +46,8 @@ class DM_Request_Cache {
         $this->set_variant_key();
 
         $this->set_key();
+
+        $this->request_data = new DM_Request_Data( $this->url_base );
     }
 
     /**
@@ -49,6 +56,8 @@ class DM_Request_Cache {
      * @return bool True on success. False otherwise.
      */
     public function delete() {
+        $this->request_data->variant_remove( $this->key );
+
         return wp_cache_delete( $this->key, 'dark-matter-fullpage' );
     }
 
@@ -100,6 +109,9 @@ class DM_Request_Cache {
         ];
 
         if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage', 1 * MINUTE_IN_SECONDS ) ) {
+            $this->request_data->variant_add( $this->key );
+            $this->request_data->save();
+
             return $data;
         }
 
@@ -124,6 +136,9 @@ class DM_Request_Cache {
         ];
 
         if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage' ) ) {
+            $this->request_data->variant_add( $this->key );
+            $this->request_data->save();
+
             return $data;
         }
 
