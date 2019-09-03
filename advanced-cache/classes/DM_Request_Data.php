@@ -25,7 +25,7 @@ class DM_Request_Data {
     public function __construct( $base_url = '' ) {
         $this->key = md5( $base_url );
 
-        $data = wp_cache_get( $this->key, 'dark-matter-fullpage' );
+        $data = wp_cache_get( $this->key, 'dark-matter-fullpage-data' );
 
         $this->data = [
             'count'    => 0,
@@ -47,7 +47,7 @@ class DM_Request_Data {
         $this->data['count']    = count( $this->variants );
         $this->data['variants'] = $this->variants;
 
-        return wp_cache_set( $this->key, $this->data, 'dark-matter-fullpage' );
+        return wp_cache_set( $this->key, $this->data, 'dark-matter-fullpage-data' );
     }
 
     /**
