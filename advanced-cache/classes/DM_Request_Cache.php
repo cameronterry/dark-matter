@@ -13,6 +13,11 @@ class DM_Request_Cache {
     private $url = '';
 
     /**
+     * @var string Base URL, minus any query string parameters.
+     */
+    private $url_base = '';
+
+    /**
      * @var string Cache Key for the URL - minus any variants - of the Request.
      */
     private $url_cache_key = '';
@@ -29,6 +34,7 @@ class DM_Request_Cache {
      */
     public function __construct( $url = '' ) {
         $this->url = $url;
+        $this->url_base = strtok( $url, '?' );
 
         $this->set_url_key();
 
