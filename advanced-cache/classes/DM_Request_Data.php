@@ -38,7 +38,36 @@ class DM_Request_Data {
         }
     }
 
-    public function invalidate() {}
+    /**
+     * Invalidates the cache for the current data record. Invalidates all variants unless a variant key is provided.
+     *
+     * @param string $variant_key Invalidate a specific key.
+     */
+    public function invalidate( $variant_key = '' ) {
+        if ( empty( $variant_key ) && in_array( $variant_key, $this->data['variants'], true ) ) {
+            wp_cache_delete( $variant_key, 'dark-matter-fullpage-data' );
+
+            /**
+             * Remove from the list of variants.
+             */
+            $position = array_search( $variant_key, $this->data['variants'], true );
+            unset( $this->data['variants'][ $position ] );
+        } else {
+            foreach ( $this->data['variants'] as $key ) {
+                wp_cache_delete( $key, 'dark-matter-fullpage-data' );
+            }
+
+            /**
+             * Empty the variants.
+             */
+            $this->data['variants'] = [];
+        }
+
+        /**
+         * Auto-save, as this method removes records.
+         */
+        $this->save();
+    }
 
     /**
      * Update the Request Cache Record.
