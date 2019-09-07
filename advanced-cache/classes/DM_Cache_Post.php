@@ -63,6 +63,19 @@ class DM_Cache_Post {
         if ( empty( $id_or_url ) ) {
             return;
         }
+
+        /**
+         * Handle a Post ID being provided by retrieving the Permalink.
+         */
+        if ( is_numeric( $id_or_url ) ) {
+            $id_or_url = get_permalink( $id_or_url );
+
+            if ( empty( $id_or_url ) ) {
+                return;
+            }
+        }
+
+        $this->invalidation[] = $id_or_url;
     }
 
     /**
