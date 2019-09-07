@@ -16,14 +16,17 @@ class DM_Cache_Post {
      * DM_Save_Post constructor.
      */
     public function __construct() {
-        add_action( 'shutdown', [ $this, 'do_cache' ] );
-        add_action( 'shutdown', [ $this, 'do_invalidate' ] );
         /**
          * Handle post creation and edits. We attempt to run this as late as possible to ensure plugins have a change to
          * make changes before add entries to invalidate the cache.
          */
         add_action( 'save_post', [ $this, 'handle_save_post' ], 999, 3 );
 
+        /**
+         * Prioritise invalidating cache entries before attempting to instantly cache again.
+         */
+        add_action( 'shutdown', [ $this, 'do_cache' ], 20 );
+        add_action( 'shutdown', [ $this, 'do_invalidate' ], 10 );
     }
 
     /**
