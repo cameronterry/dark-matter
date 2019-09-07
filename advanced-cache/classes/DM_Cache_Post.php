@@ -20,7 +20,8 @@ class DM_Cache_Post {
          * Handle post creation and edits. We attempt to run this as late as possible to ensure plugins have a change to
          * make changes before add entries to invalidate the cache.
          */
-        add_action( 'save_post', [ $this, 'handle_save_post' ], 999, 3 );
+        add_action( 'clean_post_cache', [ $this, 'handle_save_post' ], 999, 1 );
+        add_action( 'save_post', [ $this, 'handle_save_post' ], 999, 1 );
 
         /**
          * Prioritise invalidating cache entries before attempting to instantly cache again.
