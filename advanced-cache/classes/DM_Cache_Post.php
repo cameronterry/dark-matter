@@ -59,7 +59,7 @@ class DM_Cache_Post {
         $request = null;
 
         foreach ( $this->invalidation as $url ) {
-            $request = new DM_Request_Cache( $url );
+            $request = new DM_Request_Data( $url );
             $request->invalidate();
         }
     }
