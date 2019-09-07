@@ -18,6 +18,12 @@ class DM_Cache_Post {
     public function __construct() {
         add_action( 'shutdown', [ $this, 'do_cache' ] );
         add_action( 'shutdown', [ $this, 'do_invalidate' ] );
+        /**
+         * Handle post creation and edits. We attempt to run this as late as possible to ensure plugins have a change to
+         * make changes before add entries to invalidate the cache.
+         */
+        add_action( 'save_post', [ $this, 'handle_save_post' ], 999, 3 );
+
     }
 
     /**
@@ -52,6 +58,25 @@ class DM_Cache_Post {
             $request = new DM_Request_Cache( $url );
             $request->invalidate();
         }
+    }
+
+    /**
+     * Handle the Save Post action.
+     *
+     * @param int     $post_id
+     * @param WP_Post $post
+     * @param bool    $update
+     */
+    public function handle_save_post( $post_id = 0, $post = null, $update = false ) {
+        /**
+         * Invalidate the post itself.
+         */
+        $this->invalidate( $post_id );
+
+        /**
+         * Invalidate the homepage.
+         */
+        $this->invalidate( home_url() );
     }
 
     /**
