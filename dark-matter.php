@@ -39,6 +39,10 @@ define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
 wp_cache_add_global_groups( 'dark-matter' );
 
+/**
+ * Check the files exist before attempting to load them. This will allow code bases to exclude modules they do not want
+ * by using .gitignore or some other mechanism.
+ */
 if ( is_readable( DM_PATH . '/domain-mapping/module.php' ) ) {
     require_once DM_PATH . '/domain-mapping/module.php';
 }
