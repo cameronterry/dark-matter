@@ -38,22 +38,7 @@ class DM_Request_Data {
         }
     }
 
-    /**
-     * Retrieves a Request Cache Data record.
-     *
-     * @param  string     $url URL to retrieve.
-     * @return bool|array      Dictionary object of the data record. False otherwise.
-     */
-    public function get( $url = '' ) {
-        if ( empty( $url ) ) {
-            return false;
-        }
-
-        $url = strtok( $url, '?' );
-        $key = md5( $url );
-
-        return wp_cache_get( $key, 'dark-matter-fullpage-data' );
-    }
+    public function invalidate() {}
 
     /**
      * Update the Request Cache Record.
