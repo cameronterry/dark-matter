@@ -13,11 +13,6 @@ class DM_Request_Data {
     private $key = '';
 
     /**
-     * @var array
-     */
-    private $variants = [];
-
-    /**
      * DM_Request_Data constructor.
      *
      * @param string $base_url URL to retrieve Cache data for.
