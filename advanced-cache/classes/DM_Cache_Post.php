@@ -94,7 +94,7 @@ class DM_Cache_Post {
         /**
          * Invalidate the homepage and corresponding RSS feed.
          */
-        $this->invalidate( home_url() );
+        $this->invalidate( home_url( '/' ) );
         $this->invalidate( home_url( '/feed/' ) );
     }
 
