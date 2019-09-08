@@ -238,10 +238,19 @@ HTML;
      * Set the URL from the current request and to be used in later processing.
      */
     public function set_url() {
+        $protocol = 'http://';
+        if ( isset( $_SERVER['HTTPS'] ) ) {
+            if ( 'on' == strtolower( $_SERVER['HTTPS'] ) || '1' == $_SERVER['HTTPS'] ) {
+                $protocol = 'https://';
+            }
+        } elseif ( isset( $_SERVER['SERVER_PORT'] ) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
+            $protocol = 'https://';
+        }
+
         $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
         $path = ltrim( trim( $_SERVER['REQUEST_URI'] ), '/' );
 
-        $this->url = $host . '/' . $path;
+        $this->url = $protocol . $host . '/' . $path;
     }
 
     /**
