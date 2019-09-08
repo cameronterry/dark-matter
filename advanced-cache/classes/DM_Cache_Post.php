@@ -119,7 +119,21 @@ class DM_Cache_Post {
             }
         }
 
-        $this->invalidation[] = $id_or_url;
+        $this->invalidation[] = $this->prepare_url( $id_or_url );
+    }
+
+    /**
+     * Prepares the URL for use in caching or invalidation.
+     *
+     * @param  string $url URL to prepare.
+     * @return string      Prepared URL.
+     */
+    private function prepare_url( $url = '' ) {
+        if ( class_exists( 'DM_URL' ) ) {
+            $url = DM_URL::instance()->map( $url );
+        }
+
+        return $url;
     }
 
     /**
