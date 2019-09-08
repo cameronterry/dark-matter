@@ -40,7 +40,7 @@ class DM_Request_Data {
      */
     public function invalidate( $variant_key = '' ) {
         if ( empty( $variant_key ) && in_array( $variant_key, $this->data['variants'], true ) ) {
-            wp_cache_delete( $variant_key, 'dark-matter-fullpage-data' );
+            wp_cache_delete( $variant_key, 'dark-matter-fullpage' );
 
             /**
              * Remove from the list of variants.
@@ -49,7 +49,7 @@ class DM_Request_Data {
             unset( $this->data['variants'][ $position ] );
         } else {
             foreach ( $this->data['variants'] as $key ) {
-                wp_cache_delete( $key, 'dark-matter-fullpage-data' );
+                wp_cache_delete( $key, 'dark-matter-fullpage' );
             }
 
             /**
