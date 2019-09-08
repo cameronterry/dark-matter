@@ -72,6 +72,20 @@ class DM_Cache_Post {
      * @param bool    $update
      */
     public function handle_save_post( $post_id = 0, $post = null, $update = false ) {
+        if ( empty( $post ) ) {
+            $post = get_post( $post_id );
+        }
+
+        if (
+                empty( $post )
+            ||
+                'revision' === $post->post_type
+            ||
+                ! in_array( get_post_status( $post_id ), [ 'publish', 'trash' ], true )
+        ) {
+            return;
+        }
+
         /**
          * Invalidate the post itself.
          */
