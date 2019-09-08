@@ -21,7 +21,6 @@ class DM_Cache_Post {
          * make changes before add entries to invalidate the cache.
          */
         add_action( 'clean_post_cache', [ $this, 'handle_save_post' ], 999, 1 );
-        add_action( 'save_post', [ $this, 'handle_save_post' ], 999, 1 );
 
         /**
          * Prioritise invalidating cache entries before attempting to instantly cache again.
