@@ -94,10 +94,28 @@ class DM_URL {
      *
      * @param  bool   $external Whether HTTP request is external or not.
      * @param  string $host     Host name of the requested URL.
-     * @param  string $url      Requested URL.
      * @return bool             False if the URL is "mapped" domain. The provided $external value otherwise.
      */
-    public function is_external( $external = false, $host = '', $url = '' ) {
+    public function is_external( $external = false, $host = '' ) {
+        /**
+         * WordPress defaults to "false". If it is not this value, then this means another hook has modified it. We skip
+         * this to ensure that original logic is not overridden by Dark Matter.
+         */
+        if ( $external ) {
+            return $external;
+        }
+
+        /**
+         * Attempt to find the domain in Dark Matter. If the domain is found, then tell WordPress it is an internal
+         * domain.
+         */
+        $db     = DarkMatter_Domains::instance();
+        $domain = $db->find( $host );
+
+        if ( is_a( $domain, 'DM_Domain' ) ) {
+            return true;
+        }
+
         return $external;
     }
 
@@ -155,7 +173,7 @@ class DM_URL {
      */
     public function prepare() {
         add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
-        add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 1 );
+        add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
 
         /**
          * We only wish to affect `the_content` for Previews and nothing else.
