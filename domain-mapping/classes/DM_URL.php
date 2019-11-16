@@ -90,6 +90,18 @@ class DM_URL {
     }
 
     /**
+     * Checks to ensure that "mapped" domains are considered internal to WordPress and not external.
+     *
+     * @param  bool   $external Whether HTTP request is external or not.
+     * @param  string $host     Host name of the requested URL.
+     * @param  string $url      Requested URL.
+     * @return bool             False if the URL is "mapped" domain. The provided $external value otherwise.
+     */
+    public function is_external( $external = false, $host = '', $url = '' ) {
+        return $external;
+    }
+
+    /**
      * Determines if the requested domain is mapped using the DOMAIN_MAPPING
      * constant from sunrise.php.
      *
@@ -143,6 +155,7 @@ class DM_URL {
      */
     public function prepare() {
         add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
+        add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 1 );
 
         /**
          * We only wish to affect `the_content` for Previews and nothing else.
