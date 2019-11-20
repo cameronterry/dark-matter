@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.2.2
-Stable tag: 2.0.1
+Tested up to: 5.3
+Stable tag: 2.0.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.0.2 =
+
+* Added logic to ensure that mapped domains are not considered "external" which was preventing oEmbeds from working.
+* Fixed a warning notice for $is_admin.
+* Updated npm dependencies.
 
 = 2.0.1 =
 
