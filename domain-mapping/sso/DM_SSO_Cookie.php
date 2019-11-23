@@ -162,10 +162,12 @@ class DM_SSO_Cookie {
      * @return void
      */
     public function validate_token() {
+        $dm_action = filter_input( INPUT_GET, '__dm_action' );
+
         /**
          * First check to see if the authorise action is provided in the URL.
          */
-        if ( 'authorise' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        if ( 'authorise' === $dm_action ) {
             /**
              * Validate the token provided in the URL.
              */
@@ -189,7 +191,7 @@ class DM_SSO_Cookie {
                 die();
             }
         }
-        else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        else if ( 'logout' === $dm_action ) {
             wp_logout();
             wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ), 302, 'Dark-Matter' );
 
