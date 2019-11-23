@@ -145,6 +145,10 @@ class DM_SSO_Cookie {
      * @return void
      */
     public function nocache_headers() {
+        if ( headers_sent() ) {
+            return;
+        }
+
         /**
          * Set the headers to prevent caching of the JavaScript include.
          */
