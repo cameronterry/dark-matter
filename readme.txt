@@ -79,6 +79,12 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.0.3 =
+
+* Added and ensured that the no cache headers are used on all requests for the SSO flow.
+  * This should aid with installations that utilise more pronounced caching setups.
+* Modified the redirects to ensure that X-Redirect-By header is identified as "Dark Matter" rather than "WordPress".
+
 = 2.0.2 =
 
 * Added logic to ensure that mapped domains are not considered "external" which was preventing oEmbeds from working.
