@@ -84,6 +84,8 @@ Google Analytics) with over 60 websites.
 * Added and ensured that the no cache headers are used on all requests for the SSO flow.
   * This should aid with installations that utilise more pronounced caching setups.
 * Modified the redirects to ensure that X-Redirect-By header is identified as "Dark Matter" rather than "WordPress".
+* Added support for a new constant, DARKMATTER_SSO_TYPE, which can be set to a value of "disable" to stop SSO functionality.
+  * In future, this will support a few SSO implementations depending on preference.
 
 = 2.0.2 =
 
