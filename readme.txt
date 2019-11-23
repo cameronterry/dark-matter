@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.3
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,14 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.0.3 =
+
+* Added and ensured that the no cache headers are used on all requests for the SSO flow.
+  * This should aid with installations that utilise more pronounced caching setups.
+* Modified the redirects to ensure that X-Redirect-By header is identified as "Dark Matter" rather than "WordPress".
+* Added support for a new constant, DARKMATTER_SSO_TYPE, which can be set to a value of "disable" to stop SSO functionality.
+  * In future, this will support a few SSO implementations depending on preference.
 
 = 2.0.2 =
 

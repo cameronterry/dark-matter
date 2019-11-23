@@ -41,6 +41,8 @@ class DM_SSO_Cookie {
     public function login_token() {
         header( 'Content-Type: text/javascript' );
 
+        $this->nocache_headers();
+
         /**
          * Ensure that the JavaScript is never empty.
          */
@@ -71,6 +73,8 @@ class DM_SSO_Cookie {
      */
     public function logout_token() {
         header( 'Content-Type: text/javascript' );
+
+        $this->nocache_headers();
 
         /**
          * Ensure that the JavaScript is never empty.
@@ -136,16 +140,45 @@ class DM_SSO_Cookie {
     }
 
     /**
+     * Sets the relevant no cache headers using the definition from WordPress Core.
+     *
+     * @return void
+     */
+    public function nocache_headers() {
+        if ( headers_sent() ) {
+            return;
+        }
+
+        /**
+         * Set the headers to prevent caching of the JavaScript include.
+         */
+        $nocache_headers = wp_get_nocache_headers();
+
+        foreach ( $nocache_headers as $header_name => $header_value ) {
+            header( "{$header_name}: {$header_value}" );
+        }
+    }
+
+    /**
      * Handle the validation of the login token and logging in of a user. Also
      * handle the logout if that action is provided.
      *
      * @return void
      */
     public function validate_token() {
+        $dm_action = filter_input( INPUT_GET, '__dm_action' );
+
+        /**
+         * Ensure that URLs with the __dm_action query string are not cached by browsers.
+         */
+        if ( ! empty( $dm_action ) ) {
+            $this->nocache_headers();
+        }
+
         /**
          * First check to see if the authorise action is provided in the URL.
          */
-        if ( 'authorise' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        if ( 'authorise' === $dm_action ) {
             /**
              * Validate the token provided in the URL.
              */
@@ -165,13 +198,13 @@ class DM_SSO_Cookie {
                  * removed.
                  */
                 wp_set_auth_cookie( $user_id );
-                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ) );
+                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ), 302, 'Dark-Matter' );
                 die();
             }
         }
-        else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        else if ( 'logout' === $dm_action ) {
             wp_logout();
-            wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ) );
+            wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ), 302, 'Dark-Matter' );
 
             die();
         }

@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '2.0.2' );
+define( 'DM_VERSION', '2.0.3' );
 define( 'DM_DB_VERSION', '20190114' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -53,7 +53,9 @@ require_once DM_PATH . '/domain-mapping/api/DarkMatter_Domains.php';
 require_once DM_PATH . '/domain-mapping/api/DarkMatter_Primary.php';
 require_once DM_PATH . '/domain-mapping/api/DarkMatter_Restrict.php';
 
-require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
+if ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) {
+    require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
+}
 
 require_once DM_PATH . '/domain-mapping/rest/DM_REST_Domains_Controller.php';
 require_once DM_PATH . '/domain-mapping/rest/DM_REST_Restricted_Controller.php';
