@@ -41,6 +41,8 @@ class DM_SSO_Cookie {
     public function login_token() {
         header( 'Content-Type: text/javascript' );
 
+        $this->nocache_headers();
+
         /**
          * Ensure that the JavaScript is never empty.
          */
@@ -71,6 +73,8 @@ class DM_SSO_Cookie {
      */
     public function logout_token() {
         header( 'Content-Type: text/javascript' );
+
+        $this->nocache_headers();
 
         /**
          * Ensure that the JavaScript is never empty.
