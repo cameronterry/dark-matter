@@ -91,7 +91,7 @@ function darkmatter_maybe_redirect() {
 
     $host    = trim( $_SERVER['HTTP_HOST'], '/' );
     $primary = DarkMatter_Primary::instance()->get();
-    
+
     $is_admin = false;
 
     if ( is_admin() || in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) ) ) {
@@ -147,7 +147,9 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
+    header( 'X-Redirect-By: Dark-Matter' );
     header( 'Location:' . $url, true, 301 );
+
     die;
 }
 
