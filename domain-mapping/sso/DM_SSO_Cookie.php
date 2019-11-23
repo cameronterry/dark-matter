@@ -136,6 +136,22 @@ class DM_SSO_Cookie {
     }
 
     /**
+     * Sets the relevant no cache headers using the definition from WordPress Core.
+     *
+     * @return void
+     */
+    public function nocache_headers() {
+        /**
+         * Set the headers to prevent caching of the JavaScript include.
+         */
+        $nocache_headers = wp_get_nocache_headers();
+
+        foreach ( $nocache_headers as $header_name => $header_value ) {
+            header( "{$header_name}: {$header_value}" );
+        }
+    }
+
+    /**
      * Handle the validation of the login token and logging in of a user. Also
      * handle the logout if that action is provided.
      *
