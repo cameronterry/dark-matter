@@ -53,7 +53,7 @@ require_once DM_PATH . '/domain-mapping/api/DarkMatter_Domains.php';
 require_once DM_PATH . '/domain-mapping/api/DarkMatter_Primary.php';
 require_once DM_PATH . '/domain-mapping/api/DarkMatter_Restrict.php';
 
-if ( ! defined( 'DM_SSO_TYPE' ) || 'disable' !== DM_SSO_TYPE ) {
+if ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) {
     require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
 }
 
