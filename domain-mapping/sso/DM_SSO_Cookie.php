@@ -165,13 +165,13 @@ class DM_SSO_Cookie {
                  * removed.
                  */
                 wp_set_auth_cookie( $user_id );
-                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ) );
+                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ), 302, 'Dark-Matter' );
                 die();
             }
         }
         else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
             wp_logout();
-            wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ) );
+            wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ), 302, 'Dark-Matter' );
 
             die();
         }
