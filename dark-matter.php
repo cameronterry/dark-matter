@@ -53,7 +53,9 @@ require_once DM_PATH . '/domain-mapping/api/DarkMatter_Domains.php';
 require_once DM_PATH . '/domain-mapping/api/DarkMatter_Primary.php';
 require_once DM_PATH . '/domain-mapping/api/DarkMatter_Restrict.php';
 
-require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
+if ( ! defined( 'DM_SSO_TYPE' ) || 'disable' !== DM_SSO_TYPE ) {
+    require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
+}
 
 require_once DM_PATH . '/domain-mapping/rest/DM_REST_Domains_Controller.php';
 require_once DM_PATH . '/domain-mapping/rest/DM_REST_Restricted_Controller.php';
