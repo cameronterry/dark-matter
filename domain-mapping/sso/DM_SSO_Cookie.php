@@ -165,6 +165,13 @@ class DM_SSO_Cookie {
         $dm_action = filter_input( INPUT_GET, '__dm_action' );
 
         /**
+         * Ensure that URLs with the __dm_action query string are not cached by browsers.
+         */
+        if ( ! empty( $dm_action ) ) {
+            $this->nocache_headers();
+        }
+
+        /**
          * First check to see if the authorise action is provided in the URL.
          */
         if ( 'authorise' === $dm_action ) {
