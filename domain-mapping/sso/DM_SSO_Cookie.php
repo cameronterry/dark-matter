@@ -119,7 +119,7 @@ class DM_SSO_Cookie {
 
         if ( is_user_logged_in() ) {
             $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
-                $_SERVER['HTTP_REFERER'],
+                ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
                 md5( $_SERVER['HTTP_USER_AGENT'] ),
                 get_current_user_id()
             );
@@ -270,7 +270,7 @@ class DM_SSO_Cookie {
             $nonce   = filter_input( INPUT_GET, 'nonce' );
 
             $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
-                $_SERVER['HTTP_REFERER'],
+                ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
                 md5( $_SERVER['HTTP_USER_AGENT'] ),
                 $user_id
             );
