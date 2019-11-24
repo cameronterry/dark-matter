@@ -287,7 +287,7 @@ class DM_SSO_Cookie {
                  * removed.
                  */
                 wp_set_auth_cookie( $user_id );
-                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ), 302, 'Dark-Matter' );
+                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth', 'nonce' ) ) ), 302, 'Dark-Matter' );
                 die();
             }
         }
