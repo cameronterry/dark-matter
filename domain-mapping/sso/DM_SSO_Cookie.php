@@ -29,6 +29,20 @@ class DM_SSO_Cookie {
         add_action( 'admin_post_nopriv_dark_matter_dmcheck', array( $this, 'logout_token' ) );
         add_action( 'wp_head', array( $this, 'head_script' ) );
         add_action( 'plugins_loaded', array( $this, 'validate_token' ) );
+
+    /**
+     * Determines if the current request is on the Admin Domain.
+     *
+     * @return bool True if current request is on the admin domain. False otherwise.
+     */
+    private function is_admin_domain() {
+        $network = get_network();
+
+        if ( ! empty( $network ) && false === stripos( $network->domain, $_SERVER['HTTP_HOST'] ) ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
