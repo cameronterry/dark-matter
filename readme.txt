@@ -79,6 +79,11 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.0.4 =
+
+* Fixed an issue where check for logging out users was causing a MIME Type error in some instances.
+* A couple of improvements to Cookie SSO.
+
 = 2.0.3 =
 
 * Added and ensured that the no cache headers are used on all requests for the SSO flow.
