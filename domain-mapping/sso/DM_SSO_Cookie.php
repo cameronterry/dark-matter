@@ -27,8 +27,12 @@ class DM_SSO_Cookie {
         add_action( 'admin_post_dark_matter_dmsso', array( $this, 'login_token' ) );
         add_action( 'admin_post_nopriv_dark_matter_dmsso', array( $this, 'login_token' ) );
         add_action( 'admin_post_nopriv_dark_matter_dmcheck', array( $this, 'logout_token' ) );
-        add_action( 'wp_head', array( $this, 'head_script' ) );
-        add_action( 'plugins_loaded', array( $this, 'validate_token' ) );
+
+        if ( ! $this->is_admin_domain() ) {
+            add_action( 'wp_head', array( $this, 'head_script' ) );
+            add_action( 'plugins_loaded', array( $this, 'validate_token' ) );
+        }
+    }
 
     /**
      * Determines if the current request is on the Admin Domain.
