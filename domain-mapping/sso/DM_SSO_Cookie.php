@@ -35,6 +35,55 @@ class DM_SSO_Cookie {
     }
 
     /**
+     * Creates a nonce that isn't linked to a user, like the APIs in WordPress Core, but functions in a similar fashion.
+     *
+     * @param  string $action Value which creates the unique nonce.
+     * @return string         Nonce token for use.
+     */
+    private function create_shared_nonce( $action = '' ) {
+        $i = wp_nonce_tick();
+        return substr( wp_hash( $i . '|' . $action, 'nonce' ), -12, 10 );
+    }
+
+    /**
+     * Verify a shared nonce.
+     *
+     * @see create_shared_nonce()
+     *
+     * @param  string   $nonce  Nonce that was used and requires verification.
+     * @param  string   $action Value which provides the nonce uniqueness.
+     * @return bool|int         An integer if the nonce check passed, 1 for 0-12 hours ago and 2 for 12-24 hours ago. False otherwise.
+     */
+    private function verify_shared_nonce( $nonce = '', $action = '' ) {
+        if ( empty( $nonce ) ) {
+            return false;
+        }
+
+        $i = wp_nonce_tick();
+
+        /**
+         * Nonce generated 0-12 hours ago
+         */
+        $expected = substr( wp_hash( $i . '|' . $action, 'nonce' ), -12, 10 );
+        if ( hash_equals( $expected, $nonce ) ) {
+            return 1;
+        }
+
+        /**
+         * Nonce generated 12-24 hours ago
+         */
+        $expected = substr( wp_hash( ( $i - 1 ) . '|' . $action, 'nonce' ), -12, 10 );
+        if ( hash_equals( $expected, $nonce ) ) {
+            return 2;
+        }
+
+        /**
+         * Invalid.
+         */
+        return false;
+    }
+
+    /**
      * Determines if the current request is on the Admin Domain.
      *
      * @return bool True if current request is on the admin domain. False otherwise.
