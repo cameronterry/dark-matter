@@ -116,7 +116,7 @@ class DM_SSO_Cookie {
      * @return void
      */
     public function head_script() {
-        if ( is_main_site() ) {
+        if ( is_main_site() || $this->is_admin_domain() ) {
             return;
         }
 
@@ -191,6 +191,14 @@ class DM_SSO_Cookie {
          */
         if ( ! empty( $dm_action ) ) {
             $this->nocache_headers();
+        }
+
+        /**
+         * If the validation token is provided on the admin domain, rather than the primary / mapped domain, then just
+         * ignore it and end processing.
+         */
+        if ( $this->is_admin_domain() ) {
+            return;
         }
 
         /**
