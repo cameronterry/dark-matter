@@ -116,13 +116,20 @@ class DM_SSO_Cookie {
         echo "// dm_sso" . PHP_EOL;
 
         if ( is_user_logged_in() ) {
+            $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
+                $_SERVER['HTTP_REFERER'],
+                md5( $_SERVER['HTTP_USER_AGENT'] ),
+                get_current_user_id()
+            );
+
             /**
              * Construct an authentication token which is passed back along with an
              * action flag to tell the front end to
              */
             $url = add_query_arg( array(
                 '__dm_action' => 'authorise',
-                'auth' => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) )
+                'auth'        => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) ),
+                'nonce'       => $this->create_shared_nonce( $action ),
             ), $_SERVER['HTTP_REFERER'] );
 
             printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
@@ -258,12 +265,19 @@ class DM_SSO_Cookie {
              * Validate the token provided in the URL.
              */
             $user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth' ), 'auth' );
+            $nonce   = filter_input( INPUT_GET, 'nonce' );
+
+            $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
+                $_SERVER['HTTP_REFERER'],
+                md5( $_SERVER['HTTP_USER_AGENT'] ),
+                $user_id
+            );
 
             /**
              * Check if the validate token worked and we have a User ID. It will
              * display an error message or login the User if all works out well.
              */
-            if ( false === $user_id ) {
+            if ( false === $user_id || ! $this->verify_shared_nonce( $nonce, $action ) ) {
                 wp_die( 'Oops! Something went wrong with logging in.' );
             }
             else {
