@@ -3,6 +3,7 @@ const path = require( 'path' );
 const UglifyJsPlugin = require( 'uglifyjs-webpack-plugin' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const OptimizeCSSAssetsPlugin = require( 'optimize-css-assets-webpack-plugin' );
+const WebpackBar = require('webpackbar');
 
 // Webpack expects an exported object with all the configurations, so we export an object here
 module.exports = ( env, argv ) => {
@@ -51,7 +52,8 @@ module.exports = ( env, argv ) => {
     plugins: [
       new MiniCssExtractPlugin( {
         filename: 'style' + ( 'production' === argv.mode ? '.min' : '' ) + '.css'
-      } )
+      } ),
+      new WebpackBar(),
     ]
   };
 
