@@ -143,6 +143,19 @@ class DM_Advanced_Cache {
         /**
          * Check Cookies to make sure that caching is suitable, i.e. do not cache if the User is logged in.
          */
+        if ( $do_cache && ! $this->do_cache_cookies() ) {
+            $do_cache = false;
+        }
+
+        return apply_filters( 'dark_matter_do_cache', $do_cache, $this->response_type, $this->status_code );
+    }
+
+    /**
+     * Check to see if there are any Cookies which can bypass the cache.
+     *
+     * @return boolean True if none of the cookie bypasses are present.
+     */
+    private function do_cache_cookies() {
         $cookies = $_COOKIE;
         $bypass  = apply_filters( 'dark_matter_cookie_bypass', [] );
 
@@ -153,6 +166,7 @@ class DM_Advanced_Cache {
                  */
                 if ( 0 === stripos( $name, 'wp_' ) || 0 === stripos( $name, 'wordpress_' ) ) {
                     $do_cache = false;
+                    break;
                 }
 
                 /**
@@ -160,11 +174,12 @@ class DM_Advanced_Cache {
                  */
                 if ( in_array( $name, $bypass ) ) {
                     $do_cache = false;
+                    break;
                 }
             }
         }
 
-        return apply_filters( 'dark_matter_do_cache', $do_cache, $this->response_type, $this->status_code );
+        return $do_cache;
     }
 
     /**
