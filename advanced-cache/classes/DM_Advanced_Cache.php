@@ -159,6 +159,10 @@ class DM_Advanced_Cache {
         /**
          * Check Cookies to make sure that caching is suitable, i.e. do not cache if the User is logged in.
          */
+        if ( $do_cache && ! $this->do_cache_scriptname() ) {
+            $do_cache = false;
+        }
+
         if ( $do_cache && ! $this->do_cache_cookies() ) {
             $do_cache = false;
         }
@@ -231,6 +235,19 @@ class DM_Advanced_Cache {
          * If we are here, then the cache can continue from the query string perspective.
          */
         return true;
+    }
+
+    /**
+     * Check to ensure that the script file is not one which should bypass the cache, like WordPress Cron request URL or
+     * the XML-RPC implementation.
+     *
+     * @return bool False if a script name is present in the bypass. True / continue with cache otherwise.
+     */
+    private function do_cache_scriptname() {
+        $bypass = apply_filters( 'darkmatter_scriptname_bypass', [ 'wp-app.php', 'wp-cron.php', 'xmlrpc.php' ] );
+        $script = strtolower( basename( $_SERVER['SCRIPT_FILENAME'] ) );
+
+        return ! in_array( $script, $bypass, true );
     }
 
     /**
