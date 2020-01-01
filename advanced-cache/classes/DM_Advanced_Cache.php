@@ -131,6 +131,22 @@ class DM_Advanced_Cache {
      * @return boolean Return true if the current response should be cached. False if it should not.
      */
     public function do_cache() {
+        /**
+         * Hard-set checks. The caching cannot be perform if for the following;
+         *
+         * * Request method is not GET or HEAD.
+         * * Request is a POST (such as a form, etc.).
+         * * Basic Authentication has been provided.
+         */
+        $request_method = ( isset( $_SERVER['REQUEST_METHOD'] ) ? strtoupper( $_SERVER['REQUEST_METHOD'] ) : '' );
+        if ( ! in_array( $request_method, [ 'GET', 'HEAD' ], true ) ) {
+            return false;
+        }
+
+        if ( ! empty( $_POST ) || ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) || ! empty( $_SERVER['PHP_AUTH_USER'] ) ) {
+            return false;
+        }
+
         $do_cache = true;
 
         /**
