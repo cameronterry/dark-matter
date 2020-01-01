@@ -147,6 +147,10 @@ class DM_Advanced_Cache {
             $do_cache = false;
         }
 
+        if ( $do_cache && ! $this->do_cache_querystring() ) {
+            $do_cache = false;
+        }
+
         return apply_filters( 'dark_matter_do_cache', $do_cache, $this->response_type, $this->status_code );
     }
 
@@ -181,6 +185,36 @@ class DM_Advanced_Cache {
         }
 
         return $do_cache;
+    }
+
+    /**
+     * Check to see if there are any query string parameters which can bypass the cache.
+     *
+     * @return boolean False if a query string which is marked as bypass is found. True / continue with cache otherwise.
+     */
+    private function do_cache_querystring() {
+        $bypass       = apply_filters( 'darkmatter_querystring_bypass', [] );
+        $query_string = parse_url( $this->url, PHP_URL_QUERY );
+
+        if ( empty( $query_string ) || empty( $bypass ) ) {
+            return true;
+        }
+
+        /**
+         * Convert the key / value string in to an array and attempt to find any of the bypass query string parameters.
+         */
+        parse_str( $query_string, $parameters );
+
+        foreach ( $parameters as $key => $value ) {
+            if ( in_array( $key, $bypass, true ) ) {
+                return false;
+            }
+        }
+
+        /**
+         * If we are here, then the cache can continue from the query string perspective.
+         */
+        return true;
     }
 
     /**
