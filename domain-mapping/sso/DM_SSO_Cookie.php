@@ -26,9 +26,78 @@ class DM_SSO_Cookie {
     public function __construct() {
         add_action( 'admin_post_dark_matter_dmsso', array( $this, 'login_token' ) );
         add_action( 'admin_post_nopriv_dark_matter_dmsso', array( $this, 'login_token' ) );
+
+        add_action( 'admin_post_dark_matter_dmcheck', array( $this, 'logout_token' ) );
         add_action( 'admin_post_nopriv_dark_matter_dmcheck', array( $this, 'logout_token' ) );
-        add_action( 'wp_head', array( $this, 'head_script' ) );
-        add_action( 'plugins_loaded', array( $this, 'validate_token' ) );
+
+        if ( ! $this->is_admin_domain() ) {
+            add_action( 'wp_head', array( $this, 'head_script' ) );
+            add_action( 'plugins_loaded', array( $this, 'validate_token' ) );
+        }
+    }
+
+    /**
+     * Creates a nonce that isn't linked to a user, like the APIs in WordPress Core, but functions in a similar fashion.
+     *
+     * @param  string $action Value which creates the unique nonce.
+     * @return string         Nonce token for use.
+     */
+    private function create_shared_nonce( $action = '' ) {
+        $i = wp_nonce_tick();
+        return substr( wp_hash( $i . '|' . $action, 'nonce' ), -12, 10 );
+    }
+
+    /**
+     * Verify a shared nonce.
+     *
+     * @see create_shared_nonce()
+     *
+     * @param  string   $nonce  Nonce that was used and requires verification.
+     * @param  string   $action Value which provides the nonce uniqueness.
+     * @return bool|int         An integer if the nonce check passed, 1 for 0-12 hours ago and 2 for 12-24 hours ago. False otherwise.
+     */
+    private function verify_shared_nonce( $nonce = '', $action = '' ) {
+        if ( empty( $nonce ) ) {
+            return false;
+        }
+
+        $i = wp_nonce_tick();
+
+        /**
+         * Nonce generated 0-12 hours ago
+         */
+        $expected = substr( wp_hash( $i . '|' . $action, 'nonce' ), -12, 10 );
+        if ( hash_equals( $expected, $nonce ) ) {
+            return 1;
+        }
+
+        /**
+         * Nonce generated 12-24 hours ago
+         */
+        $expected = substr( wp_hash( ( $i - 1 ) . '|' . $action, 'nonce' ), -12, 10 );
+        if ( hash_equals( $expected, $nonce ) ) {
+            return 2;
+        }
+
+        /**
+         * Invalid.
+         */
+        return false;
+    }
+
+    /**
+     * Determines if the current request is on the Admin Domain.
+     *
+     * @return bool True if current request is on the admin domain. False otherwise.
+     */
+    private function is_admin_domain() {
+        $network = get_network();
+
+        if ( ! empty( $network ) && false === stripos( $network->domain, $_SERVER['HTTP_HOST'] ) ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -41,19 +110,28 @@ class DM_SSO_Cookie {
     public function login_token() {
         header( 'Content-Type: text/javascript' );
 
+        $this->nocache_headers();
+
         /**
          * Ensure that the JavaScript is never empty.
          */
         echo "// dm_sso" . PHP_EOL;
 
         if ( is_user_logged_in() ) {
+            $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
+                ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
+                md5( $_SERVER['HTTP_USER_AGENT'] ),
+                get_current_user_id()
+            );
+
             /**
              * Construct an authentication token which is passed back along with an
              * action flag to tell the front end to
              */
             $url = add_query_arg( array(
                 '__dm_action' => 'authorise',
-                'auth' => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) )
+                'auth'        => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) ),
+                'nonce'       => $this->create_shared_nonce( $action ),
             ), $_SERVER['HTTP_REFERER'] );
 
             printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
@@ -71,6 +149,8 @@ class DM_SSO_Cookie {
      */
     public function logout_token() {
         header( 'Content-Type: text/javascript' );
+
+        $this->nocache_headers();
 
         /**
          * Ensure that the JavaScript is never empty.
@@ -94,7 +174,7 @@ class DM_SSO_Cookie {
      * @return void
      */
     public function head_script() {
-        if ( is_main_site() ) {
+        if ( is_main_site() || $this->is_admin_domain() ) {
             return;
         }
 
@@ -136,26 +216,70 @@ class DM_SSO_Cookie {
     }
 
     /**
+     * Sets the relevant no cache headers using the definition from WordPress Core.
+     *
+     * @return void
+     */
+    public function nocache_headers() {
+        if ( headers_sent() ) {
+            return;
+        }
+
+        /**
+         * Set the headers to prevent caching of the JavaScript include.
+         */
+        $nocache_headers = wp_get_nocache_headers();
+
+        foreach ( $nocache_headers as $header_name => $header_value ) {
+            header( "{$header_name}: {$header_value}" );
+        }
+    }
+
+    /**
      * Handle the validation of the login token and logging in of a user. Also
      * handle the logout if that action is provided.
      *
      * @return void
      */
     public function validate_token() {
+        $dm_action = filter_input( INPUT_GET, '__dm_action' );
+
+        /**
+         * Ensure that URLs with the __dm_action query string are not cached by browsers.
+         */
+        if ( ! empty( $dm_action ) ) {
+            $this->nocache_headers();
+        }
+
+        /**
+         * If the validation token is provided on the admin domain, rather than the primary / mapped domain, then just
+         * ignore it and end processing.
+         */
+        if ( $this->is_admin_domain() ) {
+            return;
+        }
+
         /**
          * First check to see if the authorise action is provided in the URL.
          */
-        if ( 'authorise' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        if ( 'authorise' === $dm_action ) {
             /**
              * Validate the token provided in the URL.
              */
             $user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth' ), 'auth' );
+            $nonce   = filter_input( INPUT_GET, 'nonce' );
+
+            $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
+                ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
+                md5( $_SERVER['HTTP_USER_AGENT'] ),
+                $user_id
+            );
 
             /**
              * Check if the validate token worked and we have a User ID. It will
              * display an error message or login the User if all works out well.
              */
-            if ( false === $user_id ) {
+            if ( false === $user_id || ! $this->verify_shared_nonce( $nonce, $action ) ) {
                 wp_die( 'Oops! Something went wrong with logging in.' );
             }
             else {
@@ -165,13 +289,13 @@ class DM_SSO_Cookie {
                  * removed.
                  */
                 wp_set_auth_cookie( $user_id );
-                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth' ) ) ) );
+                wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth', 'nonce' ) ) ), 302, 'Dark-Matter' );
                 die();
             }
         }
-        else if ( 'logout' === filter_input( INPUT_GET, '__dm_action' ) ) {
+        else if ( 'logout' === $dm_action ) {
             wp_logout();
-            wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ) );
+            wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ), 302, 'Dark-Matter' );
 
             die();
         }
