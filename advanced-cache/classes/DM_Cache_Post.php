@@ -1,6 +1,12 @@
 <?php
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DM_Cache_Post
+ *
+ * Handles the cache invalidation for Post Types, ensuring the Homepage / Feeds as well as the Post itself is
+ * invalidated on the caching layer.
+ */
 class DM_Cache_Post {
     /**
      * @var array A list of URLs to cache immediately.

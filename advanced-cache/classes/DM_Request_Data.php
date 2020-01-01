@@ -1,6 +1,12 @@
 <?php
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DM_Request_Data
+ *
+ * Handles the data "record" - a serialised array of data in Object Cache - for a specific request and all variants.
+ * This uses the base URL as the primary key for retrieving the data.
+ */
 class DM_Request_Data {
     /**
      * @var array Data record.

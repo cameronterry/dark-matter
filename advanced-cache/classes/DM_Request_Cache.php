@@ -1,6 +1,11 @@
 <?php
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DM_Request_Cache
+ *
+ * Provides functionality for controlling the cache entry, including variants, for a specific request.
+ */
 class DM_Request_Cache {
     /**
      * @var string Cache Key.
