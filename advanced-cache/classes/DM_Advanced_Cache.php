@@ -156,8 +156,9 @@ class DM_Advanced_Cache {
      * @return boolean True if none of the cookie bypasses are present.
      */
     private function do_cache_cookies() {
-        $cookies = $_COOKIE;
-        $bypass  = apply_filters( 'dark_matter_cookie_bypass', [] );
+        $bypass   = apply_filters( 'dark_matter_cookie_bypass', [] );
+        $cookies  = $_COOKIE;
+        $do_cache = true;
 
         if ( ! empty( $cookies ) && is_array( $cookies ) ) {
             foreach ( $cookies as $name => $value ) {
