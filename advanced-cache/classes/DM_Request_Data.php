@@ -85,8 +85,15 @@ class DM_Request_Data {
      * Add a variant to the Request Cache Data record.
      *
      * @param string $variant_key Variant key to be added.
+     * @param array  $data        Useful data of the variant.
      */
-    public function variant_add( $variant_key = '' ) {
+    public function variant_add( $variant_key = '', $data = [] ) {
+        $variant_data = [];
+
+        if ( ! array_key_exists( $variant_key, $this->data['variants'] ) ) {
+            $this->data['variants'][ $variant_key ] = $variant_data;
+        }
+
         if ( ! in_array( $variant_key, $this->data['variants'], true ) ) {
             $this->data['variants'][] = $variant_key;
         }
