@@ -85,17 +85,33 @@ class DM_Request_Data {
      * Add a variant to the Request Cache Data record.
      *
      * @param string $variant_key Variant key to be added.
-     * @param array  $data        Useful data of the variant.
+     * @param array  $cache_data  Useful data of the variant.
      */
-    public function variant_add( $variant_key = '', $data = [] ) {
-        $variant_data = [];
+    public function variant_add( $variant_key = '', $cache_data = [], $ttl = 0 ) {
+        $variant_data = [
+            'time' => time(),
+            'ttl'  => $ttl,
+        ];
 
-        if ( ! array_key_exists( $variant_key, $this->data['variants'] ) ) {
-            $this->data['variants'][ $variant_key ] = $variant_data;
+        /**
+         * Store the size of the HTML.
+         */
+        if ( ! empty( $cache_data['body'] ) ) {
+            $variant_data['size'] = strlen( $cache_data['body'] );
         }
 
-        if ( ! in_array( $variant_key, $this->data['variants'], true ) ) {
-            $this->data['variants'][] = $variant_key;
+        /**
+         * Store whether the request being cached is a redirect.
+         */
+        if ( ! empty( $cache_data['redirect'] ) ) {
+            $variant_data['is_redirect'] = strlen( $cache_data['redirect'] );
+        }
+
+        /**
+         * Add the Variant Data to the Request Data object.
+         */
+        if ( ! array_key_exists( $variant_key, $this->data['variants'] ) ) {
+            $this->data['variants'][ $variant_key ] = $variant_data;
         }
     }
 
