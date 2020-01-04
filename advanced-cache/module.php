@@ -1,6 +1,14 @@
 <?php
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Do not load the full page caching logic unless the current installation has the Dark Matter version of
+ * advanced-cache.php, which defines the constant; DARKMATTER_FULLPAGECACHE.
+ */
+if ( ! defined( 'DARKMATTER_FULLPAGECACHE' ) ) {
+    return;
+}
+
 wp_cache_add_global_groups( 'dark-matter-fullpage' );
 wp_cache_add_global_groups( 'dark-matter-fullpage-data' );
 
