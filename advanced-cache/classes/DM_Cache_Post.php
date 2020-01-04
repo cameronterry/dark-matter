@@ -31,7 +31,6 @@ class DM_Cache_Post {
         /**
          * Prioritise invalidating cache entries before attempting to instantly cache again.
          */
-        add_action( 'shutdown', [ $this, 'do_cache' ], 20 );
         add_action( 'shutdown', [ $this, 'do_invalidate' ], 10 );
     }
 
@@ -44,13 +43,6 @@ class DM_Cache_Post {
         if ( empty( $id_or_url ) ) {
             return;
         }
-    }
-
-    /**
-     * Perform all the immediate cache entries.
-     */
-    public function do_cache() {
-
     }
 
     /**
