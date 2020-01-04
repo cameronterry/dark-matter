@@ -20,15 +20,25 @@ class DarkMatter_FullPage_CLI {
 
         $url = $args[0];
 
-        $cache_data = new DM_Request_Data( $url );
+        $cache_data   = new DM_Request_Data( $url );
+        $request_data = $cache_data->data();
 
-        var_dump( $cache_data );
+        $data = [];
 
-
-        if ( ! empty( $cache_data['variants'] ) ) {
-            foreach ( $cache_data['variants'] as $key => $data ) {
-            }
+        foreach ( $request_data['variants'] as $variant_key => $variant_data ) {
+            $data[] = [
+                'Variant Key' => $variant_key,
+                'Provider'    => $request_data['provider'],
+                'Time'        => $variant_data['time_utc'],
+                'TTL'         => $variant_data['ttl_secs'] / MINUTE_IN_SECONDS . ' ' . __( 'minutes', 'dark-matter' ),
+                'Size'        => size_format( $variant_data['size_bytes'] ),
+                'Headers'     => $variant_data['headers'],
+            ];
         }
+
+        $display = [ 'Variant Key', 'Provider', 'Time', 'TTL', 'Size', 'Headers' ];
+
+        WP_CLI\Utils\format_items( 'table', $data, $display );
     }
 }
 WP_CLI::add_command( 'darkmatter fullpage', 'DarkMatter_FullPage_CLI' );
