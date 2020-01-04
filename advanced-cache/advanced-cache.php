@@ -1,4 +1,5 @@
 <?php
+defined( 'ABSPATH' ) || die;
 
 $cache_path = ( dirname( __FILE__ ) . '/plugins/dark-matter/advanced-cache/inc/advanced-cache.php' );
 
