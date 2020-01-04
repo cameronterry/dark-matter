@@ -26,19 +26,26 @@ class DarkMatter_FullPage_CLI {
         $data = [];
 
         foreach ( $request_data['variants'] as $variant_key => $variant_data ) {
-            $expiry_time = $variant_data['time_utc'] + $variant_data['ttl_secs'];
+            $time        = $variant_data['time_utc'];
+            $expiry_time = $time + $variant_data['ttl_secs'];
             $remaining   = human_time_diff( time(), $expiry_time );
 
             if ( time() > $expiry_time ) {
                 $remaining = __( 'Expired', 'dark-matter' );
             }
 
+            /**
+             * Convert the Unix timestamp to a human readable format and in the website's current timezone.
+             */
+            $datetime = new DateTime( "@{$time}" );
+            $datetime->setTimezone( wp_timezone() );
+
             $data[] = [
                 'Variant Key' => $variant_key,
                 'Provider'    => $request_data['provider'],
-                'Time'        => $variant_data['time_utc'],
+                'Time'        => $datetime->format( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
                 'Remaining'   => $remaining,
-                'TTL'         => human_time_diff( $variant_data['time_utc'], $expiry_time ),
+                'TTL'         => human_time_diff( $time, $expiry_time ),
                 'Size'        => size_format( $variant_data['size_bytes'] ),
                 'Headers'     => $variant_data['headers'],
             ];
