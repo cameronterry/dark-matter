@@ -41,7 +41,7 @@ class DM_Request_Data {
 
     /**
      * Returns the Request Cache Data.
-     * 
+     *
      * @return array Request Cache Data.
      */
     public function data() {
@@ -126,9 +126,7 @@ class DM_Request_Data {
         /**
          * Add the Variant Data to the Request Data object.
          */
-        if ( ! array_key_exists( $variant_key, $this->data['variants'] ) ) {
-            $this->data['variants'][ $variant_key ] = $variant_data;
-        }
+        $this->data['variants'][ $variant_key ] = $variant_data;
     }
 
     /**
