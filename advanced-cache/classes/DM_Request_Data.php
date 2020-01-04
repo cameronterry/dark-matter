@@ -105,10 +105,8 @@ class DM_Request_Data {
      * @param string $variant_key Variant key to be removed.
      */
     public function variant_remove( $variant_key = '' ) {
-        $pos = array_search( $variant_key, $this->data['variants'], true );
-
-        if ( false !== $pos ) {
-            unset( $this->data['variants'][ $pos ] );
+        if ( ! array_key_exists( $variant_key, $this->data['variants'] ) ) {
+            unset( $this->data['variants'][ $variant_key ] );
         }
     }
 }
