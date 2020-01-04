@@ -4,8 +4,11 @@ defined( 'ABSPATH' ) || die;
 /**
  * Do not load the full page caching logic unless the current installation has the Dark Matter version of
  * advanced-cache.php, which defines the constant; DARKMATTER_FULLPAGECACHE.
+ *
+ * WP-CLI does not include the advanced-cache.php file as part of the bootstrap and therefore we need to pretend the
+ * Dark Matter cache is enabled.
  */
-if ( ! defined( 'DARKMATTER_FULLPAGECACHE' ) ) {
+if ( ! defined( 'DARKMATTER_FULLPAGECACHE' ) && ! defined( 'WP_CLI' ) ) {
     return;
 }
 
