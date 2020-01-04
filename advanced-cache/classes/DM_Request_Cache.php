@@ -113,8 +113,10 @@ class DM_Request_Cache {
             'redirect' => false,
         ];
 
-        if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage', 5 * MINUTE_IN_SECONDS ) ) {
-            $this->request_data->variant_add( $this->key );
+        $ttl = 5 * MINUTE_IN_SECONDS;
+
+        if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage', $ttl ) ) {
+            $this->request_data->variant_add( $this->key, $data, $ttl );
             $this->request_data->save();
 
             return $data;
