@@ -40,6 +40,15 @@ class DM_Request_Data {
     }
 
     /**
+     * Returns the Request Cache Data.
+     * 
+     * @return array Request Cache Data.
+     */
+    public function data() {
+        return $this->data;
+    }
+
+    /**
      * Invalidates the cache for the current data record. Invalidates all variants unless a variant key is provided.
      *
      * @param string $variant_key Invalidate a specific key.
