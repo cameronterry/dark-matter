@@ -43,7 +43,7 @@ class DarkMatter_FullPage_CLI {
             $data[] = [
                 'Variant Key' => $variant_key,
                 'Provider'    => $request_data['provider'],
-                'Time'        => $datetime->format( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ),
+                'Time'        => $datetime->format( 'r' ),
                 'Remaining'   => $remaining,
                 'TTL'         => human_time_diff( $time, $expiry_time ),
                 'Size'        => size_format( $variant_data['size_bytes'] ),
