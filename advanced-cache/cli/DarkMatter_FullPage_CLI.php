@@ -26,17 +26,25 @@ class DarkMatter_FullPage_CLI {
         $data = [];
 
         foreach ( $request_data['variants'] as $variant_key => $variant_data ) {
+            $expiry_time = $variant_data['time_utc'] + $variant_data['ttl_secs'];
+            $remaining   = human_time_diff( time(), $expiry_time );
+
+            if ( time() > $expiry_time ) {
+                $remaining = __( 'Expired', 'dark-matter' );
+            }
+
             $data[] = [
                 'Variant Key' => $variant_key,
                 'Provider'    => $request_data['provider'],
                 'Time'        => $variant_data['time_utc'],
-                'TTL'         => $variant_data['ttl_secs'] / MINUTE_IN_SECONDS . ' ' . __( 'minutes', 'dark-matter' ),
+                'Remaining'   => $remaining,
+                'TTL'         => human_time_diff( $variant_data['time_utc'], $expiry_time ),
                 'Size'        => size_format( $variant_data['size_bytes'] ),
                 'Headers'     => $variant_data['headers'],
             ];
         }
 
-        $display = [ 'Variant Key', 'Provider', 'Time', 'TTL', 'Size', 'Headers' ];
+        $display = [ 'Variant Key', 'Provider', 'Time', 'Remaining', 'TTL', 'Size', 'Headers' ];
 
         WP_CLI\Utils\format_items( 'table', $data, $display );
     }
