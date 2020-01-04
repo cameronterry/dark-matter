@@ -101,6 +101,13 @@ class DM_Request_Data {
         }
 
         /**
+         * Added a header count.
+         */
+        if ( ! empty( $cache_data['headers'] ) ) {
+            $variant_data['headers'] = count( $cache_data['headers'] );
+        }
+
+        /**
          * Store whether the request being cached is a redirect.
          */
         if ( ! empty( $cache_data['redirect'] ) ) {
