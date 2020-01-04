@@ -89,15 +89,15 @@ class DM_Request_Data {
      */
     public function variant_add( $variant_key = '', $cache_data = [], $ttl = 0 ) {
         $variant_data = [
-            'time' => time(),
-            'ttl'  => $ttl,
+            'time_utc' => time(),
+            'ttl_secs' => $ttl,
         ];
 
         /**
          * Store the size of the HTML.
          */
         if ( ! empty( $cache_data['body'] ) ) {
-            $variant_data['size'] = strlen( $cache_data['body'] );
+            $variant_data['size_bytes'] = strlen( $cache_data['body'] );
         }
 
         /**
