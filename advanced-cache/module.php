@@ -21,4 +21,5 @@ require_once DM_PATH . 'advanced-cache/classes/DM_Request_Data.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
     require_once DM_PATH . 'advanced-cache/cli/DarkMatter_FullPage_CLI.php';
+    require_once DM_PATH . 'advanced-cache/cli/DarkMatter_FullPage_Dropin_CLI.php';
 }
