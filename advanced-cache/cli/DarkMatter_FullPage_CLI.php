@@ -14,7 +14,7 @@ class DarkMatter_FullPage_CLI {
      * @param $assoc_args
      * @throws Exception
      */
-    public function stats( $args, $assoc_args ) {
+    public function info( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
             WP_CLI::error( __( 'Please provide a URL to retrieve cache statistics for.', 'dark-matter' ) );
         }
