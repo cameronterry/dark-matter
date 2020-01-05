@@ -25,8 +25,8 @@ class DarkMatter_FullPage_CLI {
 
         $url = $args[0];
 
-        $cache_data   = new DM_Request_Data( $url );
-        $request_data = $cache_data->data();
+        $cache_entry  = new DM_Request_Cache( $url );
+        $request_data = $cache_entry->get_data()->data();
 
         $data = [];
 
