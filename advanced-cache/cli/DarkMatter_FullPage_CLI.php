@@ -12,6 +12,7 @@ class DarkMatter_FullPage_CLI {
      *
      * @param $args
      * @param $assoc_args
+     * @throws Exception
      */
     public function stats( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
@@ -41,17 +42,27 @@ class DarkMatter_FullPage_CLI {
             $datetime->setTimezone( wp_timezone() );
 
             $data[] = [
-                'Variant Key' => $variant_key,
-                'Provider'    => $request_data['provider'],
-                'Time'        => $datetime->format( 'r' ),
-                'Remaining'   => $remaining,
-                'TTL'         => human_time_diff( $time, $expiry_time ),
-                'Size'        => size_format( $variant_data['size_bytes'] ),
-                'Headers'     => $variant_data['headers'],
+                'Variant Key'  => $variant_key,
+                'Variant Name' => $variant_data['name'],
+                'Provider'     => $request_data['provider'],
+                'Time'         => $datetime->format( 'r' ),
+                'Remaining'    => $remaining,
+                'TTL'          => human_time_diff( $time, $expiry_time ),
+                'Size'         => size_format( $variant_data['size_bytes'] ),
+                'Headers'      => $variant_data['headers'],
             ];
         }
 
-        $display = [ 'Variant Key', 'Provider', 'Time', 'Remaining', 'TTL', 'Size', 'Headers' ];
+        $display = [
+            'Variant Key',
+            'Variant Name',
+            'Provider',
+            'Time',
+            'Remaining',
+            'TTL',
+            'Size',
+            'Headers'
+        ];
 
         WP_CLI\Utils\format_items( 'table', $data, $display );
     }
