@@ -239,6 +239,6 @@ class DM_Request_Cache {
             $this->variant_key = md5( strval( $variant['key'] ) );
         }
 
-        $this->variant_name = $default['standard'];
+        $this->variant_name = $default['name'];
     }
 }
