@@ -10,6 +10,10 @@ class DarkMatter_FullPage_CLI {
      * <url>
      * : Full URL to retrieve full page cache statistics.
      *
+     * [--format]
+     * : Determine which format that should be returned. Defaults to "table" and accepts "json", "csv", "yaml", and
+     * "count".
+     *
      * @param $args
      * @param $assoc_args
      * @throws Exception
@@ -64,7 +68,9 @@ class DarkMatter_FullPage_CLI {
             'Headers'
         ];
 
-        WP_CLI\Utils\format_items( 'table', $data, $display );
+        $format = WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'table' );
+
+        WP_CLI\Utils\format_items( $format, $data, $display );
     }
 }
 WP_CLI::add_command( 'darkmatter fullpage', 'DarkMatter_FullPage_CLI' );
