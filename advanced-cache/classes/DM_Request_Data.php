@@ -60,10 +60,9 @@ class DM_Request_Data {
             /**
              * Remove from the list of variants.
              */
-            $position = array_search( $variant_key, $this->data['variants'], true );
-            unset( $this->data['variants'][ $position ] );
+            unset( $this->data['variants'][ $variant_key ] );
         } else {
-            foreach ( $this->data['variants'] as $key ) {
+            foreach ( $this->data['variants'] as $key => $data ) {
                 wp_cache_delete( $key, 'dark-matter-fullpage' );
             }
 
