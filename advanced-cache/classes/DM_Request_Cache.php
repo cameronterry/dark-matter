@@ -33,6 +33,11 @@ class DM_Request_Cache {
     private $url_cache_key = '';
 
     /**
+     * @var string Useful name for the Variant when debugging.
+     */
+    private $variant_name = '';
+
+    /**
      * @var string Key distinguishing the variant.
      */
     private $variant_key = '';
@@ -116,7 +121,7 @@ class DM_Request_Cache {
         $ttl = 5 * MINUTE_IN_SECONDS;
 
         if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage', $ttl ) ) {
-            $this->request_data->variant_add( $this->key, $data, $ttl );
+            $this->request_data->variant_add( $this->key, $this->variant_name, $data, $ttl );
             $this->request_data->save();
 
             return $data;
@@ -143,7 +148,7 @@ class DM_Request_Cache {
         ];
 
         if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage' ) ) {
-            $this->request_data->variant_add( $this->key );
+            $this->request_data->variant_add( $this->key, 'redirect' );
             $this->request_data->save();
 
             return $data;
@@ -221,12 +226,19 @@ class DM_Request_Cache {
      * @return string MD5 hash key for the Variant.
      */
     private function set_variant_key() {
-        $variant = apply_filters( 'dark_matter_request_variant', '', $this->url, $this->url_cache_key );
+        $default = [
+            'key'  => '',
+            'name' => 'standard',
+        ];
 
-        if ( empty( $variant ) ) {
+        $variant = apply_filters( 'dark_matter_request_variant', $default, $this->url, $this->url_cache_key );
+
+        if ( empty( $variant['key'] ) ) {
             $this->variant_key = '';
         } else {
-            $this->variant_key = md5( strval( $variant ) );
+            $this->variant_key = md5( strval( $variant['key'] ) );
         }
+
+        $this->variant_name = $default['standard'];
     }
 }
