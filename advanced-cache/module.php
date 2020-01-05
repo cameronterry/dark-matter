@@ -20,6 +20,12 @@ require_once DM_PATH . 'advanced-cache/classes/DM_Request_Cache.php';
 require_once DM_PATH . 'advanced-cache/classes/DM_Request_Data.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
+    $cache_config_path = WP_CONTENT_DIR . '/advanced-cache-config.php';
+
+    if ( is_readable( $cache_config_path ) ) {
+        require_once( $cache_config_path );
+    }
+
     require_once DM_PATH . 'advanced-cache/cli/DarkMatter_FullPage_CLI.php';
     require_once DM_PATH . 'advanced-cache/cli/DarkMatter_FullPage_Dropin_CLI.php';
 }
