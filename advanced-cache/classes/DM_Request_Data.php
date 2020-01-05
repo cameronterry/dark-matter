@@ -93,11 +93,14 @@ class DM_Request_Data {
     /**
      * Add a variant to the Request Cache Data record.
      *
-     * @param string $variant_key Variant key to be added.
-     * @param array  $cache_data  Useful data of the variant.
+     * @param string  $variant_key  Variant key to be added.
+     * @param string  $variant_name Variant name to be added.
+     * @param array   $cache_data   Useful data of the variant.
+     * @param integer $ttl          Length of time the output will be cached.
      */
-    public function variant_add( $variant_key = '', $cache_data = [], $ttl = 0 ) {
+    public function variant_add( $variant_key = '', $variant_name = 'standard', $cache_data = [], $ttl = 0 ) {
         $variant_data = [
+            'name'     => $variant_name,
             'time_utc' => time(),
             'ttl_secs' => $ttl,
         ];
