@@ -54,7 +54,7 @@ class DM_Request_Data {
      * @param string $variant_key Invalidate a specific key.
      */
     public function invalidate( $variant_key = '' ) {
-        if ( empty( $variant_key ) && in_array( $variant_key, $this->data['variants'], true ) ) {
+        if ( ! empty( $variant_key ) && ! empty( $this->data['variants'][ $variant_key ] ) ) {
             wp_cache_delete( $variant_key, 'dark-matter-fullpage' );
 
             /**
