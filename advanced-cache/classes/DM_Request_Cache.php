@@ -81,6 +81,15 @@ class DM_Request_Cache {
     }
 
     /**
+     * Retrieve the Request Cache Data record.
+     *
+     * @return DM_Request_Data Data record for the full page cache.
+     */
+    public function get_data() {
+        return $this->request_data;
+    }
+
+    /**
      * Take headers and put them in a structure that is more consistent and more programmatically appeasing to use.
      *
      * @param  array $headers Raw headers.
