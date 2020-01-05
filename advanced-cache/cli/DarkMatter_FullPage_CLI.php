@@ -72,5 +72,45 @@ class DarkMatter_FullPage_CLI {
 
         WP_CLI\Utils\format_items( $format, $data, $display );
     }
+
+    /**
+     * Invalidate a full page cache entry, either by Variant Key or URL.
+     *
+     * ### OPTIONS
+     *
+     * <url>
+     * : URL to invalidate.
+     *
+     * [<variant_key>]
+     * : Specify a specific variant to remove, if there are multiples.
+     *
+     * @param $args
+     * @param $assoc_args
+     */
+    public function invalidate( $args, $assoc_args ) {
+        if ( empty( $args[0] ) ) {
+            WP_CLI::error( __( 'Please provide either a Variant Key or a URL to perform an invalidation.', 'dark-matter' ) );
+        }
+
+        $url = $args[0];
+        $key = ( empty( $args[1] ) ? '' : $args[1] );
+
+        $cache_entry  = new DM_Request_Cache( $url );
+        $data_entry   = $cache_entry->get_data();
+        $request_data = $data_entry->data();
+
+        if ( $request_data['count'] > 0 ) {
+            if ( $request_data['count'] > 1 ) {
+                WP_CLI::confirm( __( 'This URL has multiple cache variants and this command will clear all. Do you wish to proceed?', 'dark-matter' ), $assoc_args );
+            }
+
+            $data_entry->invalidate();
+
+            WP_CLI::success( $request_data['count'] . __( ' cache variants deleted.', 'dark-matter' ) );
+        }
+        else {
+            WP_CLI::error( __( 'No cache entries are available for this URL.', 'dark-matter' ) );
+        }
+    }
 }
 WP_CLI::add_command( 'darkmatter fullpage', 'DarkMatter_FullPage_CLI' );
