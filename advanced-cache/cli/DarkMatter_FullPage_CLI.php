@@ -99,7 +99,19 @@ class DarkMatter_FullPage_CLI {
         $data_entry   = $cache_entry->get_data();
         $request_data = $data_entry->data();
 
-        if ( $request_data['count'] > 0 ) {
+        /**
+         * Invalidate a specifc key.
+         */
+        if ( ! empty( $key ) ) {
+            $data_entry->invalidate( $key );
+
+            WP_CLI::success( __( 'Full Page Cache variant has been invalidated.', 'dark-matter' ) );
+        }
+        else if ( $request_data['count'] > 0 ) {
+            /**
+             * If there is more than one variant, double-check to ensure the admin wants to delete ALL the variants. If
+             * there is only one, then just continue as normal.
+             */
             if ( $request_data['count'] > 1 ) {
                 WP_CLI::confirm( __( 'This URL has multiple cache variants and this command will clear all. Do you wish to proceed?', 'dark-matter' ), $assoc_args );
             }
