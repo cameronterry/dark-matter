@@ -25,6 +25,7 @@ if ( ! is_object( $wp_object_cache ) ) {
 }
 
 wp_cache_add_global_groups( 'dark-matter-fullpage' );
+wp_cache_add_global_groups( 'dark-matter-fullpage-data' );
 
 /**
  * Prior to loading the library and processing the cache, determine if the current installation includes a file for
