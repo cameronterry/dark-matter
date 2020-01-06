@@ -127,6 +127,14 @@ class DM_Request_Cache {
             'redirect' => false,
         ];
 
+        /**
+         * Enables the modification of the HTML output and corresponding headers prior to it to being stored in cache.
+         * This is useful for one-time modifications at the caching "point of entry".
+         *
+         * @param Array $data Array structure containing the HTML, headers, and whether it is a redirect.
+         */
+        do_action( 'dark_matter_pre_cache_output', $data );
+
         $ttl = 5 * MINUTE_IN_SECONDS;
 
         if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage', $ttl ) ) {
