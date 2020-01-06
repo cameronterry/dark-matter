@@ -90,6 +90,15 @@ class DM_Request_Cache {
     }
 
     /**
+     * Returns the TTL for full page cache entries, allowing for modification in the advanced-cache-config.php.
+     *
+     * @return integer TTL in seconds.
+     */
+    private function get_ttl() {
+        return apply_filters( 'dark_matter_cache_ttl', 5 * MINUTE_IN_SECONDS, $this->url );
+    }
+
+    /**
      * Take headers and put them in a structure that is more consistent and more programmatically appeasing to use.
      *
      * @param  array $headers Raw headers.
@@ -135,7 +144,7 @@ class DM_Request_Cache {
          */
         do_action( 'dark_matter_pre_cache_output', $data );
 
-        $ttl = 5 * MINUTE_IN_SECONDS;
+        $ttl = $this->get_ttl();
 
         if ( wp_cache_set( $this->key, $data, 'dark-matter-fullpage', $ttl ) ) {
             $this->request_data->variant_add( $this->key, $this->variant_name, $data, $ttl );
