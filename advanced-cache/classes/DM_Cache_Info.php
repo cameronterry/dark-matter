@@ -58,14 +58,14 @@ class DM_Cache_Info {
             $datetime->setTimezone( wp_timezone() );
 
             $this->data[] = [
-                'Variant Key'  => $variant_key,
-                'Variant Name' => $variant_data['name'],
-                'Provider'     => $this->cache_data['provider'],
-                'Time'         => $datetime->format( 'r' ),
-                'Remaining'    => $remaining,
-                'TTL'          => human_time_diff( $time, $expiry_time ),
-                'Size'         => size_format( $variant_data['size_bytes'] ),
-                'Headers'      => $variant_data['headers'],
+                'variant_key'  => $variant_key,
+                'variant_name' => $variant_data['name'],
+                'provider'     => $this->cache_data['provider'],
+                'time'         => $datetime->format( 'r' ),
+                'remaining'    => $remaining,
+                'ttl'          => human_time_diff( $time, $expiry_time ),
+                'size'         => size_format( $variant_data['size_bytes'] ),
+                'headers'      => $variant_data['headers'],
             ];
         }
     }
