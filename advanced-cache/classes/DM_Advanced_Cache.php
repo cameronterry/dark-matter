@@ -3,6 +3,11 @@ defined( 'ABSPATH' ) || die;
 
 class DM_Advanced_Cache {
     /**
+     * @var bool States if the current request can be cached.
+     */
+    private $can_cache = false;
+
+    /**
      * @var DM_Request_Cache Request Cache object.
      */
     private $request = null;
@@ -33,6 +38,14 @@ class DM_Advanced_Cache {
      */
     public function __construct() {
         $this->set_url();
+
+        /**
+         * Determine if we can cache the current request.
+         */
+        $this->can_cache = $this->can_cache();
+        if ( ! $this->can_cache ) {
+            return;
+        }
 
         $this->request = new DM_Request_Cache( $this->url );
         $cache_data    = $this->request->get();
@@ -126,11 +139,11 @@ class DM_Advanced_Cache {
     }
 
     /**
-     * Determine if the current response should be cached.
+     * Determines if a full page cache entry can be created.
      *
-     * @return boolean Return true if the current response should be cached. False if it should not.
+     * @return bool True if the request can be cached. False otherwise.
      */
-    public function do_cache() {
+    public function can_cache() {
         /**
          * Hard-set checks. The caching cannot be perform if for the following;
          *
@@ -147,31 +160,38 @@ class DM_Advanced_Cache {
             return false;
         }
 
-        $do_cache = true;
-
         /**
          * Ensure the Response Type can be cached.
          */
         if ( ! in_array( $this->response_type, [ 'page', 'redirect' ], true ) ) {
-            $do_cache = false;
+            return false;
         }
 
         /**
          * Check Cookies to make sure that caching is suitable, i.e. do not cache if the User is logged in.
          */
-        if ( $do_cache && ! $this->do_cache_scriptname() ) {
-            $do_cache = false;
+        if ( ! $this->do_cache_scriptname() ) {
+            return false;
         }
 
-        if ( $do_cache && ! $this->do_cache_cookies() ) {
-            $do_cache = false;
+        if ( ! $this->do_cache_cookies() ) {
+            return false;
         }
 
-        if ( $do_cache && ! $this->do_cache_querystring() ) {
-            $do_cache = false;
+        if ( ! $this->do_cache_querystring() ) {
+            return false;
         }
 
-        return apply_filters( 'dark_matter_do_cache', $do_cache, $this->response_type, $this->status_code );
+        return true;
+    }
+
+    /**
+     * Determine if the current response should be cached.
+     *
+     * @return boolean Return true if the current response should be cached. False if it should not.
+     */
+    public function do_cache() {
+        return apply_filters( 'dark_matter_do_cache', $this->can_cache, $this->response_type, $this->status_code );
     }
 
     /**
