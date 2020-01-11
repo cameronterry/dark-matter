@@ -6,7 +6,7 @@ class DM_Cache_Admin_UI {
      * DM_Cache_Admin_UI constructor.
      */
     public function __construct() {
-        add_action( 'admin_init', [ $this, 'init' ] );
+        add_action( 'init', [ $this, 'init' ] );
     }
 
     public function init() {
@@ -24,7 +24,42 @@ class DM_Cache_Admin_UI {
             return;
         }
 
-        add_action( 'admin_bar_menu', [ $this, 'admin_bar_info' ] );
+        add_action( 'admin_bar_menu', [ $this, 'admin_bar_info' ], 100 );
+    }
+
+    /**
+     * Add the information box to the Admin Bar.
+     *
+     * @param WP_Admin_Bar $admin_bar
+     */
+    public function admin_bar_info( $admin_bar = null ) {
+        $cache_info = $this->get_cache_info();
+
+        /**
+         * Retrieve the standard variant. All except the more exotic websites will use this version.
+         */
+        $standard_variant = $cache_info->get_standard();
+
+        if ( empty( $standard_variant ) ) {
+            $icon = '<span class="ab-icon dashicons dashicons-warning"></span>';
+            $text = 'Not cached.';
+        }
+        else {
+            $dashicon = ( 'Expired' === $standard_variant['remaining'] ? 'dismiss' : 'yes-alt' );
+
+            $icon = sprintf( '<span class="ab-icon dashicons dashicons-%1$s"></span>', esc_attr( $dashicon ) );
+            $text = $standard_variant['remaining'];
+        }
+
+        $admin_bar->add_menu( [
+            'id'     => 'darkmatter-fullpage',
+            'parent' => null,
+            'group'  => null,
+            'title'  => $icon . $text,
+            'meta'   => [
+                'title' => __( 'Cache details', 'dark-matter' ),
+            ],
+        ] );
     }
 
     /**
