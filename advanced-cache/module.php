@@ -15,6 +15,7 @@ if ( ! defined( 'DARKMATTER_FULLPAGECACHE' ) && ! defined( 'WP_CLI' ) ) {
 wp_cache_add_global_groups( 'dark-matter-fullpage' );
 wp_cache_add_global_groups( 'dark-matter-fullpage-data' );
 
+require_once DM_PATH . 'advanced-cache/classes/DM_Cache_Admin_UI.php';
 require_once DM_PATH . 'advanced-cache/classes/DM_Cache_Info.php';
 require_once DM_PATH . 'advanced-cache/classes/DM_Cache_Post.php';
 require_once DM_PATH . 'advanced-cache/classes/DM_Request_Cache.php';

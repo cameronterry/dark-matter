@@ -9,6 +9,9 @@ class DM_Cache_Admin_UI {
         add_action( 'init', [ $this, 'init' ] );
     }
 
+    /**
+     * Initialise the admin bar functionality.
+     */
     public function init() {
         /**
          * Only show the Admin Bar elements if on the mapped / front-end domain.
