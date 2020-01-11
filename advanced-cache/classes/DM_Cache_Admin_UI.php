@@ -6,6 +6,12 @@ class DM_Cache_Admin_UI {
      * DM_Cache_Admin_UI constructor.
      */
     public function __construct() {
+        /**
+         * Only show the Admin Bar elements if on the mapped / front-end domain.
+         */
+        if ( is_admin() || ! is_user_logged_in() ) {
+            return;
+        }
     }
 
     /**
