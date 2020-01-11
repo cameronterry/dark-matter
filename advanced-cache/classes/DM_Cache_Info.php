@@ -90,5 +90,7 @@ class DM_Cache_Info {
                 return $record;
             }
         }
+
+        return null;
     }
 }

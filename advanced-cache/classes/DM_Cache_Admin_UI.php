@@ -6,6 +6,10 @@ class DM_Cache_Admin_UI {
      * DM_Cache_Admin_UI constructor.
      */
     public function __construct() {
+        add_action( 'admin_init', [ $this, 'init' ] );
+    }
+
+    public function init() {
         /**
          * Only show the Admin Bar elements if on the mapped / front-end domain.
          */
@@ -19,6 +23,18 @@ class DM_Cache_Admin_UI {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
+
+        add_action( 'admin_bar_menu', [ $this, 'admin_bar_info' ] );
+    }
+
+    /**
+     * Retrieves the cache information.
+     *
+     * @return DM_Cache_Info Object containing the relevant cache information.
+     */
+    private function get_cache_info() {
+        return new DM_Cache_Info( $this->get_url() );
+    }
 
     /**
      * Returns the current URL.
@@ -39,7 +55,6 @@ class DM_Cache_Admin_UI {
         $path = ltrim( trim( $_SERVER['REQUEST_URI'] ), '/' );
 
         return $protocol . $host . '/' . $path;
-    }
     }
 
     /**
