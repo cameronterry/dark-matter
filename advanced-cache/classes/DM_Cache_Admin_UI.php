@@ -12,6 +12,13 @@ class DM_Cache_Admin_UI {
         if ( is_admin() || ! is_user_logged_in() ) {
             return;
         }
+
+        /**
+         * Ensure the current user is an admin.
+         */
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
     }
 
     /**
