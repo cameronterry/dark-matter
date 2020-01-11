@@ -95,7 +95,7 @@ class DM_Request_Cache {
      * @return integer TTL in seconds.
      */
     private function get_ttl() {
-        return apply_filters( 'dark_matter_cache_ttl', 5 * MINUTE_IN_SECONDS, $this->url );
+        return apply_filters( 'dark_matter_cache_ttl', 5 * MINUTE_IN_SECONDS, $this->url, $this->variant_name );
     }
 
     /**
