@@ -25,47 +25,18 @@ class DarkMatter_FullPage_CLI {
 
         $url = $args[0];
 
-        $cache_entry  = new DM_Request_Cache( $url );
-        $request_data = $cache_entry->get_data()->data();
-
-        $data = [];
-
-        foreach ( $request_data['variants'] as $variant_key => $variant_data ) {
-            $time        = $variant_data['time_utc'];
-            $expiry_time = $time + $variant_data['ttl_secs'];
-            $remaining   = human_time_diff( time(), $expiry_time );
-
-            if ( time() > $expiry_time ) {
-                $remaining = __( 'Expired', 'dark-matter' );
-            }
-
-            /**
-             * Convert the Unix timestamp to a human readable format and in the website's current timezone.
-             */
-            $datetime = new DateTime( "@{$time}" );
-            $datetime->setTimezone( wp_timezone() );
-
-            $data[] = [
-                'Variant Key'  => $variant_key,
-                'Variant Name' => $variant_data['name'],
-                'Provider'     => $request_data['provider'],
-                'Time'         => $datetime->format( 'r' ),
-                'Remaining'    => $remaining,
-                'TTL'          => human_time_diff( $time, $expiry_time ),
-                'Size'         => size_format( $variant_data['size_bytes'] ),
-                'Headers'      => $variant_data['headers'],
-            ];
-        }
+        $cache_info = new DM_Cache_Info( $url );
+        $data       = $cache_info->get_all();
 
         $display = [
-            'Variant Key',
-            'Variant Name',
-            'Provider',
-            'Time',
-            'Remaining',
-            'TTL',
-            'Size',
-            'Headers'
+            'variant_key',
+            'variant_name',
+            'provider',
+            'time',
+            'remaining',
+            'ttl',
+            'size',
+            'headers'
         ];
 
         $format = WP_CLI\Utils\get_flag_value( $assoc_args, 'format', 'table' );
