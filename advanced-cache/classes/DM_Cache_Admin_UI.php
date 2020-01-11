@@ -19,6 +19,27 @@ class DM_Cache_Admin_UI {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
         }
+
+    /**
+     * Returns the current URL.
+     *
+     * @return string Current URL.
+     */
+    private function get_url() {
+        $protocol = 'http://';
+        if ( isset( $_SERVER['HTTPS'] ) ) {
+            if ( 'on' == strtolower( $_SERVER['HTTPS'] ) || '1' == $_SERVER['HTTPS'] ) {
+                $protocol = 'https://';
+            }
+        } elseif ( isset( $_SERVER['SERVER_PORT'] ) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
+            $protocol = 'https://';
+        }
+
+        $host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
+        $path = ltrim( trim( $_SERVER['REQUEST_URI'] ), '/' );
+
+        return $protocol . $host . '/' . $path;
+    }
     }
 
     /**
