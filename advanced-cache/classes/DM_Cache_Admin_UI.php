@@ -48,7 +48,14 @@ class DM_Cache_Admin_UI {
             $dashicon = ( 'Expired' === $standard_variant['remaining'] ? 'dismiss' : 'yes-alt' );
 
             $icon = sprintf( '<span class="ab-icon dashicons dashicons-%1$s"></span>', esc_attr( $dashicon ) );
-            $text = $standard_variant['remaining'];
+
+            $display_data = [
+                $standard_variant['remaining'],
+                $standard_variant['size'],
+                sprintf( '%1$d %2$s', $cache_info->get_variant_count(), __( 'Variants', 'dark-matter' ) ),
+            ];
+
+            $text = implode( ' / ', $display_data );
         }
 
         $admin_bar->add_menu( [
