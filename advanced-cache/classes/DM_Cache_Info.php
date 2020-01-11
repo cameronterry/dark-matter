@@ -93,4 +93,13 @@ class DM_Cache_Info {
 
         return null;
     }
+
+    /**
+     * Returns the number of variant records.
+     *
+     * @return int Number of Variant records.
+     */
+    public function get_variant_count() {
+        return count( $this->data );
+    }
 }
