@@ -78,4 +78,17 @@ class DM_Cache_Info {
     public function get_all() {
         return $this->data;
     }
+
+    /**
+     * Retrieves the standard variant.
+     *
+     * @return array Data record for the "standard" Variant.
+     */
+    public function get_standard() {
+        foreach ( $this->data as $record ) {
+            if ( 'standard' === $record['variant_name'] ) {
+                return $record;
+            }
+        }
+    }
 }
