@@ -31,6 +31,27 @@ class DM_HealthChecks {
     }
 
     /**
+     * Checks to ensure the dropin - sunrise.php - exists.
+     *
+     * @return bool True if sunrise.php exists. False otherwise.
+     */
+    public function dropin_exists() {
+        return file_exists( DM_PATH . '/domain-mapping/sunrise.php' );
+    }
+
+    /**
+     * Checks the dropin - sunrise.php - to see if it is the correct version.
+     *
+     * @return bool True if the dropin is the correct version. False otherwise.
+     */
+    public function is_dropin_latest() {
+        $destination = WP_CONTENT_DIR . '/sunrise.php';
+        $source      = DM_PATH . '/domain-mapping/sunrise.php';
+
+        return filesize( $destination ) === filesize( $source ) && md5_file( $destination ) === md5_file( $source );
+    }
+
+    /**
      * Checks the Sunrise dropin to ensure it is configured correctly and is up-to-date.
      *
      * @return array Test result.
