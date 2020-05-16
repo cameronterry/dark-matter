@@ -50,4 +50,20 @@ class DM_HealthChecks {
 
         return $result;
     }
+
+    /**
+     * Return the Singleton Instance of the class.
+     *
+     * @return DM_HealthChecks
+     */
+    public static function instance() {
+        static $instance = false;
+
+        if ( ! $instance ) {
+            $instance = new self();
+        }
+
+        return $instance;
+    }
 }
+DM_HealthChecks::instance();
