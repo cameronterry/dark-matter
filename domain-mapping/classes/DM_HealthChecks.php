@@ -27,6 +27,11 @@ class DM_HealthChecks {
             'test'  => [ $this, 'test_ssl' ],
         ];
 
+        $tests['direct']['darkmatter_domain_mapping_primary_domain_set'] = [
+            'label' => __( 'Dark Matter - Domain Mapping - Checking for primary domain', 'dark-matter' ),
+            'test'  => [ $this, 'test_primary_domain_set' ],
+        ];
+
         return $tests;
     }
 
@@ -103,6 +108,52 @@ class DM_HealthChecks {
             );
 
             return $result;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Checks the Sunrise dropin to ensure it is configured correctly and is up-to-date.
+     *
+     * @return array Test result.
+     */
+    public function test_primary_domain_set() {
+        $result = [
+            'label'       => __( 'You have a primary domain.', 'dark-matter' ),
+            'status'      => 'good',
+            'badge'       => array(
+                'label' => __( 'Domain Mapping', 'dark-matter' ),
+                'color' => 'green',
+            ),
+            'description' => '',
+            'actions'     => '',
+            'test'        => 'darkmatter_domain_mapping_primary_domain_set',
+        ];
+
+        $primary = DarkMatter_Primary::instance()->get();
+
+        if ( empty( $primary ) ) {
+            $result['label']          = __( 'You have not a set a primary domain.', 'dark-matter' );
+            $result['badge']['color'] = 'orange';
+            $result['status']         = 'recommended';
+            $result['description']    = sprintf(
+                '<p>%s</p>',
+                __( 'No primary domain is set. Currently this site is using the admin domain.', 'dark-matter' )
+            );
+
+            return $result;
+        } else {
+            $result['description'] = sprintf(
+                '<p>%1$s</p>',
+                sprintf(
+                    __( 'People can now visit your website at; %1$s.', 'dark-matter' ),
+                    sprintf(
+                        '<a href="%1$s">%1$s</a>',
+                        home_url()
+                    )
+                )
+            );
         }
 
         return $result;
