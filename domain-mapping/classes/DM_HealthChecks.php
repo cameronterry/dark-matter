@@ -72,6 +72,22 @@ class DM_HealthChecks {
             'test'        => 'darkmatter_domain_mapping_dropin',
         ];
 
+        if ( ! $this->dropin_exists() ) {
+            $result['label'] = __( 'Sunrise dropin cannot be found.', 'dark-matter' );
+            $result['status'] = 'critical';
+            $result['description'] = __( 'Contact your system administrator to add sunrise.php to your wp-content/ folder.', 'dark-matter' );
+
+            return $result;
+        }
+
+        if ( ! $this->is_dropin_latest() ) {
+            $result['label'] = __( 'Sunrise is not using the correct version.', 'dark-matter' );
+            $result['status'] = 'recommended';
+            $result['description'] = __( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in this plugin.', 'dark-matter' );
+
+            return $result;
+        }
+
         return $result;
     }
 
