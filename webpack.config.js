@@ -1,19 +1,24 @@
 // node module that let's us do file system stuffs...
+const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const path = require( 'path' );
 const TerserPlugin = require('terser-webpack-plugin'); // eslint-disable-line import/no-extraneous-dependencies
 const WebpackBar = require('webpackbar');
 
+const buildPath = path.resolve( process.cwd(), 'domain-mapping/build' );
+
 // Webpack expects an exported object with all the configurations, so we export an object here
-module.exports = ( env, argv ) => {
+module.exports = () => {
+  const env = process.env.NODE_ENV;
+
   let config = {
     name: 'domain-mapping',
     entry: './domain-mapping/ui/index.js', // Where to find our main js
     output: {
       // where we want our built file to go to and be named
       // I name it index.build.js so I keep index files separate
-      filename: 'build' + ( 'production' === argv.mode ? '.min' : '' ) + '.js',
+      filename: 'build' + ( 'production' === env ? '.min' : '' ) + '.js',
       // we're going to put our built file in a './build/' folder
-      path: path.resolve( __dirname, 'domain-mapping/build' )
+      path: buildPath
     },
     externals: {
       jquery: 'jQuery',
@@ -30,8 +35,11 @@ module.exports = ( env, argv ) => {
         },
         {
           test: /\.css$/,
+          include: path.resolve( process.cwd(), 'domain-mapping/ui/App.css' ),
           use: [
-            'style-loader',
+            {
+              loader: MiniCssExtractPlugin.loader,
+            },
             {
               loader: 'css-loader',
               options: {
@@ -43,13 +51,19 @@ module.exports = ( env, argv ) => {
         }
       ]
     },
-    mode: argv.mode,
+    mode: env,
     plugins: [
+      /**
+       * Extract CSS to a separate file.
+       */
+      new MiniCssExtractPlugin( {
+        filename: 'build' + ( 'production' === env ? '.min' : '' ) + '.css',
+      } ),
       new WebpackBar(),
     ]
   };
 
-  if ( 'production' === argv.mode ) {
+  if ( 'production' === env ) {
     config.optimization = {
       minimizer: [
         new TerserPlugin( {
