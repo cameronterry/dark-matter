@@ -40,6 +40,15 @@ class DM_HealthChecks {
     }
 
     /**
+     * Checks to ensure the constant `FORCE_SSL_ADMIN` is configured correctly for Dark Matter.
+     *
+     * @return bool True if `FORCE_SSL_ADMIN` is present and set. False otherwise.
+     */
+    public function force_ssl_set() {
+        return defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN;
+    }
+
+    /**
      * Checks the dropin - sunrise.php - to see if it is the correct version.
      *
      * @return bool True if the dropin is the correct version. False otherwise.
