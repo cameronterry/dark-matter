@@ -106,8 +106,6 @@ class DM_HealthChecks {
                 '<p>%s</p>',
                 __( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in Dark Matter plugin folder.', 'dark-matter' )
             );
-
-            return $result;
         }
 
         return $result;
@@ -139,10 +137,14 @@ class DM_HealthChecks {
             $result['status']         = 'recommended';
             $result['description']    = sprintf(
                 '<p>%s</p>',
-                __( 'No primary domain is set. Currently this site is using the admin domain.', 'dark-matter' )
+                sprintf(
+                    __( 'No primary domain is set. Currently this site is can only be visited on the admin domain at; %1$s.', 'dark-matter' ),
+                    sprintf(
+                        '<a href="%1$s">%1$s</a>',
+                        home_url()
+                    )
+                )
             );
-
-            return $result;
         } else {
             $result['description'] = sprintf(
                 '<p>%1$s</p>',
@@ -197,8 +199,6 @@ class DM_HealthChecks {
                     '<code>FORCE_SSL_ADMIN</code>'
                 )
             );
-
-            return $result;
         }
 
         return $result;
