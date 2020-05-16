@@ -43,6 +43,7 @@ require_once DM_PATH . '/domain-mapping/inc/compat.php';
 
 require_once DM_PATH . '/domain-mapping/classes/DM_Database.php';
 require_once DM_PATH . '/domain-mapping/classes/DM_Domain.php';
+require_once DM_PATH . '/domain-mapping/classes/DM_HealthChecks.php';
 require_once DM_PATH . '/domain-mapping/classes/DM_URL.php';
 
 if ( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI ) {
