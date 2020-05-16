@@ -11,11 +11,10 @@
 
         .submitdelete {
             color: #AA0000;
-    
+
             &:hover {
                 color: #dc3232;
             }
         }
     }
 }
-    
