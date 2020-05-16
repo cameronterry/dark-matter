@@ -3,8 +3,6 @@
 defined( 'ABSPATH' ) || die;
 
 class DM_UI {
-    private $hook_suffix = '';
-
     /**
      * Constructor
      */
@@ -48,7 +46,7 @@ class DM_UI {
 
         wp_enqueue_script( 'dark-matter-domains' );
 
-        wp_enqueue_style( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/style' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' ) . '.css', [], DM_VERSION );
+        wp_enqueue_style( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/build' . ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' ) . '.css', [], DM_VERSION );
     }
 
     /**
