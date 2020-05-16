@@ -61,7 +61,7 @@ class DM_HealthChecks {
             'label'       => __( 'Sunrise dropin is enabled and up-to-date.', 'dark-matter' ),
             'status'      => 'good',
             'badge'       => array(
-                'label' => __( 'Domain Mapping', 'dark-matter' ),
+                'label' => __( 'Dark Matter - Domain Mapping', 'dark-matter' ),
                 'color' => 'green',
             ),
             'description' => sprintf(
@@ -73,17 +73,19 @@ class DM_HealthChecks {
         ];
 
         if ( ! $this->dropin_exists() ) {
-            $result['label'] = __( 'Sunrise dropin cannot be found.', 'dark-matter' );
-            $result['status'] = 'critical';
-            $result['description'] = __( 'Contact your system administrator to add sunrise.php to your wp-content/ folder.', 'dark-matter' );
+            $result['label']          = __( 'Sunrise dropin cannot be found.', 'dark-matter' );
+            $result['badge']['color'] = 'red';
+            $result['status']         = 'critical';
+            $result['description']    = __( 'Contact your system administrator to add sunrise.php to your wp-content/ folder.', 'dark-matter' );
 
             return $result;
         }
 
         if ( ! $this->is_dropin_latest() ) {
-            $result['label'] = __( 'Sunrise is not using the correct version.', 'dark-matter' );
-            $result['status'] = 'recommended';
-            $result['description'] = __( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in this plugin.', 'dark-matter' );
+            $result['label']          = __( 'Your Sunrise dropin does not match the Dark Matter version.', 'dark-matter' );
+            $result['badge']['color'] = 'orange';
+            $result['status']         = 'recommended';
+            $result['description']    = __( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in Dark Matter plugin folder.', 'dark-matter' );
 
             return $result;
         }
