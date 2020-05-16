@@ -70,12 +70,12 @@ class DM_HealthChecks {
             'label'       => __( 'Sunrise dropin is enabled and up-to-date.', 'dark-matter' ),
             'status'      => 'good',
             'badge'       => array(
-                'label' => __( 'Dark Matter - Domain Mapping', 'dark-matter' ),
+                'label' => __( 'Domain Mapping', 'dark-matter' ),
                 'color' => 'green',
             ),
             'description' => sprintf(
                 '<p>%s</p>',
-                __( 'Sunrise is the name of the dropin file which maps custom domains to your WordPress sites.' )
+                __( 'Sunrise is the name of the dropin file which maps custom domains to your WordPress sites.', 'dark-matter' )
             ),
             'actions'     => '',
             'test'        => 'darkmatter_domain_mapping_dropin',
@@ -85,7 +85,10 @@ class DM_HealthChecks {
             $result['label']          = __( 'Sunrise dropin cannot be found.', 'dark-matter' );
             $result['badge']['color'] = 'red';
             $result['status']         = 'critical';
-            $result['description']    = __( 'Contact your system administrator to add sunrise.php to your wp-content/ folder.', 'dark-matter' );
+            $result['description']    = sprintf(
+                '<p>%s</p>',
+                __( 'Contact your system administrator to add sunrise.php to your wp-content/ folder.', 'dark-matter' )
+            );
 
             return $result;
         }
@@ -94,7 +97,10 @@ class DM_HealthChecks {
             $result['label']          = __( 'Your Sunrise dropin does not match the Dark Matter version.', 'dark-matter' );
             $result['badge']['color'] = 'orange';
             $result['status']         = 'recommended';
-            $result['description']    = __( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in Dark Matter plugin folder.', 'dark-matter' );
+            $result['description']    = sprintf(
+                '<p>%s</p>',
+                __( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in Dark Matter plugin folder.', 'dark-matter' )
+            );
 
             return $result;
         }
