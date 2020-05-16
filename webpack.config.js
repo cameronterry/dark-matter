@@ -15,6 +15,9 @@ module.exports = ( env, argv ) => {
       // we're going to put our built file in a './build/' folder
       path: path.resolve( __dirname, 'domain-mapping/build' )
     },
+    externals: {
+      jquery: 'jQuery',
+    },
     module: {
       rules: [
         {
