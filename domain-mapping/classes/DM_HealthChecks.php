@@ -107,7 +107,35 @@ class DM_HealthChecks {
      * @return array Test result.
      */
     public function test_ssl() {
-        $result = [];
+        $result = [
+            'label'       => __( 'Your SSL configuration is compatible with Dark Matter.', 'dark-matter' ),
+            'status'      => 'good',
+            'badge'       => array(
+                'label' => __( 'Domain Mapping', 'dark-matter' ),
+                'color' => 'green',
+            ),
+            'description' => sprintf(
+                '<p>%s</p>',
+                __( 'Your admin area is secured by HTTPS and compatible with domain mapping.', 'dark-matter' )
+            ),
+            'actions'     => '',
+            'test'        => 'darkmatter_domain_mapping_ssl',
+        ];
+
+        if ( ! $this->force_ssl_set() ) {
+            $result['label']          = __( 'WordPress does not redirect admin requests to HTTPS.', 'dark-matter' );
+            $result['badge']['color'] = 'red';
+            $result['status']         = 'critical';
+            $result['description']    = sprintf(
+                '<p>%s</p>',
+                sprintf(
+                    __( 'Please ensure the %1$s constant is present and set to "true" in your wp-config.php file.', 'dark-matter' ),
+                    '<code>FORCE_SSL_ADMIN</code>'
+                )
+            );
+
+            return $result;
+        }
 
         return $result;
     }
