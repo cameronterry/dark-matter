@@ -19,12 +19,12 @@ class DM_HealthChecks {
     public function add_tests( $tests = [] ) {
         $tests['direct']['darkmatter_domain_mapping_dropin'] = [
             'label' => __( 'Dark Matter - Domain Mapping - Checking Sunrise dropin', 'dark-matter' ),
-            'test'  => [ $this, 'check_dropin' ],
+            'test'  => [ $this, 'test_dropin' ],
         ];
 
         $tests['direct']['darkmatter_domain_mapping_ssl'] = [
             'label' => __( 'Dark Matter - Domain Mapping - Checking SSL configuration', 'dark-matter' ),
-            'test'  => [ $this, 'check_ssl' ],
+            'test'  => [ $this, 'test_ssl' ],
         ];
 
         return $tests;
@@ -35,8 +35,21 @@ class DM_HealthChecks {
      *
      * @return array Test result.
      */
-    public function check_dropin() {
-        $result = [];
+    public function test_dropin() {
+        $result = [
+            'label'       => __( 'Sunrise dropin is enabled and up-to-date.', 'dark-matter' ),
+            'status'      => 'good',
+            'badge'       => array(
+                'label' => __( 'Domain Mapping', 'dark-matter' ),
+                'color' => 'green',
+            ),
+            'description' => sprintf(
+                '<p>%s</p>',
+                __( 'Sunrise is the name of the dropin file which maps custom domains to your WordPress sites.' )
+            ),
+            'actions'     => '',
+            'test'        => 'darkmatter_domain_mapping_dropin',
+        ];
 
         return $result;
     }
@@ -45,7 +58,7 @@ class DM_HealthChecks {
      * Checks SSL configuration for compatibility with Dark Matter domain mapping.
      * @return array Test result.
      */
-    public function check_ssl() {
+    public function test_ssl() {
         $result = [];
 
         return $result;
