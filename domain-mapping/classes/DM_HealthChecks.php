@@ -17,8 +17,37 @@ class DM_HealthChecks {
      * @return array        All tests including domain mapping relevant tests.
      */
     public function add_tests( $tests = [] ) {
-        $tests['direct']['domain_mapping_sunrise'] = [];
+        $tests['direct']['darkmatter_domain_mapping_dropin'] = [
+            'label' => __( 'Dark Matter - Domain Mapping - Checking Sunrise dropin', 'dark-matter' ),
+            'test'  => [ $this, 'check_dropin' ],
+        ];
+
+        $tests['direct']['darkmatter_domain_mapping_ssl'] = [
+            'label' => __( 'Dark Matter - Domain Mapping - Checking SSL configuration', 'dark-matter' ),
+            'test'  => [ $this, 'check_ssl' ],
+        ];
 
         return $tests;
+    }
+
+    /**
+     * Checks the Sunrise dropin to ensure it is configured correctly and is up-to-date.
+     *
+     * @return array Test result.
+     */
+    public function check_dropin() {
+        $result = [];
+
+        return $result;
+    }
+
+    /**
+     * Checks SSL configuration for compatibility with Dark Matter domain mapping.
+     * @return array Test result.
+     */
+    public function check_ssl() {
+        $result = [];
+
+        return $result;
     }
 }
