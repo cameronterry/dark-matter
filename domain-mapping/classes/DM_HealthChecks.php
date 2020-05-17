@@ -98,6 +98,21 @@ class DM_HealthChecks {
             return $result;
         }
 
+        if ( ! defined( 'SUNRISE' ) ) {
+            $result['label']          = __( 'SUNRISE constant is not setup.', 'dark-matter' );
+            $result['badge']['color'] = 'red';
+            $result['status']         = 'critical';
+            $result['description']    = sprintf(
+                '<p>%s</p>',
+                sprintf(
+                    __( 'Please ensure the %1$s constant is present and set to "true" in your wp-config.php file.', 'dark-matter' ),
+                    '<code>SUNRISE</code>'
+                )
+            );
+
+            return $result;
+        }
+
         if ( ! $this->is_dropin_latest() ) {
             $result['label']          = __( 'Your Sunrise dropin does not match the Dark Matter version.', 'dark-matter' );
             $result['badge']['color'] = 'orange';
