@@ -3,14 +3,15 @@
 }
 
 .wp-list-table {
-    .domain-options {
-        span {
+
+    @nest .domain-options & {
+
+        & span {
             color: #DDDDDD;
             padding: 0 4px;
         }
 
-        .submitdelete {
-            color: #AA0000;
+        & .submitdelete {
 
             &:hover {
                 color: #dc3232;
