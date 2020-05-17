@@ -2,6 +2,10 @@
 
 defined( 'ABSPATH' ) || die;
 
+if ( ! defined( 'WP_CLI' ) ) {
+    return;
+}
+
 class DarkMatter_Dropin_CLI {
     /**
      * Helper command to see if the Sunrise dropin plugin within Dark Matter is
@@ -12,15 +16,10 @@ class DarkMatter_Dropin_CLI {
      *
      *      wp darkmatter dropin check
      */
-    public function check( $args, $assoc_args ) {
-        $destination = WP_CONTENT_DIR . '/sunrise.php';
-        $source      = DM_PATH . '/domain-mapping/sunrise.php';
+    public function check() {
+        $health_check = DM_HealthChecks::instance();
 
-        if (
-            filesize( $destination ) === filesize( $source )
-        &&
-            md5_file( $destination ) === md5_file( $source )
-        ) {
+        if ( $health_check->is_dropin_latest() ) {
             WP_CLI::success( __( 'Current Sunrise dropin matches the Sunrise within Dark Matter plugin.', 'dark-matter' ) );
             return;
         }
