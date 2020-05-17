@@ -18,7 +18,7 @@ module.exports = () => {
     output: {
       // where we want our built file to go to and be named
       // I name it index.build.js so I keep index files separate
-      filename: '[name].js',
+      filename: '[name]' + ( 'production' === env ? '.min' : '' ) + '.js',
       // we're going to put our built file in a './build/' folder
       path: path.resolve( process.cwd(), 'domain-mapping/build' )
     },
@@ -62,7 +62,7 @@ module.exports = () => {
        * Extract CSS to a separate file.
        */
       new MiniCssExtractPlugin( {
-        filename: '[name].css',
+        filename: '[name]' + ( 'production' === env ? '.min' : '' ) + '.css',
         chunkFilename: '[id].css',
       } ),
       new WebpackBar(),
