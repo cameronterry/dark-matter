@@ -71,6 +71,7 @@ module.exports = () => {
 
   if ( 'production' === env ) {
     config.optimization = {
+      minimize: true,
       minimizer: [
         new TerserPlugin( {
           cache: true,
