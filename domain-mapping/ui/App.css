@@ -4,7 +4,7 @@
 
 .wp-list-table {
 
-    @nest .domain-options & {
+    & .domain-options {
 
         & span {
             color: #DDDDDD;
@@ -12,6 +12,7 @@
         }
 
         & .submitdelete {
+            color: #AA0000;
 
             &:hover {
                 color: #dc3232;
