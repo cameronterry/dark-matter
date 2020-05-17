@@ -18,7 +18,7 @@ class DomainAdd extends React.Component {
         domain: '',
         is_primary: false,
         is_active: true,
-        is_https: false,
+        is_https: true,
       }
     };
   }
