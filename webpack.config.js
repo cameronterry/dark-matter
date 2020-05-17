@@ -1,10 +1,9 @@
 // node module that let's us do file system stuffs...
+const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const path = require( 'path' );
 const TerserPlugin = require('terser-webpack-plugin'); // eslint-disable-line import/no-extraneous-dependencies
 const WebpackBar = require('webpackbar');
-
-const buildPath = path.resolve( process.cwd(), 'domain-mapping/build' );
 
 // Webpack expects an exported object with all the configurations, so we export an object here
 module.exports = () => {
@@ -12,13 +11,16 @@ module.exports = () => {
 
   let config = {
     name: 'domain-mapping',
-    entry: './domain-mapping/ui/index.js', // Where to find our main js
+    entry: {
+      'domain-mapping': path.resolve( process.cwd(), './domain-mapping/ui/index.js' ),
+      'domain-mapping-style': path.resolve( process.cwd(), './domain-mapping/ui/App.css' ),
+    },
     output: {
       // where we want our built file to go to and be named
       // I name it index.build.js so I keep index files separate
-      filename: 'build' + ( 'production' === env ? '.min' : '' ) + '.js',
+      filename: '[name].js',
       // we're going to put our built file in a './build/' folder
-      path: buildPath
+      path: path.resolve( process.cwd(), 'domain-mapping/build' )
     },
     externals: {
       jquery: 'jQuery',
@@ -35,7 +37,7 @@ module.exports = () => {
         },
         {
           test: /\.css$/,
-          include: path.resolve( process.cwd(), 'domain-mapping/ui/App.css' ),
+          include: path.resolve( process.cwd(), './domain-mapping/ui/' ),
           use: [
             {
               loader: MiniCssExtractPlugin.loader,
@@ -53,11 +55,15 @@ module.exports = () => {
     },
     mode: env,
     plugins: [
+      new FixStyleOnlyEntriesPlugin({
+        silent: true,
+      }),
       /**
        * Extract CSS to a separate file.
        */
       new MiniCssExtractPlugin( {
-        filename: 'build' + ( 'production' === env ? '.min' : '' ) + '.css',
+        filename: '[name].css',
+        chunkFilename: '[id].css',
       } ),
       new WebpackBar(),
     ]
