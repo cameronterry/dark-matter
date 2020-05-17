@@ -3,13 +3,13 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.3.1
+Tested up to: 5.4.1
 Stable tag: 2.0.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 WARNING: Dark Matter is a highly opinionated domain mapping plugin for WordPress
-Networks, designed to work out of the box as-is with no setup.
+Networks, designed to work out of the box as-is with minimal setup.
 
 == Description ==
 
@@ -78,6 +78,20 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.0 =
+
+* Added support and tests for Site Health Checks feature, originally introduced in WordPress 5.2. Tests the following;
+  * Ensure the sunrise.php dropin is present.
+  * Ensure the sunrise.php matches the version within Dark Matter.
+  * Ensure the SUNRISE constant is setup correctly.
+  * Checks FORCE_SSL_ADMIN is setup correctly and encourages best practices regarding HTTPS.
+  * Recommends a primary domain is set.
+* When creating a new domain, the protocol field now defaults to HTTPS.
+* Switch the CSS build from SASS to PostCSS and CSS / Webpack is updated accordingly.
+* Removed an unused property in DM_UI class.
+* Changed wp darkmatter dropin check to use the same test method from Site Health.
+* Tested with WordPress 5.4.x.
 
 = 2.0.5 =
 
