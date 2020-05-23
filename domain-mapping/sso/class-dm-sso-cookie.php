@@ -16,9 +16,17 @@
  *
  * The token is then provided in a URL request to the mapped domain blog and
  * then the token is used to create an session cookie to login the user.
+ *
+ * @package DarkMatter
  */
-defined( 'ABSPATH' ) or die();
 
+defined( 'ABSPATH' ) || die();
+
+// phpcs:disable WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___SERVER__HTTP_USER_AGENT__
+
+/**
+ * Class DM_SSO_Cookie
+ */
 class DM_SSO_Cookie {
     /**
      * Constructor.
@@ -93,7 +101,9 @@ class DM_SSO_Cookie {
     private function is_admin_domain() {
         $network = get_network();
 
-        if ( ! empty( $network ) && false === stripos( $network->domain, $_SERVER['HTTP_HOST'] ) ) {
+        $http_host = ( empty( $_SERVER['HTTP_HOST'] ) ? '' : filter_var( $_SERVER['HTTP_HOST'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+
+        if ( ! empty( $network ) && false === stripos( $network->domain, $http_host ) ) {
             return false;
         }
 
@@ -118,10 +128,12 @@ class DM_SSO_Cookie {
         echo '// dm_sso' . PHP_EOL;
 
         if ( is_user_logged_in() ) {
+            $referer = ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+
             $action = sprintf(
                 'darkmatter-sso|%1$s|%2$s',
-                ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
-                md5( $_SERVER['HTTP_USER_AGENT'] ),
+                $referer,
+                md5( empty( $_SERVER['HTTP_USER_AGENT'] ) ? '' : filter_var( $_SERVER['HTTP_USER_AGENT'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) ),
                 get_current_user_id()
             );
 
@@ -135,7 +147,7 @@ class DM_SSO_Cookie {
 					'auth'        => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) ),
 					'nonce'       => $this->create_shared_nonce( $action ),
                 ),
-                $_SERVER['HTTP_REFERER'] 
+                $referer
             );
 
             printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
@@ -162,11 +174,13 @@ class DM_SSO_Cookie {
         echo '// dm_sso' . PHP_EOL;
 
         if ( false === is_user_logged_in() ) {
+            $referer = ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+
             $url = add_query_arg(
                 array(
 					'__dm_action' => 'logout',
                 ),
-                $_SERVER['HTTP_REFERER'] 
+                $referer
             );
             printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
         }
@@ -198,7 +212,7 @@ class DM_SSO_Cookie {
             [
 				'action' => 'dark_matter_' . ( false === is_user_logged_in() ? 'dmsso' : 'dmcheck' ),
 			],
-            network_site_url( '/wp-admin/admin-post.php' ) 
+            network_site_url( '/wp-admin/admin-post.php' )
         );
 
         /**
@@ -253,7 +267,7 @@ class DM_SSO_Cookie {
      * @return void
      */
     public function validate_token() {
-        $dm_action = filter_input( INPUT_GET, '__dm_action' );
+        $dm_action = filter_input( INPUT_GET, '__dm_action', FILTER_SANITIZE_STRING );
 
         /**
          * Ensure that URLs with the __dm_action query string are not cached by browsers.
@@ -277,13 +291,13 @@ class DM_SSO_Cookie {
             /**
              * Validate the token provided in the URL.
              */
-            $user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth' ), 'auth' );
-            $nonce   = filter_input( INPUT_GET, 'nonce' );
+            $user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth', FILTER_SANITIZE_STRING ), 'auth' );
+            $nonce   = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
 
             $action = sprintf(
                 'darkmatter-sso|%1$s|%2$s',
-                ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
-                md5( $_SERVER['HTTP_USER_AGENT'] ),
+                ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) ),
+                md5( empty( $_SERVER['HTTP_USER_AGENT'] ) ? '' : filter_var( $_SERVER['HTTP_USER_AGENT'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) ),
                 $user_id
             );
 
@@ -300,11 +314,15 @@ class DM_SSO_Cookie {
                  * removed.
                  */
                 wp_set_auth_cookie( $user_id );
+
+                // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
                 wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth', 'nonce' ) ) ), 302, 'Dark-Matter' );
                 die();
             }
         } elseif ( 'logout' === $dm_action ) {
             wp_logout();
+
+            // phpcs:ignore WordPress.Security.SafeRedirect.wp_redirect_wp_redirect
             wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ), 302, 'Dark-Matter' );
 
             die();
@@ -314,7 +332,7 @@ class DM_SSO_Cookie {
     /**
      * Return the Singleton Instance of the class.
      *
-     * @return void
+     * @return DM_SSO_Cookie
      */
     public static function instance() {
         static $instance = false;

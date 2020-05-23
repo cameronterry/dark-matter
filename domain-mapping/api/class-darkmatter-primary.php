@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DarkMatter_Primary
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DarkMatter_Primary
+ */
 class DarkMatter_Primary {
     /**
      * The Domain Mapping table name for use by the various methods.
@@ -56,6 +64,7 @@ class DarkMatter_Primary {
          * database and re-prime the cache.
          */
         if ( ! $primary_domain ) {
+            // phpcs:ignore
             $primary_domain = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT domain FROM {$this->dm_table} WHERE is_primary = 1 AND blog_id = %s", $site_id ) );
 
             if ( empty( $primary_domain ) ) {
@@ -95,6 +104,7 @@ class DarkMatter_Primary {
     public function get_all() {
         global $wpdb;
 
+        // phpcs:ignore
         $_domains = $wpdb->get_col( "SELECT domain FROM {$this->dm_table} WHERE is_primary = 1 ORDER BY blog_id DESC, domain" );
 
         if ( empty( $_domains ) ) {
@@ -135,7 +145,7 @@ class DarkMatter_Primary {
                 ),
                 array(
 					'domain' => $domain,
-                ) 
+                )
             );
         }
 
@@ -185,7 +195,7 @@ class DarkMatter_Primary {
                 $where,
                 array(
 					'%d',
-                ) 
+                )
             );
 
             if ( false === $result ) {
@@ -213,7 +223,7 @@ class DarkMatter_Primary {
     /**
      * Return the Singleton Instance of the class.
      *
-     * @return void
+     * @return DarkMatter_Primary
      */
     public static function instance() {
         static $instance = false;

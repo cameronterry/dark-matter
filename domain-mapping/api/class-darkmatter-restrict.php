@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DarkMatter_Restrict
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DarkMatter_Restrict
+ */
 class DarkMatter_Restrict {
     /**
      * Restrict table name for database operations.
@@ -30,12 +38,14 @@ class DarkMatter_Restrict {
         }
 
         /**
-         * Ensure that the URL is purely a domian. In order for the parse_url()
-         * to work, the domain must be prefixed with a double forward slash.
+         * Ensure that the URL is purely a domain. In order for the parse_url() to work, the domain must be prefixed
+         * with a double forward slash.
          */
         if ( false === stripos( $fqdn, '//' ) ) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
             $domain_parts = parse_url( '//' . ltrim( $fqdn, '/' ) );
         } else {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
             $domain_parts = parse_url( $fqdn );
         }
 
@@ -78,12 +88,14 @@ class DarkMatter_Restrict {
          * Add the domain to the database.
          */
         global $wpdb;
+
+        // phpcs:ignore
         $result = $wpdb->insert(
             $this->restrict_table,
             array(
 				'domain' => $fqdn,
             ),
-            array( '%s' ) 
+            array( '%s' )
         );
 
         if ( ! $result ) {
@@ -125,12 +137,14 @@ class DarkMatter_Restrict {
          * Remove the domain to the database.
          */
         global $wpdb;
+
+        // phpcs:ignore
         $result = $wpdb->delete(
             $this->restrict_table,
             array(
 				'domain' => $fqdn,
             ),
-            array( '%s' ) 
+            array( '%s' )
         );
 
         if ( ! $result ) {
@@ -181,6 +195,8 @@ class DarkMatter_Restrict {
          * there is any.
          */
         global $wpdb;
+
+        // phpcs:ignore
         $restricted_domains = $wpdb->get_col( "SELECT domain FROM {$this->restrict_table} ORDER BY domain" );
 
         if ( empty( $restricted_domains ) ) {
@@ -226,7 +242,7 @@ class DarkMatter_Restrict {
     /**
      * Return the Singleton Instance of the class.
      *
-     * @return void
+     * @return DarkMatter_Restrict
      */
     public static function instance() {
         static $instance = false;

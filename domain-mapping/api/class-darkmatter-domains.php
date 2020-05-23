@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DarkMatter_Domains
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DarkMatter_Domains
+ */
 class DarkMatter_Domains {
     /**
      * The Domain Mapping table name for use by the various methods.
@@ -48,12 +56,14 @@ class DarkMatter_Domains {
         }
 
         /**
-         * Ensure that the URL is purely a domian. In order for the parse_url()
-         * to work, the domain must be prefixed with a double forward slash.
+         * Ensure that the URL is purely a domain. In order for the parse_url() to work, the domain must be prefixed
+         * with a double forward slash.
          */
         if ( false === stripos( $fqdn, '//' ) ) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
             $domain_parts = parse_url( '//' . ltrim( $fqdn, '/' ) );
         } else {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
             $domain_parts = parse_url( $fqdn );
         }
 
@@ -148,7 +158,7 @@ class DarkMatter_Domains {
 				'%s',
 				'%d',
 				'%d',
-            ) 
+            )
         );
 
         if ( $result ) {
@@ -191,8 +201,9 @@ class DarkMatter_Domains {
     /**
      * Delete a domain for a specific Site in WordPress.
      *
-     * @param  string $fqdn FQDN to be deleted.
-     * @return WP_Error|boolean       True on success. False otherwise.
+     * @param  string  $fqdn FQDN to be deleted.
+     * @param  boolean $force Force the FQDN to be deleted, even if it is the primary domain.
+     * @return WP_Error|boolean True on success. False otherwise.
      */
     public function delete( $fqdn = '', $force = true ) {
         $fqdn = $this->_basic_check( $fqdn );
@@ -234,7 +245,7 @@ class DarkMatter_Domains {
             array(
 				'domain' => $fqdn,
             ),
-            array( '%s' ) 
+            array( '%s' )
         );
 
         if ( $result ) {
@@ -305,6 +316,7 @@ class DarkMatter_Domains {
          * from the database.
          */
         if ( ! $_domain ) {
+            // phpcs:ignore
             $_domain = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT * FROM {$this->dm_table} WHERE domain = %s", $fqdn ) );
 
             if ( empty( $_domain ) ) {
@@ -334,8 +346,10 @@ class DarkMatter_Domains {
         $_domains = null;
 
         if ( ! empty( $site_id ) ) {
+            // phpcs:ignore
             $_domains = $wpdb->get_col( $wpdb->prepare( "SELECT domain FROM {$this->dm_table} WHERE blog_id = %d ORDER BY is_primary DESC, domain", $site_id ) );
         } else {
+            // phpcs:ignore
             $_domains = $wpdb->get_col( "SELECT domain FROM {$this->dm_table} ORDER BY blog_id, is_primary DESC, domain" );
         }
 
@@ -367,9 +381,10 @@ class DarkMatter_Domains {
             return false;
         }
 
+        // phpcs:ignore
         $_domain = $this->wpdb->get_row( $this->wpdb->prepare( "SELECT id FROM {$this->dm_table} WHERE domain = %s LIMIT 1", $fqdn ) );
 
-        return ( $_domain !== null );
+        return ( null !== $_domain );
     }
 
     /**
@@ -455,7 +470,7 @@ class DarkMatter_Domains {
             $_domain,
             array(
 				'id' => $domain_before->id,
-            ) 
+            )
         );
 
         if ( $result ) {
@@ -513,7 +528,7 @@ class DarkMatter_Domains {
     /**
      * Return the Singleton Instance of the class.
      *
-     * @return void
+     * @return DarkMatter_Domains
      */
     public static function instance() {
         static $instance = false;
