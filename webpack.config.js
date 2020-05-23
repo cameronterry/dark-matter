@@ -28,6 +28,14 @@ module.exports = () => {
     module: {
       rules: [
         {
+          test: /\.js$/,
+          enforce: 'pre',
+          loader: 'eslint-loader',
+          options: {
+            fix: true,
+          }
+        },
+        {
           // basically tells webpack to use babel with the correct presets
           test: /\.js$/,
           loader: 'babel-loader',
