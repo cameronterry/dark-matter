@@ -17,9 +17,9 @@ $dirname = str_replace( '/inc', '', dirname( __FILE__ ) );
 /**
  * Load the necessary parts of Dark Matter in to place.
  */
-require_once $dirname . '/classes/DM_Domain.php';
-require_once $dirname . '/api/DarkMatter_Domains.php';
-require_once $dirname . '/api/DarkMatter_Primary.php';
+require_once $dirname . '/classes/class-dm-domain.php';
+require_once $dirname . '/api/class-darkmatter-domains.php';
+require_once $dirname . '/api/class-darkmatter-primary.php';
 
 /**
  * Attempt to find the Site.

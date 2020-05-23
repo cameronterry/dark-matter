@@ -41,31 +41,31 @@ wp_cache_add_global_groups( 'dark-matter' );
 
 require_once DM_PATH . '/domain-mapping/inc/compat.php';
 
-require_once DM_PATH . '/domain-mapping/classes/DM_Database.php';
-require_once DM_PATH . '/domain-mapping/classes/DM_Domain.php';
-require_once DM_PATH . '/domain-mapping/classes/DM_HealthChecks.php';
-require_once DM_PATH . '/domain-mapping/classes/DM_URL.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-database.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-domain.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-url.php';
 
 if ( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI ) {
-    require_once DM_PATH . '/domain-mapping/classes/DM_UI.php';
+    require_once DM_PATH . '/domain-mapping/classes/class-dm-ui.php';
 }
 
-require_once DM_PATH . '/domain-mapping/api/DarkMatter_Domains.php';
-require_once DM_PATH . '/domain-mapping/api/DarkMatter_Primary.php';
-require_once DM_PATH . '/domain-mapping/api/DarkMatter_Restrict.php';
+require_once DM_PATH . '/domain-mapping/api/class-darkmatter-domains.php';
+require_once DM_PATH . '/domain-mapping/api/class-darkmatter-primary.php';
+require_once DM_PATH . '/domain-mapping/api/class-darkmatter-restrict.php';
 
 /**
  * Disable SSO if the COOKIE_DOMAIN constant is set.
  */
 if ( ! defined( 'COOKIE_DOMAIN' ) && ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) ) {
-    require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
+    require_once DM_PATH . '/domain-mapping/sso/class-dm-sso-cookie.php';
 }
 
-require_once DM_PATH . '/domain-mapping/rest/DM_REST_Domains_Controller.php';
-require_once DM_PATH . '/domain-mapping/rest/DM_REST_Restricted_Controller.php';
+require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-domains-controller.php';
+require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-restricted-controller.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-    require_once DM_PATH . '/domain-mapping/cli/domain.php';
-    require_once DM_PATH . '/domain-mapping/cli/restrict.php';
-    require_once DM_PATH . '/domain-mapping/cli/update.php';
+    require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-domain-cli.php';
+    require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-restrict-cli.php';
+    require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-update-cli.php';
 }
