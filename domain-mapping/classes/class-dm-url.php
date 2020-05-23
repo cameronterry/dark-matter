@@ -5,7 +5,7 @@
  * @package DarkMatter
  */
 
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || die();
 
 /**
  * Class DM_URL
@@ -33,6 +33,8 @@ class DM_URL {
          * Disable all the URL mapping if viewing through Customizer. This is to
          * ensure maximum functionality by retaining the Admin URL.
          */
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ( ! empty( $_GET['customize_changeset_uuid'] ) ) {
             return;
         }
@@ -43,7 +45,7 @@ class DM_URL {
          */
         $blog = get_site();
 
-        if ( (int) $blog->public < 0 || $blog->archived !== '0' || $blog->deleted !== '0' ) {
+        if ( (int) $blog->public < 0 || '0' !== $blog->archived || '0' !== $blog->deleted ) {
             return;
         }
 
@@ -142,9 +144,9 @@ class DM_URL {
      * Map the primary domain on the passed in value if it contains the unmapped
      * URL and the Site has a primary domain.
      *
-     * @param  mixed   $value Potentially a value containing the site's unmapped URL.
-     * @param  integer $value Site (Blog) ID for the URL which is being mapped.
-     * @return string         If unmapped URL is found, then returns the primary URL. Untouched otherwise.
+     * @param  mixed   $value   Potentially a value containing the site's unmapped URL.
+     * @param  integer $blog_id Site (Blog) ID for the URL which is being mapped.
+     * @return string           If unmapped URL is found, then returns the primary URL. Untouched otherwise.
      */
     public function map( $value = '', $blog_id = 0 ) {
         /**
@@ -187,6 +189,8 @@ class DM_URL {
         /**
          * We only wish to affect `the_content` for Previews and nothing else.
          */
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         if ( ! empty( $_GET['preview'] ) || ! empty( $_GET['p'] ) ) {
             return;
         }
@@ -197,13 +201,15 @@ class DM_URL {
          * affect database and cache updates to ensure compatibility if the
          * domain mapping is changed or removed.
          */
+        $request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+
         if (
                 is_admin()
             ||
                 (
                     ! $this->is_mapped()
                 &&
-                    false !== strpos( $_SERVER['REQUEST_URI'], rest_get_url_prefix() )
+                    false !== strpos( $request_uri, rest_get_url_prefix() )
                 )
         ) {
             add_action( 'admin_init', array( $this, 'prepare_admin' ) );
@@ -233,7 +239,7 @@ class DM_URL {
      *
      * @return void
      */
-    function prepare_admin() {
+    public function prepare_admin() {
         /**
          * This is to prevent the Classic Editor's AJAX action for inserting a
          * link from putting the mapped domain in to the database. However, we
@@ -241,11 +247,12 @@ class DM_URL {
          * old AJAX. Therefore we check the referer to ensure it's the admin
          * side rather than the front-end.
          */
+
         if ( wp_doing_ajax()
             &&
                 false !== stripos( wp_get_referer(), '/wp-admin/' )
             &&
-                ( empty( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'query-attachments', 'sample-permalink', 'upload-attachment' ) ) )
+                ( empty( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'query-attachments', 'sample-permalink', 'upload-attachment' ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
         ) {
             return;
         }
@@ -379,7 +386,7 @@ class DM_URL {
     /**
      * Return the Singleton Instance of the class.
      *
-     * @return void
+     * @return DM_URL
      */
     public static function instance() {
         static $instance = false;

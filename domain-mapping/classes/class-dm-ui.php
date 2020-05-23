@@ -4,6 +4,7 @@
  *
  * @package DM_UI
  */
+
 defined( 'ABSPATH' ) || die;
 
 /**
