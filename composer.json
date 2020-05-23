@@ -9,5 +9,15 @@
             "email": "cammy.wan.kenobi@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "automattic/vipwpcs": "^2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
+    },
+    "scripts": {
+        "lint": "phpcs ."
+    }
 }
