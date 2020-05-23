@@ -40,17 +40,20 @@ class DarkMatter_Domain_CLI {
 
         $fqdn = $args[0];
 
-        $opts = wp_parse_args( $assoc_args, [
-            'disable' => false,
-            'force'   => false,
-            'https'   => false,
-            'primary' => false,
-        ] );
+        $opts = wp_parse_args(
+            $assoc_args,
+            [
+				'disable' => false,
+				'force'   => false,
+				'https'   => false,
+				'primary' => false,
+			] 
+        );
 
         /**
          * Add the domain.
          */
-        $db = DarkMatter_Domains::instance();
+        $db     = DarkMatter_Domains::instance();
         $result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'] );
 
         if ( is_wp_error( $result ) ) {
@@ -98,17 +101,20 @@ class DarkMatter_Domain_CLI {
         /**
          * Handle and validate the format flag if provided.
          */
-        $opts = wp_parse_args( $assoc_args, [
-            'format'  => 'table',
-            'primary' => false,
-        ] );
+        $opts = wp_parse_args(
+            $assoc_args,
+            [
+				'format'  => 'table',
+				'primary' => false,
+			] 
+        );
 
         if ( ! in_array( $opts['format'], array( 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
             $opts['format'] = 'table';
         }
 
         if ( $opts['primary'] ) {
-            $db = DarkMatter_Primary::instance();
+            $db      = DarkMatter_Primary::instance();
             $domains = $db->get_all();
         } else {
             /**
@@ -121,49 +127,59 @@ class DarkMatter_Domain_CLI {
                 $site_id = null;
             }
 
-            $db = DarkMatter_Domains::instance();
+            $db      = DarkMatter_Domains::instance();
             $domains = $db->get_domains( $site_id );
         }
 
         /**
          * Filter out and format the columns and values appropriately.
          */
-        $domains = array_map( function ( $domain ) {
-            $no_val  = __( 'No', 'dark-matter' );
-            $yes_val = __( 'Yes', 'dark-matter' );
+        $domains = array_map(
+            function ( $domain ) {
+                $no_val  = __( 'No', 'dark-matter' );
+                $yes_val = __( 'Yes', 'dark-matter' );
 
-            $columns = array(
-                'F.Q.D.N.' => $domain->domain,
-                'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
-                'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
-                'Active'   => ( $domain->active ? $yes_val : $no_val ),
-            );
+                $columns = array(
+					'F.Q.D.N.' => $domain->domain,
+					'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
+					'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
+					'Active'   => ( $domain->active ? $yes_val : $no_val ),
+                );
 
-            /**
-             * If the query is the root Site and we are displaying all domains,
-             * then we retrieve and include the Site Name.
-             */
-            $site = get_site( $domain->blog_id );
+                /**
+                 * If the query is the root Site and we are displaying all domains,
+                 * then we retrieve and include the Site Name.
+                 */
+                $site = get_site( $domain->blog_id );
 
-            if ( empty( $site ) ) {
-                $columns['Site'] = __( 'Unknown.', 'dark-matter' );
-            } else {
-                $columns['Site'] = $site->blogname;
-            }
+                if ( empty( $site ) ) {
+                    $columns['Site'] = __( 'Unknown.', 'dark-matter' );
+                } else {
+                      $columns['Site'] = $site->blogname;
+                }
 
-            return $columns;
-        }, $domains );
+                return $columns;
+            },
+            $domains 
+        );
 
         /**
          * Determine which headers to use for the Display.
          */
         $display = [
-            'F.Q.D.N.', 'Primary', 'Protocol', 'Active',
+            'F.Q.D.N.',
+			'Primary',
+			'Protocol',
+			'Active',
         ];
 
         if ( is_main_site() ) {
             $display = [
-                'F.Q.D.N.', 'Site', 'Primary', 'Protocol', 'Active',
+                'F.Q.D.N.',
+				'Site',
+				'Primary',
+				'Protocol',
+				'Active',
             ];
         }
 
@@ -200,9 +216,12 @@ class DarkMatter_Domain_CLI {
 
         $fqdn = $args[0];
 
-        $opts = wp_parse_args( $assoc_args, [
-            'force' => false,
-        ] );
+        $opts = wp_parse_args(
+            $assoc_args,
+            [
+				'force' => false,
+			] 
+        );
 
         $db = DarkMatter_Domains::instance();
 
@@ -269,18 +288,21 @@ class DarkMatter_Domain_CLI {
 
         $fqdn = $args[0];
 
-        $db = DarkMatter_Domains::instance();
+        $db            = DarkMatter_Domains::instance();
         $domain_before = $db->get( $fqdn );
 
-        $opts = wp_parse_args( $assoc_args, [
-            'disable'   => false,
-            'enable'    => false,
-            'force'     => false,
-            'use-http'  => null,
-            'use-https' => null,
-            'primary'   => null,
-            'secondary' => null,
-        ] );
+        $opts = wp_parse_args(
+            $assoc_args,
+            [
+				'disable'   => false,
+				'enable'    => false,
+				'force'     => false,
+				'use-http'  => null,
+				'use-https' => null,
+				'primary'   => null,
+				'secondary' => null,
+			] 
+        );
 
         /**
          * Ensure that contradicting options are not being supplied.

@@ -39,7 +39,7 @@ class DarkMatter_Domains {
     /**
      * Perform basic checks before committing to a action performed by a method.
      *
-     * @param  string           $fqdn Fully qualified domain name.
+     * @param  string $fqdn Fully qualified domain name.
      * @return WP_Error|boolean       True on pass. WP_Error on failure.
      */
     private function _basic_check( $fqdn = '' ) {
@@ -93,11 +93,11 @@ class DarkMatter_Domains {
     /**
      * Add a domain for a specific Site in WordPress.
      *
-     * @param  string             $fqdn       Domain to be updated.
-     * @param  boolean            $is_primary Primary domain setting.
-     * @param  boolean            $is_https   HTTPS protocol setting.
-     * @param  boolean            $force      Whether the update should be forced.
-     * @param  boolean            $active     Default is active. Set to false if you wish to add a domain but not make it active.
+     * @param  string  $fqdn       Domain to be updated.
+     * @param  boolean $is_primary Primary domain setting.
+     * @param  boolean $is_https   HTTPS protocol setting.
+     * @param  boolean $force      Whether the update should be forced.
+     * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
      * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
     public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true ) {
@@ -139,9 +139,17 @@ class DarkMatter_Domains {
             'is_https'   => ( ! $is_https ? false : true ),
         );
 
-        $result = $this->wpdb->insert( $this->dm_table, $_domain, array(
-            '%d', '%d', '%s', '%d', '%d',
-        ) );
+        $result = $this->wpdb->insert(
+            $this->dm_table,
+            $_domain,
+            array(
+				'%d',
+				'%d',
+				'%s',
+				'%d',
+				'%d',
+            ) 
+        );
 
         if ( $result ) {
             /**
@@ -183,7 +191,7 @@ class DarkMatter_Domains {
     /**
      * Delete a domain for a specific Site in WordPress.
      *
-     * @param  string           $fqdn FQDN to be deleted.
+     * @param  string $fqdn FQDN to be deleted.
      * @return WP_Error|boolean       True on success. False otherwise.
      */
     public function delete( $fqdn = '', $force = true ) {
@@ -221,9 +229,13 @@ class DarkMatter_Domains {
             }
         }
 
-        $result = $this->wpdb->delete( $this->dm_table, array(
-            'domain' => $fqdn,
-        ), array( '%s' ) );
+        $result = $this->wpdb->delete(
+            $this->dm_table,
+            array(
+				'domain' => $fqdn,
+            ),
+            array( '%s' ) 
+        );
 
         if ( $result ) {
             $cache_key = md5( $fqdn );
@@ -244,13 +256,14 @@ class DarkMatter_Domains {
             return true;
         }
 
-        return new WP_Error( 'unknown', __( 'Sorry, the domain could not be deleted. An unknown error occurred.', 'dark-matter' ) );;
+        return new WP_Error( 'unknown', __( 'Sorry, the domain could not be deleted. An unknown error occurred.', 'dark-matter' ) );
+
     }
 
     /**
      * Find a domain for a specific Site in WordPress.
      *
-     * @param  string            $fqdn FQDN to search for.
+     * @param  string $fqdn FQDN to search for.
      * @return DM_Domain|boolean       Domain object. False on failure or not found.
      */
     public function find( $fqdn = '' ) {
@@ -264,7 +277,7 @@ class DarkMatter_Domains {
     /**
      * Retrieve a domain for a specific Site in WordPress.
      *
-     * @param  string            $fqdn FQDN to search for.
+     * @param  string $fqdn FQDN to search for.
      * @return DM_Domain|boolean       Domain object. False otherwise.
      */
     public function get( $fqdn = '' ) {
@@ -346,7 +359,7 @@ class DarkMatter_Domains {
      * Check if a domain exists. This checks against all websites and is not
      * site specific.
      *
-     * @param  string  $fqdn FQDN to search for.
+     * @param  string $fqdn FQDN to search for.
      * @return boolean       True if found. False otherwise.
      */
     public function is_exist( $fqdn = '' ) {
@@ -363,7 +376,7 @@ class DarkMatter_Domains {
      * Check if a domain is reserved. This checks against all websites and is
      * not site specific.
      *
-     * @param  string  $fqdn FQDN to search for.
+     * @param  string $fqdn FQDN to search for.
      * @return boolean       True if the domain is reserved. False otherwise.
      */
     public function is_reserved( $fqdn = '' ) {
@@ -377,7 +390,7 @@ class DarkMatter_Domains {
     /**
      * Add a reserved domain for the Network in WordPress.
      *
-     * @param  string  $fqdn FQDN to be added.
+     * @param  string $fqdn FQDN to be added.
      * @return boolean       True on success. False otherwise.
      */
     public function reserve( $fqdn = '' ) {
@@ -391,11 +404,11 @@ class DarkMatter_Domains {
     /**
      * Find a domain for a specific Site in WordPress.
      *
-     * @param  string             $fqdn       Domain to be updated.
-     * @param  boolean            $is_primary Primary domain setting.
-     * @param  boolean            $is_https   HTTPS protocol setting.
-     * @param  boolean            $force      Whether the update should be forced.
-     * @param  boolean            $active     Default is active. Set to false if you wish to add a domain but not make it active.
+     * @param  string  $fqdn       Domain to be updated.
+     * @param  boolean $is_primary Primary domain setting.
+     * @param  boolean $is_https   HTTPS protocol setting.
+     * @param  boolean $force      Whether the update should be forced.
+     * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
      * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
      */
     public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true ) {
@@ -414,9 +427,9 @@ class DarkMatter_Domains {
         $dm_primary = DarkMatter_Primary::instance();
 
         $_domain = array(
-            'active'     => ( ! $active ? false : true ),
-            'blog_id'    => $domain_before->blog_id,
-            'domain'     => $fqdn,
+            'active'  => ( ! $active ? false : true ),
+            'blog_id' => $domain_before->blog_id,
+            'domain'  => $fqdn,
         );
 
         /**
@@ -437,9 +450,13 @@ class DarkMatter_Domains {
             $_domain['is_https'] = $is_https;
         }
 
-        $result = $this->wpdb->update( $this->dm_table, $_domain, array(
-            'id' => $domain_before->id,
-        ) );
+        $result = $this->wpdb->update(
+            $this->dm_table,
+            $_domain,
+            array(
+				'id' => $domain_before->id,
+            ) 
+        );
 
         if ( $result ) {
             /**
@@ -471,7 +488,7 @@ class DarkMatter_Domains {
                 }
 
                 $dm_primary->set( $domain_before->blog_id, $domain_before->domain );
-            } else if ( false === $is_primary && $domain_before->is_primary ) {
+            } elseif ( false === $is_primary && $domain_before->is_primary ) {
                 $dm_primary->unset( $domain_before->blog_id, $domain_before->domain );
             }
 

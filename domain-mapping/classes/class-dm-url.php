@@ -79,7 +79,8 @@ class DM_URL {
         }
 
         $valid_paths = array(
-            'admin-ajax.php', 'admin-post.php'
+            'admin-ajax.php',
+			'admin-post.php',
         );
 
         if ( in_array( $filename, $valid_paths ) ) {

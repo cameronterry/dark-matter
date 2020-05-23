@@ -24,9 +24,16 @@ class DM_UI {
      * @return void
      */
     public function admin_menu() {
-        $hook_suffix = add_options_page( __( 'Domain Mappings', 'dark-matter' ), __( 'Domains', 'dark-matter' ), 'switch_themes', 'domains', array(
-            $this, 'page'
-        ) );
+        $hook_suffix = add_options_page(
+            __( 'Domain Mappings', 'dark-matter' ),
+            __( 'Domains', 'dark-matter' ),
+            'switch_themes',
+            'domains',
+            array(
+				$this,
+				'page',
+            ) 
+        );
 
         add_action( 'load-' . $hook_suffix, array( $this, 'enqueue' ) );
     }
@@ -41,10 +48,14 @@ class DM_UI {
 
         wp_register_script( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping' . $min . '.js', [], DM_VERSION, true );
 
-        wp_localize_script( 'dark-matter-domains', 'dmSettings', array(
-            'rest_root' => get_rest_url(),
-            'nonce'     => wp_create_nonce( 'wp_rest' ),
-        ) );
+        wp_localize_script(
+            'dark-matter-domains',
+            'dmSettings',
+            array(
+				'rest_root' => get_rest_url(),
+				'nonce'     => wp_create_nonce( 'wp_rest' ),
+            ) 
+        );
 
         wp_enqueue_script( 'dark-matter-domains' );
 
@@ -57,9 +68,9 @@ class DM_UI {
      * @return void
      */
     public function page() {
-    ?>
+		?>
         <div id="root"></div>
-    <?php
+		<?php
     }
 }
 

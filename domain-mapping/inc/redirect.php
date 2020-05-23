@@ -125,8 +125,7 @@ function darkmatter_maybe_redirect() {
         $is_ssl_admin = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN );
 
         $url = 'http' . ( $is_ssl_admin ? 's' : '' ) . '://' . $original_blog->domain . $original_blog->path . $request;
-    }
-    else if ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
+    } elseif ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
         $url = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain . '/' . $request;
 
         /**

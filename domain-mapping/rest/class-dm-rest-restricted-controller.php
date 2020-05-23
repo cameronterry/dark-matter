@@ -38,9 +38,11 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
             return rest_ensure_response( $result );
         }
 
-        $response = rest_ensure_response( array(
-            'domain' => $domain,
-        ) );
+        $response = rest_ensure_response(
+            array(
+				'domain' => $domain,
+            ) 
+        );
 
         $response->set_status( '201' );
 
@@ -78,10 +80,12 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
             return rest_ensure_response( $result );
         }
 
-        return rest_ensure_response( array(
-            'deleted' => true,
-            'domain'  => $domain,
-        ) );
+        return rest_ensure_response(
+            array(
+				'deleted' => true,
+				'domain'  => $domain,
+            ) 
+        );
     }
 
     /**
@@ -133,17 +137,25 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
             ]
         );
 
-        register_rest_route( $this->namespace, $this->rest_base, [
-            'methods'             => WP_REST_Server::DELETABLE,
-            'callback'            => array( $this, 'delete_item' ),
-            'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-        ] );
+        register_rest_route(
+            $this->namespace,
+            $this->rest_base,
+            [
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => array( $this, 'delete_item' ),
+				'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+			] 
+        );
 
-        register_rest_route( $this->namespace, $this->rest_base, [
-            'methods'             => WP_REST_Server::READABLE,
-            'callback'            => array( $this, 'get_items' ),
-            'permission_callback' => array( $this, 'get_items_permissions_check' ),
-        ] );
+        register_rest_route(
+            $this->namespace,
+            $this->rest_base,
+            [
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'get_items' ),
+				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+			] 
+        );
     }
 }
 

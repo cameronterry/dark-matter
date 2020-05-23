@@ -50,9 +50,12 @@ class DarkMatter_Dropin_CLI {
         $destination = WP_CONTENT_DIR . '/sunrise.php';
         $source      = DM_PATH . '/domain-mapping/sunrise.php';
 
-        $opts = wp_parse_args( $assoc_args, [
-            'force'   => false,
-        ] );
+        $opts = wp_parse_args(
+            $assoc_args,
+            [
+				'force' => false,
+			] 
+        );
 
         if ( false === is_writable( WP_CONTENT_DIR ) ) {
             WP_CLI::error( __( 'The /wp-content/ directory needs to be writable by the current user in order to update.', 'dark-matter' ) );

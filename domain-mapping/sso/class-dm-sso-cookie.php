@@ -52,8 +52,8 @@ class DM_SSO_Cookie {
      *
      * @see create_shared_nonce()
      *
-     * @param  string   $nonce  Nonce that was used and requires verification.
-     * @param  string   $action Value which provides the nonce uniqueness.
+     * @param  string $nonce  Nonce that was used and requires verification.
+     * @param  string $action Value which provides the nonce uniqueness.
      * @return bool|int         An integer if the nonce check passed, 1 for 0-12 hours ago and 2 for 12-24 hours ago. False otherwise.
      */
     private function verify_shared_nonce( $nonce = '', $action = '' ) {
@@ -115,10 +115,11 @@ class DM_SSO_Cookie {
         /**
          * Ensure that the JavaScript is never empty.
          */
-        echo "// dm_sso" . PHP_EOL;
+        echo '// dm_sso' . PHP_EOL;
 
         if ( is_user_logged_in() ) {
-            $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
+            $action = sprintf(
+                'darkmatter-sso|%1$s|%2$s',
                 ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
                 md5( $_SERVER['HTTP_USER_AGENT'] ),
                 get_current_user_id()
@@ -128,11 +129,14 @@ class DM_SSO_Cookie {
              * Construct an authentication token which is passed back along with an
              * action flag to tell the front end to
              */
-            $url = add_query_arg( array(
-                '__dm_action' => 'authorise',
-                'auth'        => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) ),
-                'nonce'       => $this->create_shared_nonce( $action ),
-            ), $_SERVER['HTTP_REFERER'] );
+            $url = add_query_arg(
+                array(
+					'__dm_action' => 'authorise',
+					'auth'        => wp_generate_auth_cookie( get_current_user_id(), time() + ( 2 * MINUTE_IN_SECONDS ) ),
+					'nonce'       => $this->create_shared_nonce( $action ),
+                ),
+                $_SERVER['HTTP_REFERER'] 
+            );
 
             printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
         }
@@ -155,12 +159,15 @@ class DM_SSO_Cookie {
         /**
          * Ensure that the JavaScript is never empty.
          */
-        echo "// dm_sso" . PHP_EOL;
+        echo '// dm_sso' . PHP_EOL;
 
         if ( false === is_user_logged_in() ) {
-            $url = add_query_arg( array(
-                '__dm_action' => 'logout'
-            ), $_SERVER['HTTP_REFERER'] );
+            $url = add_query_arg(
+                array(
+					'__dm_action' => 'logout',
+                ),
+                $_SERVER['HTTP_REFERER'] 
+            );
             printf( 'window.location.replace( "%1$s" );', esc_url_raw( $url ) );
         }
 
@@ -187,9 +194,12 @@ class DM_SSO_Cookie {
             return;
         }
 
-        $script_url = add_query_arg( [
-            'action' => 'dark_matter_' . ( false === is_user_logged_in() ? 'dmsso' : 'dmcheck' )
-        ], network_site_url( '/wp-admin/admin-post.php' ) );
+        $script_url = add_query_arg(
+            [
+				'action' => 'dark_matter_' . ( false === is_user_logged_in() ? 'dmsso' : 'dmcheck' ),
+			],
+            network_site_url( '/wp-admin/admin-post.php' ) 
+        );
 
         /**
          * Check to see if the user is logged in to the current website on the mapped
@@ -212,7 +222,8 @@ class DM_SSO_Cookie {
                 return;
             }
         }
-        ?><script defer type="text/javascript" src="<?php echo( esc_url( $script_url ) ); ?>"></script><?php
+        ?><script defer type="text/javascript" src="<?php echo( esc_url( $script_url ) ); ?>"></script>
+        <?php
     }
 
     /**
@@ -269,7 +280,8 @@ class DM_SSO_Cookie {
             $user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth' ), 'auth' );
             $nonce   = filter_input( INPUT_GET, 'nonce' );
 
-            $action = sprintf( 'darkmatter-sso|%1$s|%2$s',
+            $action = sprintf(
+                'darkmatter-sso|%1$s|%2$s',
                 ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : $_SERVER['HTTP_REFERER'] ),
                 md5( $_SERVER['HTTP_USER_AGENT'] ),
                 $user_id
@@ -281,8 +293,7 @@ class DM_SSO_Cookie {
              */
             if ( false === $user_id || ! $this->verify_shared_nonce( $nonce, $action ) ) {
                 wp_die( 'Oops! Something went wrong with logging in.' );
-            }
-            else {
+            } else {
                 /**
                  * Create the Login session cookie and redirect the user to the
                  * current page with the URL querystrings for Domain Mapping SSO
@@ -292,8 +303,7 @@ class DM_SSO_Cookie {
                 wp_redirect( esc_url( remove_query_arg( array( '__dm_action', 'auth', 'nonce' ) ) ), 302, 'Dark-Matter' );
                 die();
             }
-        }
-        else if ( 'logout' === $dm_action ) {
+        } elseif ( 'logout' === $dm_action ) {
             wp_logout();
             wp_redirect( esc_url( remove_query_arg( array( '__dm_action' ) ) ), 302, 'Dark-Matter' );
 

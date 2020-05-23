@@ -35,13 +35,15 @@ if ( $dm_domain && $dm_domain->active ) {
      * it is a primary or secondary domain.
      */
     global $current_blog, $original_blog;
-    $current_blog  = get_site( $dm_domain->blog_id );
+    $current_blog = get_site( $dm_domain->blog_id );
 
     global $current_site;
     $current_site = WP_Network::get_instance( $current_blog->site_id );
 
-    global $blog_id; $blog_id = $current_blog->blog_id;
-    global $site_id; $site_id = $current_blog->site_id;
+    global $blog_id;
+	$blog_id = $current_blog->blog_id;
+    global $site_id;
+	$site_id = $current_blog->site_id;
 
     /**
      * Dark Matter will disengage if the website is no longer public or is
@@ -67,7 +69,7 @@ if ( $dm_domain && $dm_domain->active ) {
         global $current_site;
         $current_site = WP_Network::get_instance( $current_blog->site_id );
 
-        define( 'COOKIE_DOMAIN', $_SERVER[ 'HTTP_HOST' ] );
+        define( 'COOKIE_DOMAIN', $_SERVER['HTTP_HOST'] );
         define( 'DOMAIN_MAPPING', true );
 
         if ( empty( $current_site->blog_id ) ) {
@@ -77,8 +79,10 @@ if ( $dm_domain && $dm_domain->active ) {
         /**
          * Set the other necessary globals to ensure WordPress functions correctly.
          */
-        global $blog_id; $blog_id = $current_blog->blog_id;
-        global $site_id; $site_id = $current_blog->site_id;
+        global $blog_id;
+		$blog_id = $current_blog->blog_id;
+        global $site_id;
+		$site_id = $current_blog->site_id;
     }
 }
 

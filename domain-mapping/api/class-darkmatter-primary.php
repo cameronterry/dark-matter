@@ -39,7 +39,7 @@ class DarkMatter_Primary {
     /**
      * Retrieve the Primary domain for a Site.
      *
-     * @param  integer           $site_id Site ID to retrieve the primary domain for.
+     * @param  integer $site_id Site ID to retrieve the primary domain for.
      * @return DM_Domain|boolean          Returns the DM_Domain object on success. False otherwise.
      */
     public function get( $site_id = 0 ) {
@@ -81,7 +81,7 @@ class DarkMatter_Primary {
         /**
          * Retrieve the entire Domain object.
          */
-        $db = DarkMatter_Domains::instance();
+        $db      = DarkMatter_Domains::instance();
         $_domain = $db->get( $primary_domain );
 
         return $_domain;
@@ -128,11 +128,15 @@ class DarkMatter_Primary {
         $cache_key = $site_id . '-primary';
 
         if ( $db ) {
-            $result = $this->wpdb->update( $this->dm_table, array(
-                'is_primary' => true,
-            ), array(
-                'domain' => $domain,
-            ) );
+            $result = $this->wpdb->update(
+                $this->dm_table,
+                array(
+					'is_primary' => true,
+                ),
+                array(
+					'domain' => $domain,
+                ) 
+            );
         }
 
         /**
@@ -173,11 +177,16 @@ class DarkMatter_Primary {
                 $where['domain'] = $domain;
             }
 
-            $result = $this->wpdb->update( $this->dm_table, array(
-                'is_primary' => false,
-            ), $where, array(
-                '%d',
-            ) );
+            $result = $this->wpdb->update(
+                $this->dm_table,
+                array(
+					'is_primary' => false,
+                ),
+                $where,
+                array(
+					'%d',
+                ) 
+            );
 
             if ( false === $result ) {
                 return false;

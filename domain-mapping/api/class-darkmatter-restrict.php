@@ -21,7 +21,7 @@ class DarkMatter_Restrict {
     /**
      * Perform basic checks before committing to a action performed by a method.
      *
-     * @param  string           $fqdn Fully qualified domain name.
+     * @param  string $fqdn Fully qualified domain name.
      * @return WP_Error|boolean       True on pass. WP_Error on failure.
      */
     private function _basic_checks( $fqdn ) {
@@ -60,7 +60,7 @@ class DarkMatter_Restrict {
     /**
      * Add a domain to the Restrict list.
      *
-     * @param  string           $fqdn Domain to be added to the reserve list.
+     * @param  string $fqdn Domain to be added to the reserve list.
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function add( $fqdn = '' ) {
@@ -78,9 +78,13 @@ class DarkMatter_Restrict {
          * Add the domain to the database.
          */
         global $wpdb;
-        $result = $wpdb->insert( $this->restrict_table, array(
-            'domain' => $fqdn,
-        ), array( '%s' ) );
+        $result = $wpdb->insert(
+            $this->restrict_table,
+            array(
+				'domain' => $fqdn,
+            ),
+            array( '%s' ) 
+        );
 
         if ( ! $result ) {
             return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
@@ -103,7 +107,7 @@ class DarkMatter_Restrict {
     /**
      * Delete a domain to the Restrict list.
      *
-     * @param  string           $fqdn Domain to be deleted to the restrict list.
+     * @param  string $fqdn Domain to be deleted to the restrict list.
      * @return WP_Error|boolean       True on success, WP_Error otherwise.
      */
     public function delete( $fqdn = '' ) {
@@ -121,9 +125,13 @@ class DarkMatter_Restrict {
          * Remove the domain to the database.
          */
         global $wpdb;
-        $result = $wpdb->delete( $this->restrict_table, array(
-            'domain' => $fqdn
-        ), array( '%s' ) );
+        $result = $wpdb->delete(
+            $this->restrict_table,
+            array(
+				'domain' => $fqdn,
+            ),
+            array( '%s' ) 
+        );
 
         if ( ! $result ) {
             return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
@@ -192,7 +200,7 @@ class DarkMatter_Restrict {
     /**
      * Check if a domain has been restricted.
      *
-     * @param  string  $fqdn Domain to check.
+     * @param  string $fqdn Domain to check.
      * @return boolean       True if found. False otherwise.
      */
     public function is_exist( $fqdn = '' ) {

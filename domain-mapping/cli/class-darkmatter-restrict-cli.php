@@ -60,9 +60,12 @@ class DarkMatter_Restrict_CLI {
         /**
          * Handle and validate the format flag if provided.
          */
-        $opts = wp_parse_args( $assoc_args, [
-            'format'  => 'table',
-        ] );
+        $opts = wp_parse_args(
+            $assoc_args,
+            [
+				'format' => 'table',
+			] 
+        );
 
         if ( ! in_array( $opts['format'], array( 'ids', 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
             $opts['format'] = 'table';
@@ -76,16 +79,23 @@ class DarkMatter_Restrict_CLI {
          * Only format the return array if "ids" is not specified.
          */
         if ( 'ids' !== $opts['format'] ) {
-            $restricted = array_map( function ( $domain ) {
-                return array(
-                    'F.Q.D.N.' => $domain,
-                );
-            }, $restricted );
+            $restricted = array_map(
+                function ( $domain ) {
+                    return array(
+						'F.Q.D.N.' => $domain,
+                    );
+                },
+                $restricted 
+            );
         }
 
-        WP_CLI\Utils\format_items( $opts['format'], $restricted, [
-            'F.Q.D.N.'
-        ] );
+        WP_CLI\Utils\format_items(
+            $opts['format'],
+            $restricted,
+            [
+				'F.Q.D.N.',
+			] 
+        );
     }
 
     /**
