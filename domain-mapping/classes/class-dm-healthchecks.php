@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DM_HealthChecks
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DM_HealthChecks
+ */
 class DM_HealthChecks {
     /**
      * Constructor.

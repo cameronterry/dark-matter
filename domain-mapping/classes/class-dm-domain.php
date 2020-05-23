@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DM_Domain
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DM_Domain
+ */
 class DM_Domain {
     /**
      * Database ID.

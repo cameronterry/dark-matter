@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DM_URL
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) or die();
 
+/**
+ * Class DM_URL
+ */
 class DM_URL {
     /**
      * Constructor.

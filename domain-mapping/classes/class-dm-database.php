@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DM_Database
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DM_Database
+ */
 class DM_Database {
     /**
      * Constructor.
@@ -72,7 +80,7 @@ class DM_Database {
     /**
      * Return the Singleton Instance of the class.
      *
-     * @return void
+     * @return DM_Database
      */
     public static function instance() {
         static $instance = false;

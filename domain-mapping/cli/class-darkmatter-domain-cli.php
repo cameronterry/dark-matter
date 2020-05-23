@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DarkMatter_Domain_CLI
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DarkMatter_Domain_CLI
+ */
 class DarkMatter_Domain_CLI {
     /**
      * Add a domain to a site on the WordPress Network.
@@ -32,6 +40,9 @@ class DarkMatter_Domain_CLI {
      * Set the primary domain and set the protocol to HTTPS.
      *
      *      wp --url="sites.my.com/siteone" darkmatter domain add www.primarydomain.com --primary --https
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function add( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
@@ -47,7 +58,7 @@ class DarkMatter_Domain_CLI {
 				'force'   => false,
 				'https'   => false,
 				'primary' => false,
-			] 
+			]
         );
 
         /**
@@ -96,6 +107,9 @@ class DarkMatter_Domain_CLI {
      * List all domains for all Sites.
      *
      *      wp darkmatter domain list
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function list( $args, $assoc_args ) {
         /**
@@ -106,7 +120,7 @@ class DarkMatter_Domain_CLI {
             [
 				'format'  => 'table',
 				'primary' => false,
-			] 
+			]
         );
 
         if ( ! in_array( $opts['format'], array( 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
@@ -155,12 +169,12 @@ class DarkMatter_Domain_CLI {
                 if ( empty( $site ) ) {
                     $columns['Site'] = __( 'Unknown.', 'dark-matter' );
                 } else {
-                      $columns['Site'] = $site->blogname;
+                    $columns['Site'] = $site->blogname;
                 }
 
                 return $columns;
             },
-            $domains 
+            $domains
         );
 
         /**
@@ -208,6 +222,9 @@ class DarkMatter_Domain_CLI {
      * add or set commands.
      *
      *      wp --url="sites.my.com/siteone" darkmatter domain remove www.primarydomain.com --force
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function remove( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
@@ -220,7 +237,7 @@ class DarkMatter_Domain_CLI {
             $assoc_args,
             [
 				'force' => false,
-			] 
+			]
         );
 
         $db = DarkMatter_Domains::instance();
@@ -280,6 +297,9 @@ class DarkMatter_Domain_CLI {
      *
      *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --primary
      *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --secondary
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function set( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
@@ -301,7 +321,7 @@ class DarkMatter_Domain_CLI {
 				'use-https' => null,
 				'primary'   => null,
 				'secondary' => null,
-			] 
+			]
         );
 
         /**

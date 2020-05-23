@@ -1,7 +1,14 @@
 <?php
-
+/**
+ * Class DM_UI
+ *
+ * @package DM_UI
+ */
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DM_UI
+ */
 class DM_UI {
     /**
      * Constructor
@@ -32,7 +39,7 @@ class DM_UI {
             array(
 				$this,
 				'page',
-            ) 
+            )
         );
 
         add_action( 'load-' . $hook_suffix, array( $this, 'enqueue' ) );
@@ -54,7 +61,7 @@ class DM_UI {
             array(
 				'rest_root' => get_rest_url(),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
-            ) 
+            )
         );
 
         wp_enqueue_script( 'dark-matter-domains' );

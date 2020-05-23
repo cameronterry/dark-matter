@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class DarkMatter_Dropin_CLI
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
@@ -6,6 +11,9 @@ if ( ! defined( 'WP_CLI' ) ) {
     return;
 }
 
+/**
+ * Class DarkMatter_Dropin_CLI
+ */
 class DarkMatter_Dropin_CLI {
     /**
      * Helper command to see if the Sunrise dropin plugin within Dark Matter is
@@ -45,6 +53,9 @@ class DarkMatter_Dropin_CLI {
      * Update the Sunrise dropin plugin, even if a file is already present.
      *
      *      wp darkmatter dropin update --force
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function update( $args, $assoc_args ) {
         $destination = WP_CONTENT_DIR . '/sunrise.php';
@@ -54,9 +65,10 @@ class DarkMatter_Dropin_CLI {
             $assoc_args,
             [
 				'force' => false,
-			] 
+			]
         );
 
+        // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_is_writable
         if ( false === is_writable( WP_CONTENT_DIR ) ) {
             WP_CLI::error( __( 'The /wp-content/ directory needs to be writable by the current user in order to update.', 'dark-matter' ) );
         }
@@ -73,6 +85,7 @@ class DarkMatter_Dropin_CLI {
             WP_CLI::error( __( 'Sunrise dropin within the Dark Matter plugin is missing.', 'dark-matter' ) );
         }
 
+        // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged
         if ( @copy( $source, $destination ) ) {
             WP_CLI::success( __( 'Updated the Sunrise dropin to the latest version.', 'dark-matter' ) );
         } else {

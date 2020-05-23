@@ -1,7 +1,15 @@
 <?php
+/**
+ * Class DarkMatter_Restrict_CLI
+ *
+ * @package DarkMatter
+ */
 
 defined( 'ABSPATH' ) || die;
 
+/**
+ * Class DarkMatter_Restrict_CLI
+ */
 class DarkMatter_Restrict_CLI {
     /**
      * Add a domain to the restrict for the WordPress Network.
@@ -15,6 +23,9 @@ class DarkMatter_Restrict_CLI {
      * Add a domain to the restrict list.
      *
      *      wp darkmatter restrict add www.example.com
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function add( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
@@ -55,6 +66,9 @@ class DarkMatter_Restrict_CLI {
      * spaces.
      *
      *      wp darkmatter restrict list --format=ids
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function list( $args, $assoc_args ) {
         /**
@@ -64,7 +78,7 @@ class DarkMatter_Restrict_CLI {
             $assoc_args,
             [
 				'format' => 'table',
-			] 
+			]
         );
 
         if ( ! in_array( $opts['format'], array( 'ids', 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
@@ -85,7 +99,7 @@ class DarkMatter_Restrict_CLI {
 						'F.Q.D.N.' => $domain,
                     );
                 },
-                $restricted 
+                $restricted
             );
         }
 
@@ -94,7 +108,7 @@ class DarkMatter_Restrict_CLI {
             $restricted,
             [
 				'F.Q.D.N.',
-			] 
+			]
         );
     }
 
@@ -110,6 +124,9 @@ class DarkMatter_Restrict_CLI {
      * Remove a domain to the restrict list.
      *
      *      wp darkmatter restrict remove www.example.com
+     *
+     * @param array $args CLI args.
+     * @param array $assoc_args CLI args maintaining the flag names from the terminal.
      */
     public function remove( $args, $assoc_args ) {
         if ( empty( $args[0] ) ) {
