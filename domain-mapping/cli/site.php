@@ -1,3 +1,0 @@
-<?php
-
-defined( 'ABSPATH' ) || die;
