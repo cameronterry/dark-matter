@@ -25,6 +25,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Dark Matter. If not, see
  * https://github.com/cameronterry/dark-matter/blob/master/license.txt.
+ *
+ * @package DarkMatter
  */
 
 /** A bit of security for those who are too clever for their own good. */
