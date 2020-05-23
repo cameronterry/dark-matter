@@ -27,10 +27,12 @@ class DM_HealthChecks {
             'test'  => [ $this, 'test_ssl' ],
         ];
 
-        $tests['direct']['darkmatter_domain_mapping_primary_domain_set'] = [
-            'label' => __( 'Dark Matter - Domain Mapping - Checking for primary domain', 'dark-matter' ),
-            'test'  => [ $this, 'test_primary_domain_set' ],
-        ];
+        if ( ! is_main_site() ) {
+            $tests['direct']['darkmatter_domain_mapping_primary_domain_set'] = [
+                'label' => __( 'Dark Matter - Domain Mapping - Checking for primary domain', 'dark-matter' ),
+                'test'  => [ $this, 'test_primary_domain_set' ],
+            ];
+        }
 
         $tests['direct']['darkmatter_domain_mapping_cookie_domain'] = [
             'label' => __( 'Dark Matter - Domain Mapping - Checking for cookie domain settings', 'dark-matter' ),
