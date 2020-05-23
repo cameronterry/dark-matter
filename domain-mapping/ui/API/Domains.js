@@ -4,107 +4,129 @@
  */
 
 class Domains {
-  /**
-   * Handle adding a Domain and send a request to the REST API for the database
-   * changes. If successful, then retrieve the new data set from the REST API.
-   */
-  async add( data ) {
-    let result = null;
+	/**
+	 * Handle adding a Domain and send a request to the REST API for the database
+	 * changes. If successful, then retrieve the new data set from the REST API.
+	 *
+	 * @param {Object} data Data record for the new domain.
+	 */
+	async add( data ) {
+		let result = null;
 
-    try {
-      result = await window.jQuery.ajax( {
-        url : window.dmSettings.rest_root + 'dm/v1/domain',
-        data : data,
-        dataType : 'json',
-        method : 'post',
-        beforeSend : function ( xhr ) {
-          xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-        }
-      } );
-    } catch ( error ) {
-      if ( error.responseJSON ) {
-        result = error.responseJSON;
-      }
-    }
-
-    return result;
-  }
-
-  /**
-   * Handle deleting the Domain and send a request to the REST API for the
-   * database changes. If successful, then retrieve the new data set from the
-   * REST API.
-   */
-  async delete( domain ) {
-    let result = null;
-
-    try {
-      result = await window.jQuery.ajax( {
-        url : window.dmSettings.rest_root + 'dm/v1/domain/' + domain,
-        data : {
-          force: true
-        },
-        dataType : 'json',
-        method : 'DELETE',
-        beforeSend : function ( xhr ) {
-          xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-        }
-      } );
-    } catch ( error ) {
-      if ( error.responseJSON ) {
-        result = error.responseJSON;
-      }
-    }
-
-    return result;
-  }
-
-  /**
-   * Retrieve all the domains for a specific website.
-   */
-  async getAll() {
-    let result = await window.jQuery.ajax( {
-			url : window.dmSettings.rest_root + 'dm/v1/domains',
-			dataType : 'json',
-			method : 'GET',
-			beforeSend : function ( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+		try {
+			result = await window.jQuery.ajax( {
+				url: window.dmSettings.rest_root + 'dm/v1/domain',
+				data,
+				dataType: 'json',
+				method: 'post',
+				beforeSend( xhr ) {
+					xhr.setRequestHeader(
+						'X-WP-Nonce',
+						window.dmSettings.nonce
+					);
+				},
+			} );
+		} catch ( error ) {
+			if ( error.responseJSON ) {
+				result = error.responseJSON;
 			}
-    } );
+		}
 
-    return result;
-  }
+		return result;
+	}
 
-  /**
-   * Handle the update of the Domain and send a request to the REST API for the
-   * database changes. If successful, then retrieve the new data set from the
-   * REST API.
-   */
-  async update( data ) {
-    data.force = true,
+	/**
+	 * Handle deleting the Domain and send a request to the REST API for the
+	 * database changes. If successful, then retrieve the new data set from the
+	 * REST API.
+	 *
+	 * @param {string} domain FQDN to be deleted.
+	 */
+	async delete( domain ) {
+		let result = null;
 
-    delete data.site;
+		try {
+			result = await window.jQuery.ajax( {
+				url: window.dmSettings.rest_root + 'dm/v1/domain/' + domain,
+				data: {
+					force: true,
+				},
+				dataType: 'json',
+				method: 'DELETE',
+				beforeSend( xhr ) {
+					xhr.setRequestHeader(
+						'X-WP-Nonce',
+						window.dmSettings.nonce
+					);
+				},
+			} );
+		} catch ( error ) {
+			if ( error.responseJSON ) {
+				result = error.responseJSON;
+			}
+		}
 
-    let result = null;
+		return result;
+	}
 
-    try {
-      result = await window.jQuery.ajax( {
-        url : window.dmSettings.rest_root + 'dm/v1/domain/' + data.domain,
-        data : data,
-        dataType : 'json',
-        method : 'PUT',
-        beforeSend : function ( xhr ) {
-          xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-        }
-      } );
-    } catch ( error ) {
-      if ( error.responseJSON ) {
-        result = error.responseJSON;
-      }
-    }
+	/**
+	 * Retrieve all the domains for a specific website.
+	 */
+	async getAll() {
+		const result = await window.jQuery.ajax( {
+			url: window.dmSettings.rest_root + 'dm/v1/domains',
+			dataType: 'json',
+			method: 'GET',
+			beforeSend( xhr ) {
+				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
+			},
+		} );
 
-    return result;
-  }
+		return result;
+	}
+
+	/**
+	 * Handle the update of the Domain and send a request to the REST API for the
+	 * database changes. If successful, then retrieve the new data set from the
+	 * REST API.
+	 *
+	 * @param {Object} data Data record for the domain to be updated.
+	 */
+	async update( data ) {
+		/**
+		 * Set the force attribute to true.
+		 */
+		data.force = true;
+
+		/**
+		 * Remove the site property.
+		 */
+		delete data.site;
+
+		let result = null;
+
+		try {
+			result = await window.jQuery.ajax( {
+				url:
+					window.dmSettings.rest_root + 'dm/v1/domain/' + data.domain,
+				data,
+				dataType: 'json',
+				method: 'PUT',
+				beforeSend( xhr ) {
+					xhr.setRequestHeader(
+						'X-WP-Nonce',
+						window.dmSettings.nonce
+					);
+				},
+			} );
+		} catch ( error ) {
+			if ( error.responseJSON ) {
+				result = error.responseJSON;
+			}
+		}
+
+		return result;
+	}
 }
 
 export default Domains;
