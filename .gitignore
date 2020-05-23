@@ -2,3 +2,4 @@
 node_modules
 
 domain-mapping/build/*
+/vendor/
