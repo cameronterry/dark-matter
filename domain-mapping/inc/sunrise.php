@@ -2,14 +2,6 @@
 
 defined( 'ABSPATH' ) or die();
 
-/**
- * If the COOKIE_DOMAIN is set, then we cannot proceed as the login will not be
- * able to function with the mapped domain.
- */
-if ( defined( 'COOKIE_DOMAIN' ) ) {
-    wp_die( __( "Dark Matter's single sign on will not work if a COOKIE_DOMAIN is defined.", 'dark-matter' ) );
-}
-
 wp_cache_add_global_groups( 'dark-matter' );
 
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
