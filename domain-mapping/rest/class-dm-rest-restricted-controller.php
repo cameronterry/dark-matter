@@ -1,5 +1,13 @@
 <?php
+/**
+ * Class DM_REST_Restricted_Controller
+ *
+ * @package DarkMatter
+ */
 
+/**
+ * Class DM_REST_Restricted_Controller
+ */
 class DM_REST_Restricted_Controller extends WP_REST_Controller {
     /**
      * Constructor.
@@ -12,8 +20,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
     /**
      * Add a domain to the Restricted domains list.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function create_item( $request ) {
         $db = DarkMatter_Restrict::instance();
@@ -43,7 +51,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
      * Checks if a given request has access to add a Restricted domain.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     * @return boolean True if the current user is a Super Admin. False otherwise.
      */
     public function create_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
@@ -52,8 +60,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
     /**
      * Delete a domain to the Restricted domains list.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function delete_item( $request ) {
         $db = DarkMatter_Restrict::instance();
@@ -80,7 +88,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
      * Checks if a given request has access to delete Restricted domains.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     * @return boolean True if the current user is a Super Admin. False otherwise.
      */
     public function delete_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
@@ -89,8 +97,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
     /**
      * Return the Restricted domains as a list in REST response.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function get_items( $request ) {
         $db = DarkMatter_Restrict::instance();
@@ -103,7 +111,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
      * domains.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     * @return boolean True if the current user is a Super Admin. False otherwise.
      */
     public function get_items_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
@@ -115,11 +123,15 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, $this->rest_base, [
-            'methods'             => WP_REST_Server::CREATABLE,
-            'callback'            => array( $this, 'create_item' ),
-            'permission_callback' => array( $this, 'create_item_permissions_check' ),
-        ] );
+        register_rest_route(
+            $this->namespace,
+            $this->rest_base,
+            [
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => array( $this, 'create_item' ),
+                'permission_callback' => array( $this, 'create_item_permissions_check' ),
+            ]
+        );
 
         register_rest_route( $this->namespace, $this->rest_base, [
             'methods'             => WP_REST_Server::DELETABLE,

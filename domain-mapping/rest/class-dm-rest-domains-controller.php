@@ -1,5 +1,14 @@
 <?php
+/**
+ * Class DM_REST_Domains_Controller
+ *
+ * @package DarkMatter
+ * @since 2.0.0
+ */
 
+/**
+ * Class DM_REST_Domains_Controller
+ */
 class DM_REST_Domains_Controller extends WP_REST_Controller {
     /**
      * Constructor.
@@ -13,8 +22,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
     /**
      * Add a domain to the Site.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function create_item( $request ) {
         $db = DarkMatter_Domains::instance();
@@ -46,7 +55,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * Checks if a given request has access to add a domain.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     * @return boolean True if the current user is a Super Admin. False otherwise.
      */
     public function create_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
@@ -55,8 +64,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
     /**
      * Delete a domain.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function delete_item( $request ) {
         $db = DarkMatter_Domains::instance();
@@ -74,10 +83,12 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
         /**
          * Handle the response for the REST endpoint.
          */
-        $response = rest_ensure_response( array(
-            'deleted' => true,
-            'domain'  => $request['domain'],
-        ) );
+        $response = rest_ensure_response(
+            array(
+                'deleted' => true,
+                'domain'  => $request['domain'],
+            )
+        );
 
         return $response;
     }
@@ -86,7 +97,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * Checks if a given request has access to delete a domain.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     * @return boolean True if the current user is a Super Admin. False otherwise.
      */
     public function delete_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
@@ -95,8 +106,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
     /**
      * Return the Restricted domains as a list in REST response.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function get_item( $request ) {
         $db = DarkMatter_Domains::instance();
@@ -260,8 +271,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
     /**
      * Return a list of Domains.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function get_items( $request ) {
         $site_id = null;
@@ -274,7 +285,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
          */
         if ( isset( $request['site_id'] ) ) {
             $site_id = $request['site_id'];
-        } else if ( ! is_main_site() ) {
+        } elseif ( ! is_main_site() ) {
             $site_id = get_current_blog_id();
         }
 
@@ -306,7 +317,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * Checks if a given request has access to get a domain or list of domains.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     * @return boolean True if the current user is a Super Admin. False otherwise.
      */
     public function get_items_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
@@ -316,7 +327,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * Prepare item for adding to the database.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return array                    Data provided by the call to the endpoint.
+     * @return array Data provided by the call to the endpoint.
      */
     protected function prepare_item_for_database( $request ) {
         $item = array(
@@ -356,9 +367,9 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
     /**
      * Prepares a single domain output for response.
      *
-     * @param  DM_Domain       $item    Domain object to be prepared for response.
+     * @param  DM_Domain       $item Domain object to be prepared for response.
      * @param  WP_REST_Request $request Current request.
-     * @return array                    Prepared item for REST response.
+     * @return array Prepared item for REST response.
      */
     public function prepare_item_for_response( $item, $request ) {
         $fields = $this->get_fields_for_response( $request );
@@ -424,76 +435,92 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * @return void
      */
     public function register_routes() {
-        register_rest_route( $this->namespace, $this->rest_base, array(
-            'methods'             => WP_REST_Server::CREATABLE,
-            'callback'            => array( $this, 'create_item' ),
-            'permission_callback' => array( $this, 'create_item_permissions_check' ),
-            'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-        ) );
+        register_rest_route(
+            $this->namespace,
+            $this->rest_base,
+            array(
+                'methods'             => WP_REST_Server::CREATABLE,
+                'callback'            => array( $this, 'create_item' ),
+                'permission_callback' => array( $this, 'create_item_permissions_check' ),
+                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+            )
+        );
 
-        register_rest_route( $this->namespace, $this->rest_base . '/(?P<domain>.+)', array(
-            'args' => array(
-                'domain' => array(
-                    'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
-                    'required'    => true,
-                    'type'        => 'string',
-                ),
-            ),
+        register_rest_route(
+            $this->namespace,
+            $this->rest_base . '/(?P<domain>.+)',
             array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'get_item' ),
-                'permission_callback' => array( $this, 'get_items_permissions_check' ),
-                'schema'              => array( $this, 'get_item_schema' ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::DELETABLE,
-                'callback'            => array( $this, 'delete_item' ),
-                'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-                'args'                => array(
-                    'force' => array(
-                        'default'     => false,
-                        'description' => __( 'Force Dark Matter to remove the domain. This is required if you wish to remove a Primary domain from a Site.', 'dark-matter' ),
-                        'type'        => 'boolean',
+                'args' => array(
+                    'domain' => array(
+                        'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
+                        'required'    => true,
+                        'type'        => 'string',
                     ),
                 ),
-            ),
-            array(
-                'methods'             => WP_REST_Server::EDITABLE,
-                'callback'            => array( $this, 'update_item' ),
-                'permission_callback' => array( $this, 'update_item_permissions_check' ),
-                'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
-            ),
-        ) );
-
-        register_rest_route( $this->namespace, $this->rest_base_plural, array(
-            'methods'             => WP_REST_Server::READABLE,
-            'callback'            => array( $this, 'get_items' ),
-            'permission_callback' => array( $this, 'get_items_permissions_check' ),
-            'schema'              => array( $this, 'get_item_schema' ),
-        ) );
-
-        register_rest_route( $this->namespace, $this->rest_base_plural . '/(?P<site_id>[\d]+)', array(
-            'args' => array(
-                'site_id' => array(
-                    'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
-                    'required'    => true,
-                    'type'        => 'integer',
+                array(
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => array( $this, 'get_item' ),
+                    'permission_callback' => array( $this, 'get_items_permissions_check' ),
+                    'schema'              => array( $this, 'get_item_schema' ),
                 ),
-            ),
+                array(
+                    'methods'             => WP_REST_Server::DELETABLE,
+                    'callback'            => array( $this, 'delete_item' ),
+                    'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+                    'args'                => array(
+                        'force' => array(
+                            'default'     => false,
+                            'description' => __( 'Force Dark Matter to remove the domain. This is required if you wish to remove a Primary domain from a Site.', 'dark-matter' ),
+                            'type'        => 'boolean',
+                        ),
+                    ),
+                ),
+                array(
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => array( $this, 'update_item' ),
+                    'permission_callback' => array( $this, 'update_item_permissions_check' ),
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                ),
+            )
+        );
+
+        register_rest_route(
+            $this->namespace,
+            $this->rest_base_plural,
             array(
                 'methods'             => WP_REST_Server::READABLE,
                 'callback'            => array( $this, 'get_items' ),
                 'permission_callback' => array( $this, 'get_items_permissions_check' ),
                 'schema'              => array( $this, 'get_item_schema' ),
             )
-        ) );
+        );
+
+        register_rest_route(
+            $this->namespace,
+            $this->rest_base_plural . '/(?P<site_id>[\d]+)',
+            array(
+                'args' => array(
+                    'site_id' => array(
+                        'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
+                        'required'    => true,
+                        'type'        => 'integer',
+                    ),
+                ),
+                array(
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => array( $this, 'get_items' ),
+                    'permission_callback' => array( $this, 'get_items_permissions_check' ),
+                    'schema'              => array( $this, 'get_item_schema' ),
+                ),
+            )
+        );
     }
 
     /**
      * Update a domain for a Site.
      *
-     * @param  WP_REST_Request        $request Current request.
-     * @return WP_REST_Response|mixed          WP_REST_Response on success. WP_Error on failure.
+     * @param  WP_REST_Request $request Current request.
+     * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
      */
     public function update_item( $request ) {
         $db = DarkMatter_Domains::instance();
@@ -523,7 +550,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
      * Checks if a given request has access to update a domain.
      *
      * @param  WP_REST_Request $request Current request.
-     * @return boolean                  True if the current user is a Super Admin. False otherwise.
+     * @return boolean True if the current user is a Super Admin. False otherwise.
      */
     public function update_item_permissions_check( $request ) {
         return current_user_can( 'upgrade_network' );
