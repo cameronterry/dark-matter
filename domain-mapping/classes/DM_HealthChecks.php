@@ -32,6 +32,11 @@ class DM_HealthChecks {
             'test'  => [ $this, 'test_primary_domain_set' ],
         ];
 
+        $tests['direct']['darkmatter_domain_mapping_cookie_domain'] = [
+            'label' => __( 'Dark Matter - Domain Mapping - Checking for cookie domain settings', 'dark-matter' ),
+            'test'  => [ $this, 'test_cookie_domain' ],
+        ];
+
         return $tests;
     }
 
@@ -63,6 +68,43 @@ class DM_HealthChecks {
         $source      = DM_PATH . '/domain-mapping/sunrise.php';
 
         return filesize( $destination ) === filesize( $source ) && md5_file( $destination ) === md5_file( $source );
+    }
+
+    /**
+     * Checks the COOKIE_DOMAIN constant to ensure it is compatible with Dark Matter.
+     *
+     * @return array Test result.
+     */
+    public function test_cookie_domain() {
+        $result = [
+            'label'       => __( 'Dark Matter single-sign on (bringing the admin bar to the public-facing side) is enabled.', 'dark-matter' ),
+            'status'      => 'good',
+            'badge'       => array(
+                'label' => __( 'Domain Mapping', 'dark-matter' ),
+                'color' => 'green',
+            ),
+            'description' => sprintf(
+                '<p>%s</p>',
+                __( 'Dark Matter single-sign on is enabled and can load the admin bar when WordPress users are visiting the public-facing side of your site.', 'dark-matter' )
+            ),
+            'actions'     => '',
+            'test'        => 'darkmatter_domain_mapping_cookie_domain',
+        ];
+
+        if ( defined( 'COOKIE_DOMAIN' ) ) {
+            $result['label']          = __( 'The cookie domain constant has been set and Dark Matter single-sign has been disabled.', 'dark-matter' );
+            $result['badge']['color'] = 'red';
+            $result['status']         = 'critical';
+            $result['description']    = sprintf(
+                '<p>%s</p>',
+                sprintf(
+                    __( 'The %1$s constant has been set, likely within your wp-config.php file. Dark Matter single-sign on - which uses %1$s - has been disabled to prevent errors.', 'dark-matter' ),
+                    '<code>COOKIE_DOMAIN</code>'
+                )
+            );
+        }
+
+        return $result;
     }
 
     /**
@@ -178,6 +220,7 @@ class DM_HealthChecks {
 
     /**
      * Checks SSL configuration for compatibility with Dark Matter domain mapping.
+     *
      * @return array Test result.
      */
     public function test_ssl() {
