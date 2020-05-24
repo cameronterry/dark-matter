@@ -7,6 +7,8 @@
 
 defined( 'ABSPATH' ) || die;
 
+// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduced backward compatibility (2.x.x) problems for pre-existing users.
+
 /**
  * Class DarkMatter_Domain_CLI
  */

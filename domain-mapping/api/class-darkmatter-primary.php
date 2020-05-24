@@ -7,6 +7,8 @@
 
 defined( 'ABSPATH' ) || die;
 
+// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.unsetFound
+
 /**
  * Class DarkMatter_Primary
  */
