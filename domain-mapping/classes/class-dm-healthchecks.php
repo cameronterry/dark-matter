@@ -51,6 +51,15 @@ class DM_HealthChecks {
     }
 
     /**
+     * Ensures that the COOKIE_DOMAIN constant is set by Dark Matter and not set elsewhere (such as wp-config.php).
+     *
+     * @return bool True if COOKIE_DOMAIN is set by Dark Matter. False otherwise.
+     */
+    public function cookie_domain_dm_set() {
+        return ( defined( 'COOKIE_DOMAIN' ) && defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+    }
+
+    /**
      * Checks to ensure the dropin - sunrise.php - exists.
      *
      * @return bool True if sunrise.php exists. False otherwise.
@@ -101,15 +110,15 @@ class DM_HealthChecks {
             'test'        => 'darkmatter_domain_mapping_cookie_domain',
         ];
 
-        if ( defined( 'COOKIE_DOMAIN' ) ) {
-            $result['label']          = __( 'The cookie domain constant has been set and Dark Matter single-sign has been disabled.', 'dark-matter' );
+        if ( ! $this->cookie_domain_dm_set() ) {
+            $result['label']          = __( 'The cookie domain constant has been set and Dark Matter SSO has been disabled.', 'dark-matter' );
             $result['badge']['color'] = 'red';
             $result['status']         = 'critical';
             $result['description']    = sprintf(
                 '<p>%s</p>',
                 sprintf(
                     /* translators: COOKIE_DOMAIN constant */
-                    __( 'The %1$s constant has been set, likely within your wp-config.php file. Dark Matter single-sign on - which uses %1$s - has been disabled to prevent errors.', 'dark-matter' ),
+                    __( 'The %1$s constant has been set, likely within your wp-config.php file. Dark Matter single-sign on (SSO) - which uses %1$s - has been disabled to prevent errors.', 'dark-matter' ),
                     '<code>COOKIE_DOMAIN</code>'
                 )
             );
