@@ -54,7 +54,13 @@ class DM_UI {
     public function enqueue() {
         $min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' );
 
-        wp_register_script( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping' . $min . '.js', [], DM_VERSION, true );
+        wp_register_script(
+            'dark-matter-domains',
+            DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping' . $min . '.js',
+            [ 'wp-i18n' ],
+            DM_VERSION,
+            true
+        );
 
         wp_localize_script(
             'dark-matter-domains',
