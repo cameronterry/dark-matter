@@ -1,3 +1,4 @@
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 
 class DomainDisplaySecondary extends React.Component {
@@ -15,19 +16,31 @@ class DomainDisplaySecondary extends React.Component {
 					<a href={ url }>{ this.props.data.domain }</a>
 				</p>
 				{ this.props.data.is_active ? (
-					<button onClick={ this.props.activate }>Deactivate</button>
+					<button onClick={ this.props.activate }>
+						{ __( 'Deactivate', 'dark-matter' ) }
+					</button>
 				) : (
-					<button onClick={ this.props.activate }>Activate</button>
+					<button onClick={ this.props.activate }>
+						{ __( 'Activate', 'dark-matter' ) }
+					</button>
 				) }
 				<span>|</span>
-				<button onClick={ this.props.primary }>Set as Primary</button>
+				<button onClick={ this.props.primary }>
+					{ __( 'Set as Primary', 'dark-matter' ) }
+				</button>
 				<span>|</span>
 				<button onClick={ this.props.protocol }>
-					Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }
+					{ sprintf(
+						/* translators: protocol */
+						__( 'Change to %s', 'dark-matter' ),
+						this.props.data.is_https
+							? __( 'HTTP', 'dark-matter' )
+							: __( 'HTTPS', 'dark-matter' )
+					) }
 				</button>
 				<span>|</span>
 				<button className="submitdelete" onClick={ this.props.delete }>
-					Delete
+					{ __( 'Delete', 'dark-matter' ) }
 				</button>
 			</td>
 		);

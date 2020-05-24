@@ -1,4 +1,5 @@
 import React from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 
 class DomainDisplayPrimary extends React.Component {
 	/**
@@ -17,17 +18,27 @@ class DomainDisplayPrimary extends React.Component {
 					</strong>
 				</p>
 				{ this.props.data.is_active ? (
-					<button onClick={ this.props.activate }>Deactivate</button>
+					<button onClick={ this.props.activate }>
+						{ __( 'Deactivate', 'dark-matter' ) }
+					</button>
 				) : (
-					<button onClick={ this.props.activate }>Activate</button>
+					<button onClick={ this.props.activate }>
+						{ __( 'Activate', 'dark-matter' ) }
+					</button>
 				) }
 				<span>|</span>
 				<button onClick={ this.props.protocol }>
-					Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }
+					{ sprintf(
+						/* translators: protocol */
+						__( 'Change to %s', 'dark-matter' ),
+						this.props.data.is_https
+							? __( 'HTTP', 'dark-matter' )
+							: __( 'HTTPS', 'dark-matter' )
+					) }
 				</button>
 				<span>|</span>
 				<button className="submitdelete" onClick={ this.props.delete }>
-					Delete
+					{ __( 'Delete', 'dark-matter' ) }
 				</button>
 			</td>
 		);
