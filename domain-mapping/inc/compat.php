@@ -1,11 +1,14 @@
 <?php
 /**
  * Helper file to provide basic compatibilty for some popular plugins.
+ *
+ * @package DarkMatter
  */
-defined( 'ABSPATH' ) or die();
+
+defined( 'ABSPATH' ) || die();
 
 /**
- * Undocumented function
+ * Add support for logins on mapped domains for WooCommerce and bbPress.
  *
  * @return void
  */

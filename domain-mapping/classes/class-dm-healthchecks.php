@@ -108,6 +108,7 @@ class DM_HealthChecks {
             $result['description']    = sprintf(
                 '<p>%s</p>',
                 sprintf(
+                    /* translators: COOKIE_DOMAIN constant */
                     __( 'The %1$s constant has been set, likely within your wp-config.php file. Dark Matter single-sign on - which uses %1$s - has been disabled to prevent errors.', 'dark-matter' ),
                     '<code>COOKIE_DOMAIN</code>'
                 )
@@ -157,6 +158,7 @@ class DM_HealthChecks {
             $result['description']    = sprintf(
                 '<p>%s</p>',
                 sprintf(
+                    /* translators: SUNRISE constant */
                     __( 'Please ensure the %1$s constant is present and set to "true" in your wp-config.php file.', 'dark-matter' ),
                     '<code>SUNRISE</code>'
                 )
@@ -205,6 +207,7 @@ class DM_HealthChecks {
             $result['description']    = sprintf(
                 '<p>%s</p>',
                 sprintf(
+                    /* translators: link to unmapped homepage url */
                     __( 'No primary domain is set. Currently this site is can only be visited on the admin domain at; %1$s.', 'dark-matter' ),
                     sprintf(
                         '<a href="%1$s">%1$s</a>',
@@ -216,6 +219,7 @@ class DM_HealthChecks {
             $result['description'] = sprintf(
                 '<p>%1$s</p>',
                 sprintf(
+                    /* translators: link to mapped homepage url */
                     __( 'People can now visit your website at; %1$s.', 'dark-matter' ),
                     sprintf(
                         '<a href="%1$s">%1$s</a>',
@@ -263,6 +267,7 @@ class DM_HealthChecks {
             $result['description']    = sprintf(
                 '<p>%s</p>',
                 sprintf(
+                    /* translators: FORCE_SSL_ADMIN constant */
                     __( 'Please ensure the %1$s constant is present and set to "true" in your wp-config.php file.', 'dark-matter' ),
                     '<code>FORCE_SSL_ADMIN</code>'
                 )

@@ -1,6 +1,11 @@
 <?php
+/**
+ * Redirect
+ *
+ * @package DarkMatter
+ */
 
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || die();
 
 /**
  * The function `rest_get_url_prefix()` is not available at this point in the
@@ -42,18 +47,18 @@ if (
         /**
          * REST API can be used on both the mapped and unmapped domains.
          */
-        false !== strpos( $_SERVER['REQUEST_URI'], $rest_url_prefix )
+        ( ! empty( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], $rest_url_prefix ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
     ||
         /**
          * Customizer is presented in an <iframe> over the unmapped domain.
          */
-        ! empty( $_GET['customize_changeset_uuid'] )
+        ! empty( $_GET['customize_changeset_uuid'] ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
     ||
         /**
          * Do not redirect Previews
          */
-        ( ! empty( $_GET['preview'] ) || ! empty( $_GET['page_id'] ) || ! empty( $_GET['p'] ) )
-) {
+        ( ! empty( $_GET['preview'] ) || ! empty( $_GET['page_id'] ) || ! empty( $_GET['p'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+    ) {
     return;
 }
 
@@ -71,7 +76,9 @@ function darkmatter_maybe_redirect() {
         return;
     }
 
-    $request = ltrim( $_SERVER['REQUEST_URI'], '/' );
+    $request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+
+    $request = ltrim( $request_uri, '/' );
 
     /**
      * Determine if the request is one we shouldn't handle for redirects.
@@ -89,7 +96,9 @@ function darkmatter_maybe_redirect() {
 
     $original_blog = get_site();
 
-    $host    = trim( $_SERVER['HTTP_HOST'], '/' );
+    $http_host = ( empty( $_SERVER['HTTP_HOST'] ) ? '' : filter_var( $_SERVER['HTTP_HOST'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+
+    $host    = trim( $http_host, '/' );
     $primary = DarkMatter_Primary::instance()->get();
 
     $is_admin = false;
@@ -101,7 +110,7 @@ function darkmatter_maybe_redirect() {
     /**
      * Dark Matter will disengage if the website is no longer public or is archived or deleted.
      */
-    if ( (int) $original_blog->public < 0 || $original_blog->archived !== '0' || $original_blog->deleted !== '0' ) {
+    if ( (int) $original_blog->public < 0 || '0' !== $original_blog->archived || '0' !== $original_blog->deleted ) {
         return;
     }
 
