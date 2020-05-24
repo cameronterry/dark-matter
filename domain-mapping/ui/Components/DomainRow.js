@@ -36,6 +36,7 @@ class DomainRow extends React.Component {
 			);
 		} else {
 			message = sprintf(
+				/* translators: domain name */
 				__( 'Are you sure you wish to delete %s?', 'dark-matter' ),
 				this.props.domain.domain
 			);
@@ -62,6 +63,7 @@ class DomainRow extends React.Component {
 		// eslint-disable-next-line no-alert
 		const confirm = window.confirm(
 			sprintf(
+				/* translators: domain name */
 				__(
 					'Are you sure you wish to change %s to be the primary domain? This will cause 301 redirects and may affect SEO.',
 					'dark-matter'
@@ -99,6 +101,7 @@ class DomainRow extends React.Component {
 			// eslint-disable-next-line no-alert
 			const confirm = window.confirm(
 				sprintf(
+					/* translators: domain name */
 					__(
 						'Please ensure that your server configuration includes %s for HTTPS. Do you wish to proceed?',
 						'dark-matter'
