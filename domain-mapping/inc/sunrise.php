@@ -9,6 +9,10 @@ defined( 'ABSPATH' ) || die();
 
 wp_cache_add_global_groups( 'dark-matter' );
 
+if ( defined( 'COOKIE_DOMAIN' ) ) {
+    return;
+}
+
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
     define( 'SUNRISE_LOADED', true );
 }
