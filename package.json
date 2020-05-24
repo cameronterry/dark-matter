@@ -4,7 +4,7 @@
   "description": "Domain Mapping plugin for WordPress.",
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production webpack --mode none",
+    "build": "NODE_ENV=production webpack --mode production",
     "build-dev": "NODE_ENV=development webpack --mode none",
     "build-all": "npm run build && npm run build-dev",
     "release": "composer install && npm install && npm run build-all",
