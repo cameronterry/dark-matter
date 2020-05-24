@@ -9,10 +9,6 @@ defined( 'ABSPATH' ) || die();
 
 wp_cache_add_global_groups( 'dark-matter' );
 
-if ( defined( 'COOKIE_DOMAIN' ) ) {
-    return;
-}
-
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
     define( 'SUNRISE_LOADED', true );
 }
@@ -80,7 +76,10 @@ if ( $dm_domain && $dm_domain->active ) {
         global $current_site; // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.VariableRedeclaration
         $current_site = WP_Network::get_instance( $current_blog->site_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
-        define( 'COOKIE_DOMAIN', $dm_domain->domain );
+        if ( ! defined( 'COOKIE_DOMAIN' ) ) {
+            define( 'COOKIE_DOMAIN', $dm_domain->domain );
+        }
+
         define( 'DOMAIN_MAPPING', true );
 
         if ( empty( $current_site->blog_id ) ) {
