@@ -1,4 +1,6 @@
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
+
 import DomainDisplayPrimary from './DomainDisplayPrimary';
 import DomainDisplaySecondary from './DomainDisplaySecondary';
 
@@ -28,13 +30,15 @@ class DomainRow extends React.Component {
 		let message = '';
 
 		if ( this.props.domain.is_primary ) {
-			message =
-				'Deleting the primary domain will stop any domain mapping for this Site. You will need to manually set another domain as primary. Do you wish to proceed?';
+			message = __(
+				'Deleting the primary domain will stop any domain mapping for this Site. You will need to manually set another domain as primary. Do you wish to proceed?',
+				'dark-matter'
+			);
 		} else {
-			message =
-				'Are you sure you wish to delete ' +
-				this.props.domain.domain +
-				'?';
+			message = sprintf(
+				__( 'Are you sure you wish to delete %s?', 'dark-matter' ),
+				this.props.domain.domain
+			);
 		}
 
 		// eslint-disable-next-line no-alert
@@ -57,9 +61,13 @@ class DomainRow extends React.Component {
 
 		// eslint-disable-next-line no-alert
 		const confirm = window.confirm(
-			'Are you sure you wish to change ' +
-				this.props.domain.domain +
-				' to be the primary domain? This will cause 301 redirects and may affect SEO.'
+			sprintf(
+				__(
+					'Are you sure you wish to change %s to be the primary domain? This will cause 301 redirects and may affect SEO.',
+					'dark-matter'
+				),
+				this.props.domain.domain
+			)
 		);
 
 		if ( ! confirm ) {
@@ -90,9 +98,13 @@ class DomainRow extends React.Component {
 		if ( value ) {
 			// eslint-disable-next-line no-alert
 			const confirm = window.confirm(
-				'Please ensure that your server configuration is setup properly before changing ' +
-					this.props.domain.domain +
-					' to be HTTPS. Do you wish to proceed?'
+				sprintf(
+					__(
+						'Please ensure that your server configuration includes %s for HTTPS. Do you wish to proceed?',
+						'dark-matter'
+					),
+					this.props.domain.domain
+				)
 			);
 
 			if ( ! confirm ) {
@@ -127,9 +139,21 @@ class DomainRow extends React.Component {
 						delete={ this.handleDelete }
 					/>
 				) }
-				<td>{ this.props.domain.is_primary ? 'Yes' : 'No' }</td>
-				<td>{ this.props.domain.is_active ? 'Yes' : 'No' }</td>
-				<td>{ this.props.domain.is_https ? 'HTTPS' : 'HTTP' }</td>
+				<td>
+					{ this.props.domain.is_primary
+						? __( 'Yes', 'dark-matter' )
+						: __( 'No', 'dark-matter' ) }
+				</td>
+				<td>
+					{ this.props.domain.is_active
+						? __( 'Yes', 'dark-matter' )
+						: __( 'No', 'dark-matter' ) }
+				</td>
+				<td>
+					{ this.props.domain.is_https
+						? __( 'HTTPS', 'dark-matter' )
+						: __( 'HTTP', 'dark-matter' ) }
+				</td>
 			</tr>
 		);
 	}
