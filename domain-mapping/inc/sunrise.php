@@ -1,6 +1,11 @@
 <?php
+/**
+ * Take the current request and perform the domain mapping for key global variables in WordPress.
+ *
+ * @package DarkMatter
+ */
 
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || die();
 
 wp_cache_add_global_groups( 'dark-matter' );
 
@@ -24,7 +29,7 @@ require_once $dirname . '/api/class-darkmatter-primary.php';
 /**
  * Attempt to find the Site.
  */
-$fqdn = $_SERVER['HTTP_HOST'];
+$fqdn = ( empty( $_SERVER['HTTP_HOST'] ) ? '' : $_SERVER['HTTP_HOST'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 global $dm_domain;
 $dm_domain = DarkMatter_Domains::instance()->get( $fqdn );
@@ -35,21 +40,23 @@ if ( $dm_domain && $dm_domain->active ) {
      * it is a primary or secondary domain.
      */
     global $current_blog, $original_blog;
-    $current_blog = get_site( $dm_domain->blog_id );
+    $current_blog = get_site( $dm_domain->blog_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
     global $current_site;
-    $current_site = WP_Network::get_instance( $current_blog->site_id );
+    $current_site = WP_Network::get_instance( $current_blog->site_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
+    // @codingStandardsIgnoreStart
     global $blog_id;
-	$blog_id = $current_blog->blog_id;
+    $blog_id = $current_blog->blog_id;
     global $site_id;
-	$site_id = $current_blog->site_id;
+    $site_id = $current_blog->site_id;
+    // @codingStandardsIgnoreEnd
 
     /**
      * Dark Matter will disengage if the website is no longer public or is
      * archived or deleted.
      */
-    if ( (int) $current_blog->public < 0 || $current_blog->archived !== '0' || $current_blog->deleted !== '0' ) {
+    if ( (int) $current_blog->public < 0 || '0' !== $current_blog->archived || '0' !== $current_blog->deleted ) {
         return;
     }
 
@@ -66,10 +73,10 @@ if ( $dm_domain && $dm_domain->active ) {
         /**
          * Load and prepare the WordPress Network.
          */
-        global $current_site;
-        $current_site = WP_Network::get_instance( $current_blog->site_id );
+        global $current_site; // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.VariableRedeclaration
+        $current_site = WP_Network::get_instance( $current_blog->site_id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
-        define( 'COOKIE_DOMAIN', $_SERVER['HTTP_HOST'] );
+        define( 'COOKIE_DOMAIN', $dm_domain->domain );
         define( 'DOMAIN_MAPPING', true );
 
         if ( empty( $current_site->blog_id ) ) {
@@ -79,10 +86,12 @@ if ( $dm_domain && $dm_domain->active ) {
         /**
          * Set the other necessary globals to ensure WordPress functions correctly.
          */
+        // @codingStandardsIgnoreStart
         global $blog_id;
 		$blog_id = $current_blog->blog_id;
         global $site_id;
 		$site_id = $current_blog->site_id;
+        // @codingStandardsIgnoreEnd
     }
 }
 
