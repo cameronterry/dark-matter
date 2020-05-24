@@ -18,6 +18,7 @@
         "phpcompatibility/phpcompatibility-wp": "^2.1"
     },
     "scripts": {
-        "lint": "phpcs ."
+        "lint": "phpcs .",
+        "lint-fix": "phpcbf ."
     }
 }
