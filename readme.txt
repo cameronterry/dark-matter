@@ -86,11 +86,21 @@ Google Analytics) with over 60 websites.
   * Ensure the sunrise.php matches the version within Dark Matter.
   * Ensure the SUNRISE constant is setup correctly.
   * Checks FORCE_SSL_ADMIN is setup correctly and encourages best practices regarding HTTPS.
+  * Checks COOKIE_DOMAIN to ensure it is not set.
   * Recommends a primary domain is set.
+* Changed the behaviour when COOKIE_DOMAIN is set.
+  * Now disables SSO (Single-Sign On) and no longer produces in a `wp_die()` error.
+  * The new Site Health check will note an error if COOKIE_DOMAIN is set and state that SSO has been disabled.
+* Added PHPCS through Composer for development.
+  * Set to adhere to the WordPress-VIP-Go coding standards (https://wpvip.com/documentation/how-to-install-php-code-sniffer-for-wordpress-vip/).
+  * But allow spaces rather than tabs.
+  * Reorganised filenames to be all lowercase with hyphens and prefixed `class-` where appropriate.
+  * Improved checks and sanitisation of Server Variables.
 * When creating a new domain, the protocol field now defaults to HTTPS.
 * Switch the CSS build from SASS to PostCSS and CSS / Webpack is updated accordingly.
 * Removed an unused property in DM_UI class.
-* Changed wp darkmatter dropin check to use the same test method from Site Health.
+* Changed `wp darkmatter dropin` check to use the same test method from Site Health.
+* Added localisation to the JavaScript UI components.
 * Tested with WordPress 5.4.x.
 
 = 2.0.5 =
