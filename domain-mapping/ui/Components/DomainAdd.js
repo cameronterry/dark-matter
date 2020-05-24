@@ -1,3 +1,4 @@
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 
 import Domains from '../API/Domains';
@@ -29,11 +30,25 @@ class DomainAdd extends React.Component {
 	async addDomain() {
 		const result = await this.api.add( this.state.domain );
 
+		let message = '';
+
+		if ( result.code ) {
+			message = sprintf(
+				/* translators: error message */
+				__( 'Cannot add domain. %s', 'dark-matter' ),
+				result.message
+			);
+		} else {
+			message = sprintf(
+				/* translators: added domain */
+				__( '%s; has been added.', 'dark-matter' ),
+				result.domain
+			);
+		}
+
 		this.props.addNoticeAndRefresh(
 			this.state.domain.domain,
-			result.code
-				? 'Cannot add domain. ' + result.message
-				: 'has been added.',
+			message,
 			result.code ? 'error' : 'success'
 		);
 
@@ -113,7 +128,9 @@ class DomainAdd extends React.Component {
 					<tbody>
 						<tr>
 							<th scope="row">
-								<label htmlFor="domain">Domain</label>
+								<label htmlFor="domain">
+									{ __( 'Domain', 'dark-matter' ) }
+								</label>
 							</th>
 							<td>
 								<input
@@ -126,7 +143,9 @@ class DomainAdd extends React.Component {
 						</tr>
 						<tr>
 							<th scope="row">
-								<label htmlFor="is_primary">Is Primary?</label>
+								<label htmlFor="is_primary">
+									{ __( 'Is Primary?', 'dark-matter' ) }
+								</label>
 							</th>
 							<td>
 								<input
@@ -140,7 +159,9 @@ class DomainAdd extends React.Component {
 						</tr>
 						<tr>
 							<th scope="row">
-								<label htmlFor="is_active">Is Active?</label>
+								<label htmlFor="is_active">
+									{ __( 'Is Active?', 'dark-matter' ) }
+								</label>
 							</th>
 							<td>
 								<input
@@ -153,7 +174,9 @@ class DomainAdd extends React.Component {
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Protocol</th>
+							<th scope="row">
+								{ __( 'Protocol', 'dark-matter' ) }
+							</th>
 							<td>
 								<p>
 									<input
@@ -164,7 +187,9 @@ class DomainAdd extends React.Component {
 										onChange={ this.handleProtocol }
 										checked={ ! this.state.domain.is_https }
 									/>
-									<label htmlFor="protocol-http">HTTP</label>
+									<label htmlFor="protocol-http">
+										{ __( 'HTTP', 'dark-matter' ) }
+									</label>
 								</p>
 								<p>
 									<input
@@ -176,7 +201,7 @@ class DomainAdd extends React.Component {
 										checked={ this.state.domain.is_https }
 									/>
 									<label htmlFor="protocol-https">
-										HTTPS
+										{ __( 'HTTPS', 'dark-matter' ) }
 									</label>
 								</p>
 							</td>
@@ -185,7 +210,7 @@ class DomainAdd extends React.Component {
 				</table>
 				<p className="submit">
 					<button type="submit" className="button button-primary">
-						Add Domain
+						{ __( 'Add Domain', 'dark-matter' ) }
 					</button>
 				</p>
 			</form>
