@@ -13,6 +13,8 @@ if ( false === defined( 'SUNRISE_LOADED' ) ) {
     define( 'SUNRISE_LOADED', true );
 }
 
+define( 'DARKMATTER_COOKIE_SET', ! defined( 'COOKIE_DOMAIN' ) );
+
 /**
  * Cannot utilise plugin_dir_path() as the inner function used is not available
  * and this is preferable to include more files than is realistically needed.

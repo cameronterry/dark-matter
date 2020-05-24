@@ -56,7 +56,7 @@ class DM_HealthChecks {
      * @return bool True if COOKIE_DOMAIN is set by Dark Matter. False otherwise.
      */
     public function cookie_domain_dm_set() {
-        return ( defined( 'COOKIE_DOMAIN' ) && defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+        return ( defined( 'DARKMATTER_COOKIE_SET' ) && DARKMATTER_COOKIE_SET );
     }
 
     /**
