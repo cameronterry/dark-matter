@@ -1,3 +1,4 @@
+import { __ } from '@wordpress/i18n';
 import React from 'react';
 
 class Message extends React.Component {
@@ -18,15 +19,13 @@ class Message extends React.Component {
 
 		return (
 			<div className={ classes.join( ' ' ) }>
-				<p>
-					<strong>{ notice.domain }</strong>; { notice.text }
-				</p>
+				<p>{ notice.text }</p>
 				<button
 					className="notice-dismiss"
 					onClick={ this.handleDismiss }
 				>
 					<span className="screen-reader-text">
-						Dismiss this notice.
+						{ __( 'Dismiss this notice.', 'dark-matter' ) }
 					</span>
 				</button>
 			</div>

@@ -1,3 +1,4 @@
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 
 import DomainAdd from './DomainAdd';
@@ -162,16 +163,16 @@ class DomainMapping extends React.Component {
 					<thead>
 						<tr>
 							<th scope="col" className="manage-column">
-								Domain
+								{ __( 'Domain', 'dark-matter' ) }
 							</th>
 							<th scope="col" className="manage-column">
-								Is Primary?
+								{ __( 'Is Primary?', 'dark-matter' ) }
 							</th>
 							<th scope="col" className="manage-column">
-								Active?
+								{ __( 'Is Active?', 'dark-matter' ) }
 							</th>
 							<th scope="col" className="manage-column">
-								Protocol
+								{ __( 'Protocol', 'dark-matter' ) }
 							</th>
 						</tr>
 					</thead>
@@ -192,7 +193,13 @@ class DomainMapping extends React.Component {
 
 		this.addNotice(
 			data.domain,
-			result.code ? result.message : 'Successfully updated',
+			result.code
+				? result.message
+				: sprintf(
+						/* translators: domain name */
+						__( 'Successfully updated %s.', 'dark-matter' ),
+						data.domain
+				  ),
 			result.code ? 'error' : 'success'
 		);
 
