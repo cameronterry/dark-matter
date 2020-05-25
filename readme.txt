@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.4.1
-Stable tag: 2.0.5
+Stable tag: 2.1.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,9 +93,12 @@ Google Analytics) with over 60 websites.
   * The new Site Health check will note an error if COOKIE_DOMAIN is set and state that SSO has been disabled.
 * Added PHPCS through Composer for development.
   * Set to adhere to the WordPress-VIP-Go coding standards (https://wpvip.com/documentation/how-to-install-php-code-sniffer-for-wordpress-vip/).
-  * But allow spaces rather than tabs.
   * Reorganised filenames to be all lowercase with hyphens and prefixed `class-` where appropriate.
   * Improved checks and sanitisation of Server Variables.
+  * All spaces are tabs - courtesy of phpcbf - rejoice!
+* Contributing notes;
+  * Added husky / lint-staged.
+  * Pre-commit runs lint checks for JavaScript and PHP files.
 * When creating a new domain, the protocol field now defaults to HTTPS.
 * Switch the CSS build from SASS to PostCSS and CSS / Webpack is updated accordingly.
 * Removed an unused property in DM_UI class.
