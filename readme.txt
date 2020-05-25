@@ -204,6 +204,10 @@ Google Analytics) with over 60 websites.
 
 == Upgrade Notice ==
 
+= 2.1.0 =
+
+Dark Matter will note that sunrise.php does not match. This is due to an updated PHP comment and not a coding change.
+
 = 2.0.0 = 
 
 There is backward compatibility issues upgrading. Please ensure you read the release notes for 2.0.0 before upgrading!
