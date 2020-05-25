@@ -18,7 +18,8 @@
         "phpcompatibility/phpcompatibility-wp": "^2.1"
     },
     "scripts": {
-        "lint": "phpcs .",
+        "lint": "phpcs . --extensions=php --warning-severity=8 -s",
+        "lint-all": "phpcs .",
         "lint-fix": "phpcbf ."
     }
 }
