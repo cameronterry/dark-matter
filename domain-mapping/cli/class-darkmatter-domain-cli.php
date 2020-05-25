@@ -3,6 +3,7 @@
  * Class DarkMatter_Domain_CLI
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
@@ -11,6 +12,8 @@ defined( 'ABSPATH' ) || die;
 
 /**
  * Class DarkMatter_Domain_CLI
+ *
+ * @since 2.0.0
  */
 class DarkMatter_Domain_CLI {
 	/**
@@ -42,6 +45,8 @@ class DarkMatter_Domain_CLI {
 	 * Set the primary domain and set the protocol to HTTPS.
 	 *
 	 *      wp --url="sites.my.com/siteone" darkmatter domain add www.primarydomain.com --primary --https
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
@@ -109,6 +114,8 @@ class DarkMatter_Domain_CLI {
 	 * List all domains for all Sites.
 	 *
 	 *      wp darkmatter domain list
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
@@ -225,6 +232,8 @@ class DarkMatter_Domain_CLI {
 	 *
 	 *      wp --url="sites.my.com/siteone" darkmatter domain remove www.primarydomain.com --force
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
 	 */
@@ -299,6 +308,8 @@ class DarkMatter_Domain_CLI {
 	 *
 	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --primary
 	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --secondary
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.

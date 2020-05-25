@@ -3,6 +3,7 @@
  * Class DarkMatter_Dropin_CLI
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
@@ -13,6 +14,8 @@ if ( ! defined( 'WP_CLI' ) ) {
 
 /**
  * Class DarkMatter_Dropin_CLI
+ *
+ * @since 2.0.0
  */
 class DarkMatter_Dropin_CLI {
 	/**
@@ -23,6 +26,8 @@ class DarkMatter_Dropin_CLI {
 	 * Check to see if the Sunrise dropin is the latest version.
 	 *
 	 *      wp darkmatter dropin check
+	 *
+	 * @since 2.0.0
 	 */
 	public function check() {
 		$health_check = DM_HealthChecks::instance();
@@ -53,6 +58,8 @@ class DarkMatter_Dropin_CLI {
 	 * Update the Sunrise dropin plugin, even if a file is already present.
 	 *
 	 *      wp darkmatter dropin update --force
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.

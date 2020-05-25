@@ -3,16 +3,21 @@
  * Class DarkMatter_Domains
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
 
 /**
  * Class DarkMatter_Domains
+ *
+ * @since 2.0.0
  */
 class DarkMatter_Domains {
 	/**
 	 * The Domain Mapping table name for use by the various methods.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -21,12 +26,16 @@ class DarkMatter_Domains {
 	/**
 	 * Reference to the global $wpdb and is more for code cleaniness.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @var boolean
 	 */
 	private $wpdb = false;
 
 	/**
 	 * Constructor
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -46,6 +55,8 @@ class DarkMatter_Domains {
 
 	/**
 	 * Perform basic checks before committing to a action performed by a method.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn Fully qualified domain name.
 	 * @return WP_Error|boolean       True on pass. WP_Error on failure.
@@ -102,6 +113,8 @@ class DarkMatter_Domains {
 
 	/**
 	 * Add a domain for a specific Site in WordPress.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  string  $fqdn       Domain to be updated.
 	 * @param  boolean $is_primary Primary domain setting.
@@ -201,6 +214,8 @@ class DarkMatter_Domains {
 	/**
 	 * Delete a domain for a specific Site in WordPress.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string  $fqdn FQDN to be deleted.
 	 * @param  boolean $force Force the FQDN to be deleted, even if it is the primary domain.
 	 * @return WP_Error|boolean True on success. False otherwise.
@@ -274,6 +289,8 @@ class DarkMatter_Domains {
 	/**
 	 * Find a domain for a specific Site in WordPress.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string $fqdn FQDN to search for.
 	 * @return DM_Domain|boolean       Domain object. False on failure or not found.
 	 */
@@ -287,6 +304,8 @@ class DarkMatter_Domains {
 
 	/**
 	 * Retrieve a domain for a specific Site in WordPress.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn FQDN to search for.
 	 * @return DM_Domain|boolean       Domain object. False otherwise.
@@ -337,6 +356,8 @@ class DarkMatter_Domains {
 	 * from the root Site, then this will return all domains mapped on the
 	 * Network.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  integer $site_id Site ID to retrieve mapped domains for.
 	 * @return array            An array of DM_Domain objects. Returns an empty array if no mapped domains found or on error.
 	 */
@@ -373,6 +394,8 @@ class DarkMatter_Domains {
 	 * Check if a domain exists. This checks against all websites and is not
 	 * site specific.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string $fqdn FQDN to search for.
 	 * @return boolean       True if found. False otherwise.
 	 */
@@ -391,6 +414,8 @@ class DarkMatter_Domains {
 	 * Check if a domain is reserved. This checks against all websites and is
 	 * not site specific.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string $fqdn FQDN to search for.
 	 * @return boolean       True if the domain is reserved. False otherwise.
 	 */
@@ -405,6 +430,8 @@ class DarkMatter_Domains {
 	/**
 	 * Add a reserved domain for the Network in WordPress.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string $fqdn FQDN to be added.
 	 * @return boolean       True on success. False otherwise.
 	 */
@@ -418,6 +445,8 @@ class DarkMatter_Domains {
 
 	/**
 	 * Find a domain for a specific Site in WordPress.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  string  $fqdn       Domain to be updated.
 	 * @param  boolean $is_primary Primary domain setting.
@@ -527,6 +556,8 @@ class DarkMatter_Domains {
 
 	/**
 	 * Return the Singleton Instance of the class.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return DarkMatter_Domains
 	 */

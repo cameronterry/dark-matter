@@ -18,6 +18,7 @@
  * then the token is used to create an session cookie to login the user.
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die();
@@ -26,10 +27,14 @@ defined( 'ABSPATH' ) || die();
 
 /**
  * Class DM_SSO_Cookie
+ *
+ * @since 2.0.0
  */
 class DM_SSO_Cookie {
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_action( 'admin_post_dark_matter_dmsso', array( $this, 'login_token' ) );
@@ -47,6 +52,8 @@ class DM_SSO_Cookie {
 	/**
 	 * Creates a nonce that isn't linked to a user, like the APIs in WordPress Core, but functions in a similar fashion.
 	 *
+	 * @since 2.0.4
+	 *
 	 * @param  string $action Value which creates the unique nonce.
 	 * @return string         Nonce token for use.
 	 */
@@ -57,6 +64,8 @@ class DM_SSO_Cookie {
 
 	/**
 	 * Verify a shared nonce.
+	 *
+	 * @since 2.0.4
 	 *
 	 * @see create_shared_nonce()
 	 *
@@ -96,6 +105,8 @@ class DM_SSO_Cookie {
 	/**
 	 * Determines if the current request is on the Admin Domain.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return bool True if current request is on the admin domain. False otherwise.
 	 */
 	private function is_admin_domain() {
@@ -114,6 +125,8 @@ class DM_SSO_Cookie {
 	 * Create the JavaScript output include for logging a user in to the admin
 	 * when on the Mapped domain. This is ultimately what makes the Admin Bar
 	 * appear.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -161,6 +174,8 @@ class DM_SSO_Cookie {
 	 * Without this, users can end up in a state where they are logged out of
 	 * the Admin domain but remain perpetually logged in to the Mapped domains.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function logout_token() {
@@ -191,6 +206,8 @@ class DM_SSO_Cookie {
 	/**
 	 * Adds the <script> tag which references the admin action(s) for handling
 	 * cross-domain login and logout.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -243,6 +260,8 @@ class DM_SSO_Cookie {
 	/**
 	 * Sets the relevant no cache headers using the definition from WordPress Core.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function nocache_headers() {
@@ -263,6 +282,8 @@ class DM_SSO_Cookie {
 	/**
 	 * Handle the validation of the login token and logging in of a user. Also
 	 * handle the logout if that action is provided.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -331,6 +352,8 @@ class DM_SSO_Cookie {
 
 	/**
 	 * Return the Singleton Instance of the class.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return DM_SSO_Cookie
 	 */

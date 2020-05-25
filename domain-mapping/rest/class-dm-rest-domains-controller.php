@@ -8,10 +8,14 @@
 
 /**
  * Class DM_REST_Domains_Controller
+ *
+ * @since 2.0.0
  */
 class DM_REST_Domains_Controller extends WP_REST_Controller {
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		$this->namespace        = 'dm/v1';
@@ -21,6 +25,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 	/**
 	 * Add a domain to the Site.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
@@ -54,6 +60,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	/**
 	 * Checks if a given request has access to add a domain.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
@@ -63,6 +71,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 	/**
 	 * Delete a domain.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
@@ -96,6 +106,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	/**
 	 * Checks if a given request has access to delete a domain.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
@@ -105,6 +117,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 	/**
 	 * Return the Restricted domains as a list in REST response.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
@@ -132,6 +146,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 	/**
 	 * JSON Schema definition for Domain.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return array JSON Schema definition.
 	 */
@@ -271,6 +287,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	/**
 	 * Return a list of Domains.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
@@ -316,6 +334,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	/**
 	 * Checks if a given request has access to get a domain or list of domains.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
@@ -325,6 +345,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 	/**
 	 * Prepare item for adding to the database.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return array Data provided by the call to the endpoint.
@@ -366,6 +388,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 	/**
 	 * Prepares a single domain output for response.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  DM_Domain       $item Domain object to be prepared for response.
 	 * @param  WP_REST_Request $request Current request.
@@ -431,6 +455,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 	/**
 	 * Register the routes for the REST API.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -519,6 +545,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	/**
 	 * Update a domain for a Site.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
@@ -549,6 +577,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	/**
 	 * Checks if a given request has access to update a domain.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
@@ -559,6 +589,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 /**
  * Setup the REST Controller for Domains for use.
+ *
+ * @since 2.0.0
  *
  * @return void
  */

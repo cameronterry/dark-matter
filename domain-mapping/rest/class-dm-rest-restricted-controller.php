@@ -3,14 +3,19 @@
  * Class DM_REST_Restricted_Controller
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 /**
  * Class DM_REST_Restricted_Controller
+ *
+ * @since 2.0.0
  */
 class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		$this->namespace = 'dm/v1';
@@ -19,6 +24,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 
 	/**
 	 * Add a domain to the Restricted domains list.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
@@ -41,7 +48,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 		$response = rest_ensure_response(
 			array(
 				'domain' => $domain,
-			) 
+			)
 		);
 
 		$response->set_status( '201' );
@@ -52,6 +59,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	/**
 	 * Checks if a given request has access to add a Restricted domain.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
@@ -61,6 +70,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 
 	/**
 	 * Delete a domain to the Restricted domains list.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
@@ -84,12 +95,14 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 			array(
 				'deleted' => true,
 				'domain'  => $domain,
-			) 
+			)
 		);
 	}
 
 	/**
 	 * Checks if a given request has access to delete Restricted domains.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
@@ -100,6 +113,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 
 	/**
 	 * Return the Restricted domains as a list in REST response.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
@@ -114,6 +129,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * Checks if a given request has access to retrieve a list Restricted
 	 * domains.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
@@ -123,6 +140,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 
 	/**
 	 * Register REST API routes for Restricted domains.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -144,7 +163,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 				'methods'             => WP_REST_Server::DELETABLE,
 				'callback'            => array( $this, 'delete_item' ),
 				'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-			] 
+			]
 		);
 
 		register_rest_route(
@@ -154,13 +173,15 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_items' ),
 				'permission_callback' => array( $this, 'get_items_permissions_check' ),
-			] 
+			]
 		);
 	}
 }
 
 /**
  * Setup the REST Controller for Domains for use.
+ *
+ * @since 2.0.0
  *
  * @return void
  */

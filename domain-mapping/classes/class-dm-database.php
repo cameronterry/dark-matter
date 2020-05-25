@@ -3,16 +3,21 @@
  * Class DM_Database
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
 
 /**
  * Class DM_Database
+ *
+ * @since 2.0.0
  */
 class DM_Database {
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'maybe_upgrade' ) );
@@ -21,6 +26,8 @@ class DM_Database {
 	/**
 	 * Check to see if the database upgrade is required. If so, then perform the
 	 * necessary table creation / update commands.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -39,6 +46,8 @@ class DM_Database {
 
 	/**
 	 * Upgrade the domains table.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -62,6 +71,8 @@ class DM_Database {
 	/**
 	 * Upgrade the Reserve domains table.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function upgrade_restrict() {
@@ -79,6 +90,8 @@ class DM_Database {
 
 	/**
 	 * Return the Singleton Instance of the class.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return DM_Database
 	 */

@@ -3,16 +3,21 @@
  * Class DM_Domain
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
 
 /**
  * Class DM_Domain
+ *
+ * @since 2.0.0
  */
 class DM_Domain {
 	/**
 	 * Database ID.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @var integer
 	 */
@@ -22,12 +27,16 @@ class DM_Domain {
 	 * Site ID. Using the old WordPress terminology of "Blog" rather than the
 	 * newer term of "Site".
 	 *
+	 * @since 2.0.0
+	 *
 	 * @var integer
 	 */
 	public $blog_id = 0;
 
 	/**
 	 * Is the Domain Primary?
+	 *
+	 * @since 2.0.0
 	 *
 	 * @var boolean
 	 */
@@ -36,12 +45,16 @@ class DM_Domain {
 	/**
 	 * The FQDN (Fully Qualified Domain Name).
 	 *
+	 * @since 2.0.0
+	 *
 	 * @var string
 	 */
 	public $domain = '';
 
 	/**
 	 * Is the domain Active?
+	 *
+	 * @since 2.0.0
 	 *
 	 * @var boolean
 	 */
@@ -50,12 +63,16 @@ class DM_Domain {
 	/**
 	 * Is the domain to be redirect to the HTTPS version?
 	 *
+	 * @since 2.0.0
+	 *
 	 * @var boolean
 	 */
 	public $is_https = false;
 
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param DM_Domain|object $domain A domain object.
 	 */
@@ -73,6 +90,8 @@ class DM_Domain {
 
 	/**
 	 * Converts this object to an array.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return array Object as array.
 	 */

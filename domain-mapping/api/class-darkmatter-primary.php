@@ -3,6 +3,7 @@
  * Class DarkMatter_Primary
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
@@ -11,10 +12,14 @@ defined( 'ABSPATH' ) || die;
 
 /**
  * Class DarkMatter_Primary
+ *
+ * @since 2.0.0
  */
 class DarkMatter_Primary {
 	/**
 	 * The Domain Mapping table name for use by the various methods.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -23,12 +28,16 @@ class DarkMatter_Primary {
 	/**
 	 * Reference to the global $wpdb and is more for code cleaniness.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @var boolean
 	 */
 	private $wpdb = false;
 
 	/**
 	 * Constructor
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -48,6 +57,8 @@ class DarkMatter_Primary {
 
 	/**
 	 * Retrieve the Primary domain for a Site.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  integer $site_id Site ID to retrieve the primary domain for.
 	 * @return DM_Domain|boolean          Returns the DM_Domain object on success. False otherwise.
@@ -101,6 +112,8 @@ class DarkMatter_Primary {
 	/**
 	 * Retrieve all primary domains for the Network.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return array Array of DM_Domain objects of the Primary domains for each Site in the Network.
 	 */
 	public function get_all() {
@@ -129,6 +142,8 @@ class DarkMatter_Primary {
 
 	/**
 	 * Helper function to the set the cache for the primary domain for a Site.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  integer $site_id Site ID to set the primary domain cache for.
 	 * @param  string  $domain  Domain to be stored in the cache.
@@ -168,6 +183,8 @@ class DarkMatter_Primary {
 	/**
 	 * Unset the primary domain for a given Site. By default, will change all
 	 * records with is_primary set to true.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  integer $site_id Site ID to unset the primary domain for.
 	 * @param  string  $domain  Optional. If provided, will only affect that domain's record.
@@ -224,6 +241,8 @@ class DarkMatter_Primary {
 
 	/**
 	 * Return the Singleton Instance of the class.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return DarkMatter_Primary
 	 */

@@ -3,16 +3,21 @@
  * Class DM_URL
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die();
 
 /**
  * Class DM_URL
+ *
+ * @since 2.0.0
  */
 class DM_URL {
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		/**
@@ -72,6 +77,8 @@ class DM_URL {
 	 * functionality, such as form postbacks and other such functionality on the
 	 * public-serving side.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string   $url     The complete admin area URL including scheme and path.
 	 * @param  string   $path    Path relative to the admin area URL. Blank string if no path is specified.
 	 * @param  int|null $blog_id Site ID, or null for the current site.
@@ -102,6 +109,8 @@ class DM_URL {
 
 	/**
 	 * Checks to ensure that "mapped" domains are considered internal to WordPress and not external.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  bool   $external Whether HTTP request is external or not.
 	 * @param  string $host     Host name of the requested URL.
@@ -134,6 +143,8 @@ class DM_URL {
 	 * Determines if the requested domain is mapped using the DOMAIN_MAPPING
 	 * constant from sunrise.php.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return boolean True if the domain is the Primary domain. False if the Admin domain.
 	 */
 	private function is_mapped() {
@@ -143,6 +154,8 @@ class DM_URL {
 	/**
 	 * Map the primary domain on the passed in value if it contains the unmapped
 	 * URL and the Site has a primary domain.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  mixed   $value   Potentially a value containing the site's unmapped URL.
 	 * @param  integer $blog_id Site (Blog) ID for the URL which is being mapped.
@@ -179,6 +192,8 @@ class DM_URL {
 
 	/**
 	 * Setup the actions to handle the URL mappings.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -237,6 +252,8 @@ class DM_URL {
 	 * admin area. This handles the preparation work for mapping URLs for Admni
 	 * only requests.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function prepare_admin() {
@@ -271,6 +288,8 @@ class DM_URL {
 
 	/**
 	 * Handle Home URL and Site URL mappings when and where appropriate.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  string  $url     The complete site URL including scheme and path.
 	 * @param  string  $path    Path relative to the site URL. Blank string if no path is specified.
@@ -335,6 +354,8 @@ class DM_URL {
 	 * Map the primary domain on the passed in value if it contains the unmapped
 	 * URL and the Site has a primary domain.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  mixed $value Potentially a value containing the site's unmapped URL.
 	 * @return mixed        If unmapped URL is found, then returns the primary URL. Untouched otherwise.
 	 */
@@ -368,6 +389,8 @@ class DM_URL {
 	/**
 	 * Handle the Uploads URL mappings when and where appropriate.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  array $uploads Array of upload directory data with keys of 'path', 'url', 'subdir, 'basedir', 'baseurl', and 'error'.
 	 * @return array          Array of upload directory data with the values with URLs mapped as appropriate.
 	 */
@@ -385,6 +408,8 @@ class DM_URL {
 
 	/**
 	 * Return the Singleton Instance of the class.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return DM_URL
 	 */

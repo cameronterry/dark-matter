@@ -3,16 +3,21 @@
  * Class DM_UI
  *
  * @package DM_UI
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
 
 /**
  * Class DM_UI
+ *
+ * @since 2.0.0
  */
 class DM_UI {
 	/**
 	 * Constructor
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		/**
@@ -28,6 +33,8 @@ class DM_UI {
 	/**
 	 * Initialise the admin menu and prep the hooks for the CSS and JavaScript
 	 * includes.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -48,6 +55,8 @@ class DM_UI {
 
 	/**
 	 * Enqueue assets for the Admin Page.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */
@@ -78,6 +87,8 @@ class DM_UI {
 
 	/**
 	 * Very basic HTML output for the
+	 *
+	 * @since 2.0.0
 	 *
 	 * @return void
 	 */

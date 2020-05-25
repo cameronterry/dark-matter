@@ -3,6 +3,7 @@
  * Redirect
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die();
@@ -65,6 +66,8 @@ if (
 /**
  * Helper function which is used to determine if we need to perform a redirect
  * to the primary domain whilst retaining the remaining URI structure.
+ *
+ * @since 2.0.0
  *
  * @return void
  */

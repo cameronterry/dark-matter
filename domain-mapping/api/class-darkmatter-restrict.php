@@ -3,16 +3,21 @@
  * Class DarkMatter_Restrict
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
 
 /**
  * Class DarkMatter_Restrict
+ *
+ * @since 2.0.0
  */
 class DarkMatter_Restrict {
 	/**
 	 * Restrict table name for database operations.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @var string
 	 */
@@ -20,6 +25,8 @@ class DarkMatter_Restrict {
 
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.0.0
 	 */
 	public function __construct() {
 		global $wpdb;
@@ -28,6 +35,8 @@ class DarkMatter_Restrict {
 
 	/**
 	 * Perform basic checks before committing to a action performed by a method.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn Fully qualified domain name.
 	 * @return WP_Error|boolean       True on pass. WP_Error on failure.
@@ -69,6 +78,8 @@ class DarkMatter_Restrict {
 
 	/**
 	 * Add a domain to the Restrict list.
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn Domain to be added to the reserve list.
 	 * @return WP_Error|boolean       True on success, WP_Error otherwise.
@@ -119,6 +130,8 @@ class DarkMatter_Restrict {
 	/**
 	 * Delete a domain to the Restrict list.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string $fqdn Domain to be deleted to the restrict list.
 	 * @return WP_Error|boolean       True on success, WP_Error otherwise.
 	 */
@@ -168,6 +181,8 @@ class DarkMatter_Restrict {
 	/**
 	 * Retrieve all restrict domains.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return array List of restrict domains.
 	 */
 	public function get() {
@@ -216,6 +231,8 @@ class DarkMatter_Restrict {
 	/**
 	 * Check if a domain has been restricted.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @param  string $fqdn Domain to check.
 	 * @return boolean       True if found. False otherwise.
 	 */
@@ -232,6 +249,8 @@ class DarkMatter_Restrict {
 	/**
 	 * Helper method to refresh the cache for Restricted domains.
 	 *
+	 * @since 2.0.0
+	 *
 	 * @return void
 	 */
 	public function refresh_cache() {
@@ -242,6 +261,8 @@ class DarkMatter_Restrict {
 	/**
 	 * Return the Singleton Instance of the class.
 	 *
+	 * @since 2.0.0
+	 * 
 	 * @return DarkMatter_Restrict
 	 */
 	public static function instance() {

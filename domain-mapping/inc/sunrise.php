@@ -3,6 +3,7 @@
  * Take the current request and perform the domain mapping for key global variables in WordPress.
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die();

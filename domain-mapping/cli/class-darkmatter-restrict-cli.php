@@ -3,6 +3,7 @@
  * Class DarkMatter_Restrict_CLI
  *
  * @package DarkMatter
+ * @since 2.0.0
  */
 
 defined( 'ABSPATH' ) || die;
@@ -11,6 +12,8 @@ defined( 'ABSPATH' ) || die;
 
 /**
  * Class DarkMatter_Restrict_CLI
+ *
+ * @since 2.0.0
  */
 class DarkMatter_Restrict_CLI {
 	/**
@@ -25,6 +28,8 @@ class DarkMatter_Restrict_CLI {
 	 * Add a domain to the restrict list.
 	 *
 	 *      wp darkmatter restrict add www.example.com
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
@@ -68,6 +73,8 @@ class DarkMatter_Restrict_CLI {
 	 * spaces.
 	 *
 	 *      wp darkmatter restrict list --format=ids
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
@@ -126,6 +133,8 @@ class DarkMatter_Restrict_CLI {
 	 * Remove a domain to the restrict list.
 	 *
 	 *      wp darkmatter restrict remove www.example.com
+	 *
+	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.

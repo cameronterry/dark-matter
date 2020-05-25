@@ -3,16 +3,21 @@
  * Class DM_HealthChecks
  *
  * @package DarkMatter
+ * @since 2.1.0
  */
 
 defined( 'ABSPATH' ) || die;
 
 /**
  * Class DM_HealthChecks
+ *
+ * @since 2.1.0
  */
 class DM_HealthChecks {
 	/**
 	 * Constructor.
+	 *
+	 * @since 2.1.0
 	 */
 	public function __construct() {
 		add_filter( 'site_status_tests', [ $this, 'add_tests' ] );
@@ -20,6 +25,8 @@ class DM_HealthChecks {
 
 	/**
 	 * Add tests to Site Health relevant to the domain mapping within Dark Matter.
+	 *
+	 * @since 2.1.0
 	 *
 	 * @param  array $tests Tests as defined by WordPress as well as plugins and themes.
 	 * @return array        All tests including domain mapping relevant tests.
@@ -53,6 +60,8 @@ class DM_HealthChecks {
 	/**
 	 * Ensures that the COOKIE_DOMAIN constant is set by Dark Matter and not set elsewhere (such as wp-config.php).
 	 *
+	 * @since 2.1.0
+	 *
 	 * @return bool True if COOKIE_DOMAIN is set by Dark Matter. False otherwise.
 	 */
 	public function cookie_domain_dm_set() {
@@ -61,6 +70,8 @@ class DM_HealthChecks {
 
 	/**
 	 * Checks to ensure the dropin - sunrise.php - exists.
+	 *
+	 * @since 2.1.0
 	 *
 	 * @return bool True if sunrise.php exists. False otherwise.
 	 */
@@ -71,6 +82,8 @@ class DM_HealthChecks {
 	/**
 	 * Checks to ensure the constant `FORCE_SSL_ADMIN` is configured correctly for Dark Matter.
 	 *
+	 * @since 2.1.0
+	 *
 	 * @return bool True if `FORCE_SSL_ADMIN` is present and set. False otherwise.
 	 */
 	public function force_ssl_set() {
@@ -79,6 +92,8 @@ class DM_HealthChecks {
 
 	/**
 	 * Checks the dropin - sunrise.php - to see if it is the correct version.
+	 *
+	 * @since 2.1.0
 	 *
 	 * @return bool True if the dropin is the correct version. False otherwise.
 	 */
@@ -91,6 +106,8 @@ class DM_HealthChecks {
 
 	/**
 	 * Checks the COOKIE_DOMAIN constant to ensure it is compatible with Dark Matter.
+	 *
+	 * @since 2.1.0
 	 *
 	 * @return array Test result.
 	 */
@@ -129,6 +146,8 @@ class DM_HealthChecks {
 
 	/**
 	 * Checks the Sunrise dropin to ensure it is configured correctly and is up-to-date.
+	 *
+	 * @since 2.1.0
 	 *
 	 * @return array Test result.
 	 */
@@ -192,6 +211,8 @@ class DM_HealthChecks {
 	/**
 	 * Checks the Sunrise dropin to ensure it is configured correctly and is up-to-date.
 	 *
+	 * @since 2.1.0
+	 *
 	 * @return array Test result.
 	 */
 	public function test_primary_domain_set() {
@@ -244,6 +265,8 @@ class DM_HealthChecks {
 	/**
 	 * Checks SSL configuration for compatibility with Dark Matter domain mapping.
 	 *
+	 * @since 2.1.0
+	 *
 	 * @return array Test result.
 	 */
 	public function test_ssl() {
@@ -288,6 +311,8 @@ class DM_HealthChecks {
 
 	/**
 	 * Return the Singleton Instance of the class.
+	 *
+	 * @since 2.1.0
 	 *
 	 * @return DM_HealthChecks
 	 */
