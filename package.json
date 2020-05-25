@@ -7,7 +7,8 @@
     "build": "NODE_ENV=production webpack --mode production",
     "build-dev": "NODE_ENV=development webpack --mode none",
     "build-all": "npm run build && npm run build-dev",
-    "lint": "composer lint && eslint ",
+    "lint": "composer lint && eslint",
+    "lint-js": "eslint",
     "release": "composer install && npm install && npm run build-all",
     "start": "composer install && npm install && npm run build-dev"
   },
@@ -15,6 +16,14 @@
     "hooks": {
       "pre-commit": "npm run lint"
     }
+  },
+  "lint-staged": {
+    "*.js": [
+      "npm run lint-js"
+    ],
+    "*.php": [
+      "composer run lint"
+    ]
   },
   "repository": {
     "type": "git",
