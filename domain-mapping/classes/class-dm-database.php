@@ -11,42 +11,42 @@ defined( 'ABSPATH' ) || die;
  * Class DM_Database
  */
 class DM_Database {
-    /**
-     * Constructor.
-     */
-    public function __construct() {
-        add_action( 'init', array( $this, 'maybe_upgrade' ) );
-    }
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		add_action( 'init', array( $this, 'maybe_upgrade' ) );
+	}
 
-    /**
-     * Check to see if the database upgrade is required. If so, then perform the
-     * necessary table creation / update commands.
-     *
-     * @return void
-     */
-    public function maybe_upgrade() {
-        if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
-            /**
-             * As dbDelta function is called, ensure that this part of the
-             * WordPress API is included.
-             */
-            require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	/**
+	 * Check to see if the database upgrade is required. If so, then perform the
+	 * necessary table creation / update commands.
+	 *
+	 * @return void
+	 */
+	public function maybe_upgrade() {
+		if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
+			/**
+			 * As dbDelta function is called, ensure that this part of the
+			 * WordPress API is included.
+			 */
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-            $this->upgrade_domains();
-            $this->upgrade_restrict();
-        }
-    }
+			$this->upgrade_domains();
+			$this->upgrade_restrict();
+		}
+	}
 
-    /**
-     * Upgrade the domains table.
-     *
-     * @return void
-     */
-    public function upgrade_domains() {
-        global $wpdb;
-        $charset_collate = $wpdb->get_charset_collate();
+	/**
+	 * Upgrade the domains table.
+	 *
+	 * @return void
+	 */
+	public function upgrade_domains() {
+		global $wpdb;
+		$charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE `{$wpdb->base_prefix}domain_mapping` (
+		$sql = "CREATE TABLE `{$wpdb->base_prefix}domain_mapping` (
             id BIGINT(20) NOT NULL AUTO_INCREMENT,
             blog_id BIGINT(20) NOT NULL,
             is_primary TINYINT(4) DEFAULT '0',
@@ -56,40 +56,40 @@ class DM_Database {
             PRIMARY KEY  (id)
         ) $charset_collate;";
 
-        dbDelta( $sql );
-    }
+		dbDelta( $sql );
+	}
 
-    /**
-     * Upgrade the Reserve domains table.
-     *
-     * @return void
-     */
-    public function upgrade_restrict() {
-        global $wpdb;
-        $charset_collate = $wpdb->get_charset_collate();
+	/**
+	 * Upgrade the Reserve domains table.
+	 *
+	 * @return void
+	 */
+	public function upgrade_restrict() {
+		global $wpdb;
+		$charset_collate = $wpdb->get_charset_collate();
 
-        $sql = "CREATE TABLE `{$wpdb->base_prefix}domain_restrict` (
+		$sql = "CREATE TABLE `{$wpdb->base_prefix}domain_restrict` (
             id BIGINT(20) NOT NULL AUTO_INCREMENT,
             domain VARCHAR(255) NOT NULL,
             PRIMARY KEY  (id)
         ) $charset_collate;";
 
-        dbDelta( $sql );
-    }
+		dbDelta( $sql );
+	}
 
-    /**
-     * Return the Singleton Instance of the class.
-     *
-     * @return DM_Database
-     */
-    public static function instance() {
-        static $instance = false;
+	/**
+	 * Return the Singleton Instance of the class.
+	 *
+	 * @return DM_Database
+	 */
+	public static function instance() {
+		static $instance = false;
 
-        if ( ! $instance ) {
-            $instance = new self();
-        }
+		if ( ! $instance ) {
+			$instance = new self();
+		}
 
-        return $instance;
-    }
+		return $instance;
+	}
 }
 DM_Database::instance();

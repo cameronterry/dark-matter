@@ -8,7 +8,6 @@
 
     <rule ref="WordPress">
         <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
-        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent.SpacesUsed" />
     </rule>
 
     <rule ref="PHPCompatibilityWP"/>
