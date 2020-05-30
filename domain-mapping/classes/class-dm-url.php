@@ -351,8 +351,8 @@ class DM_URL {
 	}
 
 	/**
-	 * Map the primary domain on the passed in value if it contains the unmapped
-	 * URL and the Site has a primary domain.
+	 * Converts a URL from a mapped domain to the admin domian. This will only convert a URL which is the primary
+	 * domain.
 	 *
 	 * @since 2.0.0
 	 *

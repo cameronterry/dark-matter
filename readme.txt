@@ -100,6 +100,7 @@ Google Analytics) with over 60 websites.
   * Added husky / lint-staged.
   * Pre-commit runs lint checks for JavaScript and PHP files.
 * When creating a new domain, the protocol field now defaults to HTTPS.
+* Fixed the DM_URL->unmap() method doc block.
 * Switch the CSS build from SASS to PostCSS and CSS / Webpack is updated accordingly.
 * Removed an unused property in DM_UI class.
 * Changed `wp darkmatter dropin` check to use the same test method from Site Health.
