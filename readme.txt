@@ -96,9 +96,10 @@ Google Analytics) with over 60 websites.
   * Reorganised filenames to be all lowercase with hyphens and prefixed `class-` where appropriate.
   * Improved checks and sanitisation of Server Variables.
   * All spaces are tabs - courtesy of phpcbf - rejoice!
-* Contributing notes;
-  * Added husky / lint-staged.
-  * Pre-commit runs lint checks for JavaScript and PHP files.
+* Changed the way the SSO script is included.
+  * The script tag is now created within JavaScript.
+  * Unix epoch is appended to the URL for cache breaking.
+  * Note; it is still recommended to exclude the `dark_matter_dmcheck` and `dark_matter_dmsso` is excluded from any request caching solution.
 * When creating a new domain, the protocol field now defaults to HTTPS.
 * Fixed the DM_URL->unmap() method doc block.
 * Switch the CSS build from SASS to PostCSS and CSS / Webpack is updated accordingly.
@@ -106,6 +107,9 @@ Google Analytics) with over 60 websites.
 * Changed `wp darkmatter dropin` check to use the same test method from Site Health.
 * Added localisation to the JavaScript UI components.
 * Tested with WordPress 5.4.x.
+* Contributing notes;
+  * Added husky / lint-staged.
+  * Pre-commit runs lint checks for JavaScript and PHP files.
 
 = 2.0.5 =
 

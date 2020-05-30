@@ -253,7 +253,15 @@ class DM_SSO_Cookie {
 				return;
 			}
 		}
-		?><script defer type="text/javascript" src="<?php echo( esc_url( $script_url ) ); ?>"></script>
+		?>
+		<script type="text/javascript">
+			( function () {
+				var s = document.createElement("script");
+				s.type = "text/javascript";
+				s.src = "<?php echo( esc_url( $script_url ) ); ?>&" + ( new Date() ).getTime();
+				document.head.appendChild( s );
+			} )();
+		</script>
 		<?php
 	}
 
