@@ -174,9 +174,7 @@ class DomainAdd extends React.Component {
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">
-								{ __( 'Protocol', 'dark-matter' ) }
-							</th>
+							<th scope="row">{ __( 'Protocol', 'dark-matter' ) }</th>
 							<td>
 								<p>
 									<input

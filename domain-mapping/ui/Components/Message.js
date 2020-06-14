@@ -20,10 +20,7 @@ class Message extends React.Component {
 		return (
 			<div className={ classes.join( ' ' ) }>
 				<p>{ notice.text }</p>
-				<button
-					className="notice-dismiss"
-					onClick={ this.handleDismiss }
-				>
+				<button className="notice-dismiss" onClick={ this.handleDismiss }>
 					<span className="screen-reader-text">
 						{ __( 'Dismiss this notice.', 'dark-matter' ) }
 					</span>

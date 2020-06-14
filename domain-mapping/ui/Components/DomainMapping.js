@@ -196,10 +196,10 @@ class DomainMapping extends React.Component {
 			result.code
 				? result.message
 				: sprintf(
-						/* translators: domain name */
-						__( 'Successfully updated %s.', 'dark-matter' ),
-						data.domain
-				  ),
+					/* translators: domain name */
+					__( 'Successfully updated %s.', 'dark-matter' ),
+					data.domain
+				),
 			result.code ? 'error' : 'success'
 		);
 

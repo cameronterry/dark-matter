@@ -20,10 +20,7 @@ class Domains {
 				dataType: 'json',
 				method: 'post',
 				beforeSend( xhr ) {
-					xhr.setRequestHeader(
-						'X-WP-Nonce',
-						window.dmSettings.nonce
-					);
+					xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
 				},
 			} );
 		} catch ( error ) {
@@ -54,10 +51,7 @@ class Domains {
 				dataType: 'json',
 				method: 'DELETE',
 				beforeSend( xhr ) {
-					xhr.setRequestHeader(
-						'X-WP-Nonce',
-						window.dmSettings.nonce
-					);
+					xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
 				},
 			} );
 		} catch ( error ) {
@@ -113,10 +107,7 @@ class Domains {
 				dataType: 'json',
 				method: 'PUT',
 				beforeSend( xhr ) {
-					xhr.setRequestHeader(
-						'X-WP-Nonce',
-						window.dmSettings.nonce
-					);
+					xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
 				},
 			} );
 		} catch ( error ) {
