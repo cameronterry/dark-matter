@@ -1,0 +1,40 @@
+.notice {
+    position:relative;
+}
+
+.wp-list-table {
+
+    & .domain-options {
+
+        & button {
+            -webkit-appearance: button;
+            background: transparent;
+            border: none;
+            color: #0073AA;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 100%;
+            line-height: 1.15;
+            margin: 0;
+            padding: 0;
+            text-transform: none;
+
+            &:hover, &:focus {
+                color: #00A0D2;
+            }
+        }
+
+        & span {
+            color: #DDDDDD;
+            padding: 0 4px;
+        }
+
+        & .submitdelete {
+            color: #AA0000;
+
+            &:hover {
+                color: #dc3232;
+            }
+        }
+    }
+}

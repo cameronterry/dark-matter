@@ -3,13 +3,13 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.3.1
-Stable tag: 2.0.5
+Tested up to: 5.4.2
+Stable tag: 2.1.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 WARNING: Dark Matter is a highly opinionated domain mapping plugin for WordPress
-Networks, designed to work out of the box as-is with no setup.
+Networks, designed to work out of the box as-is with minimal setup.
 
 == Description ==
 
@@ -78,6 +78,38 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.0 =
+
+* Added support and tests for Site Health Checks feature, originally introduced in WordPress 5.2. Tests the following;
+  * Ensure the sunrise.php dropin is present.
+  * Ensure the sunrise.php matches the version within Dark Matter.
+  * Ensure the SUNRISE constant is setup correctly.
+  * Checks FORCE_SSL_ADMIN is setup correctly and encourages best practices regarding HTTPS.
+  * Checks COOKIE_DOMAIN to ensure it is not set.
+  * Recommends a primary domain is set.
+* Changed the behaviour when COOKIE_DOMAIN is set.
+  * Now disables SSO (Single-Sign On) and no longer produces in a `wp_die()` error.
+  * The new Site Health check will note an error if COOKIE_DOMAIN is set and state that SSO has been disabled.
+* Added PHPCS through Composer for development.
+  * Set to adhere to the WordPress-VIP-Go coding standards (https://wpvip.com/documentation/how-to-install-php-code-sniffer-for-wordpress-vip/).
+  * Reorganised filenames to be all lowercase with hyphens and prefixed `class-` where appropriate.
+  * Improved checks and sanitisation of Server Variables.
+  * All spaces are tabs - courtesy of phpcbf - rejoice!
+* Changed the way the SSO script is included.
+  * The script tag is now created within JavaScript.
+  * Unix epoch is appended to the URL for cache breaking.
+  * Note; it is still recommended to exclude the `dark_matter_dmcheck` and `dark_matter_dmsso` is excluded from any request caching solution.
+* When creating a new domain, the protocol field now defaults to HTTPS.
+* Fixed the DM_URL->unmap() method doc block.
+* Switch the CSS build from SASS to PostCSS and CSS / Webpack is updated accordingly.
+* Removed an unused property in DM_UI class.
+* Changed `wp darkmatter dropin` check to use the same test method from Site Health.
+* Added localisation to the JavaScript UI components.
+* Tested with WordPress 5.4.x.
+* Contributing notes;
+  * Added husky / lint-staged.
+  * Pre-commit runs lint checks for JavaScript and PHP files.
 
 = 2.0.5 =
 
@@ -176,6 +208,10 @@ Google Analytics) with over 60 websites.
   * 1.x.x version of **sunrise.php** will error on update as the require path has changed in the new folder structure of 2.0.0.
 
 == Upgrade Notice ==
+
+= 2.1.0 =
+
+Dark Matter will note that sunrise.php does not match. This is due to an updated PHP comment and not a coding change.
 
 = 2.0.0 = 
 

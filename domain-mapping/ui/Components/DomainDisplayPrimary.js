@@ -1,29 +1,48 @@
 import React from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 
 class DomainDisplayPrimary extends React.Component {
-  /**
-   * Render component.
-   */
-  render() {
-    const url = ( this.props.data.is_https ? 'https://' : 'http://' ) + this.props.data.domain;
+	/**
+	 * Render component.
+	 */
+	render() {
+		const url =
+			( this.props.data.is_https ? 'https://' : 'http://' ) +
+			this.props.data.domain;
 
-    return (
-      <td className="domain-options">
-        <p>
-          <strong><a href={ url }>{ this.props.data.domain }</a></strong>
-        </p>
-        { this.props.data.is_active ?
-          <a href="#" onClick={ this.props.activate }>Deactivate</a>
-            :
-            <a href="#" onClick={ this.props.activate }>Activate</a>
-        }
-        <span>|</span>
-        <a href="#" onClick={ this.props.protocol }>Change to { this.props.data.is_https ? 'HTTP' : 'HTTPS' }</a>
-        <span>|</span>
-        <a href="#" className="submitdelete" onClick={ this.props.delete }>Delete</a>
-      </td>
-    );
-  }
+		return (
+			<td className="domain-options">
+				<p>
+					<strong>
+						<a href={ url }>{ this.props.data.domain }</a>
+					</strong>
+				</p>
+				{ this.props.data.is_active ? (
+					<button onClick={ this.props.activate }>
+						{ __( 'Deactivate', 'dark-matter' ) }
+					</button>
+				) : (
+					<button onClick={ this.props.activate }>
+						{ __( 'Activate', 'dark-matter' ) }
+					</button>
+				) }
+				<span>|</span>
+				<button onClick={ this.props.protocol }>
+					{ sprintf(
+						/* translators: protocol */
+						__( 'Change to %s', 'dark-matter' ),
+						this.props.data.is_https
+							? __( 'HTTP', 'dark-matter' )
+							: __( 'HTTPS', 'dark-matter' )
+					) }
+				</button>
+				<span>|</span>
+				<button className="submitdelete" onClick={ this.props.delete }>
+					{ __( 'Delete', 'dark-matter' ) }
+				</button>
+			</td>
+		);
+	}
 }
 
 export default DomainDisplayPrimary;

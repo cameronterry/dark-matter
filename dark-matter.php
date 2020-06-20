@@ -2,8 +2,8 @@
 /**
  * Plugin Name: Dark Matter
  * Plugin URI: https://cameronterry.supernovawp.com/dark-matter/
- * Description: A domain mapping plugin from Project Dark Matter.
- * Version: 2.0.5
+ * Description: A highly opinionated domain mapping plugin for WordPress.
+ * Version: 2.1.0
  * Author: Cameron Terry
  * Author URI: https://cameronterry.co.uk/
  * Text Domain: dark-matter
@@ -25,6 +25,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Dark Matter. If not, see
  * https://github.com/cameronterry/dark-matter/blob/master/license.txt.
+ *
+ * @package DarkMatter
  */
 
 /** A bit of security for those who are too clever for their own good. */
@@ -32,7 +34,7 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '2.0.5' );
+define( 'DM_VERSION', '2.1.0' );
 define( 'DM_DB_VERSION', '20190114' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -41,27 +43,31 @@ wp_cache_add_global_groups( 'dark-matter' );
 
 require_once DM_PATH . '/domain-mapping/inc/compat.php';
 
-require_once DM_PATH . '/domain-mapping/classes/DM_Database.php';
-require_once DM_PATH . '/domain-mapping/classes/DM_Domain.php';
-require_once DM_PATH . '/domain-mapping/classes/DM_URL.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-database.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-domain.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-url.php';
 
 if ( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI ) {
-    require_once DM_PATH . '/domain-mapping/classes/DM_UI.php';
+	require_once DM_PATH . '/domain-mapping/classes/class-dm-ui.php';
 }
 
-require_once DM_PATH . '/domain-mapping/api/DarkMatter_Domains.php';
-require_once DM_PATH . '/domain-mapping/api/DarkMatter_Primary.php';
-require_once DM_PATH . '/domain-mapping/api/DarkMatter_Restrict.php';
+require_once DM_PATH . '/domain-mapping/api/class-darkmatter-domains.php';
+require_once DM_PATH . '/domain-mapping/api/class-darkmatter-primary.php';
+require_once DM_PATH . '/domain-mapping/api/class-darkmatter-restrict.php';
 
-if ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) {
-    require_once DM_PATH . '/domain-mapping/sso/DM_SSO_Cookie.php';
+/**
+ * Disable SSO if the COOKIE_DOMAIN constant is set.
+ */
+if ( DM_HealthChecks::instance()->cookie_domain_dm_set() && ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) ) {
+	require_once DM_PATH . '/domain-mapping/sso/class-dm-sso-cookie.php';
 }
 
-require_once DM_PATH . '/domain-mapping/rest/DM_REST_Domains_Controller.php';
-require_once DM_PATH . '/domain-mapping/rest/DM_REST_Restricted_Controller.php';
+require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-domains-controller.php';
+require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-restricted-controller.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-    require_once DM_PATH . '/domain-mapping/cli/domain.php';
-    require_once DM_PATH . '/domain-mapping/cli/restrict.php';
-    require_once DM_PATH . '/domain-mapping/cli/update.php';
+	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-domain-cli.php';
+	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-dropin-cli.php';
+	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-restrict-cli.php';
 }

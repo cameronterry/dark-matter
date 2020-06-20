@@ -1,0 +1,26 @@
+{
+    "name": "cameronterry/dark-matter",
+    "version": "2.1.0",
+    "description": "A highly opinionated domain mapping plugin for WordPress.",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0+",
+    "authors": [
+        {
+            "name": "Cameron Terry",
+            "email": "cammy.wan.kenobi@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0"
+    },
+    "require-dev": {
+        "automattic/vipwpcs": "^2.0",
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
+        "phpcompatibility/phpcompatibility-wp": "^2.1"
+    },
+    "scripts": {
+        "lint": "phpcs . --extensions=php --warning-severity=8 -s",
+        "lint-all": "phpcs .",
+        "lint-fix": "phpcbf ."
+    }
+}

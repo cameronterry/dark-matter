@@ -1,171 +1,233 @@
+import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 
 import Domains from '../API/Domains';
 
 class DomainAdd extends React.Component {
-  /**
-   * Constructor.
-   *
-   * @param {object} props
-   */
-  constructor( props ) {
-    super( props );
+	/**
+	 * Constructor.
+	 *
+	 * @param {Object} props
+	 */
+	constructor( props ) {
+		super( props );
 
-    this.api = new Domains();
+		this.api = new Domains();
 
-    this.state = {
-      domain: {
-        domain: '',
-        is_primary: false,
-        is_active: true,
-        is_https: false,
-      }
-    };
-  }
+		this.state = {
+			domain: {
+				domain: '',
+				is_primary: false,
+				is_active: true,
+				is_https: true,
+			},
+		};
+	}
 
-  /**
-   * Helper method to make the AJAX call to add the domain to the database.
-   */
-  async addDomain() {
-    let result = await this.api.add( this.state.domain );
+	/**
+	 * Helper method to make the AJAX call to add the domain to the database.
+	 */
+	async addDomain() {
+		const result = await this.api.add( this.state.domain );
 
-    this.props.addNoticeAndRefresh( this.state.domain.domain, ( result.code ? 'Cannot add domain. ' + result.message : 'has been added.' ), ( result.code ? 'error' : 'success' ) );
+		let message = '';
 
-    if ( ! result.code ) {
-      this.reset();
-    }
-  }
+		if ( result.code ) {
+			message = sprintf(
+				/* translators: error message */
+				__( 'Cannot add domain. %s', 'dark-matter' ),
+				result.message
+			);
+		} else {
+			message = sprintf(
+				/* translators: added domain */
+				__( '%s; has been added.', 'dark-matter' ),
+				result.domain
+			);
+		}
 
-  /**
-   * Handle the change event for each of the form elements.
-   *
-   * @param {object} event Event Information.
-   */
-  handleChange = ( event ) => {
-    const name = event.target.name;
-    const value = event.target.value;
+		this.props.addNoticeAndRefresh(
+			this.state.domain.domain,
+			message,
+			result.code ? 'error' : 'success'
+		);
 
-    let domain = { ...this.state.domain };
-    domain[ name ] = value;
+		if ( ! result.code ) {
+			this.reset();
+		}
+	}
 
-    this.setState( {
-      domain : domain
-    } );
-  }
+	/**
+	 * Handle the change event for each of the form elements.
+	 *
+	 * @param {Object} event Event Information.
+	 */
+	handleChange = ( event ) => {
+		const name = event.target.name;
+		const value = event.target.value;
 
-  /**
-   * Handle the checkbox change for the protocol.
-   *
-   * @param {object} event Event Information.
-   */
-  handleCheckboxChange = ( event ) => {
-    const name = event.target.name;
+		const domain = { ...this.state.domain };
+		domain[ name ] = value;
 
-    let domain = { ...this.state.domain };
-    domain[ name ] = event.target.checked;
+		this.setState( {
+			domain,
+		} );
+	};
 
-    this.setState( {
-      domain : domain
-    } );
-  }
+	/**
+	 * Handle the checkbox change for the protocol.
+	 *
+	 * @param {Object} event Event Information.
+	 */
+	handleCheckboxChange = ( event ) => {
+		const name = event.target.name;
 
-  /**
-   * Handle the radio option change for the protocol.
-   *
-   * @param {object} event Event Information.
-   */
-  handleProtocol = ( event ) => {
-    const value = event.target.value;
+		const domain = { ...this.state.domain };
+		domain[ name ] = event.target.checked;
 
-    let domain = { ...this.state.domain };
-    domain.is_https = ( 'https' === value );
+		this.setState( {
+			domain,
+		} );
+	};
 
-    this.setState( {
-      domain : domain
-    } );
-  }
+	/**
+	 * Handle the radio option change for the protocol.
+	 *
+	 * @param {Object} event Event Information.
+	 */
+	handleProtocol = ( event ) => {
+		const value = event.target.value;
 
-  /**
-   * Handle the form submission.
-   *
-   * @param {object} event Event Information.
-   */
-  handleSubmit = ( event ) => {
-    event.preventDefault();
+		const domain = { ...this.state.domain };
+		domain.is_https = 'https' === value;
 
-    this.addDomain();
-  }
+		this.setState( {
+			domain,
+		} );
+	};
 
-  /**
-   * Render the component.
-   */
-  render() {
-    return (
-      <form onSubmit={ this.handleSubmit }>
-        <h2>Add Domain</h2>
-        <table className="form-table">
-          <tbody>
-            <tr>
-              <th scope="row">
-                <label htmlFor="domain">Domain</label>
-              </th>
-              <td>
-                <input name="domain" type="text" onChange={ this.handleChange } value={ this.state.domain.domain } />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">
-                <label htmlFor="is_primary">Is Primary?</label>
-              </th>
-              <td>
-                <input name="is_primary" type="checkbox" value="yes" onChange={ this.handleCheckboxChange } checked={ this.state.domain.is_primary } />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">
-                <label htmlFor="is_active">Is Active?</label>
-              </th>
-              <td>
-                <input name="is_active" type="checkbox" value="yes" onChange={ this.handleCheckboxChange } checked={ this.state.domain.is_active } />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">
-                Protocol
-              </th>
-              <td>
-                <p>
-                  <input type="radio" name="is_https" id="protocol-http" value="http" onChange={ this.handleProtocol } checked={ ! this.state.domain.is_https } />
-                  <label htmlFor="protocol-http">HTTP</label>
-                </p>
-                <p>
-                  <input type="radio" name="is_https" id="protocol-https" value="https" onChange={ this.handleProtocol } checked={ this.state.domain.is_https } />
-                  <label htmlFor="protocol-https">HTTPS</label>
-                </p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <p className="submit">
-          <button type="submit" className="button button-primary">Add Domain</button>
-        </p>
-      </form>
-    );
-  }
+	/**
+	 * Handle the form submission.
+	 *
+	 * @param {Object} event Event Information.
+	 */
+	handleSubmit = ( event ) => {
+		event.preventDefault();
 
-  /**
-   * Reset the form back to the default.
-   */
-  reset() {
-    this.setState( {
-      domain: {
-        domain: '',
-        is_primary: false,
-        is_active: true,
-        is_https: false,
-      }
-    } );
-  }
+		this.addDomain();
+	};
+
+	/**
+	 * Render the component.
+	 */
+	render() {
+		return (
+			<form onSubmit={ this.handleSubmit }>
+				<h2>Add Domain</h2>
+				<table className="form-table">
+					<tbody>
+						<tr>
+							<th scope="row">
+								<label htmlFor="domain">
+									{ __( 'Domain', 'dark-matter' ) }
+								</label>
+							</th>
+							<td>
+								<input
+									name="domain"
+									type="text"
+									onChange={ this.handleChange }
+									value={ this.state.domain.domain }
+								/>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label htmlFor="is_primary">
+									{ __( 'Is Primary?', 'dark-matter' ) }
+								</label>
+							</th>
+							<td>
+								<input
+									name="is_primary"
+									type="checkbox"
+									value="yes"
+									onChange={ this.handleCheckboxChange }
+									checked={ this.state.domain.is_primary }
+								/>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">
+								<label htmlFor="is_active">
+									{ __( 'Is Active?', 'dark-matter' ) }
+								</label>
+							</th>
+							<td>
+								<input
+									name="is_active"
+									type="checkbox"
+									value="yes"
+									onChange={ this.handleCheckboxChange }
+									checked={ this.state.domain.is_active }
+								/>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">{ __( 'Protocol', 'dark-matter' ) }</th>
+							<td>
+								<p>
+									<input
+										type="radio"
+										name="is_https"
+										id="protocol-http"
+										value="http"
+										onChange={ this.handleProtocol }
+										checked={ ! this.state.domain.is_https }
+									/>
+									<label htmlFor="protocol-http">
+										{ __( 'HTTP', 'dark-matter' ) }
+									</label>
+								</p>
+								<p>
+									<input
+										type="radio"
+										name="is_https"
+										id="protocol-https"
+										value="https"
+										onChange={ this.handleProtocol }
+										checked={ this.state.domain.is_https }
+									/>
+									<label htmlFor="protocol-https">
+										{ __( 'HTTPS', 'dark-matter' ) }
+									</label>
+								</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<p className="submit">
+					<button type="submit" className="button button-primary">
+						{ __( 'Add Domain', 'dark-matter' ) }
+					</button>
+				</p>
+			</form>
+		);
+	}
+
+	/**
+	 * Reset the form back to the default.
+	 */
+	reset() {
+		this.setState( {
+			domain: {
+				domain: '',
+				is_primary: false,
+				is_active: true,
+				is_https: false,
+			},
+		} );
+	}
 }
 
 export default DomainAdd;
