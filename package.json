@@ -9,8 +9,8 @@
     "build-all": "npm run build && npm run build-dev",
     "lint": "composer lint && eslint",
     "lint-js": "eslint",
-    "release": "composer install && npm install && npm run build-all",
-    "start": "composer install && npm install && npm run build-dev"
+    "release": "composer install --no-dev --optimize-autoloader && npm install && npm run build-all",
+    "start": "composer install && npm install && npm run build-all"
   },
   "husky": {
     "hooks": {
