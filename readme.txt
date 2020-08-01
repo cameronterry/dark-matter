@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.4.2
-Stable tag: 2.1.0
+Tested up to: 5.5
+Stable tag: 2.1.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,16 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.1 =
+
+* Tested with WordPress 5.5's introduction of sitemaps (see https://make.wordpress.org/core/2020/07/22/new-xml-sitemaps-functionality-in-wordpress-5-5/).
+* Removed and reintroduced the `home_url` hook in certain situations for mapping certain admin links to the primary domain.
+  * This fixes an issue where Yoast 14.0+ was storing mapped and unmapped URLs in the indexables table (see https://yoast.com/indexables/).
+  * This occurred when Yoast was pre-emptively populating the indexables when navigating the admin area.
+* Updated NPM dependencies.
+* Changed `npm run start` to build both min and non-min assets. (That said, best to keep your `SCRIPT_DEBUG` on if developing with Dark Matter).
+* Changed `npm run release` to use more optimised flags with Composer. (Only affects those developing Dark Matter and not the actual code in releases.)
 
 = 2.1.0 =
 
