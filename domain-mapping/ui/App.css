@@ -38,3 +38,33 @@
         }
     }
 }
+
+.has-right-sidebar {
+    float: left;
+    margin-right: 2%;
+    width: 70%;
+
+
+    @media (max-width: 1199px) {
+        width: 65%;
+    }
+
+    @media (max-width: 991px) {
+        width: 95%;
+    }
+}
+
+.has-right-sidebar table {
+    margin-top: 2em;
+}
+
+.info-panel {
+    float: left;
+    width: 20%;
+    margin-top: 2em;
+}
+
+.info-panel .postbox {
+    padding-left: 1em;
+    padding-right: 1em;
+}
