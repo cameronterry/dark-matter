@@ -183,7 +183,6 @@ class DomainMapping extends React.Component {
 					<DomainAdd addNoticeAndRefresh={ this.addNoticeAndRefresh } />
 				</div>
 				<InformationPanel />
-
 			</div>
 		);
 	}
