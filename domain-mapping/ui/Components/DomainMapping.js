@@ -4,6 +4,7 @@ import React from 'react';
 import DomainAdd from './DomainAdd';
 import Domains from '../API/Domains';
 import DomainRow from './DomainRow';
+import InformationPanel from './InformationPanel';
 import Message from './Message';
 
 class DomainMapping extends React.Component {
@@ -159,26 +160,30 @@ class DomainMapping extends React.Component {
 				<h1 className="wp-heading-inline">Domains</h1>
 				<hr className="wp-header-end" />
 				{ messages }
-				<table className="wp-list-table widefat fixed striped users">
-					<thead>
-						<tr>
-							<th scope="col" className="manage-column">
-								{ __( 'Domain', 'dark-matter' ) }
-							</th>
-							<th scope="col" className="manage-column">
-								{ __( 'Is Primary?', 'dark-matter' ) }
-							</th>
-							<th scope="col" className="manage-column">
-								{ __( 'Is Active?', 'dark-matter' ) }
-							</th>
-							<th scope="col" className="manage-column">
-								{ __( 'Protocol', 'dark-matter' ) }
-							</th>
-						</tr>
-					</thead>
-					<tbody>{ rows }</tbody>
-				</table>
-				<DomainAdd addNoticeAndRefresh={ this.addNoticeAndRefresh } />
+				<div className="has-right-sidebar">
+					<table className="wp-list-table widefat fixed striped users">
+						<thead>
+							<tr>
+								<th scope="col" className="manage-column">
+									{ __( 'Domain', 'dark-matter' ) }
+								</th>
+								<th scope="col" className="manage-column">
+									{ __( 'Is Primary?', 'dark-matter' ) }
+								</th>
+								<th scope="col" className="manage-column">
+									{ __( 'Is Active?', 'dark-matter' ) }
+								</th>
+								<th scope="col" className="manage-column">
+									{ __( 'Protocol', 'dark-matter' ) }
+								</th>
+							</tr>
+						</thead>
+						<tbody>{ rows }</tbody>
+					</table>
+					<DomainAdd addNoticeAndRefresh={ this.addNoticeAndRefresh } />
+				</div>
+				<InformationPanel />
+
 			</div>
 		);
 	}
