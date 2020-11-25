@@ -93,7 +93,15 @@ class DM_UI {
 	 * @return string Capability that must be met to use the Admin page.
 	 */
 	public function get_permission() {
-		return apply_filters( 'dark_matter_domain_permission', 'upgrade_network' );
+		/**
+		 * Allows the override of the default permission for per site domain management.
+		 *
+		 * @since 2.1.2
+		 *
+		 * @param string $capability Capability required to manage domains (upgrade_network / Super Admin).
+		 * @param string $context The context the permission is checked.
+		 */
+		return apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'admin' );
 	}
 
 	/**

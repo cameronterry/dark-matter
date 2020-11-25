@@ -66,7 +66,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network' ) );
+		/** This action is documented in domain-mapping/classes/class-dm-ui.php */
+		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'rest-create' ) );
 	}
 
 	/**
@@ -112,7 +113,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network' ) );
+		/** This action is documented in domain-mapping/classes/class-dm-ui.php */
+		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'rest-delete' ) );
 	}
 
 	/**
@@ -340,7 +342,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network' ) );
+		/** This action is documented in domain-mapping/classes/class-dm-ui.php */
+		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'rest-get' ) );
 	}
 
 	/**
@@ -583,7 +586,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
-		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network' ) );
+		/** This action is documented in domain-mapping/classes/class-dm-ui.php */
+		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'rest-update' ) );
 	}
 }
 
