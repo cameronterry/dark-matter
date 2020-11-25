@@ -74,8 +74,12 @@ class DomainMapping extends React.Component {
 
 		this.addNotice(
 			domain,
-			result.code ? result.message : 'has been deleted.',
-			result.code ? 'error' : 'success'
+			sprintf(
+				/* translators: domain name */
+				__( '%s; has been deleted.', 'dark-matter' ),
+				result.domain
+			),
+			'success'
 		);
 
 		this.getData();
