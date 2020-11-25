@@ -42,7 +42,7 @@ class DM_UI {
 		$hook_suffix = add_options_page(
 			__( 'Domain Mappings', 'dark-matter' ),
 			__( 'Domains', 'dark-matter' ),
-			'switch_themes',
+			$this->get_permission(),
 			'domains',
 			array(
 				$this,
@@ -86,6 +86,17 @@ class DM_UI {
 	}
 
 	/**
+	 * Retrieve the capability that is required for using the admin page.
+	 *
+	 * @since 2.1.2
+	 *
+	 * @return string Capability that must be met to use the Admin page.
+	 */
+	public function get_permission() {
+		return apply_filters( 'dark_matter_domain_permission', 'upgrade_network' );
+	}
+
+	/**
 	 * Very basic HTML output for the
 	 *
 	 * @since 2.0.0
@@ -93,6 +104,9 @@ class DM_UI {
 	 * @return void
 	 */
 	public function page() {
+		if ( current_user_can( $this->get_permission() ) ) {
+			wp_die( __( 'You do not have permission to manage domains.', 'dark-matter' ) );
+		}
 		?>
 		<div id="root"></div>
 		<?php
