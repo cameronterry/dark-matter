@@ -79,6 +79,14 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.1.2 =
+
+* [New] Added two new filters to allow the override of permission levels.
+  * Domain management with `dark_matter_domain_permission`.
+  * Restricted domain management with `dark_matter_restricted_permission`.
+* [Fix] Admin page uses the same permission check as the REST API endpoints which power it.
+* Removed the warning from the Github readme.
+
 = 2.1.1 =
 
 * Tested with WordPress 5.5's introduction of sitemaps (see https://make.wordpress.org/core/2020/07/22/new-xml-sitemaps-functionality-in-wordpress-5-5/).
