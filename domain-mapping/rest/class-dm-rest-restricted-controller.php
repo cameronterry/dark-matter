@@ -65,7 +65,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		return current_user_can( 'upgrade_network' );
+		return current_user_can( apply_filters( 'dark_matter_restricted_permission', 'upgrade_network' ) );
 	}
 
 	/**
@@ -108,7 +108,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return current_user_can( 'upgrade_network' );
+		return current_user_can( apply_filters( 'dark_matter_restricted_permission', 'upgrade_network' ) );
 	}
 
 	/**
@@ -135,7 +135,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		return current_user_can( 'upgrade_network' );
+		return current_user_can( apply_filters( 'dark_matter_restricted_permission', 'upgrade_network' ) );
 	}
 
 	/**
