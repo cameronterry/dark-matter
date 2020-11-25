@@ -81,10 +81,11 @@ Google Analytics) with over 60 websites.
 
 = 2.1.2 =
 
-* [New] Added two new filters to allow the override of permission levels.
+* Added two new filters to allow the override of permission levels.
   * Domain management with `dark_matter_domain_permission`.
   * Restricted domain management with `dark_matter_restricted_permission`.
-* [Fix] Admin page uses the same permission check as the REST API endpoints which power it.
+* Admin page now uses the same permission check as the REST API endpoints which power it.
+* Fixed the delete notice to use the domain name. Previously it just said " has been deleted." with little context.
 * Removed the warning from the Github readme.
 
 = 2.1.1 =
