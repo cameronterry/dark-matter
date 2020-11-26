@@ -1,9 +1,3 @@
-# WARNING
-
-**Whilst the terms and conditions of this plugin do not ask you to surrender
-your soul to us... once it has finished breaking your site, it might as well
-feel that it has!**
-
 # Dark Matter
 
 Dark Matter is a highly opinionated domain mapping plugin for WordPress

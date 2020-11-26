@@ -65,7 +65,15 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
-		return current_user_can( 'upgrade_network' );
+		/**
+		 * Allows the override of the default permission for the restricted domain management.
+		 *
+		 * @since 2.1.2
+		 *
+		 * @param string $capability Capability required to manage domains (upgrade_network / Super Admin).
+		 * @param string $context The context the permission is checked.
+		 */
+		return current_user_can( apply_filters( 'dark_matter_restricted_permission', 'upgrade_network', 'rest-create' ) );
 	}
 
 	/**
@@ -108,7 +116,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return current_user_can( 'upgrade_network' );
+		/** This action is documented in domain-mapping/rest/class-dm-rest-restricted-controller.php */
+		return current_user_can( apply_filters( 'dark_matter_restricted_permission', 'upgrade_network', 'rest-delete' ) );
 	}
 
 	/**
@@ -135,7 +144,8 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
-		return current_user_can( 'upgrade_network' );
+		/** This action is documented in domain-mapping/rest/class-dm-rest-restricted-controller.php */
+		return current_user_can( apply_filters( 'dark_matter_restricted_permission', 'upgrade_network', 'rest-get' ) );
 	}
 
 	/**
