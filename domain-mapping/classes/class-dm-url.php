@@ -310,6 +310,8 @@ class DM_URL {
 	 */
 	public function prepare_rest() {
 		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+
+		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
 	}
 
 	/**
