@@ -85,6 +85,10 @@ Google Analytics) with over 60 websites.
   * Domain management with `dark_matter_domain_permission`.
   * Restricted domain management with `dark_matter_restricted_permission`.
 * Admin page now uses the same permission check as the REST API endpoints which power it.
+* Fixed the "View [Post Type]" links in Block Editor / Gutenberg by ensuring the home_url is mapped on REST API calls.
+* Fixed an issue where `get_preview_post_link()` used the mapped domain when called within REST API request.
+  * This should also fix a randomly occurring issue where "Sorry, you are not allowed to preview drafts" shows after clicking Preview.
+  * For note: due to a quirk of Block Editor / Gutenberg, some times the "Preview in new tab" will show the mapped domain on hover but clicking will now load on admin domain.
 * Fixed the delete notice to use the domain name. Previously it just said " has been deleted." with little context.
 * Removed the warning from the Github readme.
 
