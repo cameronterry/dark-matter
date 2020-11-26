@@ -113,7 +113,7 @@ class DM_UI {
 	 */
 	public function page() {
 		if ( ! current_user_can( $this->get_permission() ) ) {
-			wp_die( __( 'You do not have permission to manage domains.', 'dark-matter' ) );
+			wp_die( esc_html__( 'You do not have permission to manage domains.', 'dark-matter' ) );
 		}
 		?>
 		<div id="root"></div>

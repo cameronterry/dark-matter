@@ -282,13 +282,21 @@ class DM_URL {
 		$post_types = get_post_types( null, 'names' );
 
 		foreach ( $post_types as $post_type ) {
-			add_action( 'manage_' . $post_type . '_posts_custom_column', function () {
-				remove_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-			}, PHP_INT_MIN );
+			add_action(
+				'manage_' . $post_type . '_posts_custom_column',
+				function () {
+					remove_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+				},
+				1
+			);
 
-			add_action( 'manage_' . $post_type . '_posts_custom_column', function () {
-				add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-			}, PHP_INT_MAX );
+			add_action(
+				'manage_' . $post_type . '_posts_custom_column',
+				function () {
+					add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+				},
+				PHP_INT_MAX
+			);
 		}
 
 		/**
