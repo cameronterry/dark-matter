@@ -218,16 +218,13 @@ class DM_URL {
 		 */
 		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
 
-		if (
-				is_admin()
-			||
-				(
-					! $this->is_mapped()
-				&&
-					false !== strpos( $request_uri, rest_get_url_prefix() )
-				)
-		) {
+		if ( is_admin() ) {
 			add_action( 'admin_init', array( $this, 'prepare_admin' ) );
+			return;
+		}
+
+		if ( ! $this->is_mapped() && false !== strpos( $request_uri, rest_get_url_prefix() ) ) {
+			add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
 			return;
 		}
 
@@ -302,6 +299,17 @@ class DM_URL {
 		 * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312 Query string parameter "preview=true" being added to the URL.
 		 */
 		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+	}
+
+	/**
+	 * Apply filters to map / unmap URLs for the REST API endpoint and for Block Editor support.
+	 *
+	 * @since 2.1.2
+	 *
+	 * @return void
+	 */
+	public function prepare_rest() {
+		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
 	}
 
 	/**
