@@ -346,6 +346,14 @@ class DM_URL {
 
 		if ( null === $scheme || in_array( $scheme, $valid_schemes ) ) {
 			/**
+			 * Ensure that if the REST API is called on the admin domain that we do not map the `_links` property on
+			 * the response. This will ensure that any integration using these sticks to the correct domain.
+			 */
+			if ( ! $this->is_mapped() && false !== strpos( $url, rest_get_url_prefix() ) ) {
+				return $url;
+			}
+
+			/**
 			 * Determine if there is any query string paramters present.
 			 */
 			$query = wp_parse_url( $url, PHP_URL_QUERY );
