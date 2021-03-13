@@ -266,7 +266,7 @@ class DM_URL {
 			&&
 				false !== stripos( wp_get_referer(), '/wp-admin/' )
 			&&
-				( empty( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'query-attachments', 'sample-permalink', 'upload-attachment' ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				( empty( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'query-attachments', 'sample-permalink', 'upload-attachment', 'wp-link-ajax' ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		) {
 			return;
 		}
