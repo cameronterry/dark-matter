@@ -14,9 +14,9 @@
         "php": ">=7.0"
     },
     "require-dev": {
-        "automattic/vipwpcs": "^2.0",
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.6.2",
-        "phpcompatibility/phpcompatibility-wp": "^2.1"
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "automattic/vipwpcs": "^2.2"
     },
     "scripts": {
         "lint": "phpcs . --extensions=php --warning-severity=8 -s",
