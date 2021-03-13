@@ -21,20 +21,6 @@ class DM_URL {
 	 */
 	public function __construct() {
 		/**
-		 * Prevent accidental URL mapping on requests which are not GET requests for the admin area. For example; a POST
-		 * request will include the postback for saving a post.
-		 *
-		 * A good example is the Yoast SEO plugin when detecting the internal links as part of the SEO score. This hooks
-		 * on to the `save_post` action and then uses `home_url()` and `get_permalink()` as part of the process. If the
-		 * URLs are mapped / unmapped here then it can cause the functionality to fail.
-		 *
-		 * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
-		 */
-		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
-			return;
-		}
-
-		/**
 		 * Disable all the URL mapping if viewing through Customizer. This is to
 		 * ensure maximum functionality by retaining the Admin URL.
 		 */
