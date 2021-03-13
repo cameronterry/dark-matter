@@ -81,6 +81,15 @@ Google Analytics) with over 60 websites.
 
 = 2.1.3 =
 
+* **IMPORTANT:** Switched the link search in Classic Editor to use mapped domains for consistency with Block Editor / Gutenberg.
+  * This change means that `post_content` will now contain mapped domains for Classic Editor.
+  * Block Editor / Gutenberg posts will already have mapped domains from the Search REST endpoint.
+  * As a byproduct, this fixes an annoying "quirk" where admins and editors would see the unmapped URL rather than the mapped one, thinking there was a mistake.
+* **IMPORTANT:** Removed a previous fix for Yoast SEO indexables.
+  * Part of the Block Editor / Search REST endpoint always using mapped domains, this would result in links being incorrectly identified as "external".
+  * Removing the previous fix will make Yoast SEO store mapped domains and correctly identify "external" and "internal" links.
+  * This also improves similar functionality in Rank Math SEO plugin.
+* Change admin domain mapping to use `init` action instead of `admin_init` to improve compatibility with Rank Math SEO.
 * Fixed the year in the license.txt file.
 * Changed the author and plugin URIs to Github.
 * Updated composer packages (used in development of the plugin).
