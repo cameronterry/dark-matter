@@ -219,7 +219,7 @@ class DM_URL {
 		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
 
 		if ( is_admin() ) {
-			add_action( 'admin_init', array( $this, 'prepare_admin' ) );
+			add_action( 'init', array( $this, 'prepare_admin' ) );
 			return;
 		}
 
