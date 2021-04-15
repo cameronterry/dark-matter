@@ -13,6 +13,10 @@ class DM_Yoast {
 	 * DM_Yoast constructor.
 	 */
 	public function __construct() {
+		if ( defined( 'WPSEO_VERSION' ) ) {
+			return;
+		}
+
 		add_filter( 'wpseo_should_save_indexable', [ $this, 'fix_indexable_permalinks' ], 10, 2 );
 	}
 
@@ -42,6 +46,4 @@ class DM_Yoast {
 /**
  * Only instantiate this class if Yoast SEO is in use.
  */
-if ( defined( 'WPSEO_VERSION' ) ) {
-	new DM_Yoast();
-}
+new DM_Yoast();
