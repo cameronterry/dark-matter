@@ -38,4 +38,10 @@ class DM_Yoast {
 		return $intend_to_save;
 	}
 }
-new DM_Yoast();
+
+/**
+ * Only instantiate this class if Yoast SEO is in use.
+ */
+if ( defined( 'WPSEO_VERSION' ) ) {
+	new DM_Yoast();
+}
