@@ -274,32 +274,6 @@ class DM_URL {
 		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
 
 		/**
-		 * Ignore the custom column to prevent accidental domain mappings. Specifically Yoast since version 14 and the
-		 * introduction of Indexables.
-		 *
-		 * @link https://yoast.com/indexables/
-		 */
-		$post_types = get_post_types( null, 'names' );
-
-		foreach ( $post_types as $post_type ) {
-			add_action(
-				'manage_' . $post_type . '_posts_custom_column',
-				function () {
-					remove_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-				},
-				1
-			);
-
-			add_action(
-				'manage_' . $post_type . '_posts_custom_column',
-				function () {
-					add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-				},
-				PHP_INT_MAX
-			);
-		}
-
-		/**
 		 * The Preview link in the metabox of Post Publish cannot be handled by the home_url hook. This is because it
 		 * uses get_permalink() to retrieve the URL before appending the "preview=true" query string parameter.
 		 *
