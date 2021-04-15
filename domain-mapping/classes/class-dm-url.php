@@ -140,6 +140,25 @@ class DM_URL {
 	}
 
 	/**
+	 * Unmap URLs prior to the post being created / updated in the database. This ensures that unmapped domains are
+	 * stored in the database if provided as well as fixing some issues related internal link tracking used by SEO
+	 * plugins.
+	 *
+	 * This can occur due to the "Search" REST endpoint returning mapped domains (as per Gutenberg) and / or admins and
+	 * editors copying and pasting links by navigating the public-facing side of the website.
+	 *
+	 * @param array $data An array of slashed, sanitized, and processed post data.
+	 * @return array Post data, with URLs unmapped.
+	 */
+	public function insert_post( $data = [] ) {
+		if ( ! empty( $data['post_content'] ) ) {
+			$data['post_content'] = $this->unmap( $data['post_content'] );
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Determines if the requested domain is mapped using the DOMAIN_MAPPING
 	 * constant from sunrise.php.
 	 *
@@ -200,6 +219,7 @@ class DM_URL {
 	public function prepare() {
 		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
 		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 
 		/**
 		 * We only wish to affect `the_content` for Previews and nothing else.
