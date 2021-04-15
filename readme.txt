@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.5
-Stable tag: 2.1.2
+Tested up to: 5.7.1
+Stable tag: 2.1.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,21 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.3 =
+
+* Ensures that the post content stores URLs in their "unmapped" form.
+  * This fixes issues with determining "internal links" by SEO plugins such as Yoast and Rank Math.
+  * Part of Dark Matter's goal of being as compatible as possible if removed.
+  * Also compensates for an issue where Gutenberg can add mapped domains to the post content through the inline link controls.
+* A new fix for Yoast SEO indexables to ensure it stores unmapped domains.
+* Developer notes (this does not alter the functionality of the plugin):
+  * Ensured compatibility with Composer 2 for coding standards.
+  * Updated NPM packages to the latest versions where applicable.
+  * Updated Webpack configuration as part of the update.
+* Rank Math SEO plugin added to the list of compatibility checks.
+* Fixed the copyright year in the license.txt file.
+* Tested with WordPress 5.7.
 
 = 2.1.2 =
 
