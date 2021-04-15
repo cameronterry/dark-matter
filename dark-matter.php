@@ -48,6 +48,11 @@ require_once DM_PATH . '/domain-mapping/classes/class-dm-domain.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-url.php';
 
+/**
+ * Plugin compatibility.
+ */
+require_once DM_PATH . '/domain-mapping/classes/third-party/class-dm-yoast.php';
+
 if ( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI ) {
 	require_once DM_PATH . '/domain-mapping/classes/class-dm-ui.php';
 }
