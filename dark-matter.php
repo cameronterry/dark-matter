@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '2.1.2' );
+define( 'DM_VERSION', '2.1.3' );
 define( 'DM_DB_VERSION', '20190114' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -47,6 +47,11 @@ require_once DM_PATH . '/domain-mapping/classes/class-dm-database.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-domain.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-url.php';
+
+/**
+ * Plugin compatibility.
+ */
+require_once DM_PATH . '/domain-mapping/classes/third-party/class-dm-yoast.php';
 
 if ( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI ) {
 	require_once DM_PATH . '/domain-mapping/classes/class-dm-ui.php';

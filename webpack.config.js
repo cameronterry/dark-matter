@@ -39,9 +39,6 @@ module.exports = () => {
           // basically tells webpack to use babel with the correct presets
           test: /\.js$/,
           loader: 'babel-loader',
-          query: {
-            presets: ['@babel/preset-env', '@babel/preset-react']
-          }
         },
         {
           test: /\.css$/,
@@ -53,10 +50,13 @@ module.exports = () => {
             {
               loader: 'css-loader',
               options: {
+                sourceMap: ! ( 'production' === env ),
                 importLoaders: 1
               }
             },
-            'postcss-loader'
+            {
+              loader: 'postcss-loader',
+            }
           ]
         }
       ]
@@ -82,17 +82,13 @@ module.exports = () => {
       minimize: true,
       minimizer: [
         new TerserPlugin( {
-          cache: true,
           parallel: true,
-          sourceMap: false,
           terserOptions: {
             parse: {
               /**
-               * We want terser to parse ecma 8 code. However, we don't want it
-               * to apply any minfication steps that turns valid ecma 5 code
-               * into invalid ecma 5 code. This is why the 'compress' and 'output'
-               * sections only apply transformations that are ecma 5 safe
-               * https://github.com/facebook/create-react-app/pull/4234
+               * We want terser to parse ecma 8 code. However, we don't want it to apply any minfication steps that
+               * turns valid ecma 5 code into invalid ecma 5 code. This is why the 'compress' and 'output' sections only
+               * apply transformations that are ecma 5 safe: https://github.com/facebook/create-react-app/pull/4234
                */
               ecma: 8,
             },
@@ -100,25 +96,18 @@ module.exports = () => {
               ecma: 5,
               warnings: false,
               /**
-               * Disabled because of an issue with Uglify breaking seemingly valid code:
-               * https://github.com/facebook/create-react-app/issues/2376
-               * Pending further investigation:
-               * https://github.com/mishoo/UglifyJS2/issues/2011
+               * Disabled because of an issue with Uglify breaking seemingly valid code: https://github.com/facebook/create-react-app/issues/2376
+               *
+               * Pending further investigation: https://github.com/mishoo/UglifyJS2/issues/2011
                */
               comparisons: false,
               /**
-               * Disabled because of an issue with Terser breaking valid code:
-               * https://github.com/facebook/create-react-app/issues/5250
-               * Pending futher investigation:
-               * https://github.com/terser-js/terser/issues/120
+               * Disabled because of an issue with Terser breaking valid code: https://github.com/facebook/create-react-app/issues/5250
+               *
+               * Pending futher investigation: https://github.com/terser-js/terser/issues/120
                */
               inline: 2,
             },
-            output: {
-              ecma: 5,
-              comments: false,
-            },
-            ie8: false,
           },
         } ),
       ]
