@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Dark Matter
- * Plugin URI: https://cameronterry.supernovawp.com/dark-matter/
+ * Plugin URI: https://github.com/cameronterry/dark-matter
  * Description: A highly opinionated domain mapping plugin for WordPress.
  * Version: 2.1.3
  * Author: Cameron Terry
- * Author URI: https://cameronterry.co.uk/
+ * Author URI: https://github.com/cameronterry/
  * Text Domain: dark-matter
  * Network: True
  * License: GPLv2
