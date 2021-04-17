@@ -140,6 +140,25 @@ class DM_URL {
 	}
 
 	/**
+	 * Unmap URLs prior to the post being created / updated in the database. This ensures that unmapped domains are
+	 * stored in the database if provided as well as fixing some issues related internal link tracking used by SEO
+	 * plugins.
+	 *
+	 * This can occur due to the "Search" REST endpoint returning mapped domains (as per Gutenberg) and / or admins and
+	 * editors copying and pasting links by navigating the public-facing side of the website.
+	 *
+	 * @param array $data An array of slashed, sanitized, and processed post data.
+	 * @return array Post data, with URLs unmapped.
+	 */
+	public function insert_post( $data = [] ) {
+		if ( ! empty( $data['post_content'] ) ) {
+			$data['post_content'] = $this->unmap( $data['post_content'] );
+		}
+
+		return $data;
+	}
+
+	/**
 	 * Determines if the requested domain is mapped using the DOMAIN_MAPPING
 	 * constant from sunrise.php.
 	 *
@@ -200,6 +219,7 @@ class DM_URL {
 	public function prepare() {
 		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
 		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 
 		/**
 		 * We only wish to affect `the_content` for Previews and nothing else.
@@ -219,7 +239,7 @@ class DM_URL {
 		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
 
 		if ( is_admin() ) {
-			add_action( 'admin_init', array( $this, 'prepare_admin' ) );
+			add_action( 'init', array( $this, 'prepare_admin' ) );
 			return;
 		}
 
@@ -272,32 +292,6 @@ class DM_URL {
 		}
 
 		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-
-		/**
-		 * Ignore the custom column to prevent accidental domain mappings. Specifically Yoast since version 14 and the
-		 * introduction of Indexables.
-		 *
-		 * @link https://yoast.com/indexables/
-		 */
-		$post_types = get_post_types( null, 'names' );
-
-		foreach ( $post_types as $post_type ) {
-			add_action(
-				'manage_' . $post_type . '_posts_custom_column',
-				function () {
-					remove_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-				},
-				1
-			);
-
-			add_action(
-				'manage_' . $post_type . '_posts_custom_column',
-				function () {
-					add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-				},
-				PHP_INT_MAX
-			);
-		}
 
 		/**
 		 * The Preview link in the metabox of Post Publish cannot be handled by the home_url hook. This is because it
