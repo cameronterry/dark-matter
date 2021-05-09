@@ -1,6 +1,8 @@
 <?php
 /**
  * Compatibility adjustments for supporting Yoast SEO.
+ *
+ * @package DarkMatter
  */
 
 /**
@@ -26,7 +28,7 @@ class DM_Yoast {
 	 *
 	 * @link https://github.com/Yoast/wordpress-seo/blob/15.1/src/builders/indexable-builder.php#L296
 	 *
-	 * @param boolean $intend_to_save Whether the indexable is to be saved or not.
+	 * @param boolean                        $intend_to_save Whether the indexable is to be saved or not.
 	 * @param \Yoast\WP\SEO\Models\Indexable $indexable The indexable to be saved.
 	 * @return boolean The default value of "intend to save".
 	 */
