@@ -1,13 +1,13 @@
 {
     "name": "cameronterry/dark-matter",
-    "version": "2.1.3",
+    "version": "2.1.4",
     "description": "A highly opinionated domain mapping plugin for WordPress.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0+",
     "authors": [
         {
             "name": "Cameron Terry",
-            "email": "cammy.wan.kenobi@gmail.com"
+            "email": "cameronterry@me.com"
         }
     ],
     "require": {
