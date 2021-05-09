@@ -10,12 +10,8 @@
     "lint": "composer lint && eslint",
     "lint-js": "eslint",
     "release": "composer install --no-dev --optimize-autoloader && npm install && npm run build-all",
-    "start": "composer install && npm install && npm run build-all"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
+    "start": "composer install && npm install && npm run build-all",
+    "prepare": "husky install"
   },
   "lint-staged": {
     "*.js": [
