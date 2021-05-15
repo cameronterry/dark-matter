@@ -281,12 +281,17 @@ class DM_URL {
 		 * old AJAX. Therefore we check the referer to ensure it's the admin
 		 * side rather than the front-end.
 		 */
+		$valid_actions = [
+			'query-attachments' => true,
+			'sample-permalink'  => true,
+			'upload-attachment' => true,
+		];
 
 		if ( wp_doing_ajax()
 			&&
 				false !== stripos( wp_get_referer(), '/wp-admin/' )
 			&&
-				( empty( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'query-attachments', 'sample-permalink', 'upload-attachment' ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				( empty( $_POST['action'] ) || ! array_key_exists( $_POST['action'], $valid_actions ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		) {
 			return;
 		}
