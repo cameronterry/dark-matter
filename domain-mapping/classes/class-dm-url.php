@@ -342,18 +342,21 @@ class DM_URL {
 			return $url;
 		}
 
-		$valid_schemes = array( 'http', 'https' );
+		$valid_schemes = array(
+			'http'  => true,
+			'https' => true,
+		);
 
 		if ( ! is_admin() ) {
-			$valid_schemes[] = 'json';
-			$valid_schemes[] = 'rest';
+			$valid_schemes['json'] = true;
+			$valid_schemes['rest'] = true;
 		}
 
 		if ( apply_filters( 'darkmatter_allow_logins', false ) ) {
 			$valid_schemes[] = 'login';
 		}
 
-		if ( null === $scheme || in_array( $scheme, $valid_schemes ) ) {
+		if ( null === $scheme || array_key_exists( $scheme, $valid_schemes ) ) {
 			/**
 			 * Ensure that if the REST API is called on the admin domain that we do not map the `_links` property on
 			 * the response. This will ensure that any integration using these sticks to the correct domain.
