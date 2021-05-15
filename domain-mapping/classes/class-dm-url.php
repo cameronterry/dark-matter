@@ -96,11 +96,11 @@ class DM_URL {
 		}
 
 		$valid_paths = array(
-			'admin-ajax.php',
-			'admin-post.php',
+			'admin-ajax.php' => true,
+			'admin-post.php' => true,
 		);
 
-		if ( in_array( $filename, $valid_paths ) ) {
+		if ( array_key_exists( $filename, $valid_paths ) ) {
 			return $this->map( $url, $blog_id );
 		}
 
