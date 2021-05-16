@@ -89,11 +89,16 @@ function darkmatter_maybe_redirect() {
 	$filename = basename( $request );
 	$filename = strtok( $filename, '?' );
 
+	$ajax_filenames = array(
+		'admin-post.php' => true,
+		'admin-ajax.php' => true,
+	);
+
 	/**
 	 * Check to see if the current request is an Admin Post action or an AJAX action. These two requests in Dark Matter
 	 * can be on either the admin domain or the primary domain.
 	 */
-	if ( in_array( $filename, array( 'admin-post.php', 'admin-ajax.php' ), true ) ) {
+	if ( array_key_exists( $filename, $ajax_filenames ) ) {
 		return;
 	}
 
@@ -106,7 +111,12 @@ function darkmatter_maybe_redirect() {
 
 	$is_admin = false;
 
-	if ( is_admin() || in_array( $filename, array( 'wp-login.php', 'wp-register.php' ) ) ) {
+	$admin_filenames = array(
+		'wp-login.php'    => true,
+		'wp-register.php' => true,
+	);
+
+	if ( is_admin() || array_key_exists( $filename, $admin_filenames ) ) {
 		$is_admin = true;
 	}
 

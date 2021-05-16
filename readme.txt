@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.7.1
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,21 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.4 =
+
+* Tweaked some conditional checks to code which is more performant. The logic is identical to before, just utilising a slightly different mechanism to achieve it. This change was applied to:
+  * Detecting and executing redirects, such as those from secondary domains to the primary domain as well as login and admin pages to the admin domain.
+  * A check for mapping `admin-ajax.php` and `admin-post.php` appropriately on the primary domain.
+  * URL mapping on the admin side.
+  * URL mapping for Home URL and Site URL options.
+* Developing (for working with Dark Matter) updates:
+  * Upgrade Composer / NPM dependencies to latest versions.
+  * Upgraded Lodash, a dependency of some packages in use, to a new version.
+  * Migrated Husky from v4 to v6 - missed in the previous 2.1.3 release.
+  * Fixed the Husky integration for the pre-commit hooks ... except it doesn't work in Gitkraken (a git GUI client).
+  * Fixed some minor PHPCS issues around the DM_Yoast class that was missed due to the aforementioned Husky / pre-commit issue.
+* Fixed a PHPCS warning when checking AJAX action in domain mapping for admin area.
 
 = 2.1.3 =
 

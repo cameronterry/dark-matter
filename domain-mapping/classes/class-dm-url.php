@@ -96,11 +96,11 @@ class DM_URL {
 		}
 
 		$valid_paths = array(
-			'admin-ajax.php',
-			'admin-post.php',
+			'admin-ajax.php' => true,
+			'admin-post.php' => true,
 		);
 
-		if ( in_array( $filename, $valid_paths ) ) {
+		if ( array_key_exists( $filename, $valid_paths ) ) {
 			return $this->map( $url, $blog_id );
 		}
 
@@ -281,12 +281,19 @@ class DM_URL {
 		 * old AJAX. Therefore we check the referer to ensure it's the admin
 		 * side rather than the front-end.
 		 */
+		$valid_actions = [
+			'query-attachments' => true,
+			'sample-permalink'  => true,
+			'upload-attachment' => true,
+		];
+
+		$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
 
 		if ( wp_doing_ajax()
 			&&
 				false !== stripos( wp_get_referer(), '/wp-admin/' )
 			&&
-				( empty( $_POST['action'] ) || ! in_array( $_POST['action'], array( 'query-attachments', 'sample-permalink', 'upload-attachment' ) ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				( empty( $action ) || ! array_key_exists( $action, $valid_actions ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		) {
 			return;
 		}
@@ -337,18 +344,21 @@ class DM_URL {
 			return $url;
 		}
 
-		$valid_schemes = array( 'http', 'https' );
+		$valid_schemes = array(
+			'http'  => true,
+			'https' => true,
+		);
 
 		if ( ! is_admin() ) {
-			$valid_schemes[] = 'json';
-			$valid_schemes[] = 'rest';
+			$valid_schemes['json'] = true;
+			$valid_schemes['rest'] = true;
 		}
 
 		if ( apply_filters( 'darkmatter_allow_logins', false ) ) {
 			$valid_schemes[] = 'login';
 		}
 
-		if ( null === $scheme || in_array( $scheme, $valid_schemes ) ) {
+		if ( null === $scheme || array_key_exists( $scheme, $valid_schemes ) ) {
 			/**
 			 * Ensure that if the REST API is called on the admin domain that we do not map the `_links` property on
 			 * the response. This will ensure that any integration using these sticks to the correct domain.
