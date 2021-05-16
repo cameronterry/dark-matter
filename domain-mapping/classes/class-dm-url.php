@@ -287,11 +287,13 @@ class DM_URL {
 			'upload-attachment' => true,
 		];
 
+		$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
+
 		if ( wp_doing_ajax()
 			&&
 				false !== stripos( wp_get_referer(), '/wp-admin/' )
 			&&
-				( empty( $_POST['action'] ) || ! array_key_exists( $_POST['action'], $valid_actions ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
+				( empty( $action ) || ! array_key_exists( $action, $valid_actions ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
 		) {
 			return;
 		}
