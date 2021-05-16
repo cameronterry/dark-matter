@@ -92,6 +92,7 @@ Google Analytics) with over 60 websites.
   * Migrated Husky from v4 to v6 - missed in the previous 2.1.3 release.
   * Fixed the Husky integration for the pre-commit hooks ... except it doesn't work in Gitkraken (a git GUI client).
   * Fixed some minor PHPCS issues around the DM_Yoast class that was missed due to the aforementioned Husky / pre-commit issue.
+* Fixed a PHPCS warning when checking AJAX action in domain mapping for admin area.
 
 = 2.1.3 =
 
