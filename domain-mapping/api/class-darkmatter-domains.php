@@ -121,9 +121,10 @@ class DarkMatter_Domains {
 	 * @param  boolean $is_https   HTTPS protocol setting.
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
+	 * @param  integer $type       Domain type. Defaults to `1`, which is "main".
 	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
 	 */
-	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true ) {
+	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true, $type = 1 ) {
 		$fqdn = $this->_basic_check( $fqdn );
 
 		if ( is_wp_error( $fqdn ) ) {
@@ -160,6 +161,7 @@ class DarkMatter_Domains {
 			'domain'     => $fqdn,
 			'is_primary' => ( ! $is_primary ? false : true ),
 			'is_https'   => ( ! $is_https ? false : true ),
+			'type'       => ( ! empty( $type ) ? $type : DM_DOMAIN_TYPE_MAIN ),
 		);
 
 		$result = $this->wpdb->insert(
@@ -169,6 +171,7 @@ class DarkMatter_Domains {
 				'%d',
 				'%d',
 				'%s',
+				'%d',
 				'%d',
 				'%d',
 			)
@@ -453,9 +456,10 @@ class DarkMatter_Domains {
 	 * @param  boolean $is_https   HTTPS protocol setting.
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
+	 * @param  integer $type       Domain type. Defaults to `1`, which is "main".
 	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
 	 */
-	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true ) {
+	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true, $type = 1 ) {
 		$fqdn = $this->_basic_check( $fqdn );
 
 		if ( is_wp_error( $fqdn ) ) {
@@ -492,6 +496,14 @@ class DarkMatter_Domains {
 
 		if ( null !== $is_https ) {
 			$_domain['is_https'] = $is_https;
+		}
+
+		/**
+		 * Type is either "main" or "CDN". If it's neither value, then default to "main" domain (which is technically
+		 * the default prior to the addition of CDN domains).
+		 */
+		if ( DM_DOMAIN_TYPE_MAIN !== $type || DM_DOMAIN_TYPE_CDN !== $type ) {
+			$_domain['type'] = DM_DOMAIN_TYPE_MAIN;
 		}
 
 		$result = $this->wpdb->update(
