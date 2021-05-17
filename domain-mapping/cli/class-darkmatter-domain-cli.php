@@ -66,7 +66,7 @@ class DarkMatter_Domain_CLI {
 			[
 				'disable' => false,
 				'force'   => false,
-				'https'   => false,
+				'https'   => true,
 				'primary' => false,
 				'cdn'     => false,
 			]
@@ -354,7 +354,7 @@ class DarkMatter_Domain_CLI {
 				'enable'    => false,
 				'force'     => false,
 				'use-http'  => null,
-				'use-https' => null,
+				'use-https' => true,
 				'primary'   => null,
 				'secondary' => null,
 				'type'      => false,
