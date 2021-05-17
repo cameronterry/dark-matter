@@ -41,6 +41,9 @@ class DarkMatter_Domain_CLI {
 	 * [--secondary]
 	 * : Sets the domain to be a secondary domain for the Site. Visitors will be redirected from this domain to the primary.
 	 *
+	 * [--type]
+	 * : Sets the domain as a CDN domain for the Site. This domain will be used for mapping supported file attachments.
+	 *
 	 * ### EXAMPLES
 	 * Set the primary domain and set the protocol to HTTPS.
 	 *
@@ -65,14 +68,28 @@ class DarkMatter_Domain_CLI {
 				'force'   => false,
 				'https'   => false,
 				'primary' => false,
+				'cdn'     => false,
 			]
 		);
+
+		/**
+		 * Handle the CDN flag.
+		 */
+		$domain_types = [
+			'main' => DM_DOMAIN_TYPE_MAIN,
+			'cdn'  => DM_DOMAIN_TYPE_CDN,
+		];
+		$type         = DM_DOMAIN_TYPE_MAIN;
+
+		if ( array_key_exists( $opts['type'], $domain_types ) ) {
+			$type = $domain_types[ $opts['type'] ];
+		}
 
 		/**
 		 * Add the domain.
 		 */
 		$db     = DarkMatter_Domains::instance();
-		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'] );
+		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'], $type );
 
 		if ( is_wp_error( $result ) ) {
 			$error_msg = $result->get_error_message();
@@ -167,6 +184,7 @@ class DarkMatter_Domain_CLI {
 					'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
 					'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
 					'Active'   => ( $domain->active ? $yes_val : $no_val ),
+					'Type'     => ( DM_DOMAIN_TYPE_CDN === $domain->type ? 'CDN' : 'Main' )
 				);
 
 				/**
@@ -194,6 +212,7 @@ class DarkMatter_Domain_CLI {
 			'Primary',
 			'Protocol',
 			'Active',
+			'Type',
 		];
 
 		if ( is_main_site() ) {
@@ -203,6 +222,7 @@ class DarkMatter_Domain_CLI {
 				'Primary',
 				'Protocol',
 				'Active',
+				'Type',
 			];
 		}
 
@@ -303,6 +323,9 @@ class DarkMatter_Domain_CLI {
 	 * : Set the domain to be a secondary domain for the Site. Visitors will be
 	 * redirected from this domain to the primary.
 	 *
+	 * [--type]
+	 * : Sets the domain as a CDN domain for the Site. This domain will be used for mapping supported file attachments.
+	 *
 	 * ### EXAMPLES
 	 * Set the primary domain and set the protocol to HTTPS.
 	 *
@@ -334,6 +357,7 @@ class DarkMatter_Domain_CLI {
 				'use-https' => null,
 				'primary'   => null,
 				'secondary' => null,
+				'type'      => false,
 			]
 		);
 
@@ -384,9 +408,22 @@ class DarkMatter_Domain_CLI {
 		}
 
 		/**
+		 * Handle the CDN flag.
+		 */
+		$domain_types = [
+			'main' => DM_DOMAIN_TYPE_MAIN,
+			'cdn'  => DM_DOMAIN_TYPE_CDN,
+		];
+		$type         = DM_DOMAIN_TYPE_MAIN;
+
+		if ( array_key_exists( $opts['type'], $domain_types ) ) {
+			$type = $domain_types[ $opts['type'] ];
+		}
+
+		/**
 		 * Update the records.
 		 */
-		$result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'], $active );
+		$result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'], $active, $type );
 
 		/**
 		 * Handle the output for errors and success.
