@@ -503,7 +503,7 @@ class DarkMatter_Domains {
 		 * the default prior to the addition of CDN domains).
 		 */
 		if ( DM_DOMAIN_TYPE_MAIN !== $type || DM_DOMAIN_TYPE_CDN !== $type ) {
-			$_domain['type'] = DM_DOMAIN_TYPE_MAIN;
+			$_domain['type'] = $type;
 		}
 
 		$result = $this->wpdb->update(
