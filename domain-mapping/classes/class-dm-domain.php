@@ -70,6 +70,15 @@ class DM_Domain {
 	public $is_https = false;
 
 	/**
+	 * Domain type: `1` is primary and secondary domains, `2` is CDN.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @var int
+	 */
+	public $type = 1;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.0.0
@@ -86,6 +95,7 @@ class DM_Domain {
 		$this->is_primary = (bool) $this->is_primary;
 		$this->active     = (bool) $this->active;
 		$this->is_https   = (bool) $this->is_https;
+		$this->type       = (int) $this->type;
 	}
 
 	/**
