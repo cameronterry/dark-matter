@@ -217,7 +217,7 @@ class DM_URL {
 	 * @return void
 	 */
 	public function prepare() {
-		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
+		add_filter( 'the_content', array( $this, 'map' ), 7, 1 );
 		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 
