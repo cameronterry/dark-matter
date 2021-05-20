@@ -98,7 +98,7 @@ function darkmatter_maybe_redirect() {
 	 * Check to see if the current request is an Admin Post action or an AJAX action. These two requests in Dark Matter
 	 * can be on either the admin domain or the primary domain.
 	 */
-	if ( array_key_exists( $filename, $ajax_filenames ) ) {
+	if ( ! empty( $filename ) && array_key_exists( $filename, $ajax_filenames ) ) {
 		return;
 	}
 
@@ -116,7 +116,7 @@ function darkmatter_maybe_redirect() {
 		'wp-register.php' => true,
 	);
 
-	if ( is_admin() || array_key_exists( $filename, $admin_filenames ) ) {
+	if ( is_admin() || ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) ) {
 		$is_admin = true;
 	}
 
