@@ -79,6 +79,14 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.1.5 =
+
+* Fixed a PHP notice for certain requests in the redirect logic.
+* Fixed an issue with embedding a post from the same site would not work in some circumstances.
+  * Essentially the "mapping" process would run too late and WordPress would attempt to embed by the admin domain rather than the primary mapped domain (the domain used to visit the site).
+  * The "mapping" process now runs twice; once before the oEmbed processes the post content. And again much later to ensure any dynamic blocks or other plugins have their output mapped to the primary domain.
+  * Note: when using domain mapping, it is normal to see a single embed appear twice in post meta with Dark Matter. One embed for the admin domain / editors and another for the primary domain / visitors.
+
 = 2.1.4 =
 
 * Tweaked some conditional checks to code which is more performant. The logic is identical to before, just utilising a slightly different mechanism to achieve it. This change was applied to:
