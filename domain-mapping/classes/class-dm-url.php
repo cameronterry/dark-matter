@@ -217,7 +217,27 @@ class DM_URL {
 	 * @return void
 	 */
 	public function prepare() {
+		/**
+		 * We attach twice to `the_content` filter.
+		 *
+		 * The first one with a high priority (5) is to ensure that URL processing logic - i.e. oEmbeds for other WP
+		 * posts - is working with the mapped domain. This is needed to ensure calls to `url_to_postid()` work as
+		 * intended as they compared URL hosts.
+		 *
+		 * The second one, with a low priority (50), is a fail-safe / sweep up. Other logic such as Block Editor process
+		 * on a later priority (9 at the time of writing this) to ensure it is correct prior to other plugins possibly
+		 * manipulating `post_content`, usually on the "normal" priority (10). For domain mapping, we want to ensure we
+		 * catch every thing after WordPress core and any plugins, so we run later in the process to achieve that.
+		 */
+		add_filter( 'the_content', array( $this, 'map' ), 5, 1 );
+
+		/**
+		 * Please note: the `$this->map()` method will check for unmapped URLs before committing to an regex replace. So
+		 * most of the time, this will go "nothing to do here". And the rest of time, catch any edge cases that produce
+		 * unmapped URLs.
+		 */
 		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
+
 		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 

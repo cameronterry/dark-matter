@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.7.1
-Stable tag: 2.1.4
+Stable tag: 2.1.5
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,14 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.5 =
+
+* Fixed a PHP notice for certain requests in the redirect logic.
+* Fixed an issue with embedding a post from the same site would not work in some circumstances.
+  * Essentially the "mapping" process would run too late and WordPress would attempt to embed by the admin domain rather than the primary mapped domain (the domain used to visit the site).
+  * The "mapping" process now runs twice; once before the oEmbed processes the post content. And again much later to ensure any dynamic blocks or other plugins have their output mapped to the primary domain.
+  * Note: when using domain mapping, it is normal to see a single embed appear twice in post meta with Dark Matter. One embed for the admin domain / editors and another for the primary domain / visitors.
 
 = 2.1.4 =
 
