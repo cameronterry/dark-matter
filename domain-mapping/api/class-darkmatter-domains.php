@@ -112,6 +112,50 @@ class DarkMatter_Domains {
 	}
 
 	/**
+	 * Clears out the relevant caches, usually when a domain is added / updated / deleted.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $fqdn Fully qualified domain name. Optional.
+	 */
+	private function _clear_cache( $fqdn = '' ) {
+		if ( ! empty( $fqdn ) ) {
+			$cache_key = md5( $fqdn );
+			wp_cache_delete( $cache_key, 'dark-matter' );
+		}
+
+		/**
+		 * Clear the cache for the domain types.
+		 */
+		$cache_key_pattern = '%1$d-%2$d-domain-types';
+		$site_id = get_current_blog_id();
+
+		/**
+		 * Delete main type domains.
+		 */
+		wp_cache_delete(
+			sprintf(
+				$cache_key_pattern,
+				DM_DOMAIN_TYPE_MAIN,
+				$site_id
+			),
+			'dark-matter'
+		);
+
+		/**
+		 * Delete CDN type domains.
+		 */
+		wp_cache_delete(
+			sprintf(
+				$cache_key_pattern,
+				DM_DOMAIN_TYPE_CDN,
+				$site_id
+			),
+			'dark-matter'
+		);
+	}
+
+	/**
 	 * Add a domain for a specific Site in WordPress.
 	 *
 	 * @since 2.0.0
@@ -380,7 +424,7 @@ class DarkMatter_Domains {
 		$site_id   = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
 		$cache_key = md5(
 			sprintf(
-				'%1$d-%2$d-cdn-domains',
+				'%1$d-%2$d-domain-types',
 				$type,
 				$site_id
 			)
