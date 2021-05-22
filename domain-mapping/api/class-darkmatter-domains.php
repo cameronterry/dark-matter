@@ -457,8 +457,6 @@ class DarkMatter_Domains {
 			wp_cache_set( $cache_key, $_domains, 'dark-matter' );
 		}
 
-		// todo: delete cache on add / update domain.
-
 		if ( empty( $_domains ) ) {
 			return [];
 		}
