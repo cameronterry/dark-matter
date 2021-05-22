@@ -223,6 +223,11 @@ class DarkMatter_Domains {
 
 		if ( $result ) {
 			/**
+			 * Clear cache but not the one for the newly added domain.
+			 */
+			$this->_clear_cache();
+
+			/**
 			 * Create the cache key.
 			 */
 			$cache_key = md5( $fqdn );
@@ -311,8 +316,10 @@ class DarkMatter_Domains {
 		);
 
 		if ( $result ) {
-			$cache_key = md5( $fqdn );
-			wp_cache_delete( $cache_key, 'dark-matter' );
+			/**
+			 * Clear the caches, including the domain.
+			 */
+			$this->_clear_cache( $fqdn );
 
 			/**
 			 * Fire action when a domain is deleted.
@@ -634,6 +641,11 @@ class DarkMatter_Domains {
 			 * cache.
 			 */
 			$_domain = wp_parse_args( $_domain, $domain_before->to_array() );
+
+			/**
+			 * Clear the caches, but not the domain.
+			 */
+			$this->_clear_cache();
 
 			/**
 			 * Create the cache key.
