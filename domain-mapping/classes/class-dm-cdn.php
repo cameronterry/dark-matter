@@ -45,6 +45,15 @@ class DM_CDN {
 	}
 
 	/**
+	 * Discontinue if there is no CDN domains to map.
+	 *
+	 * @return bool
+	 */
+	private function can_map() {
+		return ! empty( $this->cdn_domains );
+	}
+
+	/**
 	 * Initialise the CDN setup.
 	 *
 	 * @param int $site_id Site (Blog) ID, used to retrieve the site details and Primary Domain.
