@@ -184,7 +184,7 @@ class DarkMatter_Domain_CLI {
 					'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
 					'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
 					'Active'   => ( $domain->active ? $yes_val : $no_val ),
-					'Type'     => ( DM_DOMAIN_TYPE_CDN === $domain->type ? 'CDN' : 'Main' )
+					'Type'     => ( DM_DOMAIN_TYPE_CDN === $domain->type ? 'CDN' : 'Main' ),
 				);
 
 				/**
