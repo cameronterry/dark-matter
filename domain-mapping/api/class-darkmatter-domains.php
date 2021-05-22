@@ -112,6 +112,46 @@ class DarkMatter_Domains {
 	}
 
 	/**
+	 * Clears out the relevant caches, usually when a domain is added / updated / deleted.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param string $fqdn Fully qualified domain name. Optional.
+	 */
+	private function _clear_cache( $fqdn = '' ) {
+		if ( ! empty( $fqdn ) ) {
+			$cache_key = md5( $fqdn );
+			wp_cache_delete( $cache_key, 'dark-matter' );
+		}
+
+		/**
+		 * Clear the cache for the domain types.
+		 */
+		$cache_key_pattern = '%1$d-%2$d-domain-types';
+		$site_id = get_current_blog_id();
+
+		/**
+		 * Delete main type domains.
+		 */
+		$cache_key = sprintf(
+			$cache_key_pattern,
+			DM_DOMAIN_TYPE_MAIN,
+			$site_id
+		);
+		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
+
+		/**
+		 * Delete CDN type domains.
+		 */
+		$cache_key = sprintf(
+			$cache_key_pattern,
+			DM_DOMAIN_TYPE_CDN,
+			$site_id
+		);
+		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
+	}
+
+	/**
 	 * Add a domain for a specific Site in WordPress.
 	 *
 	 * @since 2.0.0
@@ -121,9 +161,10 @@ class DarkMatter_Domains {
 	 * @param  boolean $is_https   HTTPS protocol setting.
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
+	 * @param  integer $type       Domain type. Defaults to `1`, which is "main".
 	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
 	 */
-	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true ) {
+	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true, $type = 1 ) {
 		$fqdn = $this->_basic_check( $fqdn );
 
 		if ( is_wp_error( $fqdn ) ) {
@@ -160,6 +201,7 @@ class DarkMatter_Domains {
 			'domain'     => $fqdn,
 			'is_primary' => ( ! $is_primary ? false : true ),
 			'is_https'   => ( ! $is_https ? false : true ),
+			'type'       => ( ! empty( $type ) ? $type : DM_DOMAIN_TYPE_MAIN ),
 		);
 
 		$result = $this->wpdb->insert(
@@ -171,10 +213,16 @@ class DarkMatter_Domains {
 				'%s',
 				'%d',
 				'%d',
+				'%d',
 			)
 		);
 
 		if ( $result ) {
+			/**
+			 * Clear cache but not the one for the newly added domain.
+			 */
+			$this->_clear_cache();
+
 			/**
 			 * Create the cache key.
 			 */
@@ -264,8 +312,10 @@ class DarkMatter_Domains {
 		);
 
 		if ( $result ) {
-			$cache_key = md5( $fqdn );
-			wp_cache_delete( $cache_key, 'dark-matter' );
+			/**
+			 * Clear the caches, including the domain.
+			 */
+			$this->_clear_cache( $fqdn );
 
 			/**
 			 * Fire action when a domain is deleted.
@@ -349,6 +399,74 @@ class DarkMatter_Domains {
 		}
 
 		return new DM_Domain( (object) $_domain );
+	}
+
+	/**
+	 * Retrieve a List of domains by type. For example: retrieving a list of CDN domains.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param  integer $type       Domain type to retrieve.
+	 * @param  integer $site_id    Site ID to retrieve mapped domains for.
+	 * @param  boolean $skip_cache Skip the cache and retrieve the CDN domains from the database.
+	 * @return array               An array of DM_Domain objects. Returns an empty array if no mapped domains found or on error.
+	 */
+	public function get_domains_by_type( $type = DM_DOMAIN_TYPE_CDN, $site_id = 0, $skip_cache = false ) {
+		global $wpdb;
+
+		/**
+		 * Validate type before continuing.
+		 */
+		if ( DM_DOMAIN_TYPE_MAIN !== $type && DM_DOMAIN_TYPE_CDN !== $type ) {
+			return [];
+		}
+
+		/**
+		 * Setup the cache key.
+		 */
+		$site_id   = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
+		$cache_key = md5(
+			sprintf(
+				'%1$d-%2$d-domain-types',
+				$type,
+				$site_id
+			)
+		);
+
+		/**
+		 * Retrieve the cache and if some thing is available.
+		 */
+		$_domains = wp_cache_get( $cache_key, 'dark-matter' );
+
+		if ( $skip_cache || ! is_array( $_domains ) ) {
+			$_domains = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain DESC, domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$site_id,
+					$type
+				)
+			);
+
+			/**
+			 * Update the cache with the records from the database.
+			 */
+			wp_cache_set( $cache_key, $_domains, 'dark-matter' );
+		}
+
+		if ( empty( $_domains ) ) {
+			return [];
+		}
+
+		/**
+		 * Retrieve the domain details, probably from cache, and get an array of `DM_Domain` objects.
+		 */
+		$domains = array();
+
+		foreach ( $_domains as $_domain ) {
+			$domains[] = $this->get( $_domain );
+		}
+
+		return $domains;
 	}
 
 	/**
@@ -453,9 +571,10 @@ class DarkMatter_Domains {
 	 * @param  boolean $is_https   HTTPS protocol setting.
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
+	 * @param  integer $type       Domain type. Defaults to `null`, do not change current value. Accepts `1` for main and `2` for CDN.
 	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
 	 */
-	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true ) {
+	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true, $type = null ) {
 		$fqdn = $this->_basic_check( $fqdn );
 
 		if ( is_wp_error( $fqdn ) ) {
@@ -494,6 +613,13 @@ class DarkMatter_Domains {
 			$_domain['is_https'] = $is_https;
 		}
 
+		/**
+		 * Type is either "main" or "CDN".
+		 */
+		if ( null !== $type && ( DM_DOMAIN_TYPE_MAIN === $type || DM_DOMAIN_TYPE_CDN === $type ) ) {
+			$_domain['type'] = $type;
+		}
+
 		$result = $this->wpdb->update(
 			$this->dm_table,
 			$_domain,
@@ -508,6 +634,11 @@ class DarkMatter_Domains {
 			 * cache.
 			 */
 			$_domain = wp_parse_args( $_domain, $domain_before->to_array() );
+
+			/**
+			 * Clear the caches, but not the domain.
+			 */
+			$this->_clear_cache();
 
 			/**
 			 * Create the cache key.
