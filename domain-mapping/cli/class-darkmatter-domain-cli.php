@@ -416,7 +416,7 @@ class DarkMatter_Domain_CLI {
 		];
 		$type         = DM_DOMAIN_TYPE_MAIN;
 
-		if ( array_key_exists( $opts['type'], $domain_types ) ) {
+		if ( ! empty( $opts['type'] ) && array_key_exists( $opts['type'], $domain_types ) ) {
 			$type = $domain_types[ $opts['type'] ];
 		}
 
