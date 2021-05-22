@@ -355,6 +355,51 @@ class DarkMatter_Domains {
 	}
 
 	/**
+	 * Retrieve a List of domains by type. For example: retrieving a list of CDN domains.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @param  integer $type    Domain type to retrieve.
+	 * @param  integer $site_id Site ID to retrieve mapped domains for.
+	 * @return array            An array of DM_Domain objects. Returns an empty array if no mapped domains found or on error.
+	 */
+	public function get_domains_by_type( $type = DM_DOMAIN_TYPE_CDN, $site_id = 0 ) {
+		global $wpdb;
+
+		/**
+		 * Validate type before continuing.
+		 */
+		if ( DM_DOMAIN_TYPE_MAIN !== $type && DM_DOMAIN_TYPE_CDN !== $type ) {
+			return [];
+		}
+
+		$site_id = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
+
+		$_domains = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain DESC, domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+				$site_id,
+				$type
+			)
+		);
+
+		if ( empty( $_domains ) ) {
+			return [];
+		}
+
+		/**
+		 * Retrieve the domain details from the cache. If the cache is
+		 */
+		$domains = array();
+
+		foreach ( $_domains as $_domain ) {
+			$domains[] = $this->get( $_domain );
+		}
+
+		return $domains;
+	}
+
+	/**
 	 * Retrieve a List of domains. If the Site ID is empty or this is called
 	 * from the root Site, then this will return all domains mapped on the
 	 * Network.
