@@ -48,7 +48,7 @@ class DM_CDN {
 	 * @since 2.2.0
 	 */
 	public function __construct() {
-		$this->init();
+		add_action( 'init', array( $this, 'init' ), 10 );
 	}
 
 	/**
