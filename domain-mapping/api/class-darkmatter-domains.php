@@ -133,26 +133,22 @@ class DarkMatter_Domains {
 		/**
 		 * Delete main type domains.
 		 */
-		wp_cache_delete(
-			sprintf(
-				$cache_key_pattern,
-				DM_DOMAIN_TYPE_MAIN,
-				$site_id
-			),
-			'dark-matter'
+		$cache_key = sprintf(
+			$cache_key_pattern,
+			DM_DOMAIN_TYPE_MAIN,
+			$site_id
 		);
+		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
 
 		/**
 		 * Delete CDN type domains.
 		 */
-		wp_cache_delete(
-			sprintf(
-				$cache_key_pattern,
-				DM_DOMAIN_TYPE_CDN,
-				$site_id
-			),
-			'dark-matter'
+		$cache_key = sprintf(
+			$cache_key_pattern,
+			DM_DOMAIN_TYPE_CDN,
+			$site_id
 		);
+		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
 	}
 
 	/**
