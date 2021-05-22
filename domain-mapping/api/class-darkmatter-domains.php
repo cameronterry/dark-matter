@@ -359,11 +359,12 @@ class DarkMatter_Domains {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param  integer $type    Domain type to retrieve.
-	 * @param  integer $site_id Site ID to retrieve mapped domains for.
-	 * @return array            An array of DM_Domain objects. Returns an empty array if no mapped domains found or on error.
+	 * @param  integer $type       Domain type to retrieve.
+	 * @param  integer $site_id    Site ID to retrieve mapped domains for.
+	 * @param  boolean $skip_cache Skip the cache and retrieve the CDN domains from the database.
+	 * @return array               An array of DM_Domain objects. Returns an empty array if no mapped domains found or on error.
 	 */
-	public function get_domains_by_type( $type = DM_DOMAIN_TYPE_CDN, $site_id = 0 ) {
+	public function get_domains_by_type( $type = DM_DOMAIN_TYPE_CDN, $site_id = 0, $skip_cache = false ) {
 		global $wpdb;
 
 		/**
@@ -373,22 +374,46 @@ class DarkMatter_Domains {
 			return [];
 		}
 
-		$site_id = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
-
-		$_domains = $wpdb->get_col(
-			$wpdb->prepare(
-				"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain DESC, domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$site_id,
-				$type
+		/**
+		 * Setup the cache key.
+		 */
+		$site_id   = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
+		$cache_key = md5(
+			sprintf(
+				'%1$d-%2$d-cdn-domains',
+				$type,
+				$site_id
 			)
 		);
+
+		/**
+		 * Retrieve the cache and if some thing is available.
+		 */
+		$_domains = wp_cache_get( $cache_key, 'dark-matter' );
+
+		if ( $skip_cache || ! is_array( $_domains ) ) {
+			$_domains = $wpdb->get_col(
+				$wpdb->prepare(
+					"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain DESC, domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$site_id,
+					$type
+				)
+			);
+
+			/**
+			 * Update the cache with the records from the database.
+			 */
+			wp_cache_set( $cache_key, $_domains, 'dark-matter' );
+		}
+
+		// todo: delete cache on add / update domain.
 
 		if ( empty( $_domains ) ) {
 			return [];
 		}
 
 		/**
-		 * Retrieve the domain details from the cache. If the cache is
+		 * Retrieve the domain details, probably from cache, and get an array of `DM_Domain` objects.
 		 */
 		$domains = array();
 
