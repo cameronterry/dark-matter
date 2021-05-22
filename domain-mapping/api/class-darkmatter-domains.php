@@ -571,10 +571,10 @@ class DarkMatter_Domains {
 	 * @param  boolean $is_https   HTTPS protocol setting.
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
-	 * @param  integer $type       Domain type. Defaults to `1`, which is "main".
+	 * @param  integer $type       Domain type. Defaults to `null`, do not change current value. Accepts `1` for main and `2` for CDN.
 	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
 	 */
-	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true, $type = 1 ) {
+	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true, $type = null ) {
 		$fqdn = $this->_basic_check( $fqdn );
 
 		if ( is_wp_error( $fqdn ) ) {
@@ -614,10 +614,9 @@ class DarkMatter_Domains {
 		}
 
 		/**
-		 * Type is either "main" or "CDN". If it's neither value, then default to "main" domain (which is technically
-		 * the default prior to the addition of CDN domains).
+		 * Type is either "main" or "CDN".
 		 */
-		if ( DM_DOMAIN_TYPE_MAIN !== $type || DM_DOMAIN_TYPE_CDN !== $type ) {
+		if ( null !== $type && ( DM_DOMAIN_TYPE_MAIN === $type || DM_DOMAIN_TYPE_CDN === $type ) ) {
 			$_domain['type'] = $type;
 		}
 
