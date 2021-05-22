@@ -19,7 +19,14 @@ class DM_CDN {
 	 *
 	 * @var array
 	 */
-	private $cdn_domains = [];
+	private $allowed_mime_types = array();
+
+	/**
+	 * An array of CDN domains.
+	 *
+	 * @var array
+	 */
+	private $cdn_domains = array();
 
 	/**
 	 * The unmapped domain.
@@ -51,6 +58,41 @@ class DM_CDN {
 	 */
 	private function can_map() {
 		return ! empty( $this->cdn_domains );
+	}
+
+	/**
+	 * Convert WordPress Core's allwoed mime types array, which has keys designed for regex, to straight-forward strings
+	 * for the individual extensions as keys on the array.
+	 *
+	 * For example: turn `image/jpeg` mime type key from `jpg|jpeg|jpe` into three separate key / values on the array.
+	 *
+	 * @return array All mime types and extensions.
+	 */
+	private function get_mime_types() {
+		$mime_types = get_allowed_mime_types();
+
+		foreach ( $mime_types as $extension => $mime_type ) {
+			/**
+			 * No divided - regex OR - then skip it.
+			 */
+			if ( false === stripos( $extension, '|' ) ) {
+				continue;
+			}
+
+			/**
+			 * Get the separate extensions.
+			 */
+			$extensions = explode( '|', $extension );
+
+			/**
+			 * Add to the array.
+			 */
+			foreach ( $extensions as $ext ) {
+				$mime_types[ $ext ] = $mime_type;
+			}
+		}
+
+		return $mime_types;
 	}
 
 	/**
