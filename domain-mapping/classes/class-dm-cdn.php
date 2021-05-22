@@ -52,7 +52,7 @@ class DM_CDN {
 	public function init( $site_id = 0 ) {
 		$blog = get_site( $site_id );
 
-		if ( is_a( $blog, 'WP_Site' ) ) {
+		if ( ! is_a( $blog, 'WP_Site' ) ) {
 			return;
 		}
 
