@@ -65,6 +65,7 @@ class DM_CDN {
 		add_action( 'init', array( $this, 'init' ), 10 );
 
 		add_filter( 'the_content', array( $this, 'map' ), 100, 1 );
+		add_filter( 'wp_get_attachment_url', array( $this, 'map_url' ), 100, 1 );
 	}
 
 	/**
