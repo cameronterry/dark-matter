@@ -240,6 +240,21 @@ class DM_CDN {
 		}
 
 		/**
+		 * Check to ensure the URL is on a domain we can map. This is also used to prevent double-mapping occurring.
+		 */
+		$do_map = false;
+		foreach ( $this->main_domains as $main_domain ) {
+			if ( false !== stripos( $url, $main_domain ) ) {
+				$do_map = true;
+				break;
+			}
+		}
+
+		if ( ! $do_map ) {
+			return $url;
+		}
+
+		/**
 		 * Alternate through the CDN domains if there is more than one.
 		 */
 		$index = 0;
