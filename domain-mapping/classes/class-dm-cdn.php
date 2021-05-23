@@ -29,6 +29,20 @@ class DM_CDN {
 	private $cdn_domains = array();
 
 	/**
+	 * Number of CDN domains that are available.
+	 *
+	 * @var int
+	 */
+	private $cdn_domains_count = -1;
+
+	/**
+	 * CDN domains, as strings.
+	 *
+	 * @var array
+	 */
+	private $main_domains = array();
+
+	/**
 	 * The unmapped domain.
 	 *
 	 * @var string
@@ -120,9 +134,21 @@ class DM_CDN {
 		$this->primary = DarkMatter_Primary::instance()->get( $site_id );
 
 		/**
-		 * Retrieve CDN domains.
+		 * Retrieve CDN domains and update how many are available. The count needs to be zero based.
 		 */
-		$this->cdn_domains = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_CDN, $site_id );
+		$this->cdn_domains       = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_CDN, $site_id );
+		$this->cdn_domains_count = count( $this->cdn_domains ) - 1;
+
+		/**
+		 * Generate an array of only strings of the domains. Namely the primary and unmapped.
+		 */
+		$this->main_domains = array(
+			$this->unmapped,
+		);
+
+		if ( ! empty( $this->primary ) ) {
+			$this->main_domains[] = $this->primary->domain;
+		}
 
 		/**
 		 * Retrieve the allowed file types. This is the mechanism used - in this feature / plugin at least - for knowing
@@ -142,15 +168,7 @@ class DM_CDN {
 			return $content;
 		}
 
-		$domains = array(
-			$this->unmapped,
-		);
-
-		if ( ! empty( $this->primary ) ) {
-			$domains[] = $this->primary->domain;
-		}
-
-		$domains_regex = implode( '|', $domains );
+		$domains_regex = implode( '|', $this->main_domains );
 
 		/**
 		 * Find all URLs which are not mapped to a CDN domain, but are either on the primary domain or admin domain (to
@@ -183,8 +201,6 @@ class DM_CDN {
 			return $content;
 		}
 
-		$cdn_domains_count = count( $this->cdn_domains ) - 1;
-
 		/**
 		 * Loop through all the URLs and replace as required.
 		 */
@@ -202,21 +218,30 @@ class DM_CDN {
 			 * Check for a valid extension.
 			 */
 			if ( array_key_exists( strtolower( $extension ), $this->allowed_mime_types ) ) {
-				/**
-				 * Alternate through the CDN domains if there is more than one.
-				 */
-				$index = 0;
-
-				if ( $cdn_domains_count > 0 ) {
-					$index = wp_rand( 0, $cdn_domains_count );
-				}
-
-				$new_url = str_ireplace( $domains, $this->cdn_domains[ $index ]->domain, $url );
-				$content = str_ireplace( $url, $new_url, $content );
+				$content = str_ireplace( $url, $this->map_url( $url ), $content );
 			}
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Used to map a URL to a CDN domain. Any URL passed into this method **will** be mapped.
+	 *
+	 * @param  string $url URL to be modified.
+	 * @return string      URL with the domain changed to be from a CDN domain.
+	 */
+	public function map_url( $url = '' ) {
+		/**
+		 * Alternate through the CDN domains if there is more than one.
+		 */
+		$index = 0;
+
+		if ( $this->cdn_domains_count > 0 ) {
+			$index = wp_rand( 0, $this->cdn_domains_count );
+		}
+
+		return str_ireplace( $this->main_domains, $this->cdn_domains[ $index ]->domain, $url );
 	}
 
 	/**
