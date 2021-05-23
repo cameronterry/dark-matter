@@ -263,7 +263,11 @@ class DM_CDN {
 			$index = wp_rand( 0, $this->cdn_domains_count );
 		}
 
-		return str_ireplace( $this->main_domains, $this->cdn_domains[ $index ]->domain, $url );
+		return preg_replace(
+			"#://(" . implode( '|', $this->main_domains ) . ")#",
+			'://' . untrailingslashit( $this->cdn_domains[ $index ]->domain ),
+			$url
+		);
 	}
 
 	/**
