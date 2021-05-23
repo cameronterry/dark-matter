@@ -233,6 +233,13 @@ class DM_CDN {
 	 */
 	public function map_url( $url = '' ) {
 		/**
+		 * No CDN domains or the URL is blank, then bail.
+		 */
+		if ( ! $this->can_map() || empty( $url ) ) {
+			return $url;
+		}
+
+		/**
 		 * Alternate through the CDN domains if there is more than one.
 		 */
 		$index = 0;
