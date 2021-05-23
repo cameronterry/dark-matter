@@ -66,6 +66,7 @@ class DM_CDN {
 
 		add_filter( 'the_content', array( $this, 'map' ), 100, 1 );
 		add_filter( 'wp_get_attachment_url', array( $this, 'map_url' ), 100, 1 );
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 	}
 
 	/**
@@ -156,6 +157,20 @@ class DM_CDN {
 		 * what is an attachment in uploads.
 		 */
 		$this->allowed_mime_types = $this->get_mime_types();
+	}
+
+	/**
+	 * Clean up the `post_content` to restore the data to the original state as if Dark Matter was not present.
+	 *
+	 * @param  array $data An array of slashed, sanitized, and processed post data.
+	 * @return array       Post data, with URLs unmapped.
+	 */
+	public function insert_post( $data = [] ) {
+		if ( ! empty( $data['post_content'] ) ) {
+			$data['post_content'] = $this->unmap( $data['post_content'] );
+		}
+
+		return $data;
 	}
 
 	/**
