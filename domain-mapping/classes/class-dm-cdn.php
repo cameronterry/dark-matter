@@ -63,7 +63,7 @@ class DM_CDN {
 	}
 
 	/**
-	 * Convert WordPress Core's allwoed mime types array, which has keys designed for regex, to straight-forward strings
+	 * Convert WordPress Core's allowed mime types array, which has keys designed for regex, to straight-forward strings
 	 * for the individual extensions as keys on the array.
 	 *
 	 * For example: turn `image/jpeg` mime type key from `jpg|jpeg|jpe` into three separate key / values on the array.
