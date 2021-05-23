@@ -272,6 +272,32 @@ class DM_CDN {
 	}
 
 	/**
+	 * Used to unmap CDN domains.
+	 *
+	 * @param  string $value Value that may contain CDN domains.
+	 * @return string        Value with the CDN domains removed and replaced with the unmapped domain.
+	 */
+	public function unmap( $value = '' ) {
+		if ( ! $this->can_map() || empty( $value ) ) {
+			return $value;
+		}
+
+		/**
+		 * Create an array of strings of the CDN domains.
+		 */
+		$cdn_domains = wp_list_pluck( $this->cdn_domains, 'domain' );
+
+		/**
+		 * Replace the CDN domains with the unmapped domain.
+		 */
+		return preg_replace(
+			"#://(" . implode( '|', $cdn_domains ) . ")#",
+			'://' . $this->unmapped,
+			$value
+		);
+	}
+
+	/**
 	 * Return the Singleton Instance of the class.
 	 *
 	 * @since 2.2.0
