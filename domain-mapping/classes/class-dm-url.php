@@ -258,13 +258,25 @@ class DM_URL {
 		 */
 		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
 
-		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'prepare_admin' ) );
+		/**
+		 * This is called for all requests as it is possible for the REST API to be called and process without a cURL
+		 * (or equivalent) being used. REST API endpoints can be called internally through `rest_do_request()`, which
+		 * bypass the whole need for a request / latency. To ensure that the REST endpoints behave universally, this
+		 * action is always called here and not just when the request is called (as in previous versions of Dark
+		 * Matter).
+		 */
+		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
+
+		/**
+		 * We have to stop here for the REST API as the later filters and hooks can cause the REST API endpoints to 404
+		 * if added. So if it is a REST request specifically, then we stop here.
+		 */
+		if ( false !== strpos( $request_uri, rest_get_url_prefix() ) ) {
 			return;
 		}
 
-		if ( ! $this->is_mapped() && false !== strpos( $request_uri, rest_get_url_prefix() ) ) {
-			add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
+		if ( is_admin() ) {
+			add_action( 'init', array( $this, 'prepare_admin' ) );
 			return;
 		}
 
