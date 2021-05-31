@@ -21,6 +21,13 @@ class DM_URL {
 	 */
 	public function __construct() {
 		/**
+		 * In some circumstances, we always want to process the logic regardless of request type, circumstances,
+		 * conditions, etc. (like ensuring saved post data is unmapped properly).
+		 */
+		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
+
+		/**
 		 * Prevent accidental URL mapping on requests which are not GET requests for the admin area. For example; a POST
 		 * request will include the postback for saving a post.
 		 *
@@ -237,9 +244,6 @@ class DM_URL {
 		 * unmapped URLs.
 		 */
 		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
-
-		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 
 		/**
 		 * We only wish to affect `the_content` for Previews and nothing else.
