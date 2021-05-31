@@ -341,6 +341,30 @@ class DM_URL {
 		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
 
 		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+
+		/**
+		 * Loop all post types with REST endpoints to fix the mapping for content.raw property.
+		 */
+		$rest_post_types = get_post_types( [ 'show_in_rest' => true ] );
+
+		foreach ( $rest_post_types as $post_type ) {
+			add_filter( "rest_prepare_{$post_type}", array( $this, 'prepare_rest_post_item' ), 10, 1 );
+		}
+	}
+
+	/**
+	 * Ensures the "raw" version of the content, typically used by Gutenberg through it's middleware pre-load / JS
+	 * hydrate process, gets handled the same as content (which runs through the `the_content` hook).
+	 *
+	 * @param  WP_REST_Response $item Individual post / item in the response that is being processed.
+	 * @return WP_REST_Response       Post / item with the content.raw, if present, mapped.
+	 */
+	public function prepare_rest_post_item( $item = null ) {
+		if ( isset( $item->data['content']['raw'] ) ) {
+			$item->data['content']['raw'] = $this->map( $item->data['content']['raw'] );
+		}
+
+		return $item;
 	}
 
 	/**
