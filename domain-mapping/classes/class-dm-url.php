@@ -340,6 +340,24 @@ class DM_URL {
 		 * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312 Query string parameter "preview=true" being added to the URL.
 		 */
 		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+
+		/**
+		 * To prepare the Classic Editor, we need to attach to a very late hook to ensure that `get_current_screen()` is
+		 * available and returns something useful.
+		 */
+		add_action( 'edit_form_top', array( $this, 'prepare_classic_editor' ) );
+	}
+
+	/**
+	 * Ensures that the Classic Editor is prepared appropriately and the unmapped URLs are mapped prior to loading. This
+	 * is needed for compatibility with some SEO plugins such as Yoast.
+	 */
+	public function prepare_classic_editor() {
+		$screen = get_current_screen();
+
+		if ( is_a( $screen, 'WP_Screen' ) && 'post' === $screen->base && 'edit' === $screen->parent_base ) {
+			add_filter( 'the_editor_content', array( $this, 'map' ), 10, 1 );
+		}
 	}
 
 	/**
