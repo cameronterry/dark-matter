@@ -55,7 +55,7 @@
     "style-loader": "^2.0.0",
     "webpack": "^5.38.1",
     "webpack-cli": "^4.7.0",
-    "webpack-fix-style-only-entries": "^0.6.1",
+    "webpack-remove-empty-scripts": "^0.7.1",
     "webpackbar": "^5.0.0-3"
   },
   "dependencies": {

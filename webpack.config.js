@@ -1,7 +1,7 @@
 // node module that let's us do file system stuffs...
-const FixStyleOnlyEntriesPlugin = require( 'webpack-fix-style-only-entries' );
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const path = require( 'path' );
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const TerserPlugin = require('terser-webpack-plugin'); // eslint-disable-line import/no-extraneous-dependencies
 const WebpackBar = require('webpackbar');
 
@@ -63,9 +63,7 @@ module.exports = () => {
     },
     mode: env,
     plugins: [
-      new FixStyleOnlyEntriesPlugin({
-        silent: true,
-      }),
+      new RemoveEmptyScriptsPlugin(),
       /**
        * Extract CSS to a separate file.
        */
