@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.7.2
-Stable tag: 2.1.6
+Tested up to: 5.8
+Stable tag: 2.1.7
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.7 =
+
+* Fixed an issue preventing continuous builds failing if using a not Git process, due to Husky throwing an error.
+* Updated Composer and Node dependencies to newer versions.
+* Upped WordPress Core support to 5.8.
 
 = 2.1.6 =
 
