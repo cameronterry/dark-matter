@@ -81,6 +81,7 @@ Google Analytics) with over 60 websites.
 
 = 2.1.7 =
 
+* Fixed an issue preventing continuous builds failing if using a not Git process, due to Husky throwing an error.
 * Updated Composer and Node dependencies to newer versions.
 * Upped WordPress Core support to 5.8.
 
