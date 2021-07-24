@@ -9,7 +9,7 @@
     "build-all": "npm run build && npm run build-dev",
     "lint": "composer lint && eslint",
     "lint-js": "eslint",
-    "release": "composer install --no-dev --optimize-autoloader && npm install && npm run build-all",
+    "release": "composer install --no-dev --optimize-autoloader && npm ci --ignore-scripts && npm run build-all",
     "start": "composer install && npm install && npm run build-all",
     "prepare": "husky install",
     "pre-commit": "lint-staged"
