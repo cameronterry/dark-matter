@@ -88,7 +88,7 @@ class DomainMapping extends React.Component {
 	/**
 	 * Handle the removal of the Notice from state.
 	 *
-	 * @param {string} id Element ID.
+	 * @param {string} id    Element ID.
 	 * @param {number} index Message index to be removed from the array.
 	 */
 	dimissNotice = ( id, index ) => {
