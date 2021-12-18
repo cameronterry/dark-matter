@@ -11,8 +11,10 @@
     "lint-js": "eslint",
     "release": "composer install --no-dev --optimize-autoloader && npm ci --ignore-scripts && npm run build-all",
     "start": "composer install && npm install && npm run build-all",
-    "pre-commit": "lint-staged"
   },
+  "pre-commit": [
+    "lint-staged"
+  ],
   "lint-staged": {
     "*.js": [
       "npm run lint-js"
@@ -49,6 +51,7 @@
     "postcss-import": "^14.0.2",
     "postcss-loader": "^6.1.1",
     "postcss-preset-env": "^7.0.2",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.3.1",
     "style-loader": "^3.2.1",
     "webpack": "^5.38.1",
