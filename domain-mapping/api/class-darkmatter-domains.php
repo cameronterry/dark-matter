@@ -193,6 +193,8 @@ class DarkMatter_Domains {
 
 			$dm_domain = new DM_Domain( (object) $_domain );
 
+			$this->update_last_changed();
+
 			/**
 			 * Fire action when a domain is added.
 			 *
@@ -266,6 +268,8 @@ class DarkMatter_Domains {
 		if ( $result ) {
 			$cache_key = md5( $fqdn );
 			wp_cache_delete( $cache_key, 'dark-matter' );
+
+			$this->update_last_changed();
 
 			/**
 			 * Fire action when a domain is deleted.
@@ -346,6 +350,11 @@ class DarkMatter_Domains {
 			 * Update the cache.
 			 */
 			wp_cache_add( $cache_key, $_domain, 'dark-matter' );
+
+			/**
+			 * We update the last changed here as the cache was modified.
+			 */
+			$this->update_last_changed();
 		}
 
 		return new DM_Domain( (object) $_domain );
@@ -538,6 +547,8 @@ class DarkMatter_Domains {
 
 			$domain_after = new DM_Domain( (object) $_domain );
 
+			$this->update_last_changed();
+
 			/**
 			 * Fires when a domain is updated.
 			 *
@@ -552,6 +563,17 @@ class DarkMatter_Domains {
 		}
 
 		return new WP_Error( 'unknown', __( 'Sorry, the domain could not be updated. An unknown error occurred.', 'dark-matter' ) );
+	}
+
+	/**
+	 * Change the last changed cache note.
+	 *
+	 * @since 2.1.8
+	 *
+	 * @return void
+	 */
+	private function update_last_changed() {
+		wp_cache_set( 'last_changed', microtime(), 'dark-matter' );
 	}
 
 	/**
