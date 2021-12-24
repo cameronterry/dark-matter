@@ -86,6 +86,7 @@ Google Analytics) with over 60 websites.
   * This is useful as a quick way of determining when changes to domain mapping has occurred.
   * Will update for any domain changes on the WordPress Network.
 * Cache is now updated before the `darkmatter_primary_unset` hook is fired, which is more consistent with other cache update / hooks.
+* Tested Dark Matter with PHP 8.0.
 * Updated Composer and Node dependencies to newer versions.
 * Removed Husky and pre-commit linting due to on-going issues.
 
