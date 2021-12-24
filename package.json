@@ -1,6 +1,6 @@
 {
   "name": "dark-matter",
-  "version": "2.1.7",
+  "version": "2.1.8",
   "description": "Domain Mapping plugin for WordPress.",
   "main": "index.js",
   "scripts": {
