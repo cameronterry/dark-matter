@@ -230,6 +230,11 @@ class DarkMatter_Primary {
 			}
 		}
 
+		$cache_key = $site_id . '-primary';
+		wp_cache_delete( $cache_key, 'dark-matter' );
+
+		$this->update_last_changed();
+
 		/**
 		 * Fires when a domain is unset to be the primary for a Site.
 		 *
@@ -240,11 +245,6 @@ class DarkMatter_Primary {
 		 * @param  boolean $db      States if the change performed a database update.
 		 */
 		do_action( 'darkmatter_primary_unset', $domain, $site_id, $db );
-
-		$cache_key = $site_id . '-primary';
-		wp_cache_delete( $cache_key, 'dark-matter' );
-
-		$this->update_last_changed();
 
 		return true;
 	}
