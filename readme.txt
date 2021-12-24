@@ -79,6 +79,15 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.1.8 =
+
+* Added support for `wp_cache_get_last_changed( 'dark-matter' )`, to quickly and easily detect changes to domain mapping.
+  * This change was made to `DarkMatter_Domains` and `DarkMatter_Primary`.
+  * This is useful as a quick way of determining when changes to domain mapping has occurred.
+  * Will update for any domain changes on the WordPress Network.
+* Cache is now updated before the `darkmatter_primary_unset` hook is fired, which is more consistent with other cache update / hooks.
+* Updated Composer and Node dependencies to newer versions.
+
 = 2.1.7 =
 
 * Fixed an issue preventing continuous builds failing if using a not Git process, due to Husky throwing an error.
