@@ -87,6 +87,7 @@ Google Analytics) with over 60 websites.
   * Will update for any domain changes on the WordPress Network.
 * Cache is now updated before the `darkmatter_primary_unset` hook is fired, which is more consistent with other cache update / hooks.
 * Updated Composer and Node dependencies to newer versions.
+* Removed Husky and pre-commit linting due to on-going issues.
 
 = 2.1.7 =
 
