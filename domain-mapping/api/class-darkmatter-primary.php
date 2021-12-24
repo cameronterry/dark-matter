@@ -87,6 +87,12 @@ class DarkMatter_Primary {
 				 * been setup up.
 				 */
 				wp_cache_set( $cache_key, 'none', 'dark-matter' );
+
+				/**
+				 * As the cache is modified, we update the `last_changed`.
+				 */
+				$this->update_last_changed();
+
 				return false;
 			}
 
@@ -178,6 +184,8 @@ class DarkMatter_Primary {
 		do_action( 'darkmatter_primary_set', $domain, $site_id, $db );
 
 		wp_cache_set( $cache_key, $domain, 'dark-matter' );
+
+		$this->update_last_changed();
 	}
 
 	/**
@@ -236,7 +244,20 @@ class DarkMatter_Primary {
 		$cache_key = $site_id . '-primary';
 		wp_cache_delete( $cache_key, 'dark-matter' );
 
+		$this->update_last_changed();
+
 		return true;
+	}
+
+	/**
+	 * Change the last changed cache note.
+	 *
+	 * @since 2.1.8
+	 *
+	 * @return void
+	 */
+	private function update_last_changed() {
+		wp_cache_set( 'last_changed', microtime(), 'dark-matter' );
 	}
 
 	/**
