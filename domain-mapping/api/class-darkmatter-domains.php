@@ -141,11 +141,11 @@ class DarkMatter_Domains {
 		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
 
 		/**
-		 * Delete CDN type domains.
+		 * Delete Media type domains.
 		 */
 		$cache_key = sprintf(
 			$cache_key_pattern,
-			DM_DOMAIN_TYPE_CDN,
+			DM_DOMAIN_TYPE_MEDIA,
 			$site_id
 		);
 		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
@@ -411,22 +411,22 @@ class DarkMatter_Domains {
 	}
 
 	/**
-	 * Retrieve a List of domains by type. For example: retrieving a list of CDN domains.
+	 * Retrieve a List of domains by type. For example: retrieving a list of Media domains.
 	 *
 	 * @since 2.2.0
 	 *
 	 * @param  integer $type       Domain type to retrieve.
 	 * @param  integer $site_id    Site ID to retrieve mapped domains for.
-	 * @param  boolean $skip_cache Skip the cache and retrieve the CDN domains from the database.
+	 * @param  boolean $skip_cache Skip the cache and retrieve the Media domains from the database.
 	 * @return array               An array of DM_Domain objects. Returns an empty array if no mapped domains found or on error.
 	 */
-	public function get_domains_by_type( $type = DM_DOMAIN_TYPE_CDN, $site_id = 0, $skip_cache = false ) {
+	public function get_domains_by_type( $type = DM_DOMAIN_TYPE_MEDIA, $site_id = 0, $skip_cache = false ) {
 		global $wpdb;
 
 		/**
 		 * Validate type before continuing.
 		 */
-		if ( DM_DOMAIN_TYPE_MAIN !== $type && DM_DOMAIN_TYPE_CDN !== $type ) {
+		if ( DM_DOMAIN_TYPE_MAIN !== $type && DM_DOMAIN_TYPE_MEDIA !== $type ) {
 			return [];
 		}
 
@@ -580,7 +580,7 @@ class DarkMatter_Domains {
 	 * @param  boolean $is_https   HTTPS protocol setting.
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
-	 * @param  integer $type       Domain type. Defaults to `null`, do not change current value. Accepts `1` for main and `2` for CDN.
+	 * @param  integer $type       Domain type. Defaults to `null`, do not change current value. Accepts `1` for main and `2` for Media.
 	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
 	 */
 	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true, $type = null ) {
@@ -623,9 +623,9 @@ class DarkMatter_Domains {
 		}
 
 		/**
-		 * Type is either "main" or "CDN".
+		 * Type is either "main" or "media".
 		 */
-		if ( null !== $type && ( DM_DOMAIN_TYPE_MAIN === $type || DM_DOMAIN_TYPE_CDN === $type ) ) {
+		if ( null !== $type && ( DM_DOMAIN_TYPE_MAIN === $type || DM_DOMAIN_TYPE_MEDIA === $type ) ) {
 			$_domain['type'] = $type;
 		}
 

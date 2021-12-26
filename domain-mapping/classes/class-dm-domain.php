@@ -70,7 +70,7 @@ class DM_Domain {
 	public $is_https = false;
 
 	/**
-	 * Domain type: `1` is primary and secondary domains, `2` is CDN.
+	 * Domain type: `1` is primary and secondary domains, `2` is media.
 	 *
 	 * @since 2.2.0
 	 *

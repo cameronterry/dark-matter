@@ -13,11 +13,11 @@ defined( 'ABSPATH' ) || die;
  * Domain type constants.
  */
 define( 'DM_DOMAIN_TYPE_MAIN', 1 );
-define( 'DM_DOMAIN_TYPE_CDN', 2 );
+define( 'DM_DOMAIN_TYPE_MEDIA', 2 );
 
 require_once DM_PATH . '/domain-mapping/inc/compat.php';
 
-require_once DM_PATH . '/domain-mapping/classes/class-dm-cdn.php';
+require_once DM_PATH . '/domain-mapping/classes/class-dm-media.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-database.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-domain.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';

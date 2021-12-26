@@ -1,42 +1,43 @@
 <?php
 /**
- * Class DM_CDN
+ * Class DM_Media
  *
  * @package DarkMatter
+ *
  * @since 2.2.0
  */
 
 defined( 'ABSPATH' ) || die;
 
 /**
- * Class DM_CDN
+ * Class DM_Media
  *
  * @since 2.2.0
  */
-class DM_CDN {
+class DM_Media {
 	/**
-	 * An array of CDN domains.
+	 * An array of Media domains.
 	 *
 	 * @var array
 	 */
 	private $allowed_mime_types = array();
 
 	/**
-	 * An array of CDN domains.
+	 * An array of Media domains.
 	 *
 	 * @var array
 	 */
-	private $cdn_domains = array();
+	private $media_domains = array();
 
 	/**
-	 * Number of CDN domains that are available.
+	 * Number of Media domains that are available.
 	 *
 	 * @var int
 	 */
-	private $cdn_domains_count = -1;
+	private $media_domains_count = -1;
 
 	/**
-	 * CDN domains, as strings.
+	 * Media domains, as strings.
 	 *
 	 * @var array
 	 */
@@ -70,12 +71,12 @@ class DM_CDN {
 	}
 
 	/**
-	 * Discontinue if there is no CDN domains to map.
+	 * Discontinue if there is no Media domains to map.
 	 *
 	 * @return bool
 	 */
 	private function can_map() {
-		return ! empty( $this->cdn_domains );
+		return ! empty( $this->media_domains );
 	}
 
 	/**
@@ -114,7 +115,7 @@ class DM_CDN {
 	}
 
 	/**
-	 * Initialise the CDN setup.
+	 * Initialise the Media setup.
 	 *
 	 * @param int $site_id Site (Blog) ID, used to retrieve the site details and Primary Domain.
 	 */
@@ -136,10 +137,10 @@ class DM_CDN {
 		$this->primary = DarkMatter_Primary::instance()->get( $site_id );
 
 		/**
-		 * Retrieve CDN domains and update how many are available. The count needs to be zero based.
+		 * Retrieve media domains and update how many are available. The count needs to be zero based.
 		 */
-		$this->cdn_domains       = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_CDN, $site_id );
-		$this->cdn_domains_count = count( $this->cdn_domains ) - 1;
+		$this->media_domains       = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+		$this->media_domains_count = count( $this->media_domains ) - 1;
 
 		/**
 		 * Generate an array of only strings of the domains. Namely the primary and unmapped.
@@ -174,7 +175,7 @@ class DM_CDN {
 	}
 
 	/**
-	 * Map CDN domains where appropriate.
+	 * Map Media domains where appropriate.
 	 *
 	 * @param  string $content Content containing URLs - or a URL - to be adjusted.
 	 * @return string
@@ -187,8 +188,8 @@ class DM_CDN {
 		$domains_regex = implode( '|', $this->main_domains );
 
 		/**
-		 * Find all URLs which are not mapped to a CDN domain, but are either on the primary domain or admin domain (to
-		 * avoid confusion with a third party image, like GIPHY), and process them.
+		 * Find all URLs which are not mapped to a Media domain, but are either on the primary domain or admin domain
+		 * (to avoid confusion with a third party image, like GIPHY), and process them.
 		 *
 		 * Note on the regular expression: This regex looks a bit odd, and basically it's to find all URLs after the
 		 * protocol until it hits a character we do not want, like closing double-quote (") on a tag or whitespace.
@@ -242,14 +243,14 @@ class DM_CDN {
 	}
 
 	/**
-	 * Used to map a URL to a CDN domain. Any URL passed into this method **will** be mapped.
+	 * Used to map a URL to a Media domain. Any URL passed into this method **will** be mapped.
 	 *
 	 * @param  string $url URL to be modified.
-	 * @return string      URL with the domain changed to be from a CDN domain.
+	 * @return string      URL with the domain changed to be from a Media domain.
 	 */
 	public function map_url( $url = '' ) {
 		/**
-		 * No CDN domains or the URL is blank, then bail.
+		 * No Media domains or the URL is blank, then bail.
 		 */
 		if ( ! $this->can_map() || empty( $url ) ) {
 			return $url;
@@ -271,26 +272,26 @@ class DM_CDN {
 		}
 
 		/**
-		 * Alternate through the CDN domains if there is more than one.
+		 * Alternate through the Media domains if there is more than one.
 		 */
 		$index = 0;
 
-		if ( $this->cdn_domains_count > 0 ) {
-			$index = wp_rand( 0, $this->cdn_domains_count );
+		if ( $this->media_domains_count > 0 ) {
+			$index = wp_rand( 0, $this->media_domains_count );
 		}
 
 		return preg_replace(
 			"#://(" . implode( '|', $this->main_domains ) . ")#",
-			'://' . untrailingslashit( $this->cdn_domains[ $index ]->domain ),
+			'://' . untrailingslashit( $this->media_domains[ $index ]->domain ),
 			$url
 		);
 	}
 
 	/**
-	 * Used to unmap CDN domains.
+	 * Used to unmap Media domains.
 	 *
-	 * @param  string $value Value that may contain CDN domains.
-	 * @return string        Value with the CDN domains removed and replaced with the unmapped domain.
+	 * @param  string $value Value that may contain Media domains.
+	 * @return string        Value with the Media domains removed and replaced with the unmapped domain.
 	 */
 	public function unmap( $value = '' ) {
 		if ( ! $this->can_map() || empty( $value ) ) {
@@ -298,15 +299,15 @@ class DM_CDN {
 		}
 
 		/**
-		 * Create an array of strings of the CDN domains.
+		 * Create an array of strings of the Media domains.
 		 */
-		$cdn_domains = wp_list_pluck( $this->cdn_domains, 'domain' );
+		$media_domains = wp_list_pluck( $this->media_domains, 'domain' );
 
 		/**
-		 * Replace the CDN domains with the unmapped domain.
+		 * Replace the Media domains with the unmapped domain.
 		 */
 		return preg_replace(
-			"#://(" . implode( '|', $cdn_domains ) . ")#",
+			"#://(" . implode( '|', $media_domains ) . ")#",
 			'://' . $this->unmapped,
 			$value
 		);
@@ -315,9 +316,9 @@ class DM_CDN {
 	/**
 	 * Return the Singleton Instance of the class.
 	 *
-	 * @since 2.2.0
+	 * @return DM_Media
 	 *
-	 * @return DM_CDN
+	 * @since 2.2.0
 	 */
 	public static function instance() {
 		static $instance = false;
@@ -329,4 +330,4 @@ class DM_CDN {
 		return $instance;
 	}
 }
-DM_CDN::instance();
+DM_Media::instance();

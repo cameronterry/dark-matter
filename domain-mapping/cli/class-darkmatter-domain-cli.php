@@ -42,7 +42,7 @@ class DarkMatter_Domain_CLI {
 	 * : Sets the domain to be a secondary domain for the Site. Visitors will be redirected from this domain to the primary.
 	 *
 	 * [--type]
-	 * : Sets the domain as a CDN domain for the Site. This domain will be used for mapping supported file attachments.
+	 * : Choose the type of domain. Useful for creating "media" domains. Defaults to "main".
 	 *
 	 * ### EXAMPLES
 	 * Set the primary domain and set the protocol to HTTPS.
@@ -68,16 +68,16 @@ class DarkMatter_Domain_CLI {
 				'force'   => false,
 				'https'   => true,
 				'primary' => false,
-				'cdn'     => false,
+				'type'    => false,
 			]
 		);
 
 		/**
-		 * Handle the CDN flag.
+		 * Handle the Media flag.
 		 */
 		$domain_types = [
-			'main' => DM_DOMAIN_TYPE_MAIN,
-			'cdn'  => DM_DOMAIN_TYPE_CDN,
+			'main'  => DM_DOMAIN_TYPE_MAIN,
+			'media' => DM_DOMAIN_TYPE_MEDIA,
 		];
 		$type         = DM_DOMAIN_TYPE_MAIN;
 
@@ -184,7 +184,7 @@ class DarkMatter_Domain_CLI {
 					'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
 					'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
 					'Active'   => ( $domain->active ? $yes_val : $no_val ),
-					'Type'     => ( DM_DOMAIN_TYPE_CDN === $domain->type ? 'CDN' : 'Main' ),
+					'Type'     => ( DM_DOMAIN_TYPE_MEDIA === $domain->type ? 'Media' : 'Main' ),
 				);
 
 				/**
@@ -324,7 +324,7 @@ class DarkMatter_Domain_CLI {
 	 * redirected from this domain to the primary.
 	 *
 	 * [--type]
-	 * : Sets the domain as a CDN domain for the Site. This domain will be used for mapping supported file attachments.
+	 * : Choose the type of domain. Useful for creating "media" domains. Defaults to "main".
 	 *
 	 * ### EXAMPLES
 	 * Set the primary domain and set the protocol to HTTPS.
@@ -408,11 +408,11 @@ class DarkMatter_Domain_CLI {
 		}
 
 		/**
-		 * Handle the CDN flag.
+		 * Handle the Media flag.
 		 */
 		$domain_types = [
-			'main' => DM_DOMAIN_TYPE_MAIN,
-			'cdn'  => DM_DOMAIN_TYPE_CDN,
+			'main'  => DM_DOMAIN_TYPE_MAIN,
+			'media' => DM_DOMAIN_TYPE_MEDIA,
 		];
 		$type         = DM_DOMAIN_TYPE_MAIN;
 
