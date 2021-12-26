@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.8
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,17 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.8 =
+
+* Added support for `wp_cache_get_last_changed( 'dark-matter' )`, to quickly and easily detect changes to domain mapping.
+  * This change was made to `DarkMatter_Domains` and `DarkMatter_Primary`.
+  * This is useful as a quick way of determining when changes to domain mapping has occurred.
+  * Will update for any domain changes on the WordPress Network.
+* Cache is now updated before the `darkmatter_primary_unset` hook is fired, which is more consistent with other cache update / hooks.
+* Tested Dark Matter with PHP 8.0.
+* Updated Composer and Node dependencies to newer versions.
+* Removed Husky and pre-commit linting due to on-going issues.
 
 = 2.1.7 =
 
