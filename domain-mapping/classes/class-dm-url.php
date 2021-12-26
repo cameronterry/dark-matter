@@ -21,6 +21,13 @@ class DM_URL {
 	 */
 	public function __construct() {
 		/**
+		 * In some circumstances, we always want to process the logic regardless of request type, circumstances,
+		 * conditions, etc. (like ensuring saved post data is unmapped properly).
+		 */
+		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
+		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
+
+		/**
 		 * Prevent accidental URL mapping on requests which are not GET requests for the admin area. For example; a POST
 		 * request will include the postback for saving a post.
 		 *
@@ -238,9 +245,6 @@ class DM_URL {
 		 */
 		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
 
-		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
-
 		/**
 		 * We only wish to affect `the_content` for Previews and nothing else.
 		 */
@@ -258,13 +262,25 @@ class DM_URL {
 		 */
 		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
 
-		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'prepare_admin' ) );
+		/**
+		 * This is called for all requests as it is possible for the REST API to be called and process without a cURL
+		 * (or equivalent) being used. REST API endpoints can be called internally through `rest_do_request()`, which
+		 * bypass the whole need for a request / latency. To ensure that the REST endpoints behave universally, this
+		 * action is always called here and not just when the request is called (as in previous versions of Dark
+		 * Matter).
+		 */
+		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
+
+		/**
+		 * We have to stop here for the REST API as the later filters and hooks can cause the REST API endpoints to 404
+		 * if added. So if it is a REST request specifically, then we stop here.
+		 */
+		if ( false !== strpos( $request_uri, rest_get_url_prefix() ) ) {
 			return;
 		}
 
-		if ( ! $this->is_mapped() && false !== strpos( $request_uri, rest_get_url_prefix() ) ) {
-			add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
+		if ( is_admin() ) {
+			add_action( 'init', array( $this, 'prepare_admin' ) );
 			return;
 		}
 
@@ -294,30 +310,6 @@ class DM_URL {
 	 * @return void
 	 */
 	public function prepare_admin() {
-		/**
-		 * This is to prevent the Classic Editor's AJAX action for inserting a
-		 * link from putting the mapped domain in to the database. However, we
-		 * cannot rely on `is_admin()` as this is always true for calls to the
-		 * old AJAX. Therefore we check the referer to ensure it's the admin
-		 * side rather than the front-end.
-		 */
-		$valid_actions = [
-			'query-attachments' => true,
-			'sample-permalink'  => true,
-			'upload-attachment' => true,
-		];
-
-		$action = filter_input( INPUT_POST, 'action', FILTER_SANITIZE_STRING );
-
-		if ( wp_doing_ajax()
-			&&
-				false !== stripos( wp_get_referer(), '/wp-admin/' )
-			&&
-				( empty( $action ) || ! array_key_exists( $action, $valid_actions ) ) // phpcs:ignore WordPress.Security.NonceVerification.Missing
-		) {
-			return;
-		}
-
 		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
 
 		/**
@@ -328,6 +320,24 @@ class DM_URL {
 		 * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312 Query string parameter "preview=true" being added to the URL.
 		 */
 		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+
+		/**
+		 * To prepare the Classic Editor, we need to attach to a very late hook to ensure that `get_current_screen()` is
+		 * available and returns something useful.
+		 */
+		add_action( 'edit_form_top', array( $this, 'prepare_classic_editor' ) );
+	}
+
+	/**
+	 * Ensures that the Classic Editor is prepared appropriately and the unmapped URLs are mapped prior to loading. This
+	 * is needed for compatibility with some SEO plugins such as Yoast.
+	 */
+	public function prepare_classic_editor() {
+		$screen = get_current_screen();
+
+		if ( is_a( $screen, 'WP_Screen' ) && 'post' === $screen->base && 'edit' === $screen->parent_base ) {
+			add_filter( 'the_editor_content', array( $this, 'map' ), 10, 1 );
+		}
 	}
 
 	/**
@@ -341,6 +351,30 @@ class DM_URL {
 		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
 
 		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+
+		/**
+		 * Loop all post types with REST endpoints to fix the mapping for content.raw property.
+		 */
+		$rest_post_types = get_post_types( [ 'show_in_rest' => true ] );
+
+		foreach ( $rest_post_types as $post_type ) {
+			add_filter( "rest_prepare_{$post_type}", array( $this, 'prepare_rest_post_item' ), 10, 1 );
+		}
+	}
+
+	/**
+	 * Ensures the "raw" version of the content, typically used by Gutenberg through it's middleware pre-load / JS
+	 * hydrate process, gets handled the same as content (which runs through the `the_content` hook).
+	 *
+	 * @param  WP_REST_Response $item Individual post / item in the response that is being processed.
+	 * @return WP_REST_Response       Post / item with the content.raw, if present, mapped.
+	 */
+	public function prepare_rest_post_item( $item = null ) {
+		if ( isset( $item->data['content']['raw'] ) ) {
+			$item->data['content']['raw'] = $this->map( $item->data['content']['raw'] );
+		}
+
+		return $item;
 	}
 
 	/**

@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.7.1
-Stable tag: 2.1.5
+Tested up to: 5.8
+Stable tag: 2.1.8
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,36 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.8 =
+
+* Added support for `wp_cache_get_last_changed( 'dark-matter' )`, to quickly and easily detect changes to domain mapping.
+  * This change was made to `DarkMatter_Domains` and `DarkMatter_Primary`.
+  * This is useful as a quick way of determining when changes to domain mapping has occurred.
+  * Will update for any domain changes on the WordPress Network.
+* Cache is now updated before the `darkmatter_primary_unset` hook is fired, which is more consistent with other cache update / hooks.
+* Tested Dark Matter with PHP 8.0.
+* Updated Composer and Node dependencies to newer versions.
+* Removed Husky and pre-commit linting due to on-going issues.
+
+= 2.1.7 =
+
+* Fixed an issue preventing continuous builds failing if using a not Git process, due to Husky throwing an error.
+* Updated Composer and Node dependencies to newer versions.
+* Upped WordPress Core support to 5.8.
+
+= 2.1.6 =
+
+* Change: editors will now see mapped URLs when inserting links to posts. Also, editor will now load with mapped URLs and this will be unmapped on save.
+  * This fixes a really annoying issue for editors, who would could see unmapped links in Classic and Block Editors.
+  * Usually occurs around linking to another piece of content like a Page, Post or Term.
+  * Resolves a problem with SEO plugins such as Rank Math or Yoast SEO which would get confused between the admin and primary domains for counting internal links.
+* Properly resolves an issue of unmapping the primary domain in content on Save Post, which would disengage on POST requests (Classic Editor basically).
+  * This issue was introduced in 2.1.4 - sorry!
+* Fixed a problem where WordPress' validation of a "safe" URL didn't always work. This mostly affects the WP HTTP API and `wp_safe_redirect()`.
+* "Internal" REST API requests - conducted through `rest_do_request()` - are now treated identically to "external" REST API requests in Dark Matter.
+* Switched out `webpack-fix-style-only-entries` for `webpack-remove-empty-scripts` for Webpack 5 compatibility in the build process.
+* Upped WordPress Core support to 5.7.2.
 
 = 2.1.5 =
 
