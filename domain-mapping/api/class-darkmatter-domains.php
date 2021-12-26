@@ -431,6 +431,23 @@ class DarkMatter_Domains {
 		}
 
 		/**
+		 * Media domains can be set with a constant.
+		 */
+		if ( DM_DOMAIN_TYPE_MEDIA === $type && defined( 'DM_NETWORK_MEDIA' ) ) {
+			/**
+			 * Just because the constant exists, does not mean it'll be correct.
+			 */
+			$media_domains = DM_NETWORK_MEDIA;
+
+			/**
+			 * Ensure it is an array and then return. No checks, we assume that is provided correctly.
+			 */
+			if ( is_array( $media_domains ) ) {
+				return $media_domains;
+			}
+		}
+
+		/**
 		 * Setup the cache key.
 		 */
 		$site_id   = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
@@ -460,6 +477,11 @@ class DarkMatter_Domains {
 			 * Update the cache with the records from the database.
 			 */
 			wp_cache_set( $cache_key, $_domains, 'dark-matter' );
+
+			/**
+			 * As the cache is updated here.
+			 */
+			$this->update_last_changed();
 		}
 
 		if ( empty( $_domains ) ) {
