@@ -49,6 +49,10 @@ class DarkMatter_Domain_CLI {
 	 *
 	 *      wp --url="sites.my.com/siteone" darkmatter domain add www.primarydomain.com --primary --https
 	 *
+	 * Set a media domain for a site.
+	 *
+	 * 		wp --url="sites.my.com/sitefifteen" darkmatter domain add fifteen.mycdn.com --type=media
+	 *
 	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
@@ -330,7 +334,17 @@ class DarkMatter_Domain_CLI {
 	 * Set the primary domain and set the protocol to HTTPS.
 	 *
 	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --primary
-	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --secondary
+	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.secondarydomain.com --secondary
+	 *
+	 * Convert a secondary domain into a media domain. Useful for when repurposing an old domain for use a CDN for media
+	 * assets.
+	 *
+	 *		wp --url="sites.my.com/siteone" darkmatter domain set www.secondarydomain.com --type=media
+	 *
+	 * Convert a Media domain to a main domain. This is useful in scenarios when a media domain is redundant and to
+	 * ensure it redirects to the website.
+	 *
+	 * 		wp --url="sites.my.com/siteone" darkmatter domain set one.mycdntest.com --type=main --secondary
 	 *
 	 * @since 2.0.0
 	 *
