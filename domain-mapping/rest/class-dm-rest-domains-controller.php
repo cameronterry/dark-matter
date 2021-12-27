@@ -576,7 +576,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 			$item['is_https'],
 			$request['force'],
 			$item['is_active'],
-			$item['domain']
+			$item['type']
 		);
 
 		/**
