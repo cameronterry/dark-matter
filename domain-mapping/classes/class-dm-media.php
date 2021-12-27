@@ -137,9 +137,13 @@ class DM_Media {
 		$this->primary = DarkMatter_Primary::instance()->get( $site_id );
 
 		/**
-		 * Retrieve media domains and update how many are available. The count needs to be zero based.
+		 * Retrieve media domains and update how many are available.
 		 */
-		$this->media_domains       = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+		$this->media_domains = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+
+		/**
+		 * Zero-based the count of media domains.
+		 */
 		$this->media_domains_count = count( $this->media_domains ) - 1;
 
 		/**
