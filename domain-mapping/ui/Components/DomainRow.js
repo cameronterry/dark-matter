@@ -202,8 +202,11 @@ class DomainRow extends React.Component {
 					data={ this.props.domain }
 					delete={ this.handleDelete }
 				/>
+				<td colSpan="2">
+					{ __( 'This is a Media domain used for audio, images, video, etc.', 'dark-matter' ) }
+				</td>
 				<td>
-					This is a Media domain used for audio, images, video, etc.
+					{ __( 'HTTPS', 'dark-matter' ) }
 				</td>
 			</tr>
 		);
