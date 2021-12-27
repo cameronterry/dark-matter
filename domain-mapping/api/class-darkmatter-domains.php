@@ -435,14 +435,26 @@ class DarkMatter_Domains {
 		 */
 		if ( DM_DOMAIN_TYPE_MEDIA === $type && defined( 'DM_NETWORK_MEDIA' ) ) {
 			/**
-			 * Just because the constant exists, does not mean it'll be correct.
-			 */
-			$media_domains = DM_NETWORK_MEDIA;
-
-			/**
 			 * Ensure it is an array and then return. No checks, we assume that is provided correctly.
 			 */
-			if ( is_array( $media_domains ) ) {
+			if ( is_array( DM_NETWORK_MEDIA ) ) {
+				$media_domains = [];
+
+				/**
+				 * Convert the domains into DM_Domain objects.
+				 */
+				foreach ( DM_NETWORK_MEDIA as $i => $media_domain ) {
+					$media_domains[ $i ] = new DM_Domain( (object) [
+						'active'     => true,
+						'blog_id'    => get_current_blog_id(),
+						'domain'     => $media_domain,
+						'id'         => -1,
+						'is_https'   => true,
+						'is_primary' => false,
+						'type'       => DM_DOMAIN_TYPE_MEDIA,
+					] );
+				}
+
 				return $media_domains;
 			}
 		}
