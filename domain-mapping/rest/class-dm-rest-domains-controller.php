@@ -193,6 +193,13 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 					'required'    => false,
 					'type'        => 'boolean',
 				),
+				'type'       => array(
+					'context'     => array( 'view', 'edit' ),
+					'default'     => null,
+					'description' => __( 'Type of domain.', 'dark-matter' ),
+					'required'    => false,
+					'type'        => 'integer',
+				),
 				'site'       => array(
 					'description' => __( 'Site ID the domain is assigned against.', 'dark-matter' ),
 					'type'        => 'object',
@@ -360,6 +367,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 			'is_primary' => null,
 			'is_https'   => null,
 			'is_active'  => null,
+			'type'       => null,
 		);
 
 		$method = $request->get_method();
@@ -421,6 +429,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 		if ( in_array( 'is_https', $fields, true ) ) {
 			$data['is_https'] = $item->is_https;
+		}
+
+		if ( in_array( 'type', $fields, true ) ) {
+			$data['type'] = $item->type;
 		}
 
 		if ( in_array( 'site', $fields, true ) ) {
@@ -558,7 +570,14 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 
 		$item = $this->prepare_item_for_database( $request );
 
-		$result = $db->update( $item['domain'], $item['is_primary'], $item['is_https'], $request['force'], $item['is_active'] );
+		$result = $db->update(
+			$item['domain'],
+			$item['is_primary'],
+			$item['is_https'],
+			$request['force'],
+			$item['is_active'],
+			$item['domain']
+		);
 
 		/**
 		 * Return errors as-is. This is maintain consistency and parity with the
