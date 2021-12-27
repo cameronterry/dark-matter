@@ -75,6 +75,8 @@ class DM_Media {
 	 * Discontinue if there is no Media domains to map.
 	 *
 	 * @return bool
+	 *
+	 * @since 2.2.0
 	 */
 	private function can_map() {
 		return ! empty( $this->media_domains );
@@ -87,6 +89,8 @@ class DM_Media {
 	 * For example: turn `image/jpeg` mime type key from `jpg|jpeg|jpe` into three separate key / values on the array.
 	 *
 	 * @return array All mime types and extensions.
+	 *
+	 * @since 2.2.0
 	 */
 	private function get_mime_types() {
 		$mime_types = get_allowed_mime_types();
@@ -119,6 +123,9 @@ class DM_Media {
 	 * Initialise the Media setup.
 	 *
 	 * @param int $site_id Site (Blog) ID, used to retrieve the site details and Primary Domain.
+	 * @return void
+	 *
+	 * @since 2.2.0
 	 */
 	public function init( $site_id = 0 ) {
 		$blog = get_site( $site_id );
@@ -170,6 +177,8 @@ class DM_Media {
 	 *
 	 * @param  array $data An array of slashed, sanitized, and processed post data.
 	 * @return array       Post data, with URLs unmapped.
+	 *
+	 * @since 2.2.0
 	 */
 	public function insert_post( $data = [] ) {
 		if ( ! empty( $data['post_content'] ) ) {
@@ -184,6 +193,8 @@ class DM_Media {
 	 *
 	 * @param  string $content Content containing URLs - or a URL - to be adjusted.
 	 * @return string
+	 *
+	 * @since 2.2.0
 	 */
 	public function map( $content = '' ) {
 		if ( ! $this->can_map() || empty( $content ) ) {
@@ -252,6 +263,8 @@ class DM_Media {
 	 *
 	 * @param  string $url URL to be modified.
 	 * @return string      URL with the domain changed to be from a Media domain.
+	 *
+	 * @since 2.2.0
 	 */
 	public function map_url( $url = '' ) {
 		/**
@@ -300,9 +313,9 @@ class DM_Media {
 	/**
 	 * Apply filters to map / unmap asset domains on REST API.
 	 *
-	 * @since 2.2.0
-	 *
 	 * @return void
+	 *
+	 * @since 2.2.0
 	 */
 	public function prepare_rest() {
 		/**
@@ -337,6 +350,8 @@ class DM_Media {
 	 *
 	 * @param  string $value Value that may contain Media domains.
 	 * @return string        Value with the Media domains removed and replaced with the unmapped domain.
+	 *
+	 * @since 2.2.0
 	 */
 	public function unmap( $value = '' ) {
 		if ( ! $this->can_map() || empty( $value ) ) {
