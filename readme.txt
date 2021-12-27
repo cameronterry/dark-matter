@@ -79,6 +79,14 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+* New Features:
+  * Say hello to "Media domains"; a new type of domain to Dark Matter that can be used to serve media assets from a different domain name.
+    * Useful for separating infrastructure which is used for static assets from servers powering PHP requests.
+    * Or powering images through a dedicated / dynamic service such as [Tachyon](https://github.com/humanmade/tachyon).
+    * Can be hard-set using an array of domains in a constant called, `DM_NETWORK_MEDIA`.
+    * Supports all extensions that are supported by the Media Library. So if you add SVG upload support, "Media domains" will support it too.
+    * Updating the existing CLIs to support domain types and management of "Media domains".
+
 = 2.1.8 =
 
 * Added support for `wp_cache_get_last_changed( 'dark-matter' )`, to quickly and easily detect changes to domain mapping.
