@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.8
-Stable tag: 2.1.8
+Stable tag: 2.1.9
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.1.9 =
+
+* Fixed an issue with Webpack that prevents the admin UI working when `SCRIPT_DEBUG` is used.
+* Unlikely to experience issue except for staging and local developments.
+* Problem spotted during development of the 2.2.0 release.
 
 = 2.1.8 =
 
