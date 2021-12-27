@@ -169,6 +169,7 @@ class DomainRow extends React.Component {
 					<DomainDisplaySecondary
 						data={ this.props.domain }
 						activate={ this.handleActivate }
+						convert={ this.handleConvert }
 						primary={ this.handlePrimary }
 						protocol={ this.handleProtocol }
 						delete={ this.handleDelete }
