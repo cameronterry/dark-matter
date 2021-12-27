@@ -20,6 +20,27 @@ class DomainRow extends React.Component {
 		this.props.update( data );
 	};
 
+  /**
+   * Handle converting domains between secondary to media domains and vice versa.
+   *
+   * @param {Object} event
+   */
+  handleConvert = ( event ) => {
+	event.preventDefault();
+
+	const data = { ...this.props.domain };
+
+	if ( 1 === data.type ) {
+		/** Convert media domain to secondary domain. */
+		data.type = 2;
+	} else if ( 2 === data.type ) {
+		/** Convert media domain to secondary domain. */
+		data.type = 1;
+	}
+
+	this.props.update( data );
+  }
+
 	/**
 	 * Handle the Deleting of the domain.
 	 *
@@ -176,6 +197,7 @@ class DomainRow extends React.Component {
 		return (
 			<tr>
 				<DomainDisplayMedia
+					convert={ this.handleConvert }
 					data={ this.props.domain }
 					delete={ this.handleDelete }
 				/>

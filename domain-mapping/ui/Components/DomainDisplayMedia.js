@@ -11,11 +11,11 @@ class DomainDisplayMedia extends React.Component {
 		return (
 			<td className="domain-options">
 				<p>
-					<strong>
+					<em>
 						<a href={ url }>{ this.props.data.domain }</a>
-					</strong>
+					</em>
 				</p>
-				<button onClick={ false }>
+				<button onClick={ this.props.convert }>
 					{ __( 'Convert to Secondary domain', 'dark-matter' ) }
 				</button>
 				<span>|</span>
