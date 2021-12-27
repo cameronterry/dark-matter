@@ -1,6 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 
+import DomainDisplayMedia from './DomainDisplayMedia';
 import DomainDisplayPrimary from './DomainDisplayPrimary';
 import DomainDisplaySecondary from './DomainDisplaySecondary';
 
@@ -172,17 +173,14 @@ class DomainRow extends React.Component {
 	}
 
 	renderMediaDomain() {
-		const {
-			domain,
-		} = this.props;
-
 		return (
 			<tr>
+				<DomainDisplayMedia
+					data={ this.props.domain }
+					delete={ this.handleDelete }
+				/>
 				<td>
-					{ domain.domain }
-				</td>
-				<td>
-					Hello world.
+					This is a Media domain used for audio, images, video, etc.
 				</td>
 			</tr>
 		);
