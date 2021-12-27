@@ -64,6 +64,7 @@ class DM_Media {
 	 */
 	public function __construct() {
 		add_action( 'init', array( $this, 'init' ), 10 );
+		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
 
 		add_filter( 'the_content', array( $this, 'map' ), 100, 1 );
 		add_filter( 'wp_get_attachment_url', array( $this, 'map_url' ), 100, 1 );
@@ -284,11 +285,51 @@ class DM_Media {
 			$index = wp_rand( 0, $this->media_domains_count );
 		}
 
-		return preg_replace(
+		$url = preg_replace(
 			"#://(" . implode( '|', $this->main_domains ) . ")#",
 			'://' . untrailingslashit( $this->media_domains[ $index ]->domain ),
 			$url
 		);
+
+		/**
+		 * Ensure the URL is HTTPS.
+		 */
+		return set_url_scheme( $url, 'https' );
+	}
+
+	/**
+	 * Apply filters to map / unmap asset domains on REST API.
+	 *
+	 * @since 2.2.0
+	 *
+	 * @return void
+	 */
+	public function prepare_rest() {
+		/**
+		 * Loop all post types with REST endpoints to fix the mapping for content.raw property.
+		 */
+		$rest_post_types = get_post_types( array( 'show_in_rest' => true ) );
+
+		foreach ( $rest_post_types as $post_type ) {
+			add_filter( "rest_prepare_{$post_type}", array( $this, 'prepare_rest_post_item' ), 10, 1 );
+		}
+	}
+
+	/**
+	 * Ensures the "raw" version of the content, typically used by Gutenberg through it's middleware pre-load / JS
+	 * hydrate process, gets handled the same as content (which runs through the `the_content` hook).
+	 *
+	 * @param  WP_REST_Response $item Individual post / item in the response that is being processed.
+	 * @return WP_REST_Response       Post / item with the content.raw, if present, mapped.
+	 *
+	 * @since 2.2.0
+	 */
+	public function prepare_rest_post_item( $item = null ) {
+		if ( isset( $item->data['content']['raw'] ) ) {
+			$item->data['content']['raw'] = $this->map( $item->data['content']['raw'] );
+		}
+
+		return $item;
 	}
 
 	/**
