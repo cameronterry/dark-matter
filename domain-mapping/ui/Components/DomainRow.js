@@ -124,6 +124,16 @@ class DomainRow extends React.Component {
 	 * Render.
 	 */
 	render() {
+		const { type } = this.props;
+
+		if ( 1 === type ) {
+			return this.renderMainDomain();
+		} else if ( 2 === type ) {
+			return this.renderMediaDomain();
+		}
+	}
+
+	renderMainDomain() {
 		return (
 			<tr>
 				{ this.props.domain.is_primary ? (
@@ -156,6 +166,23 @@ class DomainRow extends React.Component {
 					{ this.props.domain.is_https
 						? __( 'HTTPS', 'dark-matter' )
 						: __( 'HTTP', 'dark-matter' ) }
+				</td>
+			</tr>
+		);
+	}
+
+	renderMediaDomain() {
+		const {
+			domain,
+		} = this.props;
+
+		return (
+			<tr>
+				<td>
+					{ domain.domain }
+				</td>
+				<td>
+					Hello world.
 				</td>
 			</tr>
 		);
