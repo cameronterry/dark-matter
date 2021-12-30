@@ -219,7 +219,7 @@ class DarkMatter_Domains {
 
 		if ( $result ) {
 			/**
-			 * Clear cache but not the one for the newly added domain.
+			 * Clear internal cache.
 			 */
 			$this->_clear_cache();
 
