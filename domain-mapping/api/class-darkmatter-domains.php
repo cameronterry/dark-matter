@@ -168,6 +168,13 @@ class DarkMatter_Domains {
 			}
 		}
 
+		/**
+		 * Check the type is valid.
+		 */
+		if ( DM_DOMAIN_TYPE_MAIN !== $type && DM_DOMAIN_TYPE_MEDIA !== $type ) {
+			return new WP_Error( 'type', __( 'The type for the new domain is not supported.', 'dark-matter' ) );
+		}
+
 		$_domain = array(
 			'active'     => ( ! $active ? false : true ),
 			'blog_id'    => get_current_blog_id(),
