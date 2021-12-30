@@ -164,7 +164,7 @@ class DarkMatter_Domains {
 	 * @param  integer $type       Domain type. Defaults to `1`, which is "main".
 	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
 	 */
-	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true, $type = 1 ) {
+	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true, $type = DM_DOMAIN_TYPE_MAIN ) {
 		$fqdn = $this->_basic_check( $fqdn );
 
 		if ( is_wp_error( $fqdn ) ) {
