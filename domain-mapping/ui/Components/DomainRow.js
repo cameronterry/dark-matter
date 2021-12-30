@@ -4,6 +4,7 @@ import React from 'react';
 import DomainDisplayMedia from './DomainDisplayMedia';
 import DomainDisplayPrimary from './DomainDisplayPrimary';
 import DomainDisplaySecondary from './DomainDisplaySecondary';
+import { DOMAIN_TYPES } from "../API/Enums";
 
 class DomainRow extends React.Component {
 	/**
@@ -30,10 +31,10 @@ class DomainRow extends React.Component {
 
 	const data = { ...this.props.domain };
 
-	if ( 1 === data.type ) {
+	if ( DOMAIN_TYPES.MAIN === data.type ) {
 		/** Convert media domain to secondary domain. */
 		data.type = 2;
-	} else if ( 2 === data.type ) {
+	} else if ( DOMAIN_TYPES.MEDIA === data.type ) {
 		/** Convert media domain to secondary domain. */
 		data.type = 1;
 	}
@@ -148,9 +149,9 @@ class DomainRow extends React.Component {
 	render() {
 		const { type } = this.props;
 
-		if ( 1 === type ) {
+		if ( DOMAIN_TYPES.MAIN === type ) {
 			return this.renderMainDomain();
-		} else if ( 2 === type ) {
+		} else if ( DOMAIN_TYPES.MEDIA === type ) {
 			return this.renderMediaDomain();
 		}
 	}
