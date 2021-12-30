@@ -384,7 +384,6 @@ class DarkMatter_Domain_CLI {
 				'use-https' => true,
 				'primary'   => null,
 				'secondary' => null,
-				'type'      => false,
 			]
 		);
 
@@ -435,16 +434,11 @@ class DarkMatter_Domain_CLI {
 		}
 
 		/**
-		 * Handle the Media flag.
+		 * If the type is specified, then validate it to ensure it is correct.
 		 */
-		$domain_types = [
-			'main'  => DM_DOMAIN_TYPE_MAIN,
-			'media' => DM_DOMAIN_TYPE_MEDIA,
-		];
-		$type         = DM_DOMAIN_TYPE_MAIN;
-
-		if ( ! empty( $opts['type'] ) && array_key_exists( $opts['type'], $domain_types ) ) {
-			$type = $domain_types[ $opts['type'] ];
+		$type = null;
+		if ( ! empty( $opts['type'] ) ) {
+			$type = $this->check_type_opt( $opts['type'] );
 		}
 
 		/**
