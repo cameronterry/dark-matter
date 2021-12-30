@@ -118,37 +118,10 @@ class DarkMatter_Domains {
 	 *
 	 * @param string $fqdn Fully qualified domain name. Optional.
 	 */
-	private function _clear_cache( $fqdn = '' ) {
-		if ( ! empty( $fqdn ) ) {
-			$cache_key = md5( $fqdn );
-			wp_cache_delete( $cache_key, 'dark-matter' );
-		}
-
-		/**
-		 * Clear the cache for the domain types.
-		 */
-		$cache_key_pattern = '%1$d-%2$d-domain-types';
-		$site_id = get_current_blog_id();
-
-		/**
-		 * Delete main type domains.
-		 */
-		$cache_key = sprintf(
-			$cache_key_pattern,
-			DM_DOMAIN_TYPE_MAIN,
-			$site_id
-		);
-		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
-
-		/**
-		 * Delete Media type domains.
-		 */
-		$cache_key = sprintf(
-			$cache_key_pattern,
-			DM_DOMAIN_TYPE_MEDIA,
-			$site_id
-		);
-		wp_cache_delete( md5( $cache_key ), 'dark-matter' );
+	private function _clear_caches( $fqdn = '' ) {
+		$this->clear_cache_for_domain( $fqdn );
+		$this->clear_cache_for_domain_type();
+		$this->clear_cache_for_domain_type( DM_DOMAIN_TYPE_MEDIA );
 	}
 
 	/**
@@ -221,7 +194,7 @@ class DarkMatter_Domains {
 			/**
 			 * Clear internal cache.
 			 */
-			$this->_clear_cache();
+			$this->_clear_caches();
 
 			/**
 			 * Create the cache key.
@@ -259,6 +232,64 @@ class DarkMatter_Domains {
 		}
 
 		return new WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
+	}
+
+	/**
+	 * Clears the cache entry for a specific domain.
+	 *
+	 * @param string $fdqn Fully qualified domain name.
+	 * @return bool True if the cache is deleted. False otherwise.
+	 *
+	 * @since 2.2.0
+	 */
+	public function clear_cache_for_domain( $fdqn = '' ) {
+		if ( ! empty( $fqdn ) ) {
+			$cache_key = md5( $fqdn );
+			$success = wp_cache_delete( $cache_key, 'dark-matter' );
+
+			if ( $success ) {
+				$this->update_last_changed();
+			}
+
+			return $success;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Clear the cache for a specific domain type, "main" or "media".
+	 *
+	 * @param integer $type    Type of domain, 1 = "main" and 2 = "media".
+	 * @param integer $site_id Site for which the cache will be updated. Defaults to the current site if not specified.
+	 * @return bool True if cache is deleted. False otherwise.
+	 *
+	 * @since 2.2.0
+	 */
+	public function clear_cache_for_domain_type( $type = DM_DOMAIN_TYPE_MAIN, $site_id = 0 ) {
+		/**
+		 * Use the current site ID if no site is provided.
+		 */
+		if ( empty( $site_id ) ) {
+			$site_id = get_current_blog_id();
+		}
+
+		/**
+		 * Delete main type domains.
+		 */
+		$cache_key = sprintf(
+			'%1$d-%2$d-domain-types',
+			$type,
+			$site_id
+		);
+
+		$success = wp_cache_delete( md5( $cache_key ), 'dark-matter' );
+
+		if ( $success ) {
+			$this->update_last_changed();
+		}
+
+		return $success;
 	}
 
 	/**
@@ -317,9 +348,7 @@ class DarkMatter_Domains {
 			/**
 			 * Clear the caches, including the domain.
 			 */
-			$this->_clear_cache( $fqdn );
-
-			$this->update_last_changed();
+			$this->_clear_caches( $fqdn );
 
 			/**
 			 * Fire action when a domain is deleted.
@@ -681,7 +710,7 @@ class DarkMatter_Domains {
 			/**
 			 * Clear the caches, but not the domain.
 			 */
-			$this->_clear_cache();
+			$this->_clear_caches();
 
 			/**
 			 * Create the cache key.
