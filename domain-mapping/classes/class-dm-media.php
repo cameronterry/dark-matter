@@ -364,6 +364,13 @@ class DM_Media {
 		$media_domains = wp_list_pluck( $this->media_domains, 'domain' );
 
 		/**
+		 * Ensure we have domains that are to be unmapped.
+		 */
+		if ( empty( $media_domains ) ) {
+			return $value;
+		}
+
+		/**
 		 * Replace the Media domains with the unmapped domain.
 		 */
 		return preg_replace(
