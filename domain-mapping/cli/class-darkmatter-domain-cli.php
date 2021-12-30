@@ -72,22 +72,11 @@ class DarkMatter_Domain_CLI {
 				'force'   => false,
 				'https'   => true,
 				'primary' => false,
-				'type'    => false,
+				'type'    => 'main',
 			]
 		);
 
-		/**
-		 * Handle the Media flag.
-		 */
-		$domain_types = [
-			'main'  => DM_DOMAIN_TYPE_MAIN,
-			'media' => DM_DOMAIN_TYPE_MEDIA,
-		];
-		$type         = DM_DOMAIN_TYPE_MAIN;
-
-		if ( array_key_exists( $opts['type'], $domain_types ) ) {
-			$type = $domain_types[ $opts['type'] ];
-		}
+		$type = $this->check_type_opt( $opts['type'] );
 
 		/**
 		 * Add the domain.
@@ -106,6 +95,30 @@ class DarkMatter_Domain_CLI {
 		}
 
 		WP_CLI::success( $fqdn . __( ': was added.', 'dark-matter' ) );
+	}
+
+	/**
+	 * Checks to ensure the value of type is valid and useable.
+	 *
+	 * @param string $type Type value to be checked.
+	 * @return integer Domain type.
+	 *
+	 * @since 2.2.0
+	 */
+	private function check_type_opt( $type = '' ) {
+		/**
+		 * Handle the Media flag.
+		 */
+		$domain_types = [
+			'main'  => DM_DOMAIN_TYPE_MAIN,
+			'media' => DM_DOMAIN_TYPE_MEDIA,
+		];
+
+		if ( array_key_exists( strtolower( $type ), $domain_types ) ) {
+			return $domain_types[ $type ];
+		}
+
+		return DM_DOMAIN_TYPE_MAIN;
 	}
 
 	/**
