@@ -695,8 +695,12 @@ class DarkMatter_Domains {
 		/**
 		 * Type is either "main" or "media".
 		 */
-		if ( null !== $type && ( DM_DOMAIN_TYPE_MAIN === $type || DM_DOMAIN_TYPE_MEDIA === $type ) ) {
-			$_domain['type'] = $type;
+		if ( null !== $type ) {
+			if ( DM_DOMAIN_TYPE_MAIN === $type || DM_DOMAIN_TYPE_MEDIA === $type ) {
+				$_domain['type'] = $type;
+			} else {
+				return new WP_Error( 'type', __( 'The type for the new domain is not supported.', 'dark-matter' ) );
+			}
 		}
 
 		$result = $this->wpdb->update(
