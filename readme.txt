@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.8
-Stable tag: 2.1.9
+Stable tag: 2.2.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,8 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.2.0 =
+
 * New Features:
   * Say hello to "Media domains"; a new type of domain to Dark Matter that can be used to serve media assets from a different domain name.
     * Useful for separating infrastructure which is used for static assets from servers powering PHP requests.
@@ -86,6 +88,18 @@ Google Analytics) with over 60 websites.
     * Can be hard-set using an array of domains in a constant called, `DM_NETWORK_MEDIA`.
     * Supports all extensions that are supported by the Media Library. So if you add SVG upload support, "Media domains" will support it too.
     * Updating the existing CLIs to support domain types and management of "Media domains".
+  * WordPress' plugin screen will now notify you of future releases and to update.
+    * Added support for WordPress auto-update functionality.
+    * Releases after 2.2.0, you will be able to update Dark Matter through WP CLI or admin interface (depending on your setup / file permissions).
+    * Servers are renewable powered!
+* Bug fixes and maintenance:
+  * Improved the domain validation when adding new domains.
+  * Added plugin header comment block to the `sunrise.php` dropin.
+    * There is no code and / or logic changes, however you will need to run `wp darkmatter dropin update --force`.
+    * This will provide better information on WordPress plugins screen, clearly identifying Dark Matter's sunrise dropin from others.
+    * This also improves diagnostic data for other plugins, such as Redis Cache / `wp redis status`.
+  * Updated composer dependencies and support for Composer 2.2.x version.
+  * Updated npm dependencies, excluding eslint.
 
 = 2.1.9 =
 
