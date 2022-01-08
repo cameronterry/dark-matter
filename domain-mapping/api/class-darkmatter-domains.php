@@ -84,6 +84,13 @@ class DarkMatter_Domains {
 
 		$fqdn = $domain_parts['host'];
 
+		/**
+		 * Check to ensure we have a valid domain to work with.
+		 */
+		if ( ! filter_var( $fqdn, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME ) ) {
+			return new WP_Error( 'domain', __( 'The domain is not valid.', 'dark-matter' ) );
+		}
+
 		if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $fqdn ) {
 			return new WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
 		}
