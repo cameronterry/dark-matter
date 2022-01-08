@@ -93,6 +93,7 @@ Google Analytics) with over 60 websites.
     * Releases after 2.2.0, you will be able to update Dark Matter through WP CLI or admin interface (depending on your setup / file permissions).
     * Servers are renewable powered!
 * Bug fixes and maintenance:
+  * Tweaked the release shell script to better support [wp-update-server](https://github.com/YahnisElsts/wp-update-server).
   * Improved the domain validation when adding new domains.
   * Added plugin header comment block to the `sunrise.php` dropin.
     * There is no code and / or logic changes, however you will need to run `wp darkmatter dropin update --force`.
