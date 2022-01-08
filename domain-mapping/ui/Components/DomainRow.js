@@ -1,8 +1,10 @@
 import { __, sprintf } from '@wordpress/i18n';
 import React from 'react';
 
+import DomainDisplayMedia from './DomainDisplayMedia';
 import DomainDisplayPrimary from './DomainDisplayPrimary';
 import DomainDisplaySecondary from './DomainDisplaySecondary';
+import { DOMAIN_TYPES } from "../API/Enums";
 
 class DomainRow extends React.Component {
 	/**
@@ -18,6 +20,27 @@ class DomainRow extends React.Component {
 
 		this.props.update( data );
 	};
+
+  /**
+   * Handle converting domains between secondary to media domains and vice versa.
+   *
+   * @param {Object} event
+   */
+  handleConvert = ( event ) => {
+	event.preventDefault();
+
+	const data = { ...this.props.domain };
+
+	if ( DOMAIN_TYPES.MAIN === data.type ) {
+		/** Convert media domain to secondary domain. */
+		data.type = 2;
+	} else if ( DOMAIN_TYPES.MEDIA === data.type ) {
+		/** Convert media domain to secondary domain. */
+		data.type = 1;
+	}
+
+	this.props.update( data );
+  }
 
 	/**
 	 * Handle the Deleting of the domain.
@@ -124,6 +147,16 @@ class DomainRow extends React.Component {
 	 * Render.
 	 */
 	render() {
+		const { type } = this.props;
+
+		if ( DOMAIN_TYPES.MAIN === type ) {
+			return this.renderMainDomain();
+		} else if ( DOMAIN_TYPES.MEDIA === type ) {
+			return this.renderMediaDomain();
+		}
+	}
+
+	renderMainDomain() {
 		return (
 			<tr>
 				{ this.props.domain.is_primary ? (
@@ -137,6 +170,7 @@ class DomainRow extends React.Component {
 					<DomainDisplaySecondary
 						data={ this.props.domain }
 						activate={ this.handleActivate }
+						convert={ this.handleConvert }
 						primary={ this.handlePrimary }
 						protocol={ this.handleProtocol }
 						delete={ this.handleDelete }
@@ -156,6 +190,24 @@ class DomainRow extends React.Component {
 					{ this.props.domain.is_https
 						? __( 'HTTPS', 'dark-matter' )
 						: __( 'HTTP', 'dark-matter' ) }
+				</td>
+			</tr>
+		);
+	}
+
+	renderMediaDomain() {
+		return (
+			<tr>
+				<DomainDisplayMedia
+					convert={ this.handleConvert }
+					data={ this.props.domain }
+					delete={ this.handleDelete }
+				/>
+				<td colSpan="2">
+					{ __( 'This is a Media domain used for audio, images, video, etc.', 'dark-matter' ) }
+				</td>
+				<td>
+					{ __( 'HTTPS', 'dark-matter' ) }
 				</td>
 			</tr>
 		);

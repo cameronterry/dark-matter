@@ -62,6 +62,7 @@ class DM_Database {
             domain VARCHAR(255) NOT NULL,
             active TINYINT(4) DEFAULT '1',
             is_https TINYINT(4) DEFAULT '0',
+            type TINYINT(4) DEFAULT '1',
             PRIMARY KEY  (id)
         ) $charset_collate;";
 

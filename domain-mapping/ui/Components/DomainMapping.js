@@ -143,6 +143,7 @@ class DomainMapping extends React.Component {
 					delete={ this.handleDelete }
 					domain={ domain }
 					update={ this.handleUpdate }
+					type={ domain.type }
 				/>
 			);
 		} );
