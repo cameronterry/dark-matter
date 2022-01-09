@@ -20,6 +20,23 @@ wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --primary
 wp --url="sites.my.com/siteone" darkmatter domain set www.example.com --secondary
 ```
 
+### Add / Update / Remove Media Domains
+
+Set a media domain for a site.
+```
+wp --url="sites.my.com/sitefifteen" darkmatter domain add example.mycdn.com --type=media
+```
+
+Convert a secondary domain into a media domain. Useful for when repurposing an old domain for use a CDN for media assets.
+```
+wp --url="sites.my.com/siteone" darkmatter domain set example.mycdn.com --type=media
+```
+
+Convert a Media domain to a main domain. This is useful in scenarios when a media domain is redundant and to ensure it redirects to the website.
+```
+wp --url="sites.my.com/siteone" darkmatter domain set secondarydomain.com --type=main --secondary
+```
+
 ### Listing Domains
 
 Examples of listing domains for a Site.
