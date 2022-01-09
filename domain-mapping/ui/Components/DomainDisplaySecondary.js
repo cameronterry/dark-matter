@@ -29,6 +29,10 @@ class DomainDisplaySecondary extends React.Component {
 					{ __( 'Set as Primary', 'dark-matter' ) }
 				</button>
 				<span>|</span>
+				<button onClick={ this.props.convert }>
+					{ __( 'Convert to Media domain', 'dark-matter' ) }
+				</button>
+				<span>|</span>
 				<button onClick={ this.props.protocol }>
 					{ sprintf(
 						/* translators: protocol */

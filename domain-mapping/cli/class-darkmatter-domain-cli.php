@@ -41,10 +41,17 @@ class DarkMatter_Domain_CLI {
 	 * [--secondary]
 	 * : Sets the domain to be a secondary domain for the Site. Visitors will be redirected from this domain to the primary.
 	 *
+	 * [--type]
+	 * : Choose the type of domain. Useful for creating "media" domains. Defaults to "main".
+	 *
 	 * ### EXAMPLES
 	 * Set the primary domain and set the protocol to HTTPS.
 	 *
 	 *      wp --url="sites.my.com/siteone" darkmatter domain add www.primarydomain.com --primary --https
+	 *
+	 * Set a media domain for a site.
+	 *
+	 * 		wp --url="sites.my.com/sitefifteen" darkmatter domain add fifteen.mycdn.com --type=media
 	 *
 	 * @since 2.0.0
 	 *
@@ -63,16 +70,19 @@ class DarkMatter_Domain_CLI {
 			[
 				'disable' => false,
 				'force'   => false,
-				'https'   => false,
+				'https'   => true,
 				'primary' => false,
+				'type'    => 'main',
 			]
 		);
+
+		$type = $this->check_type_opt( $opts['type'] );
 
 		/**
 		 * Add the domain.
 		 */
 		$db     = DarkMatter_Domains::instance();
-		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'] );
+		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'], $type );
 
 		if ( is_wp_error( $result ) ) {
 			$error_msg = $result->get_error_message();
@@ -85,6 +95,30 @@ class DarkMatter_Domain_CLI {
 		}
 
 		WP_CLI::success( $fqdn . __( ': was added.', 'dark-matter' ) );
+	}
+
+	/**
+	 * Checks to ensure the value of type is valid and useable.
+	 *
+	 * @param string $type Type value to be checked.
+	 * @return integer Domain type.
+	 *
+	 * @since 2.2.0
+	 */
+	private function check_type_opt( $type = '' ) {
+		/**
+		 * Handle the Media flag.
+		 */
+		$domain_types = [
+			'main'  => DM_DOMAIN_TYPE_MAIN,
+			'media' => DM_DOMAIN_TYPE_MEDIA,
+		];
+
+		if ( array_key_exists( strtolower( $type ), $domain_types ) ) {
+			return $domain_types[ $type ];
+		}
+
+		return DM_DOMAIN_TYPE_MAIN;
 	}
 
 	/**
@@ -167,6 +201,7 @@ class DarkMatter_Domain_CLI {
 					'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
 					'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
 					'Active'   => ( $domain->active ? $yes_val : $no_val ),
+					'Type'     => ( DM_DOMAIN_TYPE_MEDIA === $domain->type ? 'Media' : 'Main' ),
 				);
 
 				/**
@@ -194,6 +229,7 @@ class DarkMatter_Domain_CLI {
 			'Primary',
 			'Protocol',
 			'Active',
+			'Type',
 		];
 
 		if ( is_main_site() ) {
@@ -203,6 +239,7 @@ class DarkMatter_Domain_CLI {
 				'Primary',
 				'Protocol',
 				'Active',
+				'Type',
 			];
 		}
 
@@ -303,11 +340,24 @@ class DarkMatter_Domain_CLI {
 	 * : Set the domain to be a secondary domain for the Site. Visitors will be
 	 * redirected from this domain to the primary.
 	 *
+	 * [--type]
+	 * : Choose the type of domain. Useful for creating "media" domains. Defaults to "main".
+	 *
 	 * ### EXAMPLES
 	 * Set the primary domain and set the protocol to HTTPS.
 	 *
 	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --primary
-	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.primarydomain.com --secondary
+	 *      wp --url="sites.my.com/siteone" darkmatter domain set www.secondarydomain.com --secondary
+	 *
+	 * Convert a secondary domain into a media domain. Useful for when repurposing an old domain for use a CDN for media
+	 * assets.
+	 *
+	 *		wp --url="sites.my.com/siteone" darkmatter domain set www.secondarydomain.com --type=media
+	 *
+	 * Convert a Media domain to a main domain. This is useful in scenarios when a media domain is redundant and to
+	 * ensure it redirects to the website.
+	 *
+	 * 		wp --url="sites.my.com/siteone" darkmatter domain set one.mycdntest.com --type=main --secondary
 	 *
 	 * @since 2.0.0
 	 *
@@ -331,7 +381,7 @@ class DarkMatter_Domain_CLI {
 				'enable'    => false,
 				'force'     => false,
 				'use-http'  => null,
-				'use-https' => null,
+				'use-https' => true,
 				'primary'   => null,
 				'secondary' => null,
 			]
@@ -384,9 +434,17 @@ class DarkMatter_Domain_CLI {
 		}
 
 		/**
+		 * If the type is specified, then validate it to ensure it is correct.
+		 */
+		$type = null;
+		if ( ! empty( $opts['type'] ) ) {
+			$type = $this->check_type_opt( $opts['type'] );
+		}
+
+		/**
 		 * Update the records.
 		 */
-		$result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'], $active );
+		$result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'], $active, $type );
 
 		/**
 		 * Handle the output for errors and success.
