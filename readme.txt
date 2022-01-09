@@ -93,12 +93,14 @@ Google Analytics) with over 60 websites.
     * Releases after 2.2.0, you will be able to update Dark Matter through WP CLI or admin interface (depending on your setup / file permissions).
     * Servers are renewable powered!
 * Bug fixes and maintenance:
-  * Tweaked the release shell script to better support [wp-update-server](https://github.com/YahnisElsts/wp-update-server).
+  * Updated the `readme.md` file to include CLI examples for Media Domains.
+  * Updated the `readme.md` file to include notes on two constants that can be used with Dark Matter for disabling SSO and configuring Media Domains for an entire Multisite.
   * Improved the domain validation when adding new domains.
   * Added plugin header comment block to the `sunrise.php` dropin.
     * There is no code and / or logic changes, however you will need to run `wp darkmatter dropin update --force`.
     * This will provide better information on WordPress plugins screen, clearly identifying Dark Matter's sunrise dropin from others.
     * This also improves diagnostic data for other plugins, such as Redis Cache / `wp redis status`.
+  * Tweaked the release shell script to better support [wp-update-server](https://github.com/YahnisElsts/wp-update-server).
   * Updated composer dependencies and support for Composer 2.2.x version.
   * Updated npm dependencies, excluding eslint.
 
