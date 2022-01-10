@@ -4,7 +4,7 @@ import React from 'react';
 import DomainDisplayMedia from './DomainDisplayMedia';
 import DomainDisplayPrimary from './DomainDisplayPrimary';
 import DomainDisplaySecondary from './DomainDisplaySecondary';
-import { DOMAIN_TYPES } from "../API/Enums";
+import { DOMAIN_TYPES } from '../API/Enums';
 
 class DomainRow extends React.Component {
 	/**
@@ -21,26 +21,26 @@ class DomainRow extends React.Component {
 		this.props.update( data );
 	};
 
-  /**
-   * Handle converting domains between secondary to media domains and vice versa.
-   *
-   * @param {Object} event
-   */
-  handleConvert = ( event ) => {
-	event.preventDefault();
+	/**
+	 * Handle converting domains between secondary to media domains and vice versa.
+	 *
+	 * @param {Object} event
+	 */
+	handleConvert = ( event ) => {
+		event.preventDefault();
 
-	const data = { ...this.props.domain };
+		const data = { ...this.props.domain };
 
-	if ( DOMAIN_TYPES.MAIN === data.type ) {
-		/** Convert media domain to secondary domain. */
-		data.type = 2;
-	} else if ( DOMAIN_TYPES.MEDIA === data.type ) {
-		/** Convert media domain to secondary domain. */
-		data.type = 1;
+		if ( DOMAIN_TYPES.MAIN === data.type ) {
+			/** Convert media domain to secondary domain. */
+			data.type = 2;
+		} else if ( DOMAIN_TYPES.MEDIA === data.type ) {
+			/** Convert media domain to secondary domain. */
+			data.type = 1;
+		}
+
+		this.props.update( data );
 	}
-
-	this.props.update( data );
-  }
 
 	/**
 	 * Handle the Deleting of the domain.
