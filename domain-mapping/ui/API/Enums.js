@@ -5,5 +5,5 @@
  */
 export const DOMAIN_TYPES = {
 	MAIN: 1,
-	MEDIA: 2
-}
+	MEDIA: 2,
+};
