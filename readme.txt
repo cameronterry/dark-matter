@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 5.8.3
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.2.1 =
+
+* Fixes an issue caused by a discrepancy between eslint setup.
+* This caused the build script to fail and was missed in 2.2.0, meaning the UI broke at the final deploy stage.
+* Apologies for the inconvenience.
 
 = 2.2.0 =
 
@@ -330,6 +336,10 @@ Google Analytics) with over 60 websites.
   * 1.x.x version of **sunrise.php** will error on update as the require path has changed in the new folder structure of 2.0.0.
 
 == Upgrade Notice ==
+
+= 2.2.1 =
+
+This contains a major fix for broken UI in 2.2.0, and should be updated as soon as possible. Apologies for inconvenience.
 
 = 2.1.0 =
 
