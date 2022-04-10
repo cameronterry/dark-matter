@@ -84,6 +84,7 @@ Google Analytics) with over 60 websites.
 * Updated Composer and NPM dependencies.
   * No change in any logic code.
   * Some lint fixes in JavaScript and PHP files.
+  * Switched `eslint-loader` for `eslint-webpack-plugin`.
 * PHP CodeSniffer set to test PHP 8.0 to ensure compatibility and support going forward.
 * Tested up to WordPress 5.9.3.
 
