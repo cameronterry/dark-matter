@@ -299,7 +299,7 @@ class DM_Media {
 		}
 
 		$url = preg_replace(
-			"#://(" . implode( '|', $this->main_domains ) . ")#",
+			'#://(' . implode( '|', $this->main_domains ) . ')#',
 			'://' . untrailingslashit( $this->media_domains[ $index ]->domain ),
 			$url
 		);
@@ -374,7 +374,7 @@ class DM_Media {
 		 * Replace the Media domains with the unmapped domain.
 		 */
 		return preg_replace(
-			"#://(" . implode( '|', $media_domains ) . ")#",
+			'#://(' . implode( '|', $media_domains ) . ')#',
 			'://' . $this->unmapped,
 			$value
 		);

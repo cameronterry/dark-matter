@@ -151,18 +151,18 @@ class DM_PluginUpdate {
 
 		$result = new stdClass();
 
-		$result->name = $data->name;
-		$result->slug = $data->slug;
-		$result->version = $data->version;
-		$result->new_version = $data->version;
-		$result->tested = $data->tested;
-		$result->requires = $data->requires;
-		$result->author = $data->author;
+		$result->name           = $data->name;
+		$result->slug           = $data->slug;
+		$result->version        = $data->version;
+		$result->new_version    = $data->version;
+		$result->tested         = $data->tested;
+		$result->requires       = $data->requires;
+		$result->author         = $data->author;
 		$result->author_profile = $data->author_homepage;
-		$result->download_link = $data->download_url;
-		$result->trunk = $data->download_url;
-		$result->requires_php = $data->requires_php;
-		$result->last_updated = $data->last_updated;
+		$result->download_link  = $data->download_url;
+		$result->trunk          = $data->download_url;
+		$result->requires_php   = $data->requires_php;
+		$result->last_updated   = $data->last_updated;
 
 		$result->sections = [
 			'description'  => $data->sections->description,
@@ -189,9 +189,9 @@ class DM_PluginUpdate {
 	 * @return mixed New value of site transient.
 	 */
 	public function push_update( $value = null ) {
-		$data = $this->request();
+		$data              = $this->request();
 		$data->new_version = $data->version;
-		$data->package = $data->download_url;
+		$data->package     = $data->download_url;
 
 		if ( $this->needs_update( $data ) ) {
 			$value->response[ $this->plugin_slug ] = $data;
