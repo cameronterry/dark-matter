@@ -40,7 +40,7 @@ class DomainRow extends React.Component {
 		}
 
 		this.props.update( data );
-	}
+	};
 
 	/**
 	 * Handle the Deleting of the domain.
