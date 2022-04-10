@@ -11,7 +11,6 @@
     </rule>
 
     <rule ref="PHPCompatibilityWP"/>
-    <config name="testVersion" value="7.0-"/>
 
     <arg name="extensions" value="php"/>
 

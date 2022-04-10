@@ -19,7 +19,7 @@
         "automattic/vipwpcs": "^2.2"
     },
     "scripts": {
-        "lint": "phpcs . --extensions=php --warning-severity=8 -s",
+        "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
         "lint-all": "phpcs .",
         "lint-fix": "phpcbf ."
     },
