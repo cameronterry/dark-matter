@@ -1,6 +1,6 @@
 {
     "name": "cameronterry/dark-matter",
-    "version": "2.2.2",
+    "version": "2.2.3",
     "description": "A highly opinionated domain mapping plugin for WordPress.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0+",
@@ -19,7 +19,7 @@
         "automattic/vipwpcs": "^2.2"
     },
     "scripts": {
-        "lint": "phpcs . --extensions=php --warning-severity=8 -s",
+        "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
         "lint-all": "phpcs .",
         "lint-fix": "phpcbf ."
     },
