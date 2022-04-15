@@ -44,6 +44,13 @@ define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
  */
 wp_cache_add_global_groups( 'dark-matter' );
 
+/**
+ * Include the PSR-4 autoloader.
+ */
+if ( file_exists( DM_PATH . 'vendor/autoload.php' ) ) {
+	require_once DM_PATH . 'vendor/autoload.php';
+}
+
 require_once DM_PATH . '/dark-matter/class-dm-pluginupdate.php';
 new DM_PluginUpdate();
 
