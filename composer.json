@@ -27,5 +27,10 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
+    },
+    "autoload": {
+        "psr-4": {
+            "DarkMatter\\": "includes/classes/"
+        }
     }
 }
