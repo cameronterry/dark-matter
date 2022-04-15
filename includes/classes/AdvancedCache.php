@@ -6,6 +6,8 @@
  */
 namespace DarkMatter;
 
+use DarkMatter\Interfaces\Registerable;
+
 /**
  * Class AdvancedCache
  */

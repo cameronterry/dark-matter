@@ -5,7 +5,7 @@
  * @package DarkMatter
  */
 
-namespace DarkMatter;
+namespace DarkMatter\Interfaces;
 
 /**
  * Interface Registerable
