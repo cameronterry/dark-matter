@@ -24,4 +24,11 @@ interface Storeable {
 	 * @return mixed
 	 */
 	public function from_json( $json = '' );
+
+	/**
+	 * Handle the saving of the object to the store.
+	 * 
+	 * @return bool
+	 */
+	public function save();
 }
