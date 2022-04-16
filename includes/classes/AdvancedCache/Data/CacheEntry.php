@@ -71,7 +71,19 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
      * @inheritDoc
      */
     public function from_json( $json = '' ) {
-        // TODO: Implement from_json() method.
+		if ( empty( $json ) ) {
+			return;
+		}
+
+        $obj = json_decode( $json );
+
+		if ( isset( $obj->headers ) && is_array( $obj->headers ) ) {
+			$this->headers = $obj->headers;
+		}
+
+		if ( isset( $obj->body ) ) {
+			$this->body = $obj->body;
+		}
     }
 
 	/**
