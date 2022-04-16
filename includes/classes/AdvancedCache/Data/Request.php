@@ -79,6 +79,41 @@ class Request {
 	}
 
 	/**
+	 * Determine if the request is can be cached.
+	 *
+	 * @return bool True that request can be cached. False otherwise.
+	 */
+	public function is_cacheable() {
+		/**
+		 * Only cache GET and HEAD requests.
+		 */
+		if ( ! array_key_exists( $this->method, [ 'GET' => true, 'HEAD' => true ] ) || ! empty( $_POST ) ) {
+			return false;
+		}
+
+		/**
+		 * Ensure we do not cache any requests that utilise Basic Authentication.
+		 */
+		if ( ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) || ! empty( $_SERVER['PHP_AUTH_USER'] ) ) {
+			return false;
+		}
+
+		/**
+		 * Certain requests, such as XMLRPC or WP Cron, are not part of the full page caching.
+		 */
+		$nocache_scripts = [
+			'wp-app.php'  => true, // Atom Publishing protocol.
+			'wp-cron.php' => true, // Default WordPress Cron system if not disabled / offloaded.
+			'xmlrpc.php'  => true, // XML-RPC, which is usually authenticated or handled over POST.
+		];
+		if ( array_key_exists( strtolower( basename( $_SERVER['SCRIPT_FILENAME'] ) ), $nocache_scripts ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Retrieves the visitor's IP address, which can be in a number of headers depending on the setup.
 	 *
 	 * @return false|bool
@@ -151,6 +186,6 @@ class Request {
 		/**
 		 * Get the HTTP Method.
 		 */
-		$this->method = $_SERVER['REQUEST_METHOD'];
+		$this->method = strtoupper( $_SERVER['REQUEST_METHOD'] );
 	}
 }
