@@ -56,7 +56,7 @@ class Request {
 
 	/**
 	 * User agent of the visitor.
-	 * 
+	 *
 	 * @var string
 	 */
 	public $useragent = '';
@@ -127,9 +127,30 @@ class Request {
 	 * @return void
 	 */
 	private function set_request_data() {
-		$this->domain   = $_SERVER['HTTP_HOST'];
-		$this->method   = $_SERVER['REQUEST_METHOD'];
-		$this->path     = $_SERVER['REQUEST_URI'];
-		$this->protocol = $_SERVER['SERVER_PROTOCOL'];
+		$protocol = 'http://';
+		if ( isset( $_SERVER['HTTPS'] ) ) {
+			if ( 'on' == strtolower( $_SERVER['HTTPS'] ) || '1' == $_SERVER['HTTPS'] ) {
+				$protocol = 'https://';
+			}
+		} elseif ( isset( $_SERVER['SERVER_PORT'] ) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
+			$protocol = 'https://';
+		}
+
+		$host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
+		$path = ltrim( trim( $_SERVER['REQUEST_URI'] ), '/' );
+
+		$this->domain   = $host;
+		$this->path     = $path;
+		$this->protocol = $protocol;
+
+		/**
+		 * Setup the full URL.
+		 */
+		$this->full_url = $protocol . $host . '/' . $path;
+
+		/**
+		 * Get the HTTP Method.
+		 */
+		$this->method = $_SERVER['REQUEST_METHOD'];
 	}
 }
