@@ -64,7 +64,10 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
      * @inheritDoc
      */
     public function to_json() {
-        // TODO: Implement to_json() method.
+        return wp_json_encode( (object) [
+			'headers' => $this->headers,
+			'body'    => $this->body,
+		] );
     }
 
     /**
