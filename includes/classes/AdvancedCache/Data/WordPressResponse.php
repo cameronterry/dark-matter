@@ -35,6 +35,16 @@ class WordPressResponse extends Response implements Registerable {
 		if ( $this->is_cacheable() ) {
 			$this->headers = headers_list();
 			$this->cache();
+
+			/**
+			 * Indicate the request has been set dynamically.
+			 */
+			header( 'X-DarkMatter-Cache: DYNAMIC' );
+		} else {
+			/**
+			 * Indicate the cache is another miss.
+			 */
+			header( 'X-DarkMatter-Cache: MISS' );
 		}
 
 		return $output;
