@@ -134,7 +134,7 @@ class Request {
 		/**
 		 * Ensure we do not cache any requests that utilise Basic Authentication.
 		 */
-		if ( ! empty( $this->data['HTTP_AUTHORIZATION'] ) || ! empty( $this->data['PHP_AUTH_USER'] ) ) {
+		if ( ! empty( $this->get_data_by_key( 'HTTP_AUTHORIZATION' ) ) || ! empty( $this->get_data_by_key( 'PHP_AUTH_USER' ) ) ) {
 			return false;
 		}
 
@@ -146,11 +146,21 @@ class Request {
 			'wp-cron.php' => true, // Default WordPress Cron system if not disabled / offloaded.
 			'xmlrpc.php'  => true, // XML-RPC, which is usually authenticated or handled over POST.
 		];
-		if ( array_key_exists( strtolower( basename( $this->data['SCRIPT_FILENAME'] ) ), $nocache_scripts ) ) {
+		if ( array_key_exists( strtolower( basename( $this->get_data_by_key( 'SCRIPT_FILENAME' ) ) ), $nocache_scripts ) ) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Retrieve a specific item from the key.
+	 *
+	 * @param string $key Data key to search for.
+	 * @return string Value of the data item. Will return a blank string ('') if not found.
+	 */
+	public function get_data_by_key( $key = '' ) {
+		return $this->data[ $key ] ?? '';
 	}
 
 	/**
@@ -204,15 +214,15 @@ class Request {
 	private function set_uri_data() {
 		$protocol = 'http://';
 		if ( isset( $this->data['HTTPS'] ) ) {
-			if ( 'on' == strtolower( $this->data['HTTPS'] ) || '1' == $this->data['HTTPS'] ) {
+			if ( 'on' == strtolower( $this->get_data_by_key( 'HTTPS' ) ) || '1' == $this->get_data_by_key( 'HTTPS' ) ) {
 				$protocol = 'https://';
 			}
-		} elseif ( isset( $this->data['SERVER_PORT'] ) && ( '443' == $this->data['SERVER_PORT'] ) ) {
+		} elseif ( '443' == $this->get_data_by_key( 'SERVER_PORT' ) ) {
 			$protocol = 'https://';
 		}
 
-		$host = rtrim( trim( $this->data['HTTP_HOST'] ), '/' );
-		$path = ltrim( trim( $this->data['REQUEST_URI'] ), '/' );
+		$host = rtrim( trim( $this->get_data_by_key( 'HTTP_HOST' ) ), '/' );
+		$path = ltrim( trim( $this->get_data_by_key( 'REQUEST_URI' ) ), '/' );
 
 		$this->domain   = $host;
 		$this->path     = $path;
@@ -226,6 +236,6 @@ class Request {
 		/**
 		 * Get the HTTP Method.
 		 */
-		$this->method = strtoupper( $this->data['REQUEST_METHOD'] );
+		$this->method = strtoupper( $this->get_data_by_key( 'REQUEST_METHOD' ) );
 	}
 }
