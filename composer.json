@@ -16,12 +16,15 @@
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "automattic/vipwpcs": "^2.2"
+        "automattic/vipwpcs": "^2.2",
+        "phpunit/phpunit": "^9.5",
+        "yoast/phpunit-polyfills": "^1.0"
     },
     "scripts": {
         "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
         "lint-all": "phpcs .",
-        "lint-fix": "phpcbf ."
+        "lint-fix": "phpcbf .",
+        "test": "phpunit"
     },
     "config": {
         "allow-plugins": {
