@@ -109,6 +109,16 @@ class Request {
 	}
 
 	/**
+	 * Retrieve a Cache Entry for the current request.
+	 *
+	 * @return CacheEntry
+	 */
+	public function cache_get() {
+		$entry = new CacheEntry( $this->full_url );
+		return $entry;
+	}
+
+	/**
 	 * Determine if the request is can be cached.
 	 *
 	 * @return bool True that request can be cached. False otherwise.
