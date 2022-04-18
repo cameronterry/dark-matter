@@ -30,7 +30,8 @@ class WordPressResponse extends Response implements Registerable {
 	 * @return string
 	 */
 	public function set_body( $output = '' ) {
-		$this->body = $output;
+		$this->body    = $output;
+		$this->headers = headers_list();
 
 		/**
 		 * Permit the override of the "is cacheable" value. This is useful for providing overrides as WordPress is
@@ -41,7 +42,6 @@ class WordPressResponse extends Response implements Registerable {
 		 * @return bool True is cacheable. False otherwise.
 		 */
 		if ( apply_filters( 'darkmatter.advancedcache.response.is_cacheable', $this->is_cacheable(), $this ) ) {
-			$this->headers = headers_list();
 			$this->cache();
 
 			/**
