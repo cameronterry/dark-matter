@@ -88,6 +88,27 @@ class Request {
 	}
 
 	/**
+	 * Cache the supplied HTML.
+	 *
+	 * @param string $body The body of the request which is to be cached.
+	 * @return bool
+	 */
+	public function cache( $body = '' ) {
+		/**
+		 * Create a new CacheEntry object.
+		 */
+		$entry = new CacheEntry( $this->full_url );
+
+		/**
+		 * Set the body and headers.
+		 */
+		$entry->body    = $body;
+		$entry->headers = headers_list();
+
+		return $entry->save();
+	}
+
+	/**
 	 * Determine if the request is can be cached.
 	 *
 	 * @return bool True that request can be cached. False otherwise.
