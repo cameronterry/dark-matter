@@ -1,6 +1,8 @@
 <?php
 /**
  * Standardise the response for use in Advanced Cache.
+ *
+ * @package DarkMatter\AdvancedCache
  */
 
 namespace DarkMatter\AdvancedCache\Data;

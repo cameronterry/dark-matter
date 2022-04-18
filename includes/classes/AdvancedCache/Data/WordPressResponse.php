@@ -1,9 +1,17 @@
 <?php
+/**
+ * A version of the Response class which can be used as WordPress is generating a response.
+ *
+ * @package DarkMatter\AdvancedCache
+ */
 
 namespace DarkMatter\AdvancedCache\Data;
 
 use DarkMatter\Interfaces\Registerable;
 
+/**
+ * Class WordPressResponse
+ */
 class WordPressResponse extends Response implements Registerable {
 	/**
 	 * Register hooks.
