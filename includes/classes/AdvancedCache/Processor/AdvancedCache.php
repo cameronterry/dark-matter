@@ -26,7 +26,7 @@ class AdvancedCache {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->request = new Request();
+		$this->request = new Request( $_SERVER );
 
 		if ( $this->request->is_cacheable() ) {
 			ob_start( [ $this, 'do_output' ] );
@@ -53,7 +53,7 @@ class AdvancedCache {
 		 */
 		$head_pos = strpos( $output, '</body>' );
 
-		if ( define( 'WP_DEBUG' ) && WP_DEBUG && false !== $head_pos ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && false !== $head_pos ) {
 			$debug = <<<HTML
 <!--
 === DARK MATTER - DEBUG ===

@@ -13,6 +13,13 @@ namespace DarkMatter\AdvancedCache\Data;
  */
 class Request {
 	/**
+	 * The request data, usually provided by `$_SERVER`.
+	 *
+	 * @var array
+	 */
+	private $data = [];
+
+	/**
 	 * Domain name.
 	 *
 	 * @var string
@@ -64,15 +71,17 @@ class Request {
 	/**
 	 * Constructor
 	 */
-	public function __construct() {
+	public function __construct( $data = [] ) {
 		/**
 		 * Translate applicable and useful request data to properties.
 		 *
 		 * @link https://www.php.net/manual/en/reserved.variables.server.php
 		 */
-		if ( ! empty( $_SERVER ) ) {
+		if ( ! empty( $data ) ) {
+			$this->data = $data;
+
 			$this->visitor_ip = $this->get_visitor_ip();
-			$this->useragent  = $_SERVER['HTTP_USER_AGENT'];
+			$this->useragent  = $this->data['HTTP_USER_AGENT'];
 
 			$this->set_request_data();
 		}
@@ -94,7 +103,7 @@ class Request {
 		/**
 		 * Ensure we do not cache any requests that utilise Basic Authentication.
 		 */
-		if ( ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) || ! empty( $_SERVER['PHP_AUTH_USER'] ) ) {
+		if ( ! empty( $this->data['HTTP_AUTHORIZATION'] ) || ! empty( $this->data['PHP_AUTH_USER'] ) ) {
 			return false;
 		}
 
@@ -106,7 +115,7 @@ class Request {
 			'wp-cron.php' => true, // Default WordPress Cron system if not disabled / offloaded.
 			'xmlrpc.php'  => true, // XML-RPC, which is usually authenticated or handled over POST.
 		];
-		if ( array_key_exists( strtolower( basename( $_SERVER['SCRIPT_FILENAME'] ) ), $nocache_scripts ) ) {
+		if ( array_key_exists( strtolower( basename( $this->data['SCRIPT_FILENAME'] ) ), $nocache_scripts ) ) {
 			return false;
 		}
 
@@ -128,29 +137,29 @@ class Request {
 
 		$ip = '';
 
-		if ( ! empty( $_SERVER['HTTP_CF_CONNECTING_IP'] ) ) {
+		if ( ! empty( $this->data['HTTP_CF_CONNECTING_IP'] ) ) {
 			/**
 			 * Add support for Cloudflare.
 			 */
-			$ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+			$ip = $this->data['HTTP_CF_CONNECTING_IP'];
 		}
-		else if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-			$ip = $_SERVER['HTTP_CLIENT_IP'];
+		else if ( ! empty( $this->data['HTTP_CLIENT_IP'] ) ) {
+			$ip = $this->data['HTTP_CLIENT_IP'];
 		}
-		else if ( ! empty( $_SERVER['HTTP_X_REAL_IP'] ) ) {
+		else if ( ! empty( $this->data['HTTP_X_REAL_IP'] ) ) {
 			/**
 			 * Check for the IP from an atypical header from a reverse proxy.
 			 */
-			$ip = $_SERVER['HTTP_X_REAL_IP'];
+			$ip = $this->data['HTTP_X_REAL_IP'];
 		}
-		else if ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) {
+		else if ( ! empty( $this->data['HTTP_X_FORWARDED_FOR'] ) ) {
 			/**
 			 * Check for the IP from another atypical header from a reverse proxy.
 			 */
-			$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			$ip = $this->data['HTTP_X_FORWARDED_FOR'];
 		}
-		else if ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {
-			$ip = $_SERVER['REMOTE_ADDR'];
+		else if ( ! empty( $this->data['REMOTE_ADDR'] ) ) {
+			$ip = $this->data['REMOTE_ADDR'];
 		}
 
 		return filter_var( $ip, FILTER_VALIDATE_IP );
@@ -163,16 +172,16 @@ class Request {
 	 */
 	private function set_request_data() {
 		$protocol = 'http://';
-		if ( isset( $_SERVER['HTTPS'] ) ) {
-			if ( 'on' == strtolower( $_SERVER['HTTPS'] ) || '1' == $_SERVER['HTTPS'] ) {
+		if ( isset( $this->data['HTTPS'] ) ) {
+			if ( 'on' == strtolower( $this->data['HTTPS'] ) || '1' == $this->data['HTTPS'] ) {
 				$protocol = 'https://';
 			}
-		} elseif ( isset( $_SERVER['SERVER_PORT'] ) && ( '443' == $_SERVER['SERVER_PORT'] ) ) {
+		} elseif ( isset( $this->data['SERVER_PORT'] ) && ( '443' == $this->data['SERVER_PORT'] ) ) {
 			$protocol = 'https://';
 		}
 
-		$host = rtrim( trim( $_SERVER['HTTP_HOST'] ), '/' );
-		$path = ltrim( trim( $_SERVER['REQUEST_URI'] ), '/' );
+		$host = rtrim( trim( $this->data['HTTP_HOST'] ), '/' );
+		$path = ltrim( trim( $this->data['REQUEST_URI'] ), '/' );
 
 		$this->domain   = $host;
 		$this->path     = $path;
@@ -186,6 +195,6 @@ class Request {
 		/**
 		 * Get the HTTP Method.
 		 */
-		$this->method = strtoupper( $_SERVER['REQUEST_METHOD'] );
+		$this->method = strtoupper( $this->data['REQUEST_METHOD'] );
 	}
 }
