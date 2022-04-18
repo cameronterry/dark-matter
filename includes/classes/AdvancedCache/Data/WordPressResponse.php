@@ -32,7 +32,15 @@ class WordPressResponse extends Response implements Registerable {
 	public function set_body( $output = '' ) {
 		$this->body = $output;
 
-		if ( $this->is_cacheable() ) {
+		/**
+		 * Permit the override of the "is cacheable" value. This is useful for providing overrides as WordPress is
+		 * dynamically constructing the request.
+		 *
+		 * @param bool              $is_cacheable True is cacheable, false otherwise, as determined by the default logic.
+		 * @param WordPressResponse $response     The response object.
+		 * @return bool True is cacheable. False otherwise.
+		 */
+		if ( apply_filters( 'darkmatter.advancedcache.response.is_cacheable', $this->is_cacheable(), $this ) ) {
 			$this->headers = headers_list();
 			$this->cache();
 
