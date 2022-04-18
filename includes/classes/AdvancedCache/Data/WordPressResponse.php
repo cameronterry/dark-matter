@@ -31,6 +31,12 @@ class WordPressResponse extends Response implements Registerable {
 	 */
 	public function set_body( $output = '' ) {
 		$this->body = $output;
+
+		if ( $this->is_cacheable() ) {
+			$this->headers = headers_list();
+			$this->cache();
+		}
+
 		return $output;
 	}
 
