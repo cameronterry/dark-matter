@@ -26,7 +26,7 @@ class AdvancedCache {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->request = new Request( $_SERVER );
+		$this->request = new Request( $_SERVER, $_COOKIE );
 
 		if ( $this->request->is_cacheable() ) {
 			$cache_entry = $this->request->cache_get();

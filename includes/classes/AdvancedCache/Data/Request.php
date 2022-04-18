@@ -13,6 +13,13 @@ namespace DarkMatter\AdvancedCache\Data;
  */
 class Request {
 	/**
+	 * Cookies.
+	 *
+	 * @var array
+	 */
+	public $cookies = [];
+
+	/**
 	 * The request data, usually provided by `$_SERVER`.
 	 *
 	 * @var array
@@ -32,6 +39,13 @@ class Request {
 	 * @var string
 	 */
 	public $full_url = '';
+
+	/**
+	 * Is an administrator or an editor logged in?
+	 *
+	 * @var bool
+	 */
+	protected $is_wp_logged_in = false;
 
 	/**
 	 * HTTP Method.
@@ -71,7 +85,7 @@ class Request {
 	/**
 	 * Constructor
 	 */
-	public function __construct( $data = [] ) {
+	public function __construct( $data = [], $cookies = [] ) {
 		/**
 		 * Translate applicable and useful request data to properties.
 		 *
@@ -84,6 +98,14 @@ class Request {
 			$this->useragent  = $this->data['HTTP_USER_AGENT'];
 
 			$this->set_uri_data();
+		}
+
+		/**
+		 * If the cookies are supplied, then store them.
+		 */
+		if ( ! empty( $cookies ) ) {
+			$this->cookies = $cookies;
+			$this->set_cookie_data();
 		}
 	}
 
@@ -204,6 +226,26 @@ class Request {
 		}
 
 		return filter_var( $ip, FILTER_VALIDATE_IP );
+	}
+
+	/**
+	 * Handle specific data which is cookie related, such as whether administrators and editors are logged in / etc.
+	 *
+	 * @return void
+	 */
+	private function set_cookie_data() {
+		foreach ( $this->cookies as $cookie => $value ) {
+			if (
+				'wp' === substr( $cookie, 0, 2 )
+				||
+				'wordpress' === substr( $cookie, 0, 9 )
+				||
+				'comment_author' === substr( $cookie, 0, 14 )
+			) {
+				$this->is_wp_logged_in = true;
+				return;
+			}
+		}
 	}
 
 	/**
