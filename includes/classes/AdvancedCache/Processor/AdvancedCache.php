@@ -24,6 +24,11 @@ class AdvancedCache {
 	 */
 	private $request = null;
 
+	/**
+	 * Response.
+	 *
+	 * @var WordPressResponse
+	 */
 	private $response = null;
 
 	/**
