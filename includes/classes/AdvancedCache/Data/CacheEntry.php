@@ -50,7 +50,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 		/**
 		 * Attempt to retrieve the entry from Object Cache.
 		 */
-		$entry = wp_cache_get( md5( $this->url_key ), 'darkmatter-fpc-cacheentries' );
+		$entry = wp_cache_get( $this->url_key, 'dark-matter-fpc-cacheentries' );
 
 		/**
 		 * Parse the entry into JSON.
@@ -93,7 +93,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	 * @inheritdoc
 	 */
 	public function save() {
-		if ( wp_cache_set( $this->url_key, $this->to_json(), 'darkmatter-fpc-cacheentries', $this->expiry ) ) {
+		if ( wp_cache_set( $this->url_key, $this->to_json(), 'dark-matter-fpc-cacheentries' ) ) {
 			return $this->url_key;
 		}
 
