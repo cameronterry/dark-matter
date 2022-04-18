@@ -62,6 +62,23 @@ class Response {
 			return false;
 		}
 
+		/**
+		 * Check for a header - `X-DarkMatter-Set` - which can prevent a response being cached.
+		 *
+		 * The reason for using a header is in case the full page cache handling is offloaded to NGINX for response.
+		 */
+		if ( ! empty( $this->headers ) && isset( $this->headers['X-DarkMatter-Set'] ) && 'skip' === $this->headers['X-DarkMatter-Set'] ) {
+			/**
+			 * Remove the header from the response.
+			 */
+			header_remove( 'X-DarkMatter-Set' );
+
+			/**
+			 * Say this response isn't cacheable.
+			 */
+			return false;
+		}
+
 		return true;
 	}
 
