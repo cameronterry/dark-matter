@@ -13,6 +13,13 @@ namespace DarkMatter\AdvancedCache\Data;
  */
 class Request {
 	/**
+	 * Arguments provided by Query Strings.
+	 *
+	 * @var array
+	 */
+	public $args = [];
+
+	/**
 	 * Cookies.
 	 *
 	 * @var array
@@ -263,17 +270,31 @@ class Request {
 			$protocol = 'https://';
 		}
 
-		$host = rtrim( trim( $this->get_data_by_key( 'HTTP_HOST' ) ), '/' );
-		$path = ltrim( trim( $this->get_data_by_key( 'REQUEST_URI' ) ), '/' );
-
-		$this->domain   = $host;
-		$this->path     = $path;
 		$this->protocol = $protocol;
+
+		/**
+		 * Retrieve the domain name and removing any superfluous chars.
+		 */
+		$host = rtrim( trim( $this->get_data_by_key( 'HTTP_HOST' ) ), '/' );
+		$this->domain = $host;
+
+		/**
+		 * Break up the Request URI into two portions; 1) the path, the bit before the query string, and 2) the query
+		 * string in a more usable array.
+		 */
+		$path       = ltrim( trim( $this->get_data_by_key( 'REQUEST_URI' ) ), '/' );
+		$this->path = strtok( $path, '?' );
+
+		/**
+		 * Convert the query string into an array.
+		 */
+		$querystring = str_replace( $this->path . '?', '', $path );
+		parse_str( $querystring, $this->args );
 
 		/**
 		 * Setup the full URL.
 		 */
-		$this->full_url = $protocol . $host . '/' . $path;
+		$this->full_url = $protocol . $host . '/' . $this->path;
 
 		/**
 		 * Get the HTTP Method.
