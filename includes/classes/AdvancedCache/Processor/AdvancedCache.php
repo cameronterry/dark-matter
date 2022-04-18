@@ -28,7 +28,7 @@ class AdvancedCache {
 	public function __construct() {
 		$this->request = new Request( $_SERVER, $_COOKIE );
 
-		if ( $this->request->is_cacheable() ) {
+		if ( $this->request->is_cacheable() && ! $this->request->is_wp_logged_in ) {
 			$cache_entry = $this->request->cache_get();
 
 			if ( ! empty( $cache_entry->headers ) ) {
@@ -69,10 +69,6 @@ class AdvancedCache {
 	public function do_output( $output = '' ) {
 		if ( ! is_string( $output ) ) {
 			return $output;
-		}
-
-		if ( ! is_user_logged_in() ) {
-			$this->request->cache( $output );
 		}
 
 		/**

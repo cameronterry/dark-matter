@@ -52,7 +52,7 @@ class Request {
 	 *
 	 * @var bool
 	 */
-	protected $is_wp_logged_in = false;
+	public $is_wp_logged_in = false;
 
 	/**
 	 * HTTP Method.
