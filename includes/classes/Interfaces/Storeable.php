@@ -27,7 +27,7 @@ interface Storeable {
 
 	/**
 	 * Handle the saving of the object to the store.
-	 * 
+	 *
 	 * @return bool
 	 */
 	public function save();
