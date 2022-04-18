@@ -83,7 +83,7 @@ class Request {
 			$this->visitor_ip = $this->get_visitor_ip();
 			$this->useragent  = $this->data['HTTP_USER_AGENT'];
 
-			$this->set_request_data();
+			$this->set_uri_data();
 		}
 	}
 
@@ -201,7 +201,7 @@ class Request {
 	 *
 	 * @return void
 	 */
-	private function set_request_data() {
+	private function set_uri_data() {
 		$protocol = 'http://';
 		if ( isset( $this->data['HTTPS'] ) ) {
 			if ( 'on' == strtolower( $this->data['HTTPS'] ) || '1' == $this->data['HTTPS'] ) {
