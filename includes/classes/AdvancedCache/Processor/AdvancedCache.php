@@ -29,10 +29,34 @@ class AdvancedCache {
 		$this->request = new Request( $_SERVER );
 
 		if ( $this->request->is_cacheable() ) {
+			$cache_entry = $this->request->cache_get();
+
+			if ( ! empty( $cache_entry->headers ) ) {
+				$headers = array_merge(
+					$cache_entry->headers,
+					[
+						'X-DarkMatter-Cache' => 'HIT',
+					]
+				);
+
+				$this->do_headers( $headers );
+				die( $cache_entry->body );
+			}
+
 			ob_start( [ $this, 'do_output' ] );
 
 //			add_filter( 'status_header', array( $this, 'status_header' ), 10, 2 );
 //			add_filter( 'wp_redirect_status', array( $this, 'redirect_status' ), 10, 2 );
+		}
+	}
+
+	/**
+	 * @param array $headers Headers to be part of the request.
+	 * @return void
+	 */
+	public function do_headers( $headers = [] ) {
+		foreach ( $headers as $name => $value ) {
+			header( "{$name}: {$value}", true );
 		}
 	}
 
@@ -45,6 +69,10 @@ class AdvancedCache {
 	public function do_output( $output = '' ) {
 		if ( ! is_string( $output ) ) {
 			return $output;
+		}
+
+		if ( ! is_user_logged_in() ) {
+			$this->request->cache( $output );
 		}
 
 		/**
