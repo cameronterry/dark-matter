@@ -3,3 +3,7 @@ node_modules
 
 domain-mapping/build/*
 /vendor/
+
+# PHPUnit
+/.phpunit.cache
+.phpunit.result.cache
