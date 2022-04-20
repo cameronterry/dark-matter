@@ -2,7 +2,7 @@
 /**
  * PHPUnit bootstrap file.
  *
- * @package Dark_Matter
+ * @package DarkMatter
  */
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
