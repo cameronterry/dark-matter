@@ -7,6 +7,8 @@
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
+define( 'FORCE_SSL_ADMIN', true );
+
 if ( ! $_tests_dir ) {
 	$_tests_dir = rtrim( sys_get_temp_dir(), '/\\' ) . '/wordpress-tests-lib';
 }
@@ -32,7 +34,7 @@ function _manually_load_plugin() {
 	require dirname( dirname( dirname( __FILE__ ) ) ) . '/dark-matter.php';
 }
 
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+tests_add_filter( 'muplugins_loaded', '_manually_load_plugin', -50 );
 
 // Start up the WP testing environment.
 require "{$_tests_dir}/includes/bootstrap.php";
