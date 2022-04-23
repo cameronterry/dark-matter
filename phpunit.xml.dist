@@ -12,7 +12,7 @@
 		<const name="DOMAIN_CURRENT_SITE" value="darkmatter.test" />
 	</php>
 	<testsuites>
-		<testsuite name="tests">
+		<testsuite name="domain-mapping">
 			<directory suffix="Test.php">./tests/phpunit/domain-mapping/</directory>
 		</testsuite>
 	</testsuites>
