@@ -9,6 +9,7 @@
 	>
 	<php>
 		<const name="WP_TESTS_MULTISITE" value="1" />
+		<const name="DOMAIN_CURRENT_SITE" value="darkmatter.test" />
 	</php>
 	<testsuites>
 		<testsuite name="tests">
