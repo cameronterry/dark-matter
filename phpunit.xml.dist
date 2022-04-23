@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <phpunit
-	bootstrap="tests/bootstrap.php"
+	bootstrap="tests/phpunit/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"
@@ -9,11 +9,10 @@
 	>
 	<php>
 		<const name="WP_TESTS_MULTISITE" value="1" />
-		<ini name="error_reporting" value="24575" />
 	</php>
 	<testsuites>
-		<testsuite name="test">
-			<directory prefix="test-" suffix=".php">./tests/</directory>
+		<testsuite name="tests">
+			<directory suffix="Test.php">./tests/phpunit/domain-mapping/</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
