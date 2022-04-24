@@ -85,4 +85,24 @@ class RestrictedDomainsTest extends WP_UnitTestCase {
 		$this->assertWPError( $result, 'WP_Error for adding a restricted domain.' );
 		$this->assertSame( 'reserved', $result->get_error_code(), 'Correct WP_Error for restricted domain.' );
 	}
+
+	/**
+	 * Retrieve a number of restricted domains.
+	 *
+	 * @return void
+	 */
+	public function test_get_restricted_domains() {
+		$domains = [ 'restricteddomain1.test', 'restricteddomain2.test' ];
+
+		foreach ( $domains as $domain ) {
+			$result = DarkMatter_Restrict::instance()->add( $domain );
+			$this->assertTrue( $result, 'Adding a restricted domain.' );
+		}
+
+		$this->assertSame(
+			$domains,
+			DarkMatter_Restrict::instance()->get(),
+			'Get returns all the restricted domains properly.'
+		);
+	}
 }
