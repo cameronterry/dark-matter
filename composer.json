@@ -24,7 +24,8 @@
         "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
         "lint-all": "phpcs .",
         "lint-fix": "phpcbf .",
-        "test": "phpunit"
+        "test": "phpunit",
+        "test-setup": "bash bin/install-wp-tests.sh dark_matter_test root root"
     },
     "config": {
         "allow-plugins": {
