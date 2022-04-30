@@ -25,7 +25,7 @@
         "lint-all": "phpcs .",
         "lint-fix": "phpcbf .",
         "test": "phpunit",
-        "test-setup": "bash bin/install-wp-tests.sh dark_matter_test root root"
+        "test-setup": "bash scripts/install-wp-tests.sh dark_matter_test root root"
     },
     "config": {
         "allow-plugins": {
