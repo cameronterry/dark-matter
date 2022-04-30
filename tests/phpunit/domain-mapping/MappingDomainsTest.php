@@ -87,18 +87,15 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Ensure the feature image uses a Media Domain.
+	 * Ensure admin URL uses the unmapped domain.
 	 *
 	 * @return void
 	 */
-	public function test_feature_image() {
-		$html = get_the_post_thumbnail( $this->post->ID );
-		$pos  = stripos(
-			$html,
-			sprintf( 'https://%1$s/', self::$media_domain )
+	public function test_admin_url() {
+		$this->assertEquals(
+			get_admin_url( null, '/' ),
+			sprintf( 'https://%1$s/siteone/wp-admin/', WP_TESTS_DOMAIN )
 		);
-
-		$this->assertNotFalse( $pos, '' );
 	}
 
 	/**
@@ -129,14 +126,17 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	}
 
 	/**
-	 * Ensure admin URL uses the unmapped domain.
+	 * Ensure the feature image uses a Media Domain.
 	 *
 	 * @return void
 	 */
-	public function test_admin_url() {
-		$this->assertEquals(
-			get_admin_url( null, '/' ),
-			sprintf( 'https://%1$s/siteone/wp-admin/', WP_TESTS_DOMAIN )
+	public function test_feature_image() {
+		$html = get_the_post_thumbnail( $this->post->ID );
+		$pos  = stripos(
+			$html,
+			sprintf( 'https://%1$s/', self::$media_domain )
 		);
+
+		$this->assertNotFalse( $pos, '' );
 	}
 }
