@@ -139,4 +139,36 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 
 		$this->assertNotFalse( $pos, '' );
 	}
+
+	/**
+	 * Ensure the login URL goes to the admin domain (unmapped).
+	 *
+	 * @return void
+	 */
+	public function test_login_url() {
+		$this->assertEquals(
+			wp_login_url(),
+			sprintf( 'https://%1$s/siteone/wp-login.php', WP_TESTS_DOMAIN ),
+			'Login URL'
+		);
+	}
+
+	/**
+	 * Ensure the logout URL goes to the admin domain (unmapped).
+	 *
+	 * @return void
+	 */
+	public function test_logout_url() {
+		$url = wp_logout_url();
+
+		/**
+		 * We use `stripos()` as the logout action contains a nonce in the query string.
+		 */
+		$pos = stripos(
+			$url,
+			sprintf( 'https://%1$s/siteone/wp-login.php?action=logout', WP_TESTS_DOMAIN )
+		);
+
+		$this->assertNotFalse( $pos, 'Logout URL.' );
+	}
 }
