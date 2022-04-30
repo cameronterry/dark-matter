@@ -171,4 +171,20 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 
 		$this->assertNotFalse( $pos, 'Logout URL.' );
 	}
+
+	/**
+	 * Ensure the REST URL to ensure it is .
+	 *
+	 * @return void
+	 */
+	public function test_rest_url() {
+		$this->assertEquals(
+			/**
+			 * Ensure the REST URL is HTTPS (it gets confused because it checks a number of `$_SERVER` variables).
+			 */
+			set_url_scheme( get_rest_url(), 'https' ),
+			sprintf( 'https://%1$s/siteone/wp-json/', WP_TESTS_DOMAIN ),
+			'REST API URL'
+		);
+	}
 }
