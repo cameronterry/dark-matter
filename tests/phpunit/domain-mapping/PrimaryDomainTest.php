@@ -187,42 +187,4 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		$this->assertEquals( 2, count( $primaries ), 'Two primary domains found.' );
 		$this->assertEqualSets( $expected, $primaries, 'Compare to created with domains.' );
 	}
-
-	/**
-	 * A site with a primary domain will modify the Admin URL.
-	 *
-	 * @return void
-	 */
-	public function test_admin_url() {
-		$domain = 'mappeddomain1.test';
-
-		/**
-		 * Create primary domain.
-		 */
-		$this->darkmatter_domains->add( $domain, true, true );
-
-		$this->assertEquals(
-			get_admin_url( null, '/' ),
-			sprintf( 'https://%1$s/siteone/wp-admin/', WP_TESTS_DOMAIN )
-		);
-	}
-
-	/**
-	 * A site with a primary domain will modify the Home URL.
-	 *
-	 * @return void
-	 */
-	public function test_home_url() {
-		$domain = 'mappeddomain1.test';
-
-		/**
-		 * Create primary domain.
-		 */
-		$this->darkmatter_domains->add( $domain, true, true );
-
-		$this->assertEquals(
-			get_home_url( null, '/' ),
-			sprintf( 'https://%1$s/', $domain )
-		);
-	}
 }
