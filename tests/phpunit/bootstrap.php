@@ -7,6 +7,10 @@
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
+/**
+ * Useful constants for testing Dark Matter.
+ */
+define( 'DARKMATTER_PHPUNIT_DIR', dirname( __FILE__ ) );
 define( 'FORCE_SSL_ADMIN', true );
 
 if ( ! $_tests_dir ) {
