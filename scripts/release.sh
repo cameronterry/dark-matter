@@ -14,14 +14,16 @@ npm run release
 
 # Remove the unnecessary files.
 
-rm -rf node_modules
-rm -rf vendor
-rm -rf scripts
 rm -rf domain-mapping/ui
+rm -rf node_modules
+rm -rf scripts
+rm -rf tests
+rm -rf vendor
 rm -rf .*
 rm *.json
 rm *.lock
 rm phpcs.xml
+rm phpunit.xml.dist
 rm postcss.config.js
 rm webpack.config.js
 
