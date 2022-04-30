@@ -1,0 +1,56 @@
+name: PHPUnit
+
+env:
+  COMPOSER_CACHE: "${{ github.workspace }}/.composer-cache"
+
+on:
+  push:
+    branches:
+      - develop
+      - release/*
+  pull_request:
+    branches:
+      - develop
+      - release/*
+
+jobs:
+  phpunit:
+    name: PHP Unit
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Start MySQL
+        run: sudo systemctl start mysql.service
+
+      - name: Set standard 10up cache directories
+        run: |
+          composer config -g cache-dir "${{ env.COMPOSER_CACHE }}"
+
+      - name: Prepare composer cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.COMPOSER_CACHE }}
+          key: composer-${{ env.COMPOSER_VERSION }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            composer-${{ env.COMPOSER_VERSION }}-
+
+      - name: Set PHP version
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.0'
+          coverage: none
+          tools: composer:v2
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Setup WP Tests
+        run: |
+          composer run test-setup
+          sleep 10
+
+      - name: PHPUnit
+        run: composer run test
