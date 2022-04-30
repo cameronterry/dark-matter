@@ -170,12 +170,12 @@ class DomainsTest extends \WP_UnitTestCase {
 	 */
 	public function test_validation_international_domains() {
 		/** Chinese - Unicode - Invalid */
-		$return = DarkMatter_Domains::instance()->add( 'www.例如.中国 ' );
+		$return = DarkMatter_Domains::instance()->add( 'www.例如.中国' );
 		$this->assertWPError( $return, 'Chinese - Unicode - Invalid' );
 		$this->assertSame( $return->get_error_code(), 'domain' );
 
 		/** Chinese - ASCII - Valid */
-		$return = DarkMatter_Domains::instance()->add( 'www.xn--fsqu6v.xn--fiqs8s ' );
+		$return = DarkMatter_Domains::instance()->add( 'www.xn--fsqu6v.xn--fiqs8s' );
 		$this->assertNotWPError( $return, 'Chinese - ASCII - Valid' );
 	}
 
