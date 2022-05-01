@@ -96,24 +96,29 @@ class MediaDomainsTest extends WP_UnitTestCase {
 		 * This is a bit of fudge, but by making this test last ... `DM_NETWORK_MEDIA` constant does not interfere with
 		 * the previous test for media domains manual.
 		 */
-		define( 'DM_NETWORK_MEDIA', [
-			'cdn1.darkmatter.test',
-		] );
+		define(
+			'DM_NETWORK_MEDIA',
+			[
+				'cdn1.darkmatter.test',
+			] 
+		);
 
 		$domains = DarkMatter_Domains::instance()->get_domains_by_type();
 
 		$expected = [];
 
 		foreach ( DM_NETWORK_MEDIA as $media_domain ) {
-			$expected[] = new DM_Domain( (object) [
-				'active'     => true,
-				'blog_id'    => get_current_blog_id(),
-				'domain'     => $media_domain,
-				'id'         => -1,
-				'is_https'   => true,
-				'is_primary' => false,
-				'type'       => DM_DOMAIN_TYPE_MEDIA,
-			] );
+			$expected[] = new DM_Domain(
+				(object) [
+					'active'     => true,
+					'blog_id'    => get_current_blog_id(),
+					'domain'     => $media_domain,
+					'id'         => -1,
+					'is_https'   => true,
+					'is_primary' => false,
+					'type'       => DM_DOMAIN_TYPE_MEDIA,
+				] 
+			);
 		}
 
 		$this->assertEquals( $expected, $domains, 'Media domains set by constant.' );

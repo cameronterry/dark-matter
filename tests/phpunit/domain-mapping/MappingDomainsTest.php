@@ -74,7 +74,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/wp_insert_post/
 		 */
-		$this->post = $this->factory()->post->create_and_get();
+		$this->post       = $this->factory()->post->create_and_get();
 		$this->attachment = $this->factory()->attachment->create_upload_object(
 			DARKMATTER_PHPUNIT_DIR . '/includes/images/wordpress-logo.png',
 			$this->post->ID
