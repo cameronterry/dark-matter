@@ -81,6 +81,9 @@ Google Analytics) with over 60 websites.
 
 = 2.3.0 =
 
+* Fixed an issue where setting and unsetting the Primary Domain would update the database only, and not the cache.
+  * `DarkMatter_Domains` now handles the cache state for both primary and general domain caches.
+  * Also removes some duplicate database update logic.
 * Fixed a typo preventing the cache retrieval for Restricted Domains working properly.
 * Fixed a malformed header for the 2.2.3 release in readme.txt file.
 * First iteration of unit tests added to the project to improve quality assurance of this release and future releases.
