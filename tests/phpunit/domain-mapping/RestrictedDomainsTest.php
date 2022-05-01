@@ -1,5 +1,13 @@
 <?php
+/**
+ * Tests for the restricted domains functionality.
+ *
+ * @package DarkMatter
+ */
 
+/**
+ * Class RestrictedDomainsTest
+ */
 class RestrictedDomainsTest extends WP_UnitTestCase {
 	/**
 	 * Blog ID used for testing.

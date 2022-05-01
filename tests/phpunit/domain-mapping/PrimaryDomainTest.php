@@ -1,5 +1,13 @@
 <?php
+/**
+ * Tests for the primary domain functionality.
+ *
+ * @package DarkMatter
+ */
 
+/**
+ * Class PrimaryDomainTest
+ */
 class PrimaryDomainTest extends \WP_UnitTestCase {
 	/**
 	 * Blog ID used for testing.
@@ -42,10 +50,20 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Tear down logic after the tests are finished.
+	 *
+	 * @return void
+	 */
 	public static function wpTearDownAfterClass() {
 		wp_delete_site( self::$blog_id );
 	}
 
+	/**
+	 * Setup needing for conducting the tests.
+	 *
+	 * @return void
+	 */
 	public function setUp(): void {
 		parent::setUp();
 

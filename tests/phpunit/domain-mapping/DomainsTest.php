@@ -1,5 +1,13 @@
 <?php
+/**
+ * Tests for the domain, regardless of type, functionality.
+ *
+ * @package DarkMatter
+ */
 
+/**
+ * Class DomainsTest
+ */
 class DomainsTest extends \WP_UnitTestCase {
 	/**
 	 * Blog ID used for testing.

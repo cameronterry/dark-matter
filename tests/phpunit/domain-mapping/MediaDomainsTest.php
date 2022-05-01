@@ -1,5 +1,13 @@
 <?php
+/**
+ * Tests for the media domain functionality.
+ *
+ * @package DarkMatter
+ */
 
+/**
+ * Class MediaDomainsTest
+ */
 class MediaDomainsTest extends WP_UnitTestCase {
 	/**
 	 * Blog ID.
@@ -100,7 +108,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 			'DM_NETWORK_MEDIA',
 			[
 				'cdn1.darkmatter.test',
-			] 
+			]
 		);
 
 		$domains = DarkMatter_Domains::instance()->get_domains_by_type();
@@ -117,7 +125,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 					'is_https'   => true,
 					'is_primary' => false,
 					'type'       => DM_DOMAIN_TYPE_MEDIA,
-				] 
+				]
 			);
 		}
 

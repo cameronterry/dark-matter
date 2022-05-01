@@ -1,5 +1,13 @@
 <?php
+/**
+ * Tests for ensure domain mapping is applied - and, importantly, not applied - for particular functionality.
+ *
+ * @package DarkMatter
+ */
 
+/**
+ * Class MappingDomainsTest
+ */
 class MappingDomainsTest extends \WP_UnitTestCase {
 	/**
 	 * Attachment ID.
