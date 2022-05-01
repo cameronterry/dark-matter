@@ -91,7 +91,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 			);
 		}
 
-		$this->assertEquals( $expected, $domains, 'Media domains set by constant.' );
+		$this->assertEquals( $expected, $domains, 'Media domains set manually.' );
 	}
 
 	/**
