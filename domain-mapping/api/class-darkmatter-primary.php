@@ -153,39 +153,29 @@ class DarkMatter_Primary {
 	 *
 	 * @param  integer $site_id Site ID to set the primary domain cache for.
 	 * @param  string  $domain  Domain to be stored in the cache.
-	 * @param  boolean $db      Set to true to perform a database update.
-	 * @return void
+	 * @return boolean True on success, false otherwise.
 	 */
-	public function set( $site_id = 0, $domain = '', $db = false ) {
-		$site_id   = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
-		$cache_key = $site_id . '-primary';
+	public function set( $site_id = 0, $domain = '' ) {
+		$new_primary_domain = DarkMatter_Domains::instance()->get( $domain );
 
-		if ( $db ) {
-			$result = $this->wpdb->update(
-				$this->dm_table,
-				array(
-					'is_primary' => true,
-				),
-				array(
-					'domain' => $domain,
-				)
-			);
+		if ( $new_primary_domain->blog_id !== $site_id ) {
+			return false;
 		}
 
-		/**
-		 * Fires when a domain is set to be the primary for a Site.
-		 *
-		 * @since 2.0.0
-		 *
-		 * @param  string  $domain  Domain that is set to primary domain.
-		 * @param  integer $site_id Site ID.
-		 * @param  boolean $db      States if the change performed a database update.
-		 */
-		do_action( 'darkmatter_primary_set', $domain, $site_id, $db );
+		$result = DarkMatter_Domains::instance()->update(
+			$new_primary_domain->domain,
+			true,
+			$new_primary_domain->is_https,
+			true,
+			$new_primary_domain->active,
+			DM_DOMAIN_TYPE_MAIN
+		);
 
-		wp_cache_set( $cache_key, $domain, 'dark-matter' );
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
 
-		$this->update_last_changed();
+		return true;
 	}
 
 	/**
