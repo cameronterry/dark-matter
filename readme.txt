@@ -79,13 +79,16 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
-*
+= 2.3.0 =
+
+* Fixed a typo preventing the cache retrieval for Restricted Domains working properly.
+* Fixed a malformed header for the 2.2.3 release in readme.txt file.
 * First iteration of unit tests added to the project to improve quality assurance of this release and future releases.
   * Uses PHP Unit and based on the setup provided by the WP CLI scaffold.
   * Issues / fixes in this release were found by the new unit tests.
   * Unit tests are not included with the release version of the plugin, and are accessible via Github repository: https://github.com/cameronterry/dark-matter/
 
-- 2.2.3 =
+= 2.2.3 =
 
 * Updated Composer and NPM dependencies.
   * No change in any logic code.
