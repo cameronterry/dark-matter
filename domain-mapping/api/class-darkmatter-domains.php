@@ -170,8 +170,6 @@ class DarkMatter_Domains {
 				if ( ! $force ) {
 					return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
 				}
-
-				$this->update( $primary_domain->domain, false, null, $primary_domain->active );
 			}
 		}
 
@@ -223,7 +221,7 @@ class DarkMatter_Domains {
 			wp_cache_add( $cache_key, $_domain, 'dark-matter' );
 
 			if ( $is_primary ) {
-				$dm_primary->set( get_current_blog_id(), $fqdn );
+				$this->primary_set( $fqdn, get_current_blog_id() );
 			}
 
 			$dm_domain = new DM_Domain( (object) $_domain );
@@ -344,7 +342,7 @@ class DarkMatter_Domains {
 		 */
 		if ( $_domain->is_primary ) {
 			if ( $force ) {
-				DarkMatter_Primary::instance()->unset();
+				$this->primary_unset( $_domain->domain, $_domain->blog_id );
 			} else {
 				return new WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
 			}
@@ -808,43 +806,9 @@ class DarkMatter_Domains {
 			 * Handle changes to the primary setting if required.
 			 */
 			if ( $is_primary && ! $domain_before->is_primary ) {
-				$current_primary = $dm_primary->get( $domain_before->blog_id );
-
-				if ( ! empty( $current_primary ) && $domain_before->domain !== $current_primary->domain ) {
-					$this->update( $current_primary->domain, false, null, true, $current_primary->active );
-				}
-
-				/**
-				 * Update the primary domain cache.
-				 */
-				$primary_cache_key = $domain_before->blog_id . '-primary';
-
-				/**
-				 * Fires when a domain is set to be the primary for a Site.
-				 *
-				 * @since 2.0.0
-				 *
-				 * @param  string  $domain  Domain that is set to primary domain.
-				 * @param  integer $site_id Site ID.
-				 * @param  boolean $db      States if the change performed a database update.
-				 */
-				do_action( 'darkmatter_primary_set', $domain_before->domain, $domain_before->blog_id, true );
-
-				wp_cache_set( $primary_cache_key, $domain_before->domain, 'dark-matter' );
+				$this->primary_set( $domain_before->domain, $domain_before->blog_id );
 			} elseif ( false === $is_primary && $domain_before->is_primary ) {
-				$primary_cache_key = $domain_before->blog_id . '-primary';
-				wp_cache_delete( $primary_cache_key, 'dark-matter' );
-
-				/**
-				 * Fires when a domain is unset to be the primary for a Site.
-				 *
-				 * @since 2.0.0
-				 *
-				 * @param  string  $domain  Domain that is unset to primary domain.
-				 * @param  integer $site_id Site ID.
-				 * @param  boolean $db      States if the change performed a database update.
-				 */
-				do_action( 'darkmatter_primary_unset', $domain_before->domain, $domain_before->blog_id, true );
+				$this->primary_unset( $domain_before->domain, $domain_before->blog_id );
 			}
 
 			$domain_after = new DM_Domain( (object) $_domain );
