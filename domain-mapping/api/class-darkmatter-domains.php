@@ -496,7 +496,7 @@ class DarkMatter_Domains {
 							'is_https'   => true,
 							'is_primary' => false,
 							'type'       => DM_DOMAIN_TYPE_MEDIA,
-						] 
+						]
 					);
 				}
 
@@ -754,9 +754,37 @@ class DarkMatter_Domains {
 					$this->update( $current_primary->domain, false, null, true, $current_primary->active );
 				}
 
-				$dm_primary->set( $domain_before->blog_id, $domain_before->domain );
+				/**
+				 * Update the primary domain cache.
+				 */
+				$primary_cache_key = $domain_before->blog_id . '-primary';
+
+				/**
+				 * Fires when a domain is set to be the primary for a Site.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param  string  $domain  Domain that is set to primary domain.
+				 * @param  integer $site_id Site ID.
+				 * @param  boolean $db      States if the change performed a database update.
+				 */
+				do_action( 'darkmatter_primary_set', $domain_before->domain, $domain_before->blog_id, true );
+
+				wp_cache_set( $primary_cache_key, $domain_before->domain, 'dark-matter' );
 			} elseif ( false === $is_primary && $domain_before->is_primary ) {
-				$dm_primary->unset( $domain_before->blog_id, $domain_before->domain );
+				$primary_cache_key = $domain_before->blog_id . '-primary';
+				wp_cache_delete( $primary_cache_key, 'dark-matter' );
+
+				/**
+				 * Fires when a domain is unset to be the primary for a Site.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param  string  $domain  Domain that is unset to primary domain.
+				 * @param  integer $site_id Site ID.
+				 * @param  boolean $db      States if the change performed a database update.
+				 */
+				do_action( 'darkmatter_primary_unset', $domain_before->domain, $domain_before->blog_id, true );
 			}
 
 			$domain_after = new DM_Domain( (object) $_domain );
