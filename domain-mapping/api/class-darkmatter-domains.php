@@ -443,6 +443,13 @@ class DarkMatter_Domains {
 			wp_cache_add( $cache_key, $_domain, 'dark-matter' );
 
 			/**
+			 * Update the primary cache if applicable.
+			 */
+			if ( $_domain->is_primary ) {
+				wp_cache_set( $_domain->blog_id . '-primary', 'dark-matter' );
+			}
+
+			/**
 			 * We update the last changed here as the cache was modified.
 			 */
 			$this->update_last_changed();
