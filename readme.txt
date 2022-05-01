@@ -81,6 +81,7 @@ Google Analytics) with over 60 websites.
 
 = 2.3.0 =
 
+* Domains are now ordered alphabetically - A to Z - when returned by `get_domains_by_type()`.
 * Fixed a typo preventing the cache retrieval for Restricted Domains working properly.
 * Fixed a malformed header for the 2.2.3 release in readme.txt file.
 * First iteration of unit tests added to the project to improve quality assurance of this release and future releases.
