@@ -56,6 +56,38 @@ class DM_Media {
 	}
 
 	/**
+	 * Get the main domains for a particular site.
+	 *
+	 * @param integer $site_id Site ID to retrieve the main domains for.
+	 * @return array Main domains, essentially the unmapped (admin) domain and the primary (mapped) domain.
+	 */
+	private function get_main_domains( $site_id = 0 ) {
+		/**
+		 * Ensure the site is actually a site.
+		 */
+		$blog = get_site( $site_id );
+		if ( ! is_a( $blog, 'WP_Site' ) ) {
+			return [];
+		}
+
+		$unmapped = untrailingslashit( $blog->domain . $blog->path );
+
+		/**
+		 * Put together the main domains.
+		 */
+		$main_domains = [
+			$unmapped,
+		];
+
+		$primary = DarkMatter_Primary::instance()->get( $site_id );
+		if ( ! empty( $primary ) ) {
+			$main_domains[] = $primary->domain;
+		}
+
+		return $main_domains;
+	}
+
+	/**
 	 * Convert WordPress Core's allowed mime types array, which has keys designed for regex, to straight-forward strings
 	 * for the individual extensions as keys on the array.
 	 *
@@ -295,12 +327,8 @@ class DM_Media {
 			return;
 		}
 
-		/**
-		 * Ensure the site is actually a site.
-		 */
-		$blog = get_site( $site_id );
-
-		if ( ! is_a( $blog, 'WP_Site' ) ) {
+		$main_domains = $this->get_main_domains( $site_id );
+		if ( empty( $main_domains ) ) {
 			$this->sites[ $site_id ] = false;
 			return;
 		}
@@ -314,26 +342,15 @@ class DM_Media {
 			return;
 		}
 
-		$unmapped = untrailingslashit( $blog->domain . $blog->path );
-
-		/**
-		 * Put together the main domains.
-		 */
-		$main_domains = [
-			$unmapped,
-		];
-
-		$primary = DarkMatter_Primary::instance()->get( $site_id );
-		if ( ! empty( $primary ) ) {
-			$main_domains[] = $primary->domain;
-		}
-
 		$this->sites[ $site_id ] = [
 			'allowed_mimes'       => $this->get_mime_types(),
 			'main_domains'        => $main_domains,
 			'media_domains'       => $media_domains,
 			'media_domains_count' => count( $media_domains ),
-			'unmapped'            => $unmapped,
+			/**
+			 * The first entry is always the unmapped.
+			 */
+			'unmapped'            => $main_domains[0],
 		];
 	}
 
