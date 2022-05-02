@@ -28,7 +28,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @var string
 	 */
-	private static $media_domain = 'cdn.example.test';
+	private $media_domain = 'cdn.example.test';
 
 	/**
 	 * Post
@@ -64,15 +64,17 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 			]
 		);
 
+		DarkMatter_Domains::instance()->network_media = [
+			$this->media_domain,
+		];
+
 		switch_to_blog( $this->blog_id );
 
 		/**
 		 * Add domains to the new site.
 		 */
-		$result = DarkMatter_Domains::instance()->add(
+		DarkMatter_Domains::instance()->add(
 			$this->primary_domain,
-			true,
-			true,
 			true,
 			true
 		);
@@ -115,7 +117,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		$url = wp_get_attachment_image_url( $this->attachment );
 		$pos = stripos(
 			$url,
-			sprintf( 'https://%1$s/', self::$media_domain )
+			sprintf( 'https://%1$s/', $this->media_domain )
 		);
 
 		$this->assertNotFalse( $pos, '' );
@@ -142,7 +144,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		$html = get_the_post_thumbnail( $this->post->ID );
 		$pos  = stripos(
 			$html,
-			sprintf( 'https://%1$s/', self::$media_domain )
+			sprintf( 'https://%1$s/', $this->media_domain )
 		);
 
 		$this->assertNotFalse( $pos, '' );

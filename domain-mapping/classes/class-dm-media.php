@@ -16,46 +16,25 @@ defined( 'ABSPATH' ) || die;
  */
 class DM_Media {
 	/**
-	 * An array of Media domains.
-	 *
-	 * @var array
-	 */
-	private $allowed_mime_types = array();
-
-	/**
-	 * An array of Media domains.
-	 *
-	 * @var array
-	 */
-	private $media_domains = array();
-
-	/**
-	 * Number of Media domains that are available.
+	 * The ID of the current site.
 	 *
 	 * @var int
 	 */
-	private $media_domains_count = -1;
+	private $current_site_id = 0;
 
 	/**
-	 * Media domains, as strings.
+	 * Store the main domains for the request site (i.e. the one before any `switch_to_blog()` calls).
 	 *
 	 * @var array
 	 */
-	private $main_domains = array();
+	private $request_main_domains = [];
 
 	/**
-	 * The unmapped domain.
+	 * Storage of the per site settings.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	private $unmapped;
-
-	/**
-	 * The primary domain, if available.
-	 *
-	 * @var bool|DM_Domain
-	 */
-	private $primary;
+	private $sites = [];
 
 	/**
 	 * Constructor.
@@ -65,6 +44,7 @@ class DM_Media {
 	public function __construct() {
 		add_action( 'init', array( $this, 'init' ), 10 );
 		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
+		add_action( 'switch_blog', array( $this, 'switch_blog' ), 10, 1 );
 
 		add_filter( 'the_content', array( $this, 'map' ), 100, 1 );
 		add_filter( 'wp_get_attachment_url', array( $this, 'map_url' ), 100, 1 );
@@ -79,7 +59,39 @@ class DM_Media {
 	 * @since 2.2.0
 	 */
 	private function can_map() {
-		return ! empty( $this->media_domains );
+		return isset( $this->sites[ $this->current_site_id ] ) && false !== $this->sites[ $this->current_site_id ];
+	}
+
+	/**
+	 * Get the main domains for a particular site.
+	 *
+	 * @param integer $site_id Site ID to retrieve the main domains for.
+	 * @return array Main domains, essentially the unmapped (admin) domain and the primary (mapped) domain.
+	 */
+	private function get_main_domains( $site_id = 0 ) {
+		/**
+		 * Ensure the site is actually a site.
+		 */
+		$blog = get_site( $site_id );
+		if ( ! is_a( $blog, 'WP_Site' ) ) {
+			return [];
+		}
+
+		$unmapped = untrailingslashit( $blog->domain . $blog->path );
+
+		/**
+		 * Put together the main domains.
+		 */
+		$main_domains = [
+			$unmapped,
+		];
+
+		$primary = DarkMatter_Primary::instance()->get( $site_id );
+		if ( ! empty( $primary ) ) {
+			$main_domains[] = $primary->domain;
+		}
+
+		return $main_domains;
 	}
 
 	/**
@@ -122,54 +134,15 @@ class DM_Media {
 	/**
 	 * Initialise the Media setup.
 	 *
-	 * @param int $site_id Site (Blog) ID, used to retrieve the site details and Primary Domain.
 	 * @return void
 	 *
 	 * @since 2.2.0
 	 */
-	public function init( $site_id = 0 ) {
-		$blog = get_site( $site_id );
+	public function init() {
+		$this->current_site_id      = get_current_blog_id();
+		$this->request_main_domains = $this->get_main_domains( $this->current_site_id );
 
-		if ( ! is_a( $blog, 'WP_Site' ) ) {
-			return;
-		}
-
-		/**
-		 * Put together the unmapped domain.
-		 */
-		$this->unmapped = untrailingslashit( $blog->domain . $blog->path );
-
-		/**
-		 * Retrieve the primary domain.
-		 */
-		$this->primary = DarkMatter_Primary::instance()->get( $site_id );
-
-		/**
-		 * Retrieve media domains and update how many are available.
-		 */
-		$this->media_domains = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
-
-		/**
-		 * Zero-based the count of media domains.
-		 */
-		$this->media_domains_count = count( $this->media_domains ) - 1;
-
-		/**
-		 * Generate an array of only strings of the domains. Namely the primary and unmapped.
-		 */
-		$this->main_domains = array(
-			$this->unmapped,
-		);
-
-		if ( ! empty( $this->primary ) ) {
-			$this->main_domains[] = $this->primary->domain;
-		}
-
-		/**
-		 * Retrieve the allowed file types. This is the mechanism used - in this feature / plugin at least - for knowing
-		 * what is an attachment in uploads.
-		 */
-		$this->allowed_mime_types = $this->get_mime_types();
+		$this->prime_site( $this->current_site_id );
 	}
 
 	/**
@@ -201,7 +174,7 @@ class DM_Media {
 			return $content;
 		}
 
-		$domains_regex = implode( '|', $this->main_domains );
+		$domains_regex = implode( '|', $this->sites[ $this->current_site_id ]['main_domains'] );
 
 		/**
 		 * Find all URLs which are not mapped to a Media domain, but are either on the primary domain or admin domain
@@ -250,7 +223,7 @@ class DM_Media {
 			/**
 			 * Check for a valid extension.
 			 */
-			if ( array_key_exists( strtolower( $extension ), $this->allowed_mime_types ) ) {
+			if ( array_key_exists( strtolower( $extension ), $this->sites[ $this->current_site_id ]['allowed_mimes'] ) ) {
 				$content = str_ireplace( $url, $this->map_url( $url ), $content );
 			}
 		}
@@ -278,7 +251,8 @@ class DM_Media {
 		 * Check to ensure the URL is on a domain we can map. This is also used to prevent double-mapping occurring.
 		 */
 		$do_map = false;
-		foreach ( $this->main_domains as $main_domain ) {
+
+		foreach ( $this->sites[ $this->current_site_id ]['main_domains'] as $main_domain ) {
 			if ( false !== stripos( $url, $main_domain ) ) {
 				$do_map = true;
 				break;
@@ -294,13 +268,13 @@ class DM_Media {
 		 */
 		$index = 0;
 
-		if ( $this->media_domains_count > 0 ) {
-			$index = wp_rand( 0, $this->media_domains_count );
+		if ( $this->sites[ $this->current_site_id ]['media_domains_count'] > 1 ) {
+			$index = wp_rand( 0, $this->sites[ $this->current_site_id ]['media_domains_count'] );
 		}
 
 		$url = preg_replace(
-			'#://(' . implode( '|', $this->main_domains ) . ')#',
-			'://' . untrailingslashit( $this->media_domains[ $index ]->domain ),
+			'#://(' . implode( '|', $this->sites[ $this->current_site_id ]['main_domains'] ) . ')#',
+			'://' . untrailingslashit( $this->sites[ $this->current_site_id ]['media_domains'][ $index ]->domain ),
 			$url
 		);
 
@@ -346,6 +320,74 @@ class DM_Media {
 	}
 
 	/**
+	 * Prime the settings needed for media domain mapping a particular website.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param integer $site_id Site ID to prime for media domains.
+	 * @return void
+	 */
+	private function prime_site( $site_id = 0 ) {
+		/**
+		 * If we have seen this website before, skip doing it again.
+		 */
+		if ( isset( $this->sites[ $site_id ] ) ) {
+			return;
+		}
+
+		$main_domains = $this->get_main_domains( $site_id );
+		if ( empty( $main_domains ) ) {
+			$this->sites[ $site_id ] = false;
+			return;
+		}
+
+		/**
+		 * Ensure we have media domains to use.
+		 */
+		$media_domains = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+		if ( empty( $media_domains ) ) {
+			$this->sites[ $site_id ] = false;
+			return;
+		}
+
+		/**
+		 * Seemingly WordPress' `wp_get_attachment_url()` doesn't seem to fully work as intended for `switch_to_blog()`.
+		 * Therefore we must add the requesters' main domains in order for the map / unmap to work, as the media assets
+		 * will be served on the requesters' domains rather than the domain of the site it belongs to.
+		 */
+		$main_domains = array_filter(
+			array_merge(
+				$main_domains,
+				$this->request_main_domains
+			)
+		);
+
+		$this->sites[ $site_id ] = [
+			'allowed_mimes'       => $this->get_mime_types(),
+			'main_domains'        => $main_domains,
+			'media_domains'       => $media_domains,
+			'media_domains_count' => count( $media_domains ),
+			/**
+			 * The first entry is always the unmapped.
+			 */
+			'unmapped'            => $main_domains[0],
+		];
+	}
+
+	/**
+	 * Handle the `switch_to_blog()` / `restore_current_blog()` functionality.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param int $site_id Site (Blog) ID, used to retrieve the site details and Primary Domain.
+	 * @return void
+	 */
+	public function switch_blog( $site_id = 0 ) {
+		$this->current_site_id = ( ! empty( $site_id ) ? intval( $site_id ) : get_current_blog_id() );
+		$this->prime_site( $this->current_site_id );
+	}
+
+	/**
 	 * Used to unmap Media domains.
 	 *
 	 * @param  string $value Value that may contain Media domains.
@@ -361,7 +403,7 @@ class DM_Media {
 		/**
 		 * Create an array of strings of the Media domains.
 		 */
-		$media_domains = wp_list_pluck( $this->media_domains, 'domain' );
+		$media_domains = wp_list_pluck( $this->sites[ $this->current_site_id ]['media_domains'], 'domain' );
 
 		/**
 		 * Ensure we have domains that are to be unmapped.
@@ -375,7 +417,7 @@ class DM_Media {
 		 */
 		return preg_replace(
 			'#://(' . implode( '|', $media_domains ) . ')#',
-			'://' . $this->unmapped,
+			'://' . $this->sites[ $this->current_site_id ]['unmapped'],
 			$value
 		);
 	}
