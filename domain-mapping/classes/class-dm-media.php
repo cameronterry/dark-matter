@@ -350,6 +350,11 @@ class DM_Media {
 			return;
 		}
 
+		/**
+		 * Seemingly WordPress' `wp_get_attachment_url()` doesn't seem to fully work as intended for `switch_to_blog()`.
+		 * Therefore we must add the requesters' main domains in order for the map / unmap to work, as the media assets
+		 * will be served on the requesters' domains rather than the domain of the site it belongs to.
+		 */
 		$main_domains = array_filter(
 			array_merge(
 				$main_domains,
