@@ -23,6 +23,13 @@ class DM_Media {
 	private $current_site_id = 0;
 
 	/**
+	 * Store the main domains for the request site (i.e. the one before any `switch_to_blog()` calls).
+	 *
+	 * @var array
+	 */
+	private $request_main_domains = [];
+
+	/**
 	 * Storage of the per site settings.
 	 *
 	 * @var array
@@ -342,6 +349,13 @@ class DM_Media {
 			$this->sites[ $site_id ] = false;
 			return;
 		}
+
+		$main_domains = array_filter(
+			array_merge(
+				$main_domains,
+				$this->request_main_domains
+			)
+		);
 
 		$this->sites[ $site_id ] = [
 			'allowed_mimes'       => $this->get_mime_types(),
