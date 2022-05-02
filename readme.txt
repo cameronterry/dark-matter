@@ -81,6 +81,10 @@ Google Analytics) with over 60 websites.
 
 = 2.3.0 =
 
+* Fixed an issue where setting and unsetting the Primary Domain would update the database only, and not the cache.
+  * `DarkMatter_Domains` now handles the cache state for both primary and general domain caches.
+  * Also removes some duplicate database update logic.
+  * The third parameter of action hooks `darkmatter_primary_set` and `darkmatter_primary_unset` is now deprecated. It is always `true` as the database is always updated now, therefore it is redundant.
 * Domains are now ordered alphabetically - A to Z - when returned by `get_domains_by_type()`.
 * Fixed a typo preventing the cache retrieval for Restricted Domains working properly.
 * Fixed a malformed header for the 2.2.3 release in readme.txt file.
