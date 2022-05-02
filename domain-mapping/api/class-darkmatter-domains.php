@@ -664,9 +664,9 @@ class DarkMatter_Domains {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param  string  $domain  Domain that is set to primary domain.
-		 * @param  integer $site_id Site ID.
-		 * @param  boolean $db      States if the change performed a database update.
+		 * @param  string  $domain     Domain that is unset to primary domain.
+		 * @param  integer $site_id    Site ID.
+		 * @param  boolean $deprecated Redundant, is always true as database is now always updated.
 		 */
 		do_action( 'darkmatter_primary_set', $domain, $blog_id, true );
 
@@ -691,9 +691,9 @@ class DarkMatter_Domains {
 		 *
 		 * @since 2.0.0
 		 *
-		 * @param  string  $domain  Domain that is unset to primary domain.
-		 * @param  integer $site_id Site ID.
-		 * @param  boolean $db      States if the change performed a database update.
+		 * @param  string  $domain     Domain that is unset to primary domain.
+		 * @param  integer $site_id    Site ID.
+		 * @param  boolean $deprecated Redundant, is always true as database is now always updated.
 		 */
 		do_action( 'darkmatter_primary_unset', $domain, $blog_id, true );
 	}
