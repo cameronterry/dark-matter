@@ -81,6 +81,10 @@ Google Analytics) with over 60 websites.
 
 = 2.3.0 =
 
+* Tweaked the way mapped domains are detected to better support scenarios involving `switch_to_blog()`.
+  * No longer relies solely on the `DOMAIN_MAPPING` constant, set when a request is processed through a primary domain.
+  * Essentially, if the website handling the request is being viewed through its primary domain, then URLs within a `switch_to_blog()` context will be mapped if applicable (i.e. the blog switched to has an active primary domain).
+  * And vice-versa - if a request is through the admin domain ("unmapped"), then URLs in the `switch_to_blog()` context will be unmapped as well (to prevent cross-domain compatibility issues / warnings in browsers).
 * Fixed an issue where setting and unsetting the Primary Domain would update the database only, and not the cache.
   * `DarkMatter_Domains` now handles the cache state for both primary and general domain caches.
   * Also removes some duplicate database update logic.
