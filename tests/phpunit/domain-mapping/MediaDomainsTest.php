@@ -36,9 +36,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 			]
 		);
 	}
-
-
-
+	
 	/**
 	 * Media domains set by the `DM_NETWORK_MEDIA` constant.
 	 *
