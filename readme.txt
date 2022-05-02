@@ -81,6 +81,10 @@ Google Analytics) with over 60 websites.
 
 = 2.3.0 =
 
+* Added `switch_to_blog()` support for Media Domains.
+  * When using the various attachment functions within the `switch_to_blog()` context, it will now respect media domain settings on a per site basis.
+  * Setting media domains through the `DM_NETWORK_MEDIA` constant now works more fully.
+  * It is now possible to controlled media domains through the `network_media` property on DarkMatter_Domains, to enable more sophisticated logic in code.
 * Tweaked the way mapped domains are detected to better support scenarios involving `switch_to_blog()`.
   * No longer relies solely on the `DOMAIN_MAPPING` constant, set when a request is processed through a primary domain.
   * Essentially, if the website handling the request is being viewed through its primary domain, then URLs within a `switch_to_blog()` context will be mapped if applicable (i.e. the blog switched to has an active primary domain).
