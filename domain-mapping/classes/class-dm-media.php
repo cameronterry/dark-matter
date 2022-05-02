@@ -37,7 +37,7 @@ class DM_Media {
 	public function __construct() {
 		add_action( 'init', array( $this, 'init' ), 10 );
 		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
-		add_action( 'switch_blog', array( $this, 'init' ), 10, 1 );
+		add_action( 'switch_blog', array( $this, 'switch_blog' ), 10, 1 );
 
 		add_filter( 'the_content', array( $this, 'map' ), 100, 1 );
 		add_filter( 'wp_get_attachment_url', array( $this, 'map_url' ), 100, 1 );
@@ -127,13 +127,14 @@ class DM_Media {
 	/**
 	 * Initialise the Media setup.
 	 *
-	 * @param int $site_id Site (Blog) ID, used to retrieve the site details and Primary Domain.
 	 * @return void
 	 *
 	 * @since 2.2.0
 	 */
-	public function init( $site_id = 0 ) {
-		$this->current_site_id = ( ! empty( $site_id ) ? intval( $site_id ) : get_current_blog_id() );
+	public function init() {
+		$this->current_site_id      = get_current_blog_id();
+		$this->request_main_domains = $this->get_main_domains( $this->current_site_id );
+
 		$this->prime_site( $this->current_site_id );
 	}
 
@@ -352,6 +353,19 @@ class DM_Media {
 			 */
 			'unmapped'            => $main_domains[0],
 		];
+	}
+
+	/**
+	 * Handle the `switch_to_blog()` / `restore_current_blog()` functionality.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param int $site_id Site (Blog) ID, used to retrieve the site details and Primary Domain.
+	 * @return void
+	 */
+	public function switch_blog( $site_id = 0 ) {
+		$this->current_site_id = ( ! empty( $site_id ) ? intval( $site_id ) : get_current_blog_id() );
+		$this->prime_site( $this->current_site_id );
 	}
 
 	/**
