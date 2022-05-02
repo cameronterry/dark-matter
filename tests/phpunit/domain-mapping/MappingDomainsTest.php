@@ -186,6 +186,8 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_rest_url() {
+		DM_URL::instance()->is_request_mapped = true;
+
 		$this->assertEquals(
 			/**
 			 * Ensure the REST URL is HTTPS (it gets confused because it checks a number of `$_SERVER` variables).
@@ -194,5 +196,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 			sprintf( 'https://%1$s/wp-json/', $this->primary_domain ),
 			'REST API URL'
 		);
+
+		DM_URL::instance()->is_request_mapped = false;
 	}
 }
