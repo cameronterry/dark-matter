@@ -24,6 +24,13 @@ class DarkMatter_Domains {
 	private $dmtable = '';
 
 	/**
+	 * Hard-coded media domains, most likely through `DM_NETWORK_MEDIA` constant.
+	 *
+	 * @var array
+	 */
+	public $network_media = [];
+
+	/**
 	 * Reference to the global $wpdb and is more for code cleaniness.
 	 *
 	 * @since 2.0.0
@@ -51,6 +58,10 @@ class DarkMatter_Domains {
 		 * Store a reference to $wpdb as it will be used a lot.
 		 */
 		$this->wpdb = $wpdb;
+
+		if ( defined( 'DM_NETWORK_MEDIA' ) && ! empty( DM_NETWORK_MEDIA ) ) {
+			$this->network_media = DM_NETWORK_MEDIA;
+		}
 	}
 
 	/**
@@ -481,17 +492,17 @@ class DarkMatter_Domains {
 		/**
 		 * Media domains can be set with a constant.
 		 */
-		if ( DM_DOMAIN_TYPE_MEDIA === $type && defined( 'DM_NETWORK_MEDIA' ) ) {
+		if ( DM_DOMAIN_TYPE_MEDIA === $type && ! empty( $this->network_media ) ) {
 			/**
 			 * Ensure it is an array and then return. No checks, we assume that is provided correctly.
 			 */
-			if ( is_array( DM_NETWORK_MEDIA ) ) {
+			if ( is_array( $this->network_media ) ) {
 				$media_domains = [];
 
 				/**
 				 * Convert the domains into DM_Domain objects.
 				 */
-				foreach ( DM_NETWORK_MEDIA as $i => $media_domain ) {
+				foreach ( $this->network_media as $i => $media_domain ) {
 					$media_domains[ $i ] = new DM_Domain(
 						(object) [
 							'active'     => true,
