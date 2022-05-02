@@ -529,7 +529,7 @@ class DarkMatter_Domains {
 		if ( $skip_cache || ! is_array( $_domains ) ) {
 			$_domains = $wpdb->get_col(
 				$wpdb->prepare(
-					"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain DESC, domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$site_id,
 					$type
 				)
