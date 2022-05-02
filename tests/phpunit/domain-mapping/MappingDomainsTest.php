@@ -191,7 +191,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 			 * Ensure the REST URL is HTTPS (it gets confused because it checks a number of `$_SERVER` variables).
 			 */
 			set_url_scheme( get_rest_url(), 'https' ),
-			sprintf( 'https://%1$s/siteone/wp-json/', $this->primary_domain ),
+			sprintf( 'https://%1$s/wp-json/', $this->primary_domain ),
 			'REST API URL'
 		);
 	}
