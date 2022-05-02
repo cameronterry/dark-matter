@@ -64,6 +64,10 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 			]
 		);
 
+		DarkMatter_Domains::instance()->network_media = [
+			$this->media_domain,
+		];
+
 		switch_to_blog( $this->blog_id );
 
 		/**
