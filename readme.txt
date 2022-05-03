@@ -100,6 +100,7 @@ Google Analytics) with over 60 websites.
   * Uses PHP Unit and based on the setup provided by the WP CLI scaffold.
   * Issues / fixes in this release were found by the new unit tests.
   * Unit tests are not included with the release version of the plugin, and are accessible via Github repository: https://github.com/cameronterry/dark-matter/
+* We have incorporated [Snyk](https://snyk.io/) scanning for dependencies in Composer and NPM.
 
 = 2.2.3 =
 
