@@ -15,11 +15,22 @@ defined( 'ABSPATH' ) || die();
  */
 class DM_URL {
 	/**
+	 * Determine if the current request was mapped in `sunrise.php`.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @var bool
+	 */
+	public $is_request_mapped = false;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.0.0
 	 */
 	public function __construct() {
+		$this->is_request_mapped = ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+
 		/**
 		 * In some circumstances, we always want to process the logic regardless of request type, circumstances,
 		 * conditions, etc. (like ensuring saved post data is unmapped properly).
@@ -174,7 +185,27 @@ class DM_URL {
 	 * @return boolean True if the domain is the Primary domain. False if the Admin domain.
 	 */
 	private function is_mapped() {
-		return ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+		/**
+		 * Check to see if this was called within a `switch_to_blog()` context.
+		 *
+		 * If we are and the request was originally mapped to a primary domain, then we check to ensure the blog within
+		 * the context can be mapped (i.e. it has an active primary domain) and if so, we say the request is mapped.
+		 */
+		global $switched;
+		if ( $switched && $this->is_request_mapped ) {
+			$primary = DarkMatter_Primary::instance()->get();
+
+			/**
+			 * If there is no primary or if it is inactive, then the site is not mapped.
+			 */
+			if ( false === $primary || ! $primary->active ) {
+				return false;
+			}
+
+			return true;
+		}
+
+		return $this->is_request_mapped;
 	}
 
 	/**

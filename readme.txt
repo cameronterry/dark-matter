@@ -79,7 +79,29 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
-- 2.2.3 =
+= 2.3.0 =
+
+* Added `switch_to_blog()` support for Media Domains.
+  * When using the various attachment functions within the `switch_to_blog()` context, it will now respect media domain settings on a per site basis.
+  * Setting media domains through the `DM_NETWORK_MEDIA` constant now works more fully.
+  * It is now possible to controlled media domains through the `network_media` property on `DarkMatter_Domains`, to enable more sophisticated logic in code.
+* Tweaked the way mapped domains are detected to better support scenarios involving `switch_to_blog()`.
+  * No longer relies solely on the `DOMAIN_MAPPING` constant, set when a request is processed through a primary domain.
+  * Essentially, if the website handling the request is being viewed through its primary domain, then URLs within a `switch_to_blog()` context will be mapped if applicable (i.e. the blog switched to has an active primary domain).
+  * And vice-versa - if a request is through the admin domain ("unmapped"), then URLs in the `switch_to_blog()` context will be unmapped as well (to prevent cross-domain compatibility issues / warnings in browsers).
+* Fixed an issue where setting and unsetting the Primary Domain would update the database only, and not the cache.
+  * `DarkMatter_Domains` now handles the cache state for both primary and general domain caches.
+  * Also removes some duplicate database update logic.
+  * The third parameter of action hooks `darkmatter_primary_set` and `darkmatter_primary_unset` is now deprecated. It is always `true` as the database is always updated now, therefore it is redundant.
+* Domains are now ordered alphabetically - A to Z - when returned by `get_domains_by_type()`.
+* Fixed a typo preventing the cache retrieval for Restricted Domains working properly.
+* Fixed a malformed header for the 2.2.3 release in readme.txt file.
+* First iteration of unit tests added to the project to improve quality assurance of this release and future releases.
+  * Uses PHP Unit and based on the setup provided by the WP CLI scaffold.
+  * Issues / fixes in this release were found by the new unit tests.
+  * Unit tests are not included with the release version of the plugin, and are accessible via Github repository: https://github.com/cameronterry/dark-matter/
+
+= 2.2.3 =
 
 * Updated Composer and NPM dependencies.
   * No change in any logic code.

@@ -163,3 +163,54 @@ Using www.wpnetwork.com as the "Admin domain" and www.example.com as the
 * http://www.wpnetwork.com/sitetwo?utm_source=test (with query string, without trailing forward slash) => http://www.example.com/?utm_source=test
 * http://www.wpnetwork.com/sitetwo/#test (hash URL test) => http://www.example.com/
 * http://www.wpnetwork.com/sitetwo#test (hash URL test, without trailing forward slash) => http://www.example.com/
+
+## Development
+
+### Prerequisites
+
+To develop with Dark Matter plugin requires the following to be installed.
+
+* Composer 2.0+
+* Node 16.13+
+* PHP 7.0+
+* WordPress 5.9+
+
+For a developer environment, Dark Matter plugin is most commonly built with VVV. However this is not a hard requirement
+and any WordPress development environment should work without any complications.
+
+### Initial Setup
+
+If you have NVM installed, then you can ensure the most recent compatible version of Node is installed and ready for
+use.
+
+```shell
+nvm use
+```
+
+And then you can run the following:
+
+```shell
+npm run start
+```
+
+This NPM script will do the following:
+
+* Install all Composer dependencies, including dev dependencies.
+* Install all NPM dependencies, including dev dependencies.
+* Build both the production and developer scripts.
+
+After this point, the plugin is ready for use with your local WordPress installation.
+
+### Unit Tests
+
+Use the following command to setup PHPUnit and the WordPress environment for it.
+
+```shell
+composer run test-setup
+```
+
+After the setup has completed successfully, then the following command can be used to run the unit tests.
+
+```shell
+composer run test
+```
