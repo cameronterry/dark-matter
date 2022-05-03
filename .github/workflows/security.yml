@@ -16,8 +16,8 @@ jobs:
           args: --sarif-file-output=snyk-node.sarif
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
-          with:
-            sarif_file: snyk-node.sarif
+        with:
+          sarif_file: snyk-node.sarif
 
       - name: Run Snyk to check for vulnerabilities for PHP
         uses: snyk/actions/php@master
@@ -27,5 +27,5 @@ jobs:
           args: --sarif-file-output=snyk-php.sarif
       - name: Upload result to GitHub Code Scanning
         uses: github/codeql-action/upload-sarif@v1
-          with:
-            sarif_file: snyk-php.sarif
+        with:
+          sarif_file: snyk-php.sarif
