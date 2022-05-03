@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.8
-Stable tag: 2.1.8
+Tested up to: 5.9.3
+Stable tag: 2.2.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,58 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+- 2.2.3 =
+
+* Updated Composer and NPM dependencies.
+  * No change in any logic code.
+  * Some lint fixes in JavaScript and PHP files.
+  * Switched `eslint-loader` for `eslint-webpack-plugin`.
+* PHP CodeSniffer set to test PHP 8.0 to ensure compatibility and support going forward.
+* Tested up to WordPress 5.9.3.
+
+= 2.2.2 =
+
+* Updated Composer and NPM dependencies. No code changes made to CSS and JS files.
+* Tested with WordPress 5.9 "Joséphine".
+* Checked for basic compatibility with Rank Math 1.0.81 and Yoast SEO 18.
+
+= 2.2.1 =
+
+* Fixes an issue caused by a discrepancy between eslint setup.
+* This caused the build script to fail and was missed in 2.2.0, meaning the UI broke at the final deploy stage.
+* Apologies for the inconvenience.
+
+= 2.2.0 =
+
+* New Features:
+  * Say hello to "Media domains"; a new type of domain to Dark Matter that can be used to serve media assets from a different domain name.
+    * Useful for separating infrastructure which is used for static assets from servers powering PHP requests.
+    * Or powering images through a dedicated / dynamic service such as [Tachyon](https://github.com/humanmade/tachyon).
+    * Can be hard-set using an array of domains in a constant called, `DM_NETWORK_MEDIA`.
+    * Supports all extensions that are supported by the Media Library. So if you add SVG upload support, "Media domains" will support it too.
+    * Updating the existing CLIs to support domain types and management of "Media domains".
+  * WordPress' plugin screen will now notify you of future releases and to update.
+    * Added support for WordPress auto-update functionality.
+    * Releases after 2.2.0, you will be able to update Dark Matter through WP CLI or admin interface (depending on your setup / file permissions).
+    * Servers are renewable powered!
+* Bug fixes and maintenance:
+  * Updated the `readme.md` file to include CLI examples for Media Domains.
+  * Updated the `readme.md` file to include notes on two constants that can be used with Dark Matter for disabling SSO and configuring Media Domains for an entire Multisite.
+  * Improved the domain validation when adding new domains.
+  * Added plugin header comment block to the `sunrise.php` dropin.
+    * There is no code and / or logic changes, however you will need to run `wp darkmatter dropin update --force`.
+    * This will provide better information on WordPress plugins screen, clearly identifying Dark Matter's sunrise dropin from others.
+    * This also improves diagnostic data for other plugins, such as Redis Cache / `wp redis status`.
+  * Tweaked the release shell script to better support [wp-update-server](https://github.com/YahnisElsts/wp-update-server).
+  * Updated composer dependencies and support for Composer 2.2.x version.
+  * Updated npm dependencies, excluding eslint.
+
+= 2.1.9 =
+
+* Fixed an issue with Webpack that prevents the admin UI working when `SCRIPT_DEBUG` is used.
+* Unlikely to experience issue except for staging and local developments.
+* Problem spotted during development of the 2.2.0 release.
 
 = 2.1.8 =
 
@@ -299,6 +351,10 @@ Google Analytics) with over 60 websites.
   * 1.x.x version of **sunrise.php** will error on update as the require path has changed in the new folder structure of 2.0.0.
 
 == Upgrade Notice ==
+
+= 2.2.1 =
+
+This contains a major fix for broken UI in 2.2.0, and should be updated as soon as possible. Apologies for inconvenience.
 
 = 2.1.0 =
 

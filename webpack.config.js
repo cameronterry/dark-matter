@@ -1,14 +1,16 @@
 // node module that let's us do file system stuffs...
+const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require( 'mini-css-extract-plugin' );
 const path = require( 'path' );
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const TerserPlugin = require('terser-webpack-plugin'); // eslint-disable-line import/no-extraneous-dependencies
+const webpack = require( 'webpack' );
 const WebpackBar = require('webpackbar');
+
+const env = process.env.NODE_ENV;
 
 // Webpack expects an exported object with all the configurations, so we export an object here
 module.exports = () => {
-  const env = process.env.NODE_ENV;
-
   let config = {
     name: 'domain-mapping',
     entry: {
@@ -27,14 +29,6 @@ module.exports = () => {
     },
     module: {
       rules: [
-        {
-          test: /\.js$/,
-          enforce: 'pre',
-          loader: 'eslint-loader',
-          options: {
-            fix: true,
-          }
-        },
         {
           // basically tells webpack to use babel with the correct presets
           test: /\.js$/,
@@ -63,6 +57,9 @@ module.exports = () => {
     },
     mode: env,
     plugins: [
+			new ESLintPlugin( {
+				fix: true,
+			} ),
       new RemoveEmptyScriptsPlugin(),
       /**
        * Extract CSS to a separate file.
@@ -72,6 +69,7 @@ module.exports = () => {
         chunkFilename: '[id].css',
       } ),
       new WebpackBar(),
+      new webpack.EnvironmentPlugin( [ 'NODE_ENV' ] )
     ]
   };
 

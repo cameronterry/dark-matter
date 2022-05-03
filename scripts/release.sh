@@ -2,13 +2,13 @@
 
 cd ..
 
-rm -rf ~/dm/release
-mkdir -p ~/dm/release
+rm -rf ~/dm/release/dark-matter
+mkdir -p ~/dm/release/dark-matter
 
-rsync -av -progress ./ ~/dm/release --exclude node_modules --exclude vendor
+rsync -av -progress ./ ~/dm/release/dark-matter --exclude node_modules --exclude vendor
 
 # Run the build.
-cd ~/dm/release
+cd ~/dm/release/dark-matter
 
 npm run release
 
@@ -25,5 +25,7 @@ rm phpcs.xml
 rm postcss.config.js
 rm webpack.config.js
 
-zip -r dark-matter-$1.zip *
+cd ~/dm/release/
+
+zip -r dark-matter-$1.zip dark-matter/*
 mv dark-matter-$1.zip ../dark-matter-$1.zip
