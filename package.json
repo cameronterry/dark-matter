@@ -10,7 +10,8 @@
     "lint": "composer lint && eslint",
     "lint-js": "eslint",
     "release": "composer install --no-dev --optimize-autoloader && npm ci --ignore-scripts && npm run build-all",
-    "start": "composer install && npm install && npm run build-all"
+    "start": "composer install && npm install && npm run build-all",
+    "test": "snyk test"
   },
   "pre-commit": [
     "lint-staged"
@@ -52,6 +53,7 @@
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.4.3",
     "prettier": "^2.6.2",
+    "snyk": "^1.809.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.72.0",
     "webpack-cli": "^4.9.2",
