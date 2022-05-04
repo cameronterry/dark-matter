@@ -24,6 +24,13 @@ class DarkMatter_Domains {
 	private $dmtable = '';
 
 	/**
+	 * Hard-coded media domains, most likely through `DM_NETWORK_MEDIA` constant.
+	 *
+	 * @var array
+	 */
+	public $network_media = [];
+
+	/**
 	 * Reference to the global $wpdb and is more for code cleaniness.
 	 *
 	 * @since 2.0.0
@@ -51,6 +58,10 @@ class DarkMatter_Domains {
 		 * Store a reference to $wpdb as it will be used a lot.
 		 */
 		$this->wpdb = $wpdb;
+
+		if ( defined( 'DM_NETWORK_MEDIA' ) && ! empty( DM_NETWORK_MEDIA ) ) {
+			$this->network_media = DM_NETWORK_MEDIA;
+		}
 	}
 
 	/**
@@ -170,8 +181,6 @@ class DarkMatter_Domains {
 				if ( ! $force ) {
 					return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
 				}
-
-				$this->update( $primary_domain->domain, false, null, $primary_domain->active );
 			}
 		}
 
@@ -223,7 +232,7 @@ class DarkMatter_Domains {
 			wp_cache_add( $cache_key, $_domain, 'dark-matter' );
 
 			if ( $is_primary ) {
-				$dm_primary->set( get_current_blog_id(), $fqdn );
+				$this->primary_set( $fqdn, get_current_blog_id() );
 			}
 
 			$dm_domain = new DM_Domain( (object) $_domain );
@@ -344,7 +353,7 @@ class DarkMatter_Domains {
 		 */
 		if ( $_domain->is_primary ) {
 			if ( $force ) {
-				DarkMatter_Primary::instance()->unset();
+				$this->primary_unset( $_domain->domain, $_domain->blog_id );
 			} else {
 				return new WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
 			}
@@ -445,6 +454,13 @@ class DarkMatter_Domains {
 			wp_cache_add( $cache_key, $_domain, 'dark-matter' );
 
 			/**
+			 * Update the primary cache if applicable.
+			 */
+			if ( $_domain->is_primary ) {
+				wp_cache_set( $_domain->blog_id . '-primary', 'dark-matter' );
+			}
+
+			/**
 			 * We update the last changed here as the cache was modified.
 			 */
 			$this->update_last_changed();
@@ -476,17 +492,17 @@ class DarkMatter_Domains {
 		/**
 		 * Media domains can be set with a constant.
 		 */
-		if ( DM_DOMAIN_TYPE_MEDIA === $type && defined( 'DM_NETWORK_MEDIA' ) ) {
+		if ( DM_DOMAIN_TYPE_MEDIA === $type && ! empty( $this->network_media ) ) {
 			/**
 			 * Ensure it is an array and then return. No checks, we assume that is provided correctly.
 			 */
-			if ( is_array( DM_NETWORK_MEDIA ) ) {
+			if ( is_array( $this->network_media ) ) {
 				$media_domains = [];
 
 				/**
 				 * Convert the domains into DM_Domain objects.
 				 */
-				foreach ( DM_NETWORK_MEDIA as $i => $media_domain ) {
+				foreach ( $this->network_media as $i => $media_domain ) {
 					$media_domains[ $i ] = new DM_Domain(
 						(object) [
 							'active'     => true,
@@ -496,7 +512,7 @@ class DarkMatter_Domains {
 							'is_https'   => true,
 							'is_primary' => false,
 							'type'       => DM_DOMAIN_TYPE_MEDIA,
-						] 
+						]
 					);
 				}
 
@@ -524,7 +540,7 @@ class DarkMatter_Domains {
 		if ( $skip_cache || ! is_array( $_domains ) ) {
 			$_domains = $wpdb->get_col(
 				$wpdb->prepare(
-					"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain DESC, domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					"SELECT domain FROM {$this->dm_table} WHERE blog_id = %d AND type = %d AND active = 1 ORDER BY domain", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$site_id,
 					$type
 				)
@@ -631,6 +647,66 @@ class DarkMatter_Domains {
 		}
 
 		return false;
+	}
+
+	/**
+	 * Helper to set the Primary Domain cache.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param string  $domain  Domain to set as primary.
+	 * @param integer $blog_id Blog ID for the site to have the new primary.
+	 * @return void
+	 */
+	private function primary_set( $domain = '', $blog_id = 0 ) {
+		$current_primary = DarkMatter_Primary::instance()->get( $blog_id );
+
+		if ( ! empty( $current_primary ) && $domain !== $current_primary->domain ) {
+			$this->update( $current_primary->domain, false, null, true, $current_primary->active );
+		}
+
+		/**
+		 * Update the primary domain cache.
+		 */
+		$primary_cache_key = $blog_id . '-primary';
+
+		/**
+		 * Fires when a domain is set to be the primary for a Site.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param  string  $domain     Domain that is unset to primary domain.
+		 * @param  integer $site_id    Site ID.
+		 * @param  boolean $deprecated Redundant, is always true as database is now always updated.
+		 */
+		do_action( 'darkmatter_primary_set', $domain, $blog_id, true );
+
+		wp_cache_set( $primary_cache_key, $domain, 'dark-matter' );
+	}
+
+	/**
+	 * Helper to set the Primary Domain cache.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param string  $domain  Domain to unset as primary.
+	 * @param integer $blog_id Blog ID for the site to remove the primary.
+	 * @return void
+	 */
+	private function primary_unset( $domain = '', $blog_id = 0 ) {
+		$primary_cache_key = $blog_id . '-primary';
+		wp_cache_delete( $primary_cache_key, 'dark-matter' );
+
+		/**
+		 * Fires when a domain is unset to be the primary for a Site.
+		 *
+		 * @since 2.0.0
+		 *
+		 * @param  string  $domain     Domain that is unset to primary domain.
+		 * @param  integer $site_id    Site ID.
+		 * @param  boolean $deprecated Redundant, is always true as database is now always updated.
+		 */
+		do_action( 'darkmatter_primary_unset', $domain, $blog_id, true );
 	}
 
 	/**
@@ -748,15 +824,9 @@ class DarkMatter_Domains {
 			 * Handle changes to the primary setting if required.
 			 */
 			if ( $is_primary && ! $domain_before->is_primary ) {
-				$current_primary = $dm_primary->get( $domain_before->blog_id );
-
-				if ( ! empty( $current_primary ) && $domain_before->domain !== $current_primary->domain ) {
-					$this->update( $current_primary->domain, false, null, true, $current_primary->active );
-				}
-
-				$dm_primary->set( $domain_before->blog_id, $domain_before->domain );
+				$this->primary_set( $domain_before->domain, $domain_before->blog_id );
 			} elseif ( false === $is_primary && $domain_before->is_primary ) {
-				$dm_primary->unset( $domain_before->blog_id, $domain_before->domain );
+				$this->primary_unset( $domain_before->domain, $domain_before->blog_id );
 			}
 
 			$domain_after = new DM_Domain( (object) $_domain );
