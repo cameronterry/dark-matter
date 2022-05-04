@@ -101,6 +101,7 @@ Google Analytics) with over 60 websites.
   * Issues / fixes in this release were found by the new unit tests.
   * Unit tests are not included with the release version of the plugin, and are accessible via Github repository: https://github.com/cameronterry/dark-matter/
 * Updated NPM dependencies to their latest versions.
+* Tested with WordPress 6.0 RC1.
 * We have incorporated [Snyk](https://snyk.io/) scanning for dependencies in Composer and NPM.
 
 = 2.2.3 =
