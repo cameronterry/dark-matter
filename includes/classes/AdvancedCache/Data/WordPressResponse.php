@@ -20,6 +20,9 @@ class WordPressResponse extends Response implements Registerable {
 	 */
 	public function register() {
 		ob_start( [ $this, 'set_body' ] );
+
+		add_action( 'shutdown', [ $this, 'shutdown' ] );
+
 		add_filter( 'status_header', [ $this, 'set_status_header' ], 10, 2 );
 	}
 
@@ -68,5 +71,14 @@ class WordPressResponse extends Response implements Registerable {
 	public function set_status_header( $status_header = '', $status_code = 200 ) {
 		$this->status_code = $status_code;
 		return $status_header;
+	}
+
+	/**
+	 * Save the Request Data. This only fires on a dynamic request.
+	 *
+	 * @return void
+	 */
+	public function shutdown() {
+		$this->request->save();
 	}
 }
