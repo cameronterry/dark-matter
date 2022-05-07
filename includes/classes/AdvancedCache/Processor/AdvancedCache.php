@@ -8,7 +8,6 @@
 namespace DarkMatter\AdvancedCache\Processor;
 
 use DarkMatter\AdvancedCache\Data\CacheEntry;
-use DarkMatter\AdvancedCache\Data\Request;
 use DarkMatter\AdvancedCache\Data\WordPressResponse;
 
 /**
@@ -20,7 +19,7 @@ class AdvancedCache {
 	/**
 	 * Request data.
 	 *
-	 * @var Request
+	 * @var Requester
 	 */
 	private $request = null;
 
@@ -35,7 +34,7 @@ class AdvancedCache {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->request = new Request( $_SERVER, $_COOKIE );
+		$this->request = new Requester( $_SERVER, $_COOKIE );
 
 		if ( $this->request->is_cacheable() && ! $this->request->is_wp_logged_in ) {
 			/**

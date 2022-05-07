@@ -4,14 +4,16 @@
  *
  * @package DarkMatter\AdvancedCache
  */
-namespace DarkMatter\AdvancedCache\Data;
+namespace DarkMatter\AdvancedCache\Processor;
+
+use DarkMatter\AdvancedCache\Data\CacheEntry;
 
 /**
  * Class Request
  *
  * @since 3.0.0
  */
-class Request {
+class Requester {
 	/**
 	 * Arguments provided by Query Strings.
 	 *
