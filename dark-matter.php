@@ -46,7 +46,7 @@ wp_cache_add_global_groups(
 	[
 		'dark-matter',
 		'dark-matter-fpc-cacheentries',
-		'dark-matter-fpc-requestdata',
+		'dark-matter-fpc-request',
 	]
 );
 
