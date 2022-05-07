@@ -58,6 +58,18 @@ class AdvancedCache {
 	}
 
 	/**
+	 * Handle the output of the headers for a cache hit.
+	 *
+	 * @param array $headers Headers to be part of the request.
+	 * @return void
+	 */
+	public function do_headers( $headers = [] ) {
+		foreach ( $headers as $name => $value ) {
+			header( "{$name}: {$value}", true );
+		}
+	}
+
+	/**
 	 * Handle a Cache "hit".
 	 *
 	 * @param CacheEntry $cache_entry
@@ -84,15 +96,5 @@ class AdvancedCache {
 	private function lookup( $request ) {
 		$this->response = new WordPressResponse( $this->requester->full_url, '', $request );
 		$this->response->register();
-	}
-
-	/**
-	 * @param array $headers Headers to be part of the request.
-	 * @return void
-	 */
-	public function do_headers( $headers = [] ) {
-		foreach ( $headers as $name => $value ) {
-			header( "{$name}: {$value}", true );
-		}
 	}
 }
