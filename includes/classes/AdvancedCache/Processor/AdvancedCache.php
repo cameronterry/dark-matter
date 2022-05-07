@@ -8,6 +8,7 @@
 namespace DarkMatter\AdvancedCache\Processor;
 
 use DarkMatter\AdvancedCache\Data\CacheEntry;
+use DarkMatter\AdvancedCache\Data\Request;
 use DarkMatter\AdvancedCache\Data\WordPressResponse;
 
 /**
@@ -17,11 +18,11 @@ use DarkMatter\AdvancedCache\Data\WordPressResponse;
  */
 class AdvancedCache {
 	/**
-	 * Request data.
+	 * Request details.
 	 *
 	 * @var Requester
 	 */
-	private $request = null;
+	private $requester = null;
 
 	/**
 	 * Response.
@@ -34,14 +35,16 @@ class AdvancedCache {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->request = new Requester( $_SERVER, $_COOKIE );
+		$this->requester = new Requester( $_SERVER, $_COOKIE );
 
-		if ( $this->request->is_cacheable() && ! $this->request->is_wp_logged_in ) {
+		$request = new Request( $this->requester->full_url );
+
+		if ( $this->requester->is_cacheable() && ! $this->requester->is_wp_logged_in ) {
 			/**
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
 			 * WordPress.
 			 */
-			$cache_entry = $this->request->cache_get();
+			$cache_entry = $this->requester->cache_get();
 			if ( ! empty( $cache_entry->headers ) ) {
 				$this->hit( $cache_entry );
 			}
@@ -50,7 +53,7 @@ class AdvancedCache {
 			 * Here means there was no current cache entry. Therefore we do a "lookup" to generate a new cache entry
 			 * with a response.
 			 */
-			$this->lookup();
+			$this->lookup( $request );
 		}
 	}
 
@@ -75,10 +78,11 @@ class AdvancedCache {
 	/**
 	 * Handle a response.
 	 *
+	 * @param Request $request Request Data object.
 	 * @return void
 	 */
-	private function lookup() {
-		$this->response = new WordPressResponse( $this->request->full_url );
+	private function lookup( $request ) {
+		$this->response = new WordPressResponse( $this->requester->full_url, '', $request );
 		$this->response->register();
 	}
 
