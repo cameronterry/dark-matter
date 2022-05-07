@@ -31,6 +31,13 @@ class Response {
 	public $headers = [];
 
 	/**
+	 * Request Data object.
+	 *
+	 * @var Request
+	 */
+	protected $request = null;
+
+	/**
 	 * Status Code
 	 *
 	 * @var int
@@ -40,13 +47,15 @@ class Response {
 	/**
 	 * Constructor
 	 *
-	 * @param string $full_url Full URL which created the response.
-	 * @param string $body     Body of the response (usually HTML).
+	 * @param string  $full_url Full URL which created the response.
+	 * @param string  $body     Body of the response (usually HTML).
+	 * @param Request $request  Request Data object.
 	 */
-	public function __construct( $full_url = '', $body = '' ) {
+	public function __construct( $full_url = '', $body = '', $request = null ) {
 		$this->body     = $body;
 		$this->full_url = $full_url;
 		$this->headers  = headers_list();
+		$this->request  = $request;
 	}
 
 	/**
@@ -97,6 +106,12 @@ class Response {
 		$entry->body    = $this->body;
 		$entry->headers = $this->headers;
 
-		return $entry->save();
+		/**
+		 * Cache the output and store the variant key with the Request Data.
+		 */
+		$variant_key = $entry->save();
+		$this->request->variants[ $variant_key ] = true;
+
+		return $variant_key;
 	}
 }
