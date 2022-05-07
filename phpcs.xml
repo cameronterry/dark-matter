@@ -8,6 +8,7 @@
 
     <rule ref="WordPress">
         <exclude name="Generic.Arrays.DisallowShortArraySyntax.Found" />
+        <exclude name="WordPress.Files.FileName" />
     </rule>
 
     <rule ref="PHPCompatibilityWP"/>
@@ -24,4 +25,5 @@
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/dist/*</exclude-pattern>
+    <exclude-pattern>*/tests/phpunit/includes/*</exclude-pattern>
 </ruleset>
