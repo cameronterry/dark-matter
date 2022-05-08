@@ -39,6 +39,15 @@ class Request implements Storeable {
 	public $instruction = 0;
 
 	/**
+	 * Is the request cacheable.
+	 *
+	 * @var bool
+	 */
+	public $is_cacheable = true;
+
+	/**
+	 * Versions of the request based on policies.
+	 *
 	 * @var array
 	 */
 	public $variants = [];

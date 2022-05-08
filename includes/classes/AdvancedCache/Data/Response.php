@@ -65,6 +65,13 @@ class Response {
 	 */
 	public function is_cacheable() {
 		/**
+		 * Request determination of is cacheable takes precedence.
+		 */
+		if ( ! $this->request->is_cacheable ) {
+			return false;
+		}
+
+		/**
 		 * Do not cache errors.
 		 */
 		if ( 5 === intval( $this->status_code / 100 ) ) {
