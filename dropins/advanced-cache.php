@@ -39,7 +39,12 @@ if ( file_exists( $darkmatter_path . 'vendor/autoload.php' ) ) {
 	/**
 	 * Attempt to load any customisations.
 	 */
-	$darkmatter_customisations_path = dirname( __FILE__ ) . '/mu-plugins/dark-matter-customisations/dark-matter.php';
+	if ( defined( 'DARKMATTER_ADVANCEDCACHE_CUSTOM' ) ) {
+		$darkmatter_customisations_path = trailingslashit( DARKMATTER_ADVANCEDCACHE_CUSTOM );
+	} else {
+		$darkmatter_customisations_path = dirname( __FILE__ ) . '/mu-plugins/advanced-cache/dark-matter.php';
+	}
+
 	if ( file_exists( $darkmatter_customisations_path ) ) {
 		require_once $darkmatter_customisations_path;
 	}
