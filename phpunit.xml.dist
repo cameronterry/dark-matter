@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<phpunit
+	bootstrap="tests/phpunit/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	>
+	<php>
+		<const name="WP_TESTS_MULTISITE" value="1" />
+		<const name="DOMAIN_CURRENT_SITE" value="darkmatter.test" />
+	</php>
+	<testsuites>
+		<testsuite name="domain-mapping">
+			<directory suffix="Test.php">./tests/phpunit/domain-mapping/</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

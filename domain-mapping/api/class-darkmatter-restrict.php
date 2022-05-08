@@ -189,7 +189,7 @@ class DarkMatter_Restrict {
 		/**
 		 * Attempt to retreive the domain from cache.
 		 */
-		$restrict_domains = wp_cache_get( 'restrictd', 'dark-matter' );
+		$restrict_domains = wp_cache_get( 'restricted', 'dark-matter' );
 
 		/**
 		 * Fires after the domains have been retrieved from cache (if available)
@@ -262,7 +262,7 @@ class DarkMatter_Restrict {
 	 * Return the Singleton Instance of the class.
 	 *
 	 * @since 2.0.0
-	 * 
+	 *
 	 * @return DarkMatter_Restrict
 	 */
 	public static function instance() {
