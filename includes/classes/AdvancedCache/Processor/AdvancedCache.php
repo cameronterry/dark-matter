@@ -20,7 +20,7 @@ class AdvancedCache {
 	/**
 	 * Request details.
 	 *
-	 * @var Requester
+	 * @var Visitor
 	 */
 	private $requester = null;
 
@@ -35,7 +35,7 @@ class AdvancedCache {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->requester = new Requester( $_SERVER, $_COOKIE );
+		$this->requester = new Visitor( $_SERVER, $_COOKIE );
 
 		$request = new Request( $this->requester->full_url );
 

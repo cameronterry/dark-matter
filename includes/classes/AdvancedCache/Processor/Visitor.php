@@ -13,7 +13,7 @@ use DarkMatter\AdvancedCache\Data\CacheEntry;
  *
  * @since 3.0.0
  */
-class Requester {
+class Visitor {
 	/**
 	 * Arguments provided by Query Strings.
 	 *

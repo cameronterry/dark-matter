@@ -7,7 +7,7 @@
 namespace DarkMatter\Interfaces;
 
 use DarkMatter\AdvancedCache\Data\Request;
-use DarkMatter\AdvancedCache\Processor\Requester;
+use DarkMatter\AdvancedCache\Processor\Visitor;
 
 /**
  * Interface Policy
@@ -19,9 +19,9 @@ interface Policy {
 	 * Constructor.
 	 *
 	 * @param Request   $request   Details on the request.
-	 * @param Requester $requester Details on the requester.
+	 * @param Visitor $requester Details on the requester.
 	 */
-	public function __constructor( Request $request, Requester $requester );
+	public function __constructor( Request $request, Visitor $requester );
 
 	/**
 	 * Can the request be cached.
