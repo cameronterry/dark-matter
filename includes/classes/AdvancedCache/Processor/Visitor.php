@@ -142,10 +142,11 @@ class Visitor {
 	/**
 	 * Retrieve a Cache Entry for the current request.
 	 *
+	 * @param string $variant_key Variant key.
 	 * @return CacheEntry
 	 */
-	public function cache_get() {
-		$entry = new CacheEntry( $this->full_url );
+	public function cache_get( $variant_key = '' ) {
+		$entry = new CacheEntry( $this->full_url, $variant_key );
 		return $entry;
 	}
 

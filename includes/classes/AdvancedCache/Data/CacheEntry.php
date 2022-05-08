@@ -40,12 +40,22 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 
 	/**
 	 * Constructor
+	 *
+	 * @param string $url         URL.
+	 * @param string $variant_key Variant key.
 	 */
-	public function __construct( $url = '' ) {
+	public function __construct( $url = '', $variant_key = '' ) {
 		/**
 		 * Convert the URL with md5() to make sure we have a straightforward string without the special chars.
 		 */
 		$this->url_key = md5( $url );
+		if ( ! empty( $variant_key ) ) {
+			$this->url_key = sprintf(
+				'%s-%s',
+				$this->url_key,
+				$variant_key
+			);
+		}
 
 		/**
 		 * Attempt to retrieve the entry from Object Cache.

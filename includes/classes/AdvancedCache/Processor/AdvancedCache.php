@@ -36,15 +36,22 @@ class AdvancedCache {
 	 */
 	public function __construct() {
 		$this->requester = new Visitor( $_SERVER, $_COOKIE );
-
 		$request = new Request( $this->requester->full_url );
+
+		/**
+		 * Process the policies.
+		 */
+		$policies = new Policies( $request, $this->requester );
+
+		$variant_key = $policies->get_variant();
+		$request->is_cacheable = $policies->can_cache();
 
 		if ( $this->requester->is_cacheable() && ! $this->requester->is_wp_logged_in ) {
 			/**
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
 			 * WordPress.
 			 */
-			$cache_entry = $this->requester->cache_get();
+			$cache_entry = $this->requester->cache_get( $variant_key );
 			if ( ! empty( $cache_entry->headers ) ) {
 				$this->hit( $cache_entry );
 			}
