@@ -18,10 +18,10 @@ interface Policy {
 	/**
 	 * Constructor.
 	 *
-	 * @param Request   $request   Details on the request.
-	 * @param Visitor $requester Details on the requester.
+	 * @param Request $request Details on the request.
+	 * @param Visitor $visitor Details on the requester.
 	 */
-	public function __constructor( Request $request, Visitor $requester );
+	public function __constructor( Request $request, Visitor $visitor );
 
 	/**
 	 * Can the request be cached.
