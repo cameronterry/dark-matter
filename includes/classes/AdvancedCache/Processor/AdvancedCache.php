@@ -32,6 +32,13 @@ class AdvancedCache {
 	private $response = null;
 
 	/**
+	 * Variant key, as determined by processing all the policies.
+	 *
+	 * @var string
+	 */
+	private $variant = '';
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -43,7 +50,7 @@ class AdvancedCache {
 		 */
 		$policies = new Policies( $request, $this->requester );
 
-		$variant_key = $policies->get_variant();
+		$this->variant = $policies->get_variant();
 		$request->is_cacheable = $policies->can_cache();
 
 		if ( $this->requester->is_cacheable() && ! $this->requester->is_wp_logged_in ) {
@@ -51,7 +58,7 @@ class AdvancedCache {
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
 			 * WordPress.
 			 */
-			$cache_entry = $this->requester->cache_get( $variant_key );
+			$cache_entry = $this->requester->cache_get( $this->variant );
 			if ( ! empty( $cache_entry->headers ) ) {
 				$this->hit( $cache_entry );
 			}
@@ -101,7 +108,7 @@ class AdvancedCache {
 	 * @return void
 	 */
 	private function lookup( $request ) {
-		$this->response = new WordPressResponse( $this->requester->full_url, '', $request );
+		$this->response = new WordPressResponse( $this->requester->full_url, $this->variant, $request );
 		$this->response->register();
 	}
 }

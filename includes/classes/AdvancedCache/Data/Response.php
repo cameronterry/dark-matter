@@ -45,17 +45,26 @@ class Response {
 	public $status_code = 200;
 
 	/**
+	 * Variant key, as determined by processing the policies.
+	 *
+	 * @var string
+	 */
+	public $variant = '';
+
+	/**
 	 * Constructor
 	 *
 	 * @param string  $full_url Full URL which created the response.
-	 * @param string  $body     Body of the response (usually HTML).
+	 * @param string  $variant  Variant key.
 	 * @param Request $request  Request Data object.
+	 * @param string  $body     Body of the response (usually HTML).
 	 */
-	public function __construct( $full_url = '', $body = '', $request = null ) {
+	public function __construct( $full_url = '', $variant = '', $request = null, $body = '' ) {
 		$this->body     = $body;
 		$this->full_url = $full_url;
 		$this->headers  = headers_list();
 		$this->request  = $request;
+		$this->variant  = $variant;
 	}
 
 	/**
@@ -105,7 +114,7 @@ class Response {
 		/**
 		 * Create a new CacheEntry object.
 		 */
-		$entry = new CacheEntry( $this->full_url );
+		$entry = new CacheEntry( $this->full_url, $this->variant );
 
 		/**
 		 * Set the body and headers.
