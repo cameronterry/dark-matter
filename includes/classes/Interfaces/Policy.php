@@ -21,7 +21,7 @@ interface Policy {
 	 * @param Request $request Details on the request.
 	 * @param Visitor $visitor Details on the requester.
 	 */
-	public function __constructor( Request $request, Visitor $visitor );
+	public function __construct( Request $request, Visitor $visitor );
 
 	/**
 	 * Can the request be cached.
