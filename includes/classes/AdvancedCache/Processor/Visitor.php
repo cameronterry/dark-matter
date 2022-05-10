@@ -146,6 +146,7 @@ class Visitor {
 	 * @return CacheEntry
 	 */
 	public function cache_get( $variant_key = '' ) {
+		// @todo check expiry time from CacheEntry.
 		$entry = new CacheEntry( $this->full_url, $variant_key );
 		return $entry;
 	}

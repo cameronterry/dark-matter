@@ -53,6 +53,14 @@ class AdvancedCache {
 		$this->variant = $policies->get_variant();
 		$request->is_cacheable = $policies->can_cache();
 
+		// @todo Policies with a response ("maintenance page" example).
+		// @todo Policy response when cache not found ("always serve from cache" example).
+
+		// @todo Instructions processor.
+		// @todo Instruction to update content with supplied body.
+		// @todo Instruction to find and replace a piece of content.
+		// @todo Instruction to append content.
+
 		if ( $this->requester->is_cacheable() && ! $this->requester->is_wp_logged_in ) {
 			/**
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip

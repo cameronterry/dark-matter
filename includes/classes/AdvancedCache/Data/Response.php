@@ -122,6 +122,9 @@ class Response {
 		$entry->body    = $this->body;
 		$entry->headers = $this->headers;
 
+		// @todo expiry time.
+		// @todo Policy configuration for expiry time ("pages are until updated", "archives are every 10mins", "homepage every five mins", etc.).
+
 		/**
 		 * Cache the output and store the variant key with the Request Data.
 		 */
