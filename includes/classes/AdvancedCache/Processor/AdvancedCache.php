@@ -72,10 +72,22 @@ class AdvancedCache {
 	 * @return void
 	 */
 	private function hit( $cache_entry ) {
+		/**
+		 * Handle max age for the Cache Control header. If the expiry is set to "infinite" (zero / 0), then we set a not
+		 * so infinite time in the future.
+		 *
+		 * Otherwise, the max age will be when the cache entry expires.
+		 */
+		$max_age = $cache_entry->expiry;
+		if ( 0 === $max_age ) {
+			$max_age = time() * DAY_IN_SECONDS;
+		}
+
 		$headers = array_merge(
 			$cache_entry->headers,
 			[
-				'Last-Modified'      => gmdate( 'D, d M Y H:i:s', $cache_entry->lastmodified ) . ' GMT',
+				'Cache-Control'      => sprintf( 'max-age=%d', $max_age ),
+				'Last-Modified'      => sprintf( '%s GMT', gmdate( 'D, d M Y H:i:s', $cache_entry->lastmodified ) ),
 				'X-DarkMatter-Cache' => 'HIT',
 			]
 		);
