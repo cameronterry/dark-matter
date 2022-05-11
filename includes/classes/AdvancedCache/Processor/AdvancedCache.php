@@ -18,20 +18,6 @@ use DarkMatter\AdvancedCache\Data\WordPressResponse;
  */
 class AdvancedCache {
 	/**
-	 * Request details.
-	 *
-	 * @var Visitor
-	 */
-	private $requester = null;
-
-	/**
-	 * Response.
-	 *
-	 * @var WordPressResponse
-	 */
-	private $response = null;
-
-	/**
 	 * Variant key, as determined by processing all the policies.
 	 *
 	 * @var string
@@ -42,8 +28,8 @@ class AdvancedCache {
 	 * Constructor
 	 */
 	public function __construct() {
-		$this->requester = new Visitor( $_SERVER, $_COOKIE );
-		$request = new Request( $this->requester->full_url );
+		$visitor = new Visitor( $_SERVER, $_COOKIE );
+		$request = new Request( $visitor->full_url );
 
 		// @todo Policies with a response ("maintenance page" example).
 		// @todo Policy response when cache not found ("always serve from cache" example).
@@ -54,7 +40,7 @@ class AdvancedCache {
 		// @todo Instruction to find and replace a piece of content.
 		// @todo Instruction to append content.
 
-		if ( $this->requester->is_cacheable() && ! $this->requester->is_wp_logged_in ) {
+		if ( $visitor->is_cacheable() && ! $visitor->is_wp_logged_in ) {
 			/**
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
 			 * WordPress.
@@ -68,7 +54,7 @@ class AdvancedCache {
 			 * Here means there was no current cache entry. Therefore we do a "lookup" to generate a new cache entry
 			 * with a response.
 			 */
-			$this->lookup( $request );
+			$this->lookup( $request, $visitor->full_url );
 		}
 	}
 
@@ -105,11 +91,12 @@ class AdvancedCache {
 	/**
 	 * Handle a response.
 	 *
-	 * @param Request $request Request Data object.
+	 * @param Request $request  Request Data object.
+	 * @param string  $full_url Full URL of the current request.
 	 * @return void
 	 */
-	private function lookup( $request ) {
-		$this->response = new WordPressResponse( $this->requester->full_url, $this->variant, $request );
-		$this->response->register();
+	private function lookup( $request, $full_url ) {
+		$response = new WordPressResponse( $full_url, $this->variant, $request );
+		$response->register();
 	}
 }
