@@ -47,6 +47,7 @@ class AdvancedCache {
 
 		// @todo Policies with a response ("maintenance page" example).
 		// @todo Policy response when cache not found ("always serve from cache" example).
+		// @todo Policy for WordPress session cookies.
 
 		// @todo Instructions processor.
 		// @todo Instruction to update content with supplied body.
@@ -58,8 +59,8 @@ class AdvancedCache {
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
 			 * WordPress.
 			 */
-			$cache_entry = $this->requester->cache_get( $this->variant );
-			if ( ! empty( $cache_entry->headers ) && ! $cache_entry->has_expired() ) {
+			$cache_entry = $request->get_variant( $this->variant );
+			if ( ! empty( $cache_entry ) && ! $cache_entry->has_expired() ) {
 				$this->hit( $cache_entry );
 			}
 

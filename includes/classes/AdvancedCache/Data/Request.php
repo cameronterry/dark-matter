@@ -32,6 +32,13 @@ class Request implements Storeable {
 	public $expiry = -1;
 
 	/**
+	 * Full URL of the Request.
+	 *
+	 * @var string
+	 */
+	public $full_url = '';
+
+	/**
 	 * Note on the latest instruction received and processed.
 	 *
 	 * @var int
@@ -59,6 +66,7 @@ class Request implements Storeable {
 	 */
 	public function __construct( $full_url = '' ) {
 		$this->cache_key = md5( $full_url );
+		$this->full_url  = $full_url;
 
 		/**
 		 * Retrieve from cache if possible.
@@ -97,6 +105,29 @@ class Request implements Storeable {
 		$this->expiry      = $obj->expiry;
 		$this->instruction = $obj->instruction;
 		$this->variants    = $obj->variants;
+	}
+
+	/**
+	 * Retrieve a cache entry for the Request.
+	 *
+	 * @param string $key Key of variant to request. If provided, then `null` can be returned to denote a variant is not found.
+	 * @return CacheEntry|null CacheEntry on success. Null otherwise.
+	 */
+	public function get_variant( $key = '' ) {
+		if ( ! empty( $key ) && ! array_key_exists( $key, $this->variants ) ) {
+			return null;
+		}
+
+		/**
+		 * Find a cache entry and ensure it does exist. Headers and other properties will be empty if there is not an
+		 * entry stored in cache.
+		 */
+		$cache_entry = new CacheEntry( $this->full_url, $key );
+		if ( ! empty( $cache_entry->headers ) ) {
+			return $cache_entry;
+		}
+
+		return null;
 	}
 
 	/**

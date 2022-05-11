@@ -119,17 +119,6 @@ class Visitor {
 	}
 
 	/**
-	 * Retrieve a Cache Entry for the current request.
-	 *
-	 * @param string $variant_key Variant key.
-	 * @return CacheEntry
-	 */
-	public function cache_get( $variant_key = '' ) {
-		$entry = new CacheEntry( $this->full_url, $variant_key );
-		return $entry;
-	}
-
-	/**
 	 * Determine if the request is can be cached.
 	 *
 	 * @return bool True that request can be cached. False otherwise.
