@@ -4,6 +4,7 @@
  *
  * @package DarkMatter\AdvancedCache
  */
+
 namespace DarkMatter\Interfaces;
 
 use DarkMatter\AdvancedCache\Data\Request;

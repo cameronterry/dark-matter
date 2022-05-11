@@ -4,6 +4,7 @@
  *
  * @package DarkMatter\AdvancedCache
  */
+
 namespace DarkMatter\AdvancedCache\Data;
 
 use DarkMatter\Interfaces\Storeable;
@@ -13,6 +14,8 @@ use DarkMatter\Interfaces\Storeable;
  */
 class Request implements Storeable {
 	/**
+	 * Cache key.
+	 *
 	 * @var string
 	 */
 	public $cache_key = '';
@@ -78,7 +81,9 @@ class Request implements Storeable {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Convert the Request to JSON.
+	 *
+	 * @return string JSON string of the Request.
 	 */
 	public function to_json() {
 		return wp_json_encode(
@@ -92,7 +97,10 @@ class Request implements Storeable {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Populate this Request with the data from JSON.
+	 *
+	 * @param string $json JSON string to extract the data from.
+	 * @return void
 	 */
 	public function from_json( $json = '' ) {
 		if ( empty( $json ) ) {
@@ -131,7 +139,9 @@ class Request implements Storeable {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Save the Request object.
+	 *
+	 * @return bool True on success. False otherwise.
 	 */
 	public function save() {
 		return wp_cache_set( $this->cache_key, $this->to_json(), 'dark-matter-fpc-request' );

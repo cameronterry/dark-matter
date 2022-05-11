@@ -4,6 +4,7 @@
  *
  * @package DarkMatter\AdvancedCache
  */
+
 namespace DarkMatter\AdvancedCache\Processor;
 
 use DarkMatter\AdvancedCache\Data\CacheEntry;
@@ -93,6 +94,9 @@ class Visitor {
 
 	/**
 	 * Constructor
+	 *
+	 * @param array $data    Server data, usually provided by `$_SERVER`.
+	 * @param array $cookies Cookies data.
 	 */
 	public function __construct( $data = [], $cookies = [] ) {
 		/**
@@ -132,8 +136,8 @@ class Visitor {
 			[
 				'GET'  => true,
 				'HEAD' => true,
-			] 
-		) || ! empty( $_POST ) ) {
+			]
+		) || ! empty( $_POST ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Missing
 			return false;
 		}
 

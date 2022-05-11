@@ -4,6 +4,7 @@
  *
  * @package DarkMatter\AdvancedCache
  */
+
 namespace DarkMatter\AdvancedCache\Processor;
 
 use DarkMatter\AdvancedCache\Data\Request;
@@ -13,6 +14,11 @@ use DarkMatter\Interfaces\Policy;
  * Class Policies
  */
 class Policies {
+	/**
+	 * Can cache after processing all the policies.
+	 *
+	 * @var bool
+	 */
 	private $can_cache = true;
 
 	/**

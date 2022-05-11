@@ -21,6 +21,7 @@ interface Storeable {
 	/**
 	 * Converts the provided JSON into the current object (if valid).
 	 *
+	 * @param string $json JSON as string.
 	 * @return mixed
 	 */
 	public function from_json( $json = '' );

@@ -68,7 +68,7 @@ class AdvancedCache {
 	/**
 	 * Handle a Cache "hit".
 	 *
-	 * @param CacheEntry $cache_entry
+	 * @param CacheEntry $cache_entry Cache Entry object and details.
 	 * @return void
 	 */
 	private function hit( $cache_entry ) {
@@ -98,7 +98,7 @@ class AdvancedCache {
 		// @todo Instruction to append content.
 
 		$this->do_headers( $headers );
-		die( $cache_entry->body );
+		die( $cache_entry->body ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**

@@ -4,6 +4,7 @@
  *
  * @package DarkMatter
  */
+
 namespace DarkMatter\AdvancedCache\Data;
 
 /**
@@ -41,6 +42,8 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	public $lastmodified = 0;
 
 	/**
+	 * Cache key based on the URL.
+	 *
 	 * @var string
 	 */
 	private $url_key = '';
@@ -78,7 +81,10 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Populate this Cache Entry with the data from JSON.
+	 *
+	 * @param string $json JSON string to extract the data from.
+	 * @return void
 	 */
 	public function from_json( $json = '' ) {
 		if ( empty( $json ) ) {
@@ -114,7 +120,9 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	}
 
 	/**
-	 * @inheritDoc
+	 * Convert the Cache Entry to JSON.
+	 *
+	 * @return string JSON string of the Cache Entry.
 	 */
 	public function to_json() {
 		return wp_json_encode(
@@ -123,12 +131,14 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 				'body'         => $this->body,
 				'expiry'       => $this->expiry,
 				'lastmodified' => $this->lastmodified,
-			] 
+			]
 		);
 	}
 
 	/**
-	 * @inheritdoc
+	 * Save the cache entry.
+	 *
+	 * @return string|false URL key on success. False otherwise.
 	 */
 	public function save() {
 		/**

@@ -19,13 +19,15 @@ class Response {
 	public $body = '';
 
 	/**
-	 * Full URl.
+	 * Full URL.
 	 *
 	 * @var string
 	 */
 	public $full_url = '';
 
 	/**
+	 * Headers.
+	 *
 	 * @var array
 	 */
 	public $headers = [];
