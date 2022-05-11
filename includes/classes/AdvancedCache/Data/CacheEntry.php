@@ -71,24 +71,14 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	}
 
 	/**
-     * @inheritDoc
-     */
-    public function to_json() {
-        return wp_json_encode( [
-			'headers' => $this->headers,
-			'body'    => $this->body,
-		] );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function from_json( $json = '' ) {
+	 * @inheritDoc
+	 */
+	public function from_json( $json = '' ) {
 		if ( empty( $json ) ) {
 			return;
 		}
 
-        $obj = json_decode( $json );
+		$obj = json_decode( $json );
 
 		if ( isset( $obj->headers ) && is_array( $obj->headers ) ) {
 			$this->headers = $obj->headers;
@@ -97,6 +87,16 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 		if ( isset( $obj->body ) ) {
 			$this->body = $obj->body;
 		}
+	}
+
+	/**
+     * @inheritDoc
+     */
+    public function to_json() {
+        return wp_json_encode( [
+			'headers' => $this->headers,
+			'body'    => $this->body,
+		] );
     }
 
 	/**
