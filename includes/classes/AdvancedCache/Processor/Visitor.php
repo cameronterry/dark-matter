@@ -119,34 +119,12 @@ class Visitor {
 	}
 
 	/**
-	 * Cache the supplied HTML.
-	 *
-	 * @param string $body The body of the request which is to be cached.
-	 * @return bool
-	 */
-	public function cache( $body = '' ) {
-		/**
-		 * Create a new CacheEntry object.
-		 */
-		$entry = new CacheEntry( $this->full_url );
-
-		/**
-		 * Set the body and headers.
-		 */
-		$entry->body    = $body;
-		$entry->headers = headers_list();
-
-		return $entry->save();
-	}
-
-	/**
 	 * Retrieve a Cache Entry for the current request.
 	 *
 	 * @param string $variant_key Variant key.
 	 * @return CacheEntry
 	 */
 	public function cache_get( $variant_key = '' ) {
-		// @todo check expiry time from CacheEntry.
 		$entry = new CacheEntry( $this->full_url, $variant_key );
 		return $entry;
 	}
