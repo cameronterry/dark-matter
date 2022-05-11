@@ -276,7 +276,7 @@ class Visitor {
 		/**
 		 * Setup the full URL.
 		 */
-		$this->full_url = $protocol . $host . '/' . $this->path;
+		$this->full_url = $host . '/' . $this->path;
 
 		/**
 		 * Get the HTTP Method.
