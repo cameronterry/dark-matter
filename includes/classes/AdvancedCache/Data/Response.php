@@ -122,7 +122,14 @@ class Response {
 		$entry->body    = $this->body;
 		$entry->headers = $this->headers;
 
-		// @todo expiry time.
+		/**
+		 * Adjust the time a response is cached for.
+		 *
+		 * @param integer    $ttl   Time To Live / expiry time (defaults to 5 minutes from time of execution).
+		 * @param CacheEntry $entry CacheEntry object.
+		 */
+		$entry->expiry = apply_filters( 'darkmatter.advancedcache.response.expiry', time() + 5 * MINUTE_IN_SECONDS, $entry );
+
 		// @todo Policy configuration for expiry time ("pages are until updated", "archives are every 10mins", "homepage every five mins", etc.).
 
 		/**
