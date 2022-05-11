@@ -67,7 +67,7 @@ class AdvancedCache {
 			 * WordPress.
 			 */
 			$cache_entry = $this->requester->cache_get( $this->variant );
-			if ( ! empty( $cache_entry->headers ) ) {
+			if ( ! empty( $cache_entry->headers ) && ! $cache_entry->has_expired() ) {
 				$this->hit( $cache_entry );
 			}
 
