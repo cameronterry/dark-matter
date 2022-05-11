@@ -45,14 +45,6 @@ class AdvancedCache {
 		$this->requester = new Visitor( $_SERVER, $_COOKIE );
 		$request = new Request( $this->requester->full_url );
 
-		/**
-		 * Process the policies.
-		 */
-		$policies = new Policies( $request, $this->requester );
-
-		$this->variant = $policies->get_variant();
-		$request->is_cacheable = $policies->can_cache();
-
 		// @todo Policies with a response ("maintenance page" example).
 		// @todo Policy response when cache not found ("always serve from cache" example).
 
