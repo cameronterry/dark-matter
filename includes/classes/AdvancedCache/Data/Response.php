@@ -108,27 +108,23 @@ class Response {
 	}
 
 	/**
+	 * Store the current response in cache.
+	 *
+	 * @param integer $expiry Expiry time, in Unix epoch, for the cache entry.
 	 * @return bool|string Cache key when stored successfully. False otherwise.
 	 */
-	public function cache() {
+	public function cache( $expiry = 0 ) {
 		/**
 		 * Create a new CacheEntry object.
 		 */
 		$entry = new CacheEntry( $this->full_url, $this->variant );
 
 		/**
-		 * Set the body and headers.
+		 * Set the properties.
 		 */
 		$entry->body    = $this->body;
+		$entry->expiry  = $expiry;
 		$entry->headers = $this->headers;
-
-		/**
-		 * Adjust the time a response is cached for.
-		 *
-		 * @param integer    $ttl   Time To Live / expiry time (defaults to 5 minutes from time of execution).
-		 * @param CacheEntry $entry CacheEntry object.
-		 */
-		$entry->expiry = apply_filters( 'darkmatter.advancedcache.response.expiry', time() + 5 * MINUTE_IN_SECONDS, $entry );
 
 		// @todo Policy configuration for expiry time ("pages are until updated", "archives are every 10mins", "homepage every five mins", etc.).
 
