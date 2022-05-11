@@ -35,11 +35,6 @@ class AdvancedCache {
 		// @todo Policy response when cache not found ("always serve from cache" example).
 		// @todo Policy for WordPress session cookies.
 
-		// @todo Instructions processor.
-		// @todo Instruction to update content with supplied body.
-		// @todo Instruction to find and replace a piece of content.
-		// @todo Instruction to append content.
-
 		if ( $visitor->is_cacheable() && ! $visitor->is_wp_logged_in ) {
 			/**
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
@@ -83,6 +78,11 @@ class AdvancedCache {
 				'X-DarkMatter-Cache' => 'HIT',
 			]
 		);
+
+		// @todo Instructions processor.
+		// @todo Instruction to update content with supplied body.
+		// @todo Instruction to find and replace a piece of content.
+		// @todo Instruction to append content.
 
 		$this->do_headers( $headers );
 		die( $cache_entry->body );
