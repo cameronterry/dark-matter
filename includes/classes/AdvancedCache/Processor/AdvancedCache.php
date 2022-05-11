@@ -75,6 +75,7 @@ class AdvancedCache {
 		$headers = array_merge(
 			$cache_entry->headers,
 			[
+				'Last-Modified'      => gmdate( 'D, d M Y H:i:s', $cache_entry->lastmodified ) . ' GMT',
 				'X-DarkMatter-Cache' => 'HIT',
 			]
 		);
