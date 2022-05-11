@@ -93,7 +93,14 @@ class WordPressResponse extends Response implements Registerable {
 		 * @return bool True is cacheable. False otherwise.
 		 */
 		if ( apply_filters( 'darkmatter.advancedcache.response.is_cacheable', $this->is_cacheable(), $this ) ) {
-			$this->cache();
+			/**
+			 * Adjust the time a response is cached for.
+			 *
+			 * @param integer           $ttl      Time To Live / expiry time (defaults to 5 minutes from time of execution).
+			 * @param WordPressResponse $response Response object.
+			 */
+			$expiry = apply_filters( 'darkmatter.advancedcache.response.expiry', time() + 5 * MINUTE_IN_SECONDS, $this );
+			$this->cache( $expiry );
 
 			/**
 			 * Indicate the request has been set dynamically.
