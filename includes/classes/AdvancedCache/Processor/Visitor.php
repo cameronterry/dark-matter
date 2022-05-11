@@ -127,7 +127,13 @@ class Visitor {
 		/**
 		 * Only cache GET and HEAD requests.
 		 */
-		if ( ! array_key_exists( $this->method, [ 'GET' => true, 'HEAD' => true ] ) || ! empty( $_POST ) ) {
+		if ( ! array_key_exists(
+			$this->method,
+			[
+				'GET'  => true,
+				'HEAD' => true,
+			] 
+		) || ! empty( $_POST ) ) {
 			return false;
 		}
 
@@ -183,23 +189,19 @@ class Visitor {
 			 * Add support for Cloudflare.
 			 */
 			$ip = $this->data['HTTP_CF_CONNECTING_IP'];
-		}
-		else if ( ! empty( $this->data['HTTP_CLIENT_IP'] ) ) {
+		} elseif ( ! empty( $this->data['HTTP_CLIENT_IP'] ) ) {
 			$ip = $this->data['HTTP_CLIENT_IP'];
-		}
-		else if ( ! empty( $this->data['HTTP_X_REAL_IP'] ) ) {
+		} elseif ( ! empty( $this->data['HTTP_X_REAL_IP'] ) ) {
 			/**
 			 * Check for the IP from an atypical header from a reverse proxy.
 			 */
 			$ip = $this->data['HTTP_X_REAL_IP'];
-		}
-		else if ( ! empty( $this->data['HTTP_X_FORWARDED_FOR'] ) ) {
+		} elseif ( ! empty( $this->data['HTTP_X_FORWARDED_FOR'] ) ) {
 			/**
 			 * Check for the IP from another atypical header from a reverse proxy.
 			 */
 			$ip = $this->data['HTTP_X_FORWARDED_FOR'];
-		}
-		else if ( ! empty( $this->data['REMOTE_ADDR'] ) ) {
+		} elseif ( ! empty( $this->data['REMOTE_ADDR'] ) ) {
 			$ip = $this->data['REMOTE_ADDR'];
 		}
 
@@ -246,7 +248,7 @@ class Visitor {
 		/**
 		 * Retrieve the domain name and removing any superfluous chars.
 		 */
-		$host = rtrim( trim( $this->get_data_by_key( 'HTTP_HOST' ) ), '/' );
+		$host         = rtrim( trim( $this->get_data_by_key( 'HTTP_HOST' ) ), '/' );
 		$this->domain = $host;
 
 		/**

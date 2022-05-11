@@ -131,7 +131,7 @@ class Response {
 		/**
 		 * Cache the output and store the variant key with the Request Data.
 		 */
-		$variant_key = $entry->save();
+		$variant_key                             = $entry->save();
 		$this->request->variants[ $variant_key ] = true;
 
 		return $variant_key;

@@ -43,25 +43,25 @@ class WordPressResponse extends Response implements Registerable {
 		$queried_object = get_queried_object();
 
 		if ( is_a( $queried_object, '\WP_Post' ) ) {
-			$data['archive'] = false;
+			$data['archive']  = false;
 			$data['singular'] = true;
 
 			$data['post_author'] = $queried_object->post_author;
-			$data['post_date'] = $queried_object->post_date;
-			$data['post_id'] = $queried_object->ID;
-			$data['post_name'] = $queried_object->post_name;
+			$data['post_date']   = $queried_object->post_date;
+			$data['post_id']     = $queried_object->ID;
+			$data['post_name']   = $queried_object->post_name;
 			$data['post_parent'] = $queried_object->post_parent;
-			$data['post_type'] = $queried_object->post_type;
+			$data['post_type']   = $queried_object->post_type;
 		} elseif ( is_a( $queried_object, '\WP_Term' ) ) {
-			$data['archive'] = true;
+			$data['archive']  = true;
 			$data['singular'] = false;
 
-			$data['term_id'] = $queried_object->term_id;
+			$data['term_id']     = $queried_object->term_id;
 			$data['term_parent'] = $queried_object->parent;
-			$data['term_slug'] = $queried_object->slug;
-			$data['term_tax'] = $queried_object->taxonomy;
+			$data['term_slug']   = $queried_object->slug;
+			$data['term_tax']    = $queried_object->taxonomy;
 		} elseif ( is_a( $queried_object, 'WP_User' ) ) {
-			$data['archive'] = true;
+			$data['archive']  = true;
 			$data['singular'] = false;
 		}
 

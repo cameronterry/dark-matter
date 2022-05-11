@@ -18,7 +18,7 @@
  * Make sure Object Cache is available.
  */
 global $wp_object_cache;
-if ( ! is_a( $wp_object_cache, 'WP_Object_Cache' ) && ! ! include_once( WP_CONTENT_DIR . '/object-cache.php' ) ) {
+if ( ! is_a( $wp_object_cache, 'WP_Object_Cache' ) && ! ! include_once WP_CONTENT_DIR . '/object-cache.php' ) {
 	wp_cache_init();
 	wp_cache_add_global_groups(
 		[
