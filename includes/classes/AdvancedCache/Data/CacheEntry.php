@@ -24,7 +24,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	 *
 	 * @var int
 	 */
-	private $expiry = 0;
+	public $expiry = 0;
 
 	/**
 	 * Request Headers.
@@ -87,6 +87,19 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 		if ( isset( $obj->body ) ) {
 			$this->body = $obj->body;
 		}
+
+		if ( isset( $obj->expiry ) ) {
+			$this->expiry = $obj->expiry;
+		}
+	}
+
+	/**
+	 * Checks if the CacheEntry has expired.
+	 *
+	 * @return bool True if expired. False otherwise.
+	 */
+	public function has_expired() {
+		return ( 0 !== $this->expiry && $this->expiry <= time() );
 	}
 
 	/**
@@ -96,6 +109,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
         return wp_json_encode( [
 			'headers' => $this->headers,
 			'body'    => $this->body,
+			'expiry'  => $this->expiry,
 		] );
     }
 
@@ -108,22 +122,5 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 		}
 
 		return false;
-	}
-
-	/**
-	 * Set when the Cache Entry is to expiry.
-	 *
-	 * @param integer $time Unix epoch of the expiry time for the entry. Zero equates to no expiry.
-	 * @return void
-	 */
-	public function set_expiry( $time = 0 ) {
-		/**
-		 * Only set an Expiry if it's in the future or zero (0 - no expiry).
-		 */
-		if ( 0 !== $time && time() > $time ) {
-			return;
-		}
-
-		$this->expiry = $time;
 	}
 }
