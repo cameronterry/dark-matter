@@ -34,6 +34,13 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	public $headers = [];
 
 	/**
+	 * Last time the Cache Entry was modified.
+	 *
+	 * @var int
+	 */
+	public $lastmodified = 0;
+
+	/**
 	 * @var string
 	 */
 	private $url_key = '';
@@ -91,6 +98,10 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 		if ( isset( $obj->expiry ) ) {
 			$this->expiry = $obj->expiry;
 		}
+
+		if ( isset( $obj->lastmodified ) ) {
+			$this->lastmodified = $obj->lastmodified;
+		}
 	}
 
 	/**
@@ -107,9 +118,10 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
      */
     public function to_json() {
         return wp_json_encode( [
-			'headers' => $this->headers,
-			'body'    => $this->body,
-			'expiry'  => $this->expiry,
+			'headers'      => $this->headers,
+			'body'         => $this->body,
+			'expiry'       => $this->expiry,
+			'lastmodified' => $this->lastmodified,
 		] );
     }
 
@@ -117,6 +129,14 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	 * @inheritdoc
 	 */
 	public function save() {
+		/**
+		 * Update the Last Modified property.
+		 */
+		$this->lastmodified = time();
+
+		/**
+		 * Attempt to cache the entry.
+		 */
 		if ( wp_cache_set( $this->url_key, $this->to_json(), 'dark-matter-fpc-cacheentries' ) ) {
 			return $this->url_key;
 		}
