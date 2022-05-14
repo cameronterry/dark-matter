@@ -66,7 +66,7 @@ class AdvancedCache {
 		// @todo Policy response when cache not found ("always serve from cache" example).
 		// @todo Policy for WordPress session cookies.
 
-		if ( $visitor->is_cacheable() && ! $visitor->is_wp_logged_in ) {
+		if ( $visitor->is_cacheable() ) {
 			/**
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
 			 * WordPress.

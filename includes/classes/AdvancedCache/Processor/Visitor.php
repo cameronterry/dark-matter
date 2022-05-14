@@ -51,13 +51,6 @@ class Visitor {
 	public $full_url = '';
 
 	/**
-	 * Is an administrator or an editor logged in?
-	 *
-	 * @var bool
-	 */
-	public $is_wp_logged_in = false;
-
-	/**
 	 * HTTP Method.
 	 *
 	 * @var string
@@ -210,26 +203,6 @@ class Visitor {
 		}
 
 		return filter_var( $ip, FILTER_VALIDATE_IP );
-	}
-
-	/**
-	 * Handle specific data which is cookie related, such as whether administrators and editors are logged in / etc.
-	 *
-	 * @return void
-	 */
-	private function set_cookie_data() {
-		foreach ( $this->cookies as $cookie => $value ) {
-			if (
-				'wp' === substr( $cookie, 0, 2 )
-				||
-				'wordpress' === substr( $cookie, 0, 9 )
-				||
-				'comment_author' === substr( $cookie, 0, 14 )
-			) {
-				$this->is_wp_logged_in = true;
-				return;
-			}
-		}
 	}
 
 	/**
