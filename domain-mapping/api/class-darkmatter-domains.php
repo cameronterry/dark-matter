@@ -463,9 +463,9 @@ class DarkMatter_Domains {
 		 * When the domain is retrieved _and_ the domain is a "primary domain", then double-check that the primary
 		 * domain cache is set for it as well.
 		 */
-		$primary_cache_key = $_domain->blog_id . '-primary';
-		if ( $_domain->is_primary && empty( wp_cache_get( $primary_cache_key, 'dark-matter' ) ) ) {
-			wp_cache_set( $primary_cache_key, $_domain->domain, 'dark-matter' );
+		$primary_cache_key = $_domain['blog_id'] . '-primary';
+		if ( $_domain['is_primary'] && empty( wp_cache_get( $primary_cache_key, 'dark-matter' ) ) ) {
+			wp_cache_set( $primary_cache_key, $_domain['domain'], 'dark-matter' );
 		}
 
 		/**
