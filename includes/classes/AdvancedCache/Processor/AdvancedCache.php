@@ -11,6 +11,7 @@ use DarkMatter\AdvancedCache\Data\ResponseEntry;
 use DarkMatter\AdvancedCache\Data\Request;
 use DarkMatter\AdvancedCache\Data\WordPressResponse;
 use DarkMatter\AdvancedCache\Policies\AbstractPolicy;
+use DarkMatter\AdvancedCache\Policies\Maintenance;
 use DarkMatter\AdvancedCache\Policies\WordPressSession;
 
 /**
@@ -142,6 +143,7 @@ class AdvancedCache {
 	 */
 	public function inbuilt_policies( $polices = [] ) {
 		$polices[] = WordPressSession::class;
+		$polices[] = Maintenance::class;
 
 		return $polices;
 	}
