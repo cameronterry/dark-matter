@@ -7,6 +7,7 @@
 
 namespace DarkMatter\AdvancedCache\Policies;
 
+use DarkMatter\AdvancedCache\Data\CacheEntry;
 use DarkMatter\AdvancedCache\Data\Request;
 use DarkMatter\AdvancedCache\Processor\Visitor;
 
@@ -17,7 +18,7 @@ abstract class AbstractPolicy {
 	/**
 	 * Response.
 	 *
-	 * @var string
+	 * @var CacheEntry
 	 */
 	protected $response = '';
 
@@ -49,7 +50,7 @@ abstract class AbstractPolicy {
 	 * Provide a response for a policy. If a value is provided, then this will override the response and stop any
 	 * processing by any matching request.
 	 *
-	 * @return string
+	 * @return CacheEntry
 	 */
 	public function response() {
 		return $this->response;
