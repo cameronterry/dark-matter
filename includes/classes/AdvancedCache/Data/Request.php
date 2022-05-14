@@ -9,6 +9,8 @@ namespace DarkMatter\AdvancedCache\Data;
 
 use DarkMatter\Interfaces\Storeable;
 
+// @todo Add the ability to override the storage, defaults to Object Cache API.
+
 /**
  * Class Request
  */

@@ -7,6 +7,8 @@
 
 namespace DarkMatter\AdvancedCache\Data;
 
+// @todo Add the ability to override the storage, defaults to Object Cache API.
+
 /**
  * Class ResponseEntry
  *
