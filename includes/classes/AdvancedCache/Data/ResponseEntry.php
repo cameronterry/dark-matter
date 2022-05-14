@@ -116,7 +116,14 @@ class ResponseEntry implements \DarkMatter\Interfaces\Storeable {
 	 * @return bool True if expired. False otherwise.
 	 */
 	public function has_expired() {
-		return ( 0 !== $this->expiry && $this->expiry <= time() );
+		/**
+		 * Response Entry has expired check. Permits the expiry to be overridden.
+		 *
+		 * @param bool          $has_expired True if the Response Entry has expired. False otherwise.
+		 * @param ResponseEntry $entry       ResponseEntry.
+		 * @return bool True if expired, false otherwise.
+		 */
+		return apply_filters( 'darkmatter.advancedcache.response.has_expired', ( 0 !== $this->expiry && $this->expiry <= time() ), $this );
 	}
 
 	/**

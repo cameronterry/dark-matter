@@ -35,7 +35,7 @@ abstract class AbstractPolicy {
 	 * @param Request $request Details on the request.
 	 * @param Visitor $visitor Details on the visitor.
 	 */
-	public abstract function __construct( Request $request, Visitor $visitor );
+	abstract public function __construct( Request $request, Visitor $visitor );
 
 	/**
 	 * Prevent matching requests being cached.
