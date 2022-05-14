@@ -173,6 +173,7 @@ class AdvancedCache {
 		 * @return array
 		 */
 		$policies = apply_filters( 'darkmatter.advancedcache.policies', [] );
+		$variants = [];
 
 		foreach ( $policies as $policy ) {
 			/**
@@ -189,6 +190,22 @@ class AdvancedCache {
 			if ( $obj->stop_cache() || ! empty( $obj->response() ) ) {
 				return $obj;
 			}
+
+			/**
+			 * Another policy type is to create variants.
+			 */
+			$variant = $obj->variant();
+			if ( ! empty( $variant ) ) {
+				$variants[] = $variant;
+			}
+		}
+
+		/**
+		 * Combined variants from all the processed policies and create a single key. This allows multiple policies to
+		 * build up different variants based on different rules.
+		 */
+		if ( ! empty( $variants ) ) {
+			$this->variant = md5( join( '-', $variants ) );
 		}
 
 		return null;

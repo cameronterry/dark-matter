@@ -30,6 +30,13 @@ abstract class AbstractPolicy {
 	protected $stop_cache = false;
 
 	/**
+	 * Introduce a unique variant.
+	 *
+	 * @var string
+	 */
+	protected $variant = '';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Request $request Details on the request.
@@ -54,5 +61,14 @@ abstract class AbstractPolicy {
 	 */
 	public function response() {
 		return $this->response;
+	}
+
+	/**
+	 * Provide a variant key that will seek and / or store different Response Entries.
+	 *
+	 * @return string
+	 */
+	public function variant() {
+		return $this->variant;
 	}
 }
