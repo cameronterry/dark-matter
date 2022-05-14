@@ -140,6 +140,8 @@ class AdvancedCache {
 	 * @return array
 	 */
 	public function inbuilt_policies( $polices = [] ) {
+		$polices[] = WordPressSession::class;
+
 		return $polices;
 	}
 
