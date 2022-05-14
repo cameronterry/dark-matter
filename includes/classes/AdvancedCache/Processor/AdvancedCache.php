@@ -10,6 +10,8 @@ namespace DarkMatter\AdvancedCache\Processor;
 use DarkMatter\AdvancedCache\Data\CacheEntry;
 use DarkMatter\AdvancedCache\Data\Request;
 use DarkMatter\AdvancedCache\Data\WordPressResponse;
+use DarkMatter\AdvancedCache\Policies\AbstractPolicy;
+use DarkMatter\AdvancedCache\Policies\WordPressSession;
 
 /**
  * Class Request
@@ -28,8 +30,37 @@ class AdvancedCache {
 	 * Constructor
 	 */
 	public function __construct() {
+		/**
+		 * Get the details of request and visitor.
+		 */
 		$visitor = new Visitor( $_SERVER, $_COOKIE );
 		$request = new Request( $visitor->full_url );
+
+		/**
+		 * Attach the in-built policies.
+		 */
+		add_filter( 'darkmatter.advancedcache.policies', [ $this, 'inbuilt_policies' ], 10, 1 );
+
+		$policy = $this->policies( $request, $visitor );
+		if ( ! empty( $policy ) ) {
+			/**
+			 * Check if the policy is to the stop cache. If so, then we can stop execution here.
+			 */
+			if ( $policy->stop_cache() ) {
+				header( 'X-DarkMatter-Cache: DYNAMIC' );
+				header( 'X-DarkMatter-Reason: Policy-Stop' );
+				return;
+			}
+
+			/**
+			 * See if the policy has a response.
+			 */
+			$policy_entry = $policy->response();
+			if ( $policy_entry instanceof CacheEntry ) {
+				$policy_entry->headers['X-DarkMatter-Reason'] = 'Policy-Response';
+				$this->hit( $policy_entry );
+			}
+		}
 
 		// @todo Policies with a response ("maintenance page" example).
 		// @todo Policy response when cache not found ("always serve from cache" example).
@@ -102,6 +133,17 @@ class AdvancedCache {
 	}
 
 	/**
+	 * Attach the in-built policies for processing.
+	 *
+	 * @param array $polices Policies as part of the filter.
+	 *
+	 * @return array
+	 */
+	public function inbuilt_policies( $polices = [] ) {
+		return $polices;
+	}
+
+	/**
 	 * Handle a response.
 	 *
 	 * @param Request $request  Request Data object.
@@ -111,5 +153,42 @@ class AdvancedCache {
 	private function lookup( $request, $full_url ) {
 		$response = new WordPressResponse( $full_url, $this->variant, $request );
 		$response->register();
+	}
+
+	/**
+	 * Process the Policies for the cache and determine if any prevent caching or have a response.
+	 *
+	 * @param Request $request Details on the request.
+	 * @param Visitor $visitor Details on the visitor.
+	 *
+	 * @return mixed|null If matching policy found, will return a class that inherits AbstractPolicy. Null otherwise.
+	 */
+	private function policies( $request, $visitor ) {
+		/**
+		 * An array of Policy classes which can be instantiated and then run in Advanced Cache.
+		 *
+		 * @param array $policies Policies to be applied.
+		 * @return array
+		 */
+		$policies = apply_filters( 'darkmatter.advancedcache.policies', [] );
+
+		foreach ( $policies as $policy ) {
+			/**
+			 * Make sure it is actually a policy.
+			 */
+			$obj = new $policy( $request, $visitor );
+			if ( ! $obj instanceof AbstractPolicy ) {
+				continue;
+			}
+
+			/**
+			 * Execute the policy. If the policy instructs the cache to stop or has a response, then return it.
+			 */
+			if ( $obj->stop_cache() || ! empty( $obj->response() ) ) {
+				return $obj;
+			}
+		}
+
+		return null;
 	}
 }
