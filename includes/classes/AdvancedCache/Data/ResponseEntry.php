@@ -8,11 +8,11 @@
 namespace DarkMatter\AdvancedCache\Data;
 
 /**
- * Class CacheEntry
+ * Class ResponseEntry
  *
  * @since 3.0.0
  */
-class CacheEntry implements \DarkMatter\Interfaces\Storeable {
+class ResponseEntry implements \DarkMatter\Interfaces\Storeable {
 	/**
 	 * Request Body - can be plaintext, HTML, JSON, or XML.
 	 *
@@ -21,7 +21,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	public $body = '';
 
 	/**
-	 * Unix epoch of when the cache entry expires. Zero (0) equates to "no expiry".
+	 * Unix epoch of when the response entry expires. Zero (0) equates to "no expiry".
 	 *
 	 * @var int
 	 */
@@ -35,14 +35,14 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	public $headers = [];
 
 	/**
-	 * Last time the Cache Entry was modified.
+	 * Last time the Response Entry was modified.
 	 *
 	 * @var int
 	 */
 	public $lastmodified = 0;
 
 	/**
-	 * Cache key based on the URL.
+	 * Response key based on the URL.
 	 *
 	 * @var string
 	 */
@@ -70,7 +70,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 		/**
 		 * Attempt to retrieve the entry from Object Cache.
 		 */
-		$entry = wp_cache_get( $this->url_key, 'dark-matter-fpc-cacheentries' );
+		$entry = wp_cache_get( $this->url_key, 'dark-matter-fpc-responses' );
 
 		/**
 		 * Parse the entry into JSON.
@@ -111,7 +111,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 	}
 
 	/**
-	 * Checks if the CacheEntry has expired.
+	 * Checks if the ResponseEntry has expired.
 	 *
 	 * @return bool True if expired. False otherwise.
 	 */
@@ -149,7 +149,7 @@ class CacheEntry implements \DarkMatter\Interfaces\Storeable {
 		/**
 		 * Attempt to cache the entry.
 		 */
-		if ( wp_cache_set( $this->url_key, $this->to_json(), 'dark-matter-fpc-cacheentries' ) ) {
+		if ( wp_cache_set( $this->url_key, $this->to_json(), 'dark-matter-fpc-responses' ) ) {
 			return $this->url_key;
 		}
 

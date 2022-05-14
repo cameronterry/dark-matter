@@ -22,7 +22,7 @@ if ( ! is_a( $wp_object_cache, 'WP_Object_Cache' ) && ! ! include_once WP_CONTEN
 	wp_cache_init();
 	wp_cache_add_global_groups(
 		[
-			'dark-matter-fpc-cacheentries',
+			'dark-matter-fpc-responses',
 			'dark-matter-fpc-request',
 		]
 	);

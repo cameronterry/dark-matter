@@ -7,7 +7,7 @@
 
 namespace DarkMatter\AdvancedCache\Processor;
 
-use DarkMatter\AdvancedCache\Data\CacheEntry;
+use DarkMatter\AdvancedCache\Data\ResponseEntry;
 
 /**
  * Class Request

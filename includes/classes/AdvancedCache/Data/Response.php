@@ -117,9 +117,9 @@ class Response {
 	 */
 	public function cache( $expiry = 0 ) {
 		/**
-		 * Create a new CacheEntry object.
+		 * Create a new ResponseEntry object.
 		 */
-		$entry = new CacheEntry( $this->full_url, $this->variant );
+		$entry = new ResponseEntry( $this->full_url, $this->variant );
 
 		/**
 		 * Set the properties.

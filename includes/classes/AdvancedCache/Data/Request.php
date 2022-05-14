@@ -119,7 +119,8 @@ class Request implements Storeable {
 	 * Retrieve a cache entry for the Request.
 	 *
 	 * @param string $key Key of variant to request. If provided, then `null` can be returned to denote a variant is not found.
-	 * @return CacheEntry|null CacheEntry on success. Null otherwise.
+	 *
+	 * @return ResponseEntry|null ResponseEntry on success. Null otherwise.
 	 */
 	public function get_variant( $key = '' ) {
 		if ( ! empty( $key ) && ! array_key_exists( $key, $this->variants ) ) {
@@ -130,7 +131,7 @@ class Request implements Storeable {
 		 * Find a cache entry and ensure it does exist. Headers and other properties will be empty if there is not an
 		 * entry stored in cache.
 		 */
-		$cache_entry = new CacheEntry( $this->full_url, $key );
+		$cache_entry = new ResponseEntry( $this->full_url, $key );
 		if ( ! empty( $cache_entry->headers ) ) {
 			return $cache_entry;
 		}

@@ -7,7 +7,7 @@
 
 namespace DarkMatter\AdvancedCache\Processor;
 
-use DarkMatter\AdvancedCache\Data\CacheEntry;
+use DarkMatter\AdvancedCache\Data\ResponseEntry;
 use DarkMatter\AdvancedCache\Data\Request;
 use DarkMatter\AdvancedCache\Data\WordPressResponse;
 use DarkMatter\AdvancedCache\Policies\AbstractPolicy;
@@ -56,7 +56,7 @@ class AdvancedCache {
 			 * See if the policy has a response.
 			 */
 			$policy_entry = $policy->response();
-			if ( $policy_entry instanceof CacheEntry ) {
+			if ( $policy_entry instanceof ResponseEntry ) {
 				$policy_entry->headers['X-DarkMatter-Reason'] = 'Policy-Response';
 				$this->hit( $policy_entry );
 			}
@@ -99,7 +99,8 @@ class AdvancedCache {
 	/**
 	 * Handle a Cache "hit".
 	 *
-	 * @param CacheEntry $cache_entry Cache Entry object and details.
+	 * @param ResponseEntry $cache_entry Cache Entry object and details.
+	 *
 	 * @return void
 	 */
 	private function hit( $cache_entry ) {
