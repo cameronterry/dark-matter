@@ -97,27 +97,27 @@ class AdvancedCache {
 	/**
 	 * Handle a Cache "hit".
 	 *
-	 * @param ResponseEntry $cache_entry Cache Entry object and details.
+	 * @param ResponseEntry $response_entry Cache Entry object and details.
 	 *
 	 * @return void
 	 */
-	private function hit( $cache_entry ) {
+	private function hit( $response_entry ) {
 		/**
 		 * Handle max age for the Cache Control header. If the expiry is set to "infinite" (zero / 0), then we set a not
 		 * so infinite time in the future.
 		 *
 		 * Otherwise, the max age will be when the cache entry expires.
 		 */
-		$max_age = $cache_entry->expiry;
+		$max_age = $response_entry->expiry;
 		if ( 0 === $max_age ) {
 			$max_age = time() * DAY_IN_SECONDS;
 		}
 
 		$headers = array_merge(
-			$cache_entry->headers,
+			$response_entry->headers,
 			[
 				'Cache-Control'      => sprintf( 'max-age=%d', $max_age ),
-				'Last-Modified'      => sprintf( '%s GMT', gmdate( 'D, d M Y H:i:s', $cache_entry->lastmodified ) ),
+				'Last-Modified'      => sprintf( '%s GMT', gmdate( 'D, d M Y H:i:s', $response_entry->lastmodified ) ),
 				'X-DarkMatter-Cache' => 'HIT',
 			]
 		);
@@ -128,7 +128,7 @@ class AdvancedCache {
 		// @todo Instruction to append content.
 
 		$this->do_headers( $headers );
-		die( $cache_entry->body ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		die( $response_entry->body ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
