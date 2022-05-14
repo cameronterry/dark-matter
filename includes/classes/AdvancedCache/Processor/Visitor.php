@@ -111,7 +111,6 @@ class Visitor {
 		 */
 		if ( ! empty( $cookies ) ) {
 			$this->cookies = $cookies;
-			$this->set_cookie_data();
 		}
 	}
 
