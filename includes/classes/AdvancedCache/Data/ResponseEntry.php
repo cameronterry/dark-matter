@@ -7,6 +7,8 @@
 
 namespace DarkMatter\AdvancedCache\Data;
 
+use DarkMatter\Interfaces\Storeable;
+
 // @todo Add the ability to override the storage, defaults to Object Cache API.
 
 /**
@@ -14,7 +16,7 @@ namespace DarkMatter\AdvancedCache\Data;
  *
  * @since 3.0.0
  */
-class ResponseEntry implements \DarkMatter\Interfaces\Storeable {
+class ResponseEntry implements Storeable {
 	/**
 	 * Request Body - can be plaintext, HTML, JSON, or XML.
 	 *
