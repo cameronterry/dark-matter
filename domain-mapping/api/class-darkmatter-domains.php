@@ -457,7 +457,8 @@ class DarkMatter_Domains {
 			 * Update the primary cache if applicable.
 			 */
 			if ( $_domain->is_primary ) {
-				wp_cache_set( $_domain->blog_id . '-primary', 'dark-matter' );
+				$primary_cache_key = $_domain->blog_id . '-primary';
+				wp_cache_set( $primary_cache_key, $_domain->domain, 'dark-matter' );
 			}
 
 			/**
