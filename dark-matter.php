@@ -45,6 +45,7 @@ define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 wp_cache_add_global_groups(
 	[
 		'dark-matter',
+		'dark-matter-fpc-instructions',
 		'dark-matter-fpc-responses',
 		'dark-matter-fpc-request',
 	]
