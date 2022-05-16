@@ -61,30 +61,50 @@ class Instructions {
 	 * @return string Response after all perpetual instructions have run.
 	 */
 	public function body( $response = '' ) {
-		foreach ( $this->instructions as $instruction_row ) {
-			/**
-			 * Ensure the class is provided.
-			 */
-			if ( ! isset( $instruction_row['class'] ) || ! class_exists( $instruction_row['class'] ) ) {
-				continue;
-			}
-
-			/**
-			 * Instantiate the instruction.
-			 */
-			$instruction = new $instruction_row['class']( $this->request, $this->visitor );
-
-			/**
-			 * Ensure the instruction is 1) an instruction, and 2) perpetual.
-			 */
-			if ( ! $instruction instanceof AbstractInstruction && InstructionType::Perpetual !== $instruction->type ) {
-				continue;
-			}
-
-			$response = $instruction->do( $response );
+		foreach ( $this->instructions as $instruction ) {
+			$response = self::run(
+				$response,
+				$instruction,
+				InstructionType::Ephemeral,
+				$this->request,
+				$this->visitor
+			);
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Instruction runner.
+	 *
+	 * @param string  $body        Response to be processed.
+	 * @param string  $instruction Namespaced class to be called, inherited from AbstractInstruction.
+	 * @param int     $type        InstructionType.
+	 * @param Request $request     Details of the request.
+	 * @param Visitor $visitor     Details of the visitor.
+	 * @return string
+	 */
+	public static function run( $body, $instruction, $type, $request, $visitor ) {
+		/**
+		 * Ensure the class is provided.
+		 */
+		if ( ! isset( $instruction ) || ! class_exists( $instruction ) ) {
+			return '';
+		}
+
+		/**
+		 * Instantiate the instruction.
+		 */
+		$obj = new $instruction( $request, $visitor );
+
+		/**
+		 * Ensure the instruction is 1) an instruction, and 2) perpetual.
+		 */
+		if ( ! $obj instanceof AbstractInstruction && $type !== $obj->type ) {
+			return '';
+		}
+
+		return $obj->do( $body );
 	}
 
 	/**
