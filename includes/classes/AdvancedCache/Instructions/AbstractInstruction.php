@@ -35,7 +35,7 @@ abstract class AbstractInstruction {
 	 *
 	 * @var int
 	 */
-	protected $type = InstructionType::Ephemeral;
+	public $type = InstructionType::Ephemeral;
 
 	/**
 	 * Constructor.
@@ -51,7 +51,7 @@ abstract class AbstractInstruction {
 	 * @param ResponseEntry $response_entry
 	 * @return void
 	 */
-	public function appendAfter( $response_entry ) {
+	protected function appendAfter( $response_entry ) {
 		$this->complete( $response_entry );
 	}
 
@@ -71,12 +71,20 @@ abstract class AbstractInstruction {
 	}
 
 	/**
+	 * Perform the instruction changes to the HTML body.
+	 *
+	 * @param string $body Response body prior to instruction being run.
+	 * @return string Response body after instruction is run.
+	 */
+	abstract public function do( $body );
+
+	/**
 	 * Replace the tag with the content.
 	 *
 	 * @param ResponseEntry $response_entry
 	 * @return void
 	 */
-	public function replace( $response_entry ) {
+	protected function replace( $response_entry ) {
 		$tag = sanitize_title_with_dashes( $this->tag );
 
 		$response_entry->body = str_replace( "<!--instruction:{$tag}-->", $this->content, $response_entry->body );
