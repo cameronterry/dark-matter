@@ -1,6 +1,6 @@
 <?php
 /**
- * Processor for handling perpetual instructions on responses.
+ * Processor for running instructions on responses.
  *
  * @package DarkMatter\AdvancedCache
  */
@@ -12,9 +12,9 @@ use DarkMatter\AdvancedCache\Instructions\AbstractInstruction;
 use DarkMatter\Enums\InstructionType;
 
 /**
- * Class InstructionsPerpetual
+ * Class Instructions
  */
-class InstructionsPerpetual {
+class Instructions {
 	/**
 	 * Instructions.
 	 *
@@ -90,9 +90,9 @@ class InstructionsPerpetual {
 	/**
 	 * Return the Singleton Instance of the class.
 	 *
-	 * @since 2.0.0
+	 * @return Instructions
+	 *@since 2.0.0
 	 *
-	 * @return InstructionsPerpetual
 	 */
 	public static function instance() {
 		static $instance = false;

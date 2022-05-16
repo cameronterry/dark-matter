@@ -7,7 +7,7 @@
 
 namespace DarkMatter\AdvancedCache\Data;
 
-use DarkMatter\AdvancedCache\Processor\InstructionsPerpetual;
+use DarkMatter\AdvancedCache\Processor\Instructions;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -114,7 +114,7 @@ class WordPressResponse extends Response implements Registerable {
 			header( 'X-DarkMatter-Cache: MISS' );
 		}
 
-		return InstructionsPerpetual::instance()->body( $output );
+		return Instructions::instance()->body( $output );
 	}
 
 	/**
