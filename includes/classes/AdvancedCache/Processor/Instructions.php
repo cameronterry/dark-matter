@@ -62,13 +62,17 @@ class Instructions {
 	 */
 	public function body( $response = '' ) {
 		foreach ( $this->instructions as $instruction ) {
-			$response = self::run(
+			$instruction_response = self::run(
 				$response,
 				$instruction,
 				InstructionType::Ephemeral,
 				$this->request,
 				$this->visitor
 			);
+
+			if ( ! empty( $instruction_response ) ) {
+				$response = $instruction_response;
+			}
 		}
 
 		return $response;
