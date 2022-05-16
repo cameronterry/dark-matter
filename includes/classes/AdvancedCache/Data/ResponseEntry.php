@@ -7,6 +7,8 @@
 
 namespace DarkMatter\AdvancedCache\Data;
 
+use DarkMatter\AdvancedCache\Instructions\AbstractInstruction;
+use DarkMatter\Enums\InstructionType;
 use DarkMatter\Interfaces\Storeable;
 
 // @todo Add the ability to override the storage, defaults to Object Cache API.
@@ -131,7 +133,48 @@ class ResponseEntry implements Storeable {
 	 * @return string
 	 */
 	public function get_body() {
-		return $this->body;
+		$body = $this->body;
+
+		if ( ! empty( $this->instructions ) ) {
+			/**
+			 * Run each instruction, from first to last, removing the instruction from the array to denote that it has run
+			 * and isn't needed anymore.
+			 */
+			while ( $instruction = array_shift( $this->instructions ) ) {
+				/**
+				 * Ensure the class is provided.
+				 */
+				if ( ! isset( $instruction_row['class'] ) || ! class_exists( $instruction_row['class'] ) ) {
+					continue;
+				}
+
+				/**
+				 * Instantiate the instruction.
+				 */
+				$instruction = new $instruction_row['class']( $this->request, $this->visitor );
+
+				/**
+				 * Ensure the instruction is 1) an instruction, and 2) perpetual.
+				 */
+				if ( ! $instruction instanceof AbstractInstruction && InstructionType::Ephemeral !== $instruction->type ) {
+					continue;
+				}
+
+				$response = $instruction->do( $response );
+			}
+
+			/**
+			 * Update the body with the changes from the instructions.
+			 */
+			$this->body = $body;
+
+			/**
+			 * Save the changes to the body to the cache. This will also update the instructions to zero again.
+			 */
+			$this->save();
+		}
+
+		return $body;
 	}
 
 	/**
