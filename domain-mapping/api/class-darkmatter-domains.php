@@ -434,7 +434,14 @@ class DarkMatter_Domains {
 		 * Attempt to retrieve the domain from cache.
 		 */
 		$cache_key = md5( $fqdn );
-		$_domain   = (object) wp_cache_get( $cache_key, 'dark-matter' );
+
+		/**
+		 * Make sure if the cache returns a value, that it's set to an object rather than an array.
+		 */
+		$_domain = wp_cache_get( $cache_key, 'dark-matter' );
+		if ( is_array( $_domain ) ) {
+			$_domain = (object) $_domain;
+		}
 
 		/**
 		 * If the domain cannot be retrieved from cache, attempt to retrieve it
