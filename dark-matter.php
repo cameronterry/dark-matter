@@ -3,7 +3,7 @@
  * Plugin Name: Dark Matter
  * Plugin URI: https://github.com/cameronterry/dark-matter
  * Description: A highly opinionated domain mapping plugin for WordPress.
- * Version: 2.3.1
+ * Version: 2.3.2
  * Author: Cameron Terry
  * Author URI: https://github.com/cameronterry/
  * Text Domain: dark-matter
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '2.3.1' );
+define( 'DM_VERSION', '2.3.2' );
 define( 'DM_DB_VERSION', '20210517' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
