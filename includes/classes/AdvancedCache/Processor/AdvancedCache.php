@@ -21,11 +21,25 @@ use DarkMatter\AdvancedCache\Policies\WordPressSession;
  */
 class AdvancedCache {
 	/**
+	 * Details of the request.
+	 *
+	 * @var Request
+	 */
+	private $request;
+
+	/**
 	 * Variant key, as determined by processing all the policies.
 	 *
 	 * @var string
 	 */
 	private $variant = '';
+
+	/**
+	 * Details of the visitor.
+	 *
+	 * @var Visitor
+	 */
+	private $visitor;
 
 	/**
 	 * Constructor
@@ -34,15 +48,15 @@ class AdvancedCache {
 		/**
 		 * Get the details of request and visitor.
 		 */
-		$visitor = new Visitor( $_SERVER, $_COOKIE );
-		$request = new Request( $visitor->full_url );
+		$this->visitor = new Visitor( $_SERVER, $_COOKIE );
+		$this->request = new Request( $this->visitor->full_url );
 
 		/**
 		 * Attach the in-built policies.
 		 */
 		add_filter( 'darkmatter.advancedcache.policies', [ $this, 'inbuilt_policies' ], 10, 1 );
 
-		$policy = $this->policies( $request, $visitor );
+		$policy = $this->policies( $this->request, $this->visitor );
 		if ( ! empty( $policy ) ) {
 			/**
 			 * Check if the policy is to the stop cache. If so, then we can stop execution here.
@@ -63,12 +77,12 @@ class AdvancedCache {
 			}
 		}
 
-		if ( $visitor->is_cacheable() ) {
+		if ( $this->visitor->is_cacheable() ) {
 			/**
 			 * See if there is a "hit" on the cache entry. If so, then use this to serve the response and skip
 			 * WordPress.
 			 */
-			$response_entry = $request->get_variant( $this->variant );
+			$response_entry = $this->request->get_variant( $this->variant );
 
 			if ( ! empty( $response_entry ) && ! $response_entry->has_expired() ) {
 				$this->hit( $response_entry );
@@ -78,7 +92,7 @@ class AdvancedCache {
 			 * Here means there was no current cache entry. Therefore we do a "lookup" to generate a new cache entry
 			 * with a response.
 			 */
-			$this->lookup( $request, $visitor->full_url );
+			$this->lookup( $this->request, $this->visitor->full_url );
 		}
 	}
 
