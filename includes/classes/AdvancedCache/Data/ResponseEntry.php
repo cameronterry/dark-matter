@@ -39,6 +39,13 @@ class ResponseEntry implements Storeable {
 	public $headers = [];
 
 	/**
+	 * Instructions to be run on the response entry.
+	 *
+	 * @var array
+	 */
+	private $instructions = [];
+
+	/**
 	 * Last time the Response Entry was modified.
 	 *
 	 * @var int
@@ -109,6 +116,10 @@ class ResponseEntry implements Storeable {
 			$this->expiry = $obj->expiry;
 		}
 
+		if ( isset( $obj->instructions ) ) {
+			$this->instructions = $obj->instructions;
+		}
+
 		if ( isset( $obj->lastmodified ) ) {
 			$this->lastmodified = $obj->lastmodified;
 		}
@@ -150,6 +161,7 @@ class ResponseEntry implements Storeable {
 				'headers'      => $this->headers,
 				'body'         => $this->body,
 				'expiry'       => $this->expiry,
+				'instructions' => $this->instructions,
 				'lastmodified' => $this->lastmodified,
 			]
 		);
