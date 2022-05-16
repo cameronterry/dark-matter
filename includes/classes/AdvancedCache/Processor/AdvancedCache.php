@@ -136,13 +136,8 @@ class AdvancedCache {
 			]
 		);
 
-		// @todo Instructions processor.
-		// @todo Instruction to update content with supplied body.
-		// @todo Instruction to find and replace a piece of content.
-		// @todo Instruction to append content.
-
 		$this->do_headers( $headers );
-		die( Instructions::instance()->body( $response_entry->get_body() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		die( Instructions::instance()->body( $response_entry->get_body( $this->request, $this->visitor ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
