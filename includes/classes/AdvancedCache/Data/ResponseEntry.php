@@ -8,6 +8,8 @@
 namespace DarkMatter\AdvancedCache\Data;
 
 use DarkMatter\AdvancedCache\Instructions\AbstractInstruction;
+use DarkMatter\AdvancedCache\Processor\Instructions;
+use DarkMatter\AdvancedCache\Processor\Visitor;
 use DarkMatter\Enums\InstructionType;
 use DarkMatter\Interfaces\Storeable;
 
@@ -130,9 +132,11 @@ class ResponseEntry implements Storeable {
 	/**
 	 * Get the body, either as-is or with instructions.
 	 *
+	 * @param Request $request Details of the request.
+	 * @param Visitor $visitor Details of the visitor.
 	 * @return string
 	 */
-	public function get_body() {
+	public function get_body( $request, $visitor ) {
 		$body = $this->body;
 
 		if ( ! empty( $this->instructions ) ) {
@@ -141,26 +145,17 @@ class ResponseEntry implements Storeable {
 			 * and isn't needed anymore.
 			 */
 			while ( $instruction = array_shift( $this->instructions ) ) {
-				/**
-				 * Ensure the class is provided.
-				 */
-				if ( ! isset( $instruction_row['class'] ) || ! class_exists( $instruction_row['class'] ) ) {
-					continue;
+				$instruction_body = Instructions::run(
+					$body,
+					$instruction,
+					InstructionType::Ephemeral,
+					$request,
+					$visitor
+				);
+
+				if ( ! empty( $instruction_body ) ) {
+					$body = $instruction_body;
 				}
-
-				/**
-				 * Instantiate the instruction.
-				 */
-				$instruction = new $instruction_row['class']( $this->request, $this->visitor );
-
-				/**
-				 * Ensure the instruction is 1) an instruction, and 2) perpetual.
-				 */
-				if ( ! $instruction instanceof AbstractInstruction && InstructionType::Ephemeral !== $instruction->type ) {
-					continue;
-				}
-
-				$response = $instruction->do( $response );
 			}
 
 			/**
