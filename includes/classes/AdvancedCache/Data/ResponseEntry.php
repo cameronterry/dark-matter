@@ -115,6 +115,15 @@ class ResponseEntry implements Storeable {
 	}
 
 	/**
+	 * Get the body, either as-is or with instructions.
+	 *
+	 * @return string
+	 */
+	public function get_body() {
+		return $this->body;
+	}
+
+	/**
 	 * Checks if the ResponseEntry has expired.
 	 *
 	 * @return bool True if expired. False otherwise.

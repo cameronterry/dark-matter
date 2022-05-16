@@ -128,7 +128,7 @@ class AdvancedCache {
 		// @todo Instruction to append content.
 
 		$this->do_headers( $headers );
-		die( InstructionsPerpetual::instance()->body( $response_entry->body ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		die( InstructionsPerpetual::instance()->body( $response_entry->get_body() ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
 
 	/**
