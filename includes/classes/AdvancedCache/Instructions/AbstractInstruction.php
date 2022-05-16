@@ -48,26 +48,16 @@ abstract class AbstractInstruction {
 	/**
 	 * After the instruction content after the Instruction comment.
 	 *
-	 * @param ResponseEntry $response_entry
-	 * @return void
+	 * @param string $body
+	 * @return string
 	 */
-	protected function appendAfter( $response_entry ) {
-		$this->complete( $response_entry );
-	}
+	protected function appendAfter( $body ) {
+		$tag = sprintf(
+			'<!--instruction:%s-->',
+			sanitize_title_with_dashes( $this->tag )
+		);
 
-	/**
-	 * Complete the instruction.
-	 *
-	 * @param ResponseEntry $response_entry
-	 * @return void
-	 */
-	private function complete( $response_entry ) {
-		/**
-		 * Ephemeral instructions are to update the Response entry.
-		 */
-		if ( InstructionType::Ephemeral === $this->type ) {
-			$response_entry->save();
-		}
+		return str_replace( $tag, $tag . $this->content, $body );
 	}
 
 	/**
@@ -81,20 +71,18 @@ abstract class AbstractInstruction {
 	/**
 	 * Replace the tag with the content.
 	 *
-	 * @param ResponseEntry $response_entry
-	 * @return void
+	 * @param string $body
+	 * @return string
 	 */
-	protected function replace( $response_entry ) {
+	protected function replace( $body ) {
 		$tag = sanitize_title_with_dashes( $this->tag );
 
-		$response_entry->body = str_replace( "<!--instruction:{$tag}-->", $this->content, $response_entry->body );
+		return str_replace( "<!--instruction:{$tag}-->", $this->content, $body );
 
 //		$response_entry->body = preg_replace(
 //			"#<!--instruction:{$tag}-->(?s:.*?)<!--\/instruction:{$tag}-->#",
 //			$this->content,
 //			$response_entry->body
 //		);
-
-		$this->complete( $response_entry );
 	}
 }
