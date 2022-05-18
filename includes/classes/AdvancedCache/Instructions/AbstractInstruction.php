@@ -21,7 +21,7 @@ abstract class AbstractInstruction {
 	 *
 	 * @var string
 	 */
-	private $content = '';
+	protected $content = '';
 
 	/**
 	 * The tag which is used for processing the instruction.
@@ -52,12 +52,8 @@ abstract class AbstractInstruction {
 	 * @return string
 	 */
 	protected function appendAfter( $body ) {
-		$tag = sprintf(
-			'<!--instruction:%s-->',
-			sanitize_title_with_dashes( $this->tag )
-		);
-
-		return str_replace( $tag, $tag . $this->content, $body );
+		$tag = \preg_replace('/[^a-zA-Z]+/', '', $this->tag );
+		return str_replace( "<!--instruction:{$tag}-->", $tag . $this->content, $body );
 	}
 
 	/**
@@ -75,8 +71,7 @@ abstract class AbstractInstruction {
 	 * @return string
 	 */
 	protected function replace( $body ) {
-		$tag = sanitize_title_with_dashes( $this->tag );
-
+		$tag = \preg_replace('/[^a-zA-Z]+/', '', $this->tag );
 		return str_replace( "<!--instruction:{$tag}-->", $this->content, $body );
 
 //		$response_entry->body = preg_replace(
