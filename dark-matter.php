@@ -65,3 +65,13 @@ new DM_PluginUpdate();
  * Domain Mapping module.
  */
 require DM_PATH . '/domain-mapping/domain-mapping.php';
+
+/**
+ * Advanced Cache module.
+ *
+ * https://mappeddomain1.test/2022/05/04/megadeth/
+ */
+if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
+	$invalidation = new \DarkMatter\AdvancedCache\Admin\Invalidation();
+	$invalidation->register();
+}
