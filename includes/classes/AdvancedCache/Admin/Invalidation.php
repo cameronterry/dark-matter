@@ -106,10 +106,29 @@ class Invalidation implements Registerable {
 		 */
 		add_action( 'clean_post_cache', [ $this, 'post' ], 999, 1 );
 
+		add_action( 'clean_term_cache', [ $this, 'term' ], 999, 2 );
+
 		/**
 		 * Prioritise invalidating cache entries before attempting to instantly cache again.
 		 */
 		add_action( 'shutdown', [ $this, 'invalidation' ], 10 );
+	}
+
+	/**
+	 * Add URLs, if applicable, for terms.
+	 *
+	 * @param array  $ids      Term IDs.
+	 * @param string $taxonomy Taxonomy.
+	 *
+	 * @return void
+	 */
+	public function term( $ids = [], $taxonomy = '' ) {
+		foreach ( $ids as $id ) {
+			$url = get_term_link( intval( $id ), $taxonomy );
+			if ( ! is_wp_error( $url ) ) {
+				$this->urls[] = $url;
+			}
+		}
 	}
 
 	/**
