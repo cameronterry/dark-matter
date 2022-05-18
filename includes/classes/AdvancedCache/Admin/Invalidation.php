@@ -70,7 +70,7 @@ class Invalidation implements Registerable {
 	 * @param bool     $update  New or update.
 	 * @return void
 	 */
-	public function post( $post_id = 0, $post = null, $update = false ) {
+	public function post( $post_id = 0, $post = null ) {
 		if ( empty( $post ) ) {
 			$post = get_post( $post_id );
 		}
@@ -104,7 +104,7 @@ class Invalidation implements Registerable {
 		 * Handle post creation and edits. We attempt to run this as late as possible to ensure plugins have a change to
 		 * make changes before add entries to invalidate the cache.
 		 */
-		add_action( 'clean_post_cache', [ $this, 'post' ], 999, 1 );
+		add_action( 'clean_post_cache', [ $this, 'post' ], 999, 2 );
 
 		add_action( 'clean_term_cache', [ $this, 'term' ], 999, 2 );
 
