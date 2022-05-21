@@ -47,7 +47,7 @@ class ResponseEntry implements Storeable {
 	 *
 	 * @var array
 	 */
-	private $instructions = [];
+	public $instructions = [];
 
 	/**
 	 * Last time the Response Entry was modified.
