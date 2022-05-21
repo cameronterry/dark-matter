@@ -5,7 +5,9 @@
  * @package DarkMatter
  */
 
-use DarkMatter\AdvancedCache\Processor\Instructions;
+namespace DarkMatter;
+
+use DarkMatter\Interfaces\Registerable;
 
 /**
  * Class DarkMatter.
@@ -16,6 +18,30 @@ class DarkMatter {
 	 */
 	public function __construct() {
 
+	}
+
+	/**
+	 * Register a set of classes used by the Dark Matter plugin.
+	 *
+	 * @param array $classes String of class names / namespaces to be instantiated.
+	 * @return array Array of the resultant objects.
+	 */
+	private function class_register( $classes = [] ) {
+		if ( empty( $classes ) ) {
+			return [];
+		}
+
+
+		$objs = [];
+		foreach ( $classes as $class ) {
+			$obj = new $class();
+
+			if ( $obj instanceof Registerable ) {
+				$obj->register();
+			}
+		}
+
+		return $objs;
 	}
 
 	/**
