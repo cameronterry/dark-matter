@@ -29,7 +29,7 @@ class AdminBar implements Registerable {
 		 * Remote the protocol.
 		 */
 		$protocol = wp_parse_url( $url, PHP_URL_SCHEME );
-		return str_replace( $protocol, '', $url );
+		return trailingslashit( str_replace( "{$protocol}://", '', $url ) );
 	}
 
 	/**
