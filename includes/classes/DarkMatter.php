@@ -7,6 +7,7 @@
 
 namespace DarkMatter;
 
+use DarkMatter\AdvancedCache\Admin\AdminBar;
 use DarkMatter\AdvancedCache\Admin\Invalidation;
 use DarkMatter\Interfaces\Registerable;
 
@@ -58,6 +59,7 @@ class DarkMatter {
 	public function register_advancedcache() {
 		$this->class_register(
 			[
+				AdminBar::class,
 				Invalidation::class,
 			]
 		);
