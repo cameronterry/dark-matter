@@ -72,7 +72,7 @@ class AdminBar implements Registerable {
 			[
 				'id'     => 'dark-matter-advancedcache-clear',
 				'parent' => 'dark-matter-advancedcache',
-				'title'  => __( 'Clear Cache', 'dark-matter' ),
+				'title'  => __( 'Clear All Variants', 'dark-matter' ),
 			]
 		);
 	}
@@ -143,6 +143,25 @@ class AdminBar implements Registerable {
 		/**
 		 * Instructions information.
 		 */
+		$instruction_count = count( $response_entry->instructions );
+		$admin_bar->add_menu(
+			[
+				'id'     => 'dark-matter-ac-instructions',
+				'parent' => $id,
+				'title'  => wp_kses(
+					sprintf(
+						/* translators: %s: count of instructions. */
+						__( 'Instructions: %s to be run', 'dark-matter' ),
+						number_format_i18n( $instruction_count )
+					),
+					[
+						'span' => [
+							'class' => true,
+						],
+					]
+				),
+			]
+		);
 
 		/**
 		 * Action buttons for the admin / editor.
