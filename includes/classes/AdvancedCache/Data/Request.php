@@ -125,8 +125,16 @@ class Request implements Storeable {
 	 * @return ResponseEntry|null ResponseEntry on success. Null otherwise.
 	 */
 	public function get_variant( $key = '' ) {
-		if ( ! empty( $key ) && ! array_key_exists( $key, $this->variants ) ) {
-			return null;
+		if ( ! empty( $key ) ) {
+			$full_key = sprintf(
+				'%1$s-%2$s',
+				$this->cache_key,
+				$key
+			);
+
+			if ( ! array_key_exists( $full_key, $this->variants ) ) {
+				return null;
+			}
 		}
 
 		/**
