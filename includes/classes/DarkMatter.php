@@ -7,6 +7,7 @@
 
 namespace DarkMatter;
 
+use DarkMatter\AdvancedCache\Admin\Invalidation;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -17,7 +18,12 @@ class DarkMatter {
 	 * Constructor
 	 */
 	public function __construct() {
-
+		/**
+		 * Only register advanced cache if it is enabled.
+		 */
+		if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
+			$this->register_advancedcache();
+		}
 	}
 
 	/**
@@ -42,6 +48,19 @@ class DarkMatter {
 		}
 
 		return $objs;
+	}
+
+	/**
+	 * Register the classes for Advanced Cache.
+	 *
+	 * @return void
+	 */
+	public function register_advancedcache() {
+		$this->class_register(
+			[
+				Invalidation::class,
+			]
+		);
 	}
 
 	/**
