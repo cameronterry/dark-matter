@@ -114,7 +114,7 @@ class Request implements Storeable {
 		$this->data        = $obj->data;
 		$this->expiry      = $obj->expiry;
 		$this->instruction = $obj->instruction;
-		$this->variants    = $obj->variants;
+		$this->variants    = (array) $obj->variants;
 	}
 
 	/**
