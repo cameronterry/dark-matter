@@ -102,7 +102,11 @@ class AdminBar implements Registerable {
 			[
 				'id'     => $id,
 				'parent' => 'dark-matter-advancedcache',
-				'title'  => __( 'Variant: Default', 'dark-matter' ),
+				'title'  => sprintf(
+					/* translators: %s: Variant key. */
+					__( 'Variant: %s', 'dark-matter' ),
+					empty( $variant ) ? __( 'Default', 'dark-matter' ) : $variant
+				),
 			]
 		);
 
@@ -207,7 +211,8 @@ class AdminBar implements Registerable {
 		$this->menu_variant( $admin_bar, $request );
 
 		foreach ( $request->variants as $variant => $value ) {
-			$this->menu_variant( $admin_bar, $request, $variant );
+			$key = str_replace( strtok( $variant, '-' ) . '-', '', $variant );
+			$this->menu_variant( $admin_bar, $request, $key );
 		}
 	}
 
