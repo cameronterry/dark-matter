@@ -107,13 +107,25 @@ class AdminBar implements Registerable {
 		);
 
 		/**
-		 * Add the Expiry node.
+		 * Add timing related information.
 		 */
+		$admin_bar->add_node(
+			[
+				'id'     => $id . '-modified',
+				'parent' => $id,
+				'title'  => sprintf(
+					/* translators: %s: last modified time, in human readable (i.e. 5 minutes) */
+					__( 'Last Modified: %s ago', 'dark-matter' ),
+					human_time_diff( wp_date( 'U' ), $response_entry->lastmodified )
+				),
+			]
+		);
+
 		$expiry = __( 'None (Perpetual)', 'dark-matter' );
 		if ( time() > $response_entry->expiry ) {
 			$expiry = __( 'Expired', 'dark-matter' );
 		} elseif ( 0 < $response_entry->expiry ) {
-			$expiry = human_time_diff( $response_entry->expiry, wp_date( 'u' ) );
+			$expiry = human_time_diff( $response_entry->expiry, wp_date( 'U' ) );
 		}
 
 		$admin_bar->add_node(
@@ -128,9 +140,24 @@ class AdminBar implements Registerable {
 			]
 		);
 
+		/**
+		 * Instructions information.
+		 */
+
+		/**
+		 * Action buttons for the admin / editor.
+		 */
 		$admin_bar->add_node(
 			[
-				'id'     => $id . '-clear',
+				'id'     => $id . '-clear-instructions',
+				'parent' => $id,
+				'title'  => __( 'Clear Instructions', 'dark-matter' ),
+			]
+		);
+
+		$admin_bar->add_node(
+			[
+				'id'     => $id . '-clear-variant',
 				'parent' => $id,
 				'title'  => __( 'Clear Variant', 'dark-matter' ),
 			]
@@ -148,44 +175,7 @@ class AdminBar implements Registerable {
 		$this->menu_variant( $admin_bar, $request );
 
 		foreach ( $request->variants as $variant => $value ) {
-			/**
-			 * Get the response entry and ensure it hasn't been removed.
-			 */
-			$response_entry = $request->get_variant( $variant );
-			if ( empty( $response_entry ) ) {
-				continue;
-			}
-
-			$id = 'dark-matter-advancedcache-' . esc_attr( $variant );
-
-			$admin_bar->add_node(
-				[
-					'id'     => $id,
-					'parent' => 'dark-matter-advancedcache',
-					'title'  => sprintf(
-						/* translators: %s: variant name. */
-						__( 'Variant: %s', 'dark-matter' ),
-						$variant
-					),
-				]
-			);
-
-			$expiry = __( 'None (Perpetual)', 'dark-matter' );
-			if ( 0 < $response_entry->expiry ) {
-				$expiry = human_time_diff( $response_entry->expiry, wp_date( 'u' ) );
-			}
-
-			$admin_bar->add_node(
-				[
-					'id'     => $id . '-expiry',
-					'parent' => $id,
-					'title'  => sprintf(
-						/* translators: %s: expiry time, in human readable (i.e. 5 minutes) */
-						__( 'Expiry: %s', 'dark-matter' ),
-						$expiry
-					),
-				]
-			);
+			$this->menu_variant( $admin_bar, $request, $variant );
 		}
 	}
 
