@@ -149,8 +149,26 @@ class AdminBar implements Registerable {
 		 */
 		$admin_bar->add_node(
 			[
-				'id'     => $id . '-clear-instructions',
+				'id'     => $id . '-actions',
 				'parent' => $id,
+				'title'  => __( 'Actions', 'dark-matter' ),
+			]
+		);
+
+		if ( -1 !== $response_entry->expiry ) {
+			$admin_bar->add_node(
+				[
+					'id'     => $id . '-perpetual',
+					'parent' => $id . '-actions',
+					'title'  => __( 'Cache Perpetually', 'dark-matter' ),
+				]
+			);
+		}
+
+		$admin_bar->add_node(
+			[
+				'id'     => $id . '-clear-instructions',
+				'parent' => $id . '-actions',
 				'title'  => __( 'Clear Instructions', 'dark-matter' ),
 			]
 		);
@@ -158,7 +176,7 @@ class AdminBar implements Registerable {
 		$admin_bar->add_node(
 			[
 				'id'     => $id . '-clear-variant',
-				'parent' => $id,
+				'parent' => $id . '-actions',
 				'title'  => __( 'Clear Variant', 'dark-matter' ),
 			]
 		);
