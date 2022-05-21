@@ -100,7 +100,7 @@ class WordPressResponse extends Response implements Registerable {
 			 * @param integer           $ttl      Time To Live / expiry time (defaults to 5 minutes from time of execution).
 			 * @param WordPressResponse $response Response object.
 			 */
-			$expiry = apply_filters( 'darkmatter.advancedcache.response.expiry', time() + 5 * MINUTE_IN_SECONDS, $this );
+			$expiry = apply_filters( 'darkmatter.advancedcache.response.expiry', time() + DAY_IN_SECONDS, $this );
 			$this->cache( $expiry );
 
 			/**
