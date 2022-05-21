@@ -58,7 +58,34 @@ class AdminBar implements Registerable {
 			]
 		);
 
+		$this->menu_ttl( $admin_bar, $request );
 		$this->menu_variants( $admin_bar, $request );
+	}
+
+	/**
+	 * Handle the admin bar options for TTL.
+	 *
+	 * @param \WP_Admin_Bar $admin_bar Admin Bar.
+	 * @param Request       $request   Request.
+	 * @return void
+	 */
+	private function menu_ttl( $admin_bar, $request ) {
+		$when = __( 'None (Perpetual)', 'dark-matter' );
+		if ( 0 < $request->expiry ) {
+			$when = human_time_diff( wp_date( 'U' ), $request->expiry );
+		}
+
+		$admin_bar->add_node(
+			[
+				'id'     => 'dark-matter-advancedcache-ttl',
+				'parent' => 'dark-matter-advancedcache',
+				'title'  => sprintf(
+					/* translators: %s */
+					__( 'TTL: %s', 'dark-matter' ),
+					$when
+				),
+			]
+		);
 	}
 
 	/**
