@@ -115,8 +115,6 @@ class Instructions {
 	 * Return the Singleton Instance of the class.
 	 *
 	 * @return Instructions
-	 *@since 2.0.0
-	 *
 	 */
 	public static function instance() {
 		static $instance = false;
