@@ -148,17 +148,12 @@ class AdminBar implements Registerable {
 			[
 				'id'     => 'dark-matter-ac-instructions',
 				'parent' => $id,
-				'title'  => wp_kses(
+				'title'  => esc_html(
 					sprintf(
 						/* translators: %s: count of instructions. */
 						__( 'Instructions: %s to be run', 'dark-matter' ),
 						number_format_i18n( $instruction_count )
-					),
-					[
-						'span' => [
-							'class' => true,
-						],
-					]
+					)
 				),
 			]
 		);
