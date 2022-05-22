@@ -51,7 +51,7 @@ class AdvancedCache extends WP_CLI_Command {
 	 * Check and prepare the URL.
 	 *
 	 * @param string $url URL to be checked.
-	 * @return string Cache key ready URL on success. Empty string otherwise.
+	 * @return string URL that can be used to retrieve a Request object.
 	 */
 	private function check_url( $url = '' ) {
 		/**
@@ -61,7 +61,7 @@ class AdvancedCache extends WP_CLI_Command {
 			WP_CLI::error( __( 'Please provide a URL.', 'dark-matter' ) );
 		}
 
-		if ( ! filter_var( $url, FILTER_SANITIZE_URL ) ) {
+		if ( ! filter_var( $url, FILTER_VALIDATE_URL ) ) {
 			WP_CLI::error( __( 'URL is invalid.', 'dark-matter' ) );
 		}
 
@@ -97,7 +97,7 @@ class AdvancedCache extends WP_CLI_Command {
 	 * @throws Exception
 	 */
 	public function delete( $args, $assoc_args ) {
-
+		$url = $this->check_url( $args[0] );
 
 		$variant_key = '';
 		if ( ! empty( $args[1] ) ) {
