@@ -85,7 +85,8 @@ class ResponseEntry implements Storeable {
 		/**
 		 * Attempt to retrieve the entry from Object Cache.
 		 */
-		$entry = wp_cache_get( $this->url_key, 'dark-matter-fpc-responses' );
+		global $darkmatter_cache_storage;
+		$entry = $darkmatter_cache_storage->get( $this->url_key, 'dark-matter-fpc-responses', 'response' );
 
 		/**
 		 * Parse the entry into JSON.
@@ -219,7 +220,8 @@ class ResponseEntry implements Storeable {
 		/**
 		 * Attempt to cache the entry.
 		 */
-		if ( wp_cache_set( $this->url_key, $this->to_json(), 'dark-matter-fpc-responses' ) ) {
+		global $darkmatter_cache_storage;
+		if ( $darkmatter_cache_storage->set( $this->url_key, $this->to_json(), 'dark-matter-fpc-responses', 0, 'response' ) ) {
 			return $this->url_key;
 		}
 
