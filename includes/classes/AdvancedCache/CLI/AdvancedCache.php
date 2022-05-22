@@ -17,6 +17,37 @@ use WP_CLI_Command;
  */
 class AdvancedCache extends WP_CLI_Command {
 	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		/**
+		 * Define a global for the cache storage.
+		 */
+		global $darkmatter_cache_storage;
+
+		/**
+		 * Attempt to load any customisations.
+		 */
+		if ( defined( 'DARKMATTER_ADVANCEDCACHE_CUSTOM' ) ) {
+			$darkmatter_customisations_path = trailingslashit( DARKMATTER_ADVANCEDCACHE_CUSTOM );
+		} else {
+			$darkmatter_customisations_path = dirname( __FILE__ ) . '/mu-plugins/advanced-cache/dark-matter.php';
+		}
+
+		if ( file_exists( $darkmatter_customisations_path ) ) {
+			require_once $darkmatter_customisations_path;
+		}
+
+		/**
+		 * Check if the global has been setup and if it is inheriting `AbstractStorage`. If not, then use the default with
+		 * the plugin which utilises the Object Cache API.
+		 */
+		if ( empty( $darkmatter_cache_storage ) || ! $darkmatter_cache_storage instanceof \DarkMatter\AdvancedCache\Storage\AbstractStorage ) {
+			$darkmatter_cache_storage = new \DarkMatter\AdvancedCache\Storage\WPCacheStorage();
+		}
+	}
+
+	/**
 	 * Used to add this class to the available CLI commands.
 	 *
 	 * @return void
