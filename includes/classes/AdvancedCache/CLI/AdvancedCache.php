@@ -100,7 +100,7 @@ class AdvancedCache extends WP_CLI_Command {
 		if ( $response instanceof ResponseEntry && $response->delete() ) {
 			WP_CLI::success( __( 'Response entry has been deleted from cache.', 'dark-matter' ) );
 		} else {
-			WP_CLI::error( __( 'Could not delete response entry.', 'dark-matter' ) );
+			WP_CLI::error( __( 'Response entry could not be found. It is possibly already deleted.', 'dark-matter' ) );
 		}
 	}
 
