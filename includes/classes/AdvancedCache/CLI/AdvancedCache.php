@@ -48,6 +48,31 @@ class AdvancedCache extends WP_CLI_Command {
 	}
 
 	/**
+	 * Check and prepare the URL.
+	 *
+	 * @param string $url URL to be checked.
+	 * @return string Cache key ready URL on success. Empty string otherwise.
+	 */
+	private function check_url( $url = '' ) {
+		/**
+		 * Check we actually got a URL.
+		 */
+		if ( empty( $url ) ) {
+			WP_CLI::error( __( 'Please provide a URL.', 'dark-matter' ) );
+		}
+
+		if ( ! filter_var( $url, FILTER_SANITIZE_URL ) ) {
+			WP_CLI::error( __( 'URL is invalid.', 'dark-matter' ) );
+		}
+
+		/**
+		 * Remove the URL scheme.
+		 */
+		$protocol = wp_parse_url( $url, PHP_URL_SCHEME );
+		return str_replace( $protocol . '://', '', $url );
+	}
+
+	/**
 	 * Used to add this class to the available CLI commands.
 	 *
 	 * @return void
@@ -72,27 +97,12 @@ class AdvancedCache extends WP_CLI_Command {
 	 * @throws Exception
 	 */
 	public function delete( $args, $assoc_args ) {
-		/**
-		 * Check we actually got a URL.
-		 */
-		if ( empty( $args[0] ) ) {
-			WP_CLI::error( __( 'Please provide a URL.', 'dark-matter' ) );
-		}
 
-		if ( ! filter_var( $args[0], FILTER_SANITIZE_URL ) ) {
-			WP_CLI::error( __( 'URL is invalid.', 'dark-matter' ) );
-		}
 
 		$variant_key = '';
 		if ( ! empty( $args[1] ) ) {
 			$variant_key = $args[1];
 		}
-
-		/**
-		 * Remove the URL scheme.
-		 */
-		$protocol = wp_parse_url( $args[0], PHP_URL_SCHEME );
-		$url      = str_replace( $protocol . '://', '', $args[0] );
 
 		$request  = new Request( $url );
 		$response = $request->get_variant( $variant_key );
