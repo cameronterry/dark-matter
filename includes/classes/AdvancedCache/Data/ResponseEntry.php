@@ -102,8 +102,8 @@ class ResponseEntry implements Storeable {
 	 * @return bool
 	 */
 	public function delete() {
-		// TODO: Implement delete() method.
-		return false;
+		global $darkmatter_cache_storage;
+		return $darkmatter_cache_storage->delete( $this->url_key, 'dark-matter-fpc-responses', 'response' );
 	}
 
 	/**

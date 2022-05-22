@@ -88,6 +88,23 @@ class Request implements Storeable {
 	 * @return bool
 	 */
 	public function delete() {
+		/**
+		 * Delete all the variants.
+		 */
+		foreach ( $this->variants as $variant => $value ) {
+			$variant = $this->get_variant( $variant );
+
+			if ( $variant instanceof ResponseEntry ) {
+				$variant->delete();
+			}
+		}
+
+		/**
+		 * Delete the Request object itself.
+		 */
+		global $darkmatter_cache_storage;
+		$darkmatter_cache_storage->delete( $this->cache_key, 'dark-matter-fpc-request', 'request' );
+
 		return false;
 	}
 
