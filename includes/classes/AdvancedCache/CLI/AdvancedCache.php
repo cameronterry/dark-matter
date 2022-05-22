@@ -146,7 +146,15 @@ class AdvancedCache extends WP_CLI_Command {
 	 * @throws Exception
 	 */
 	public function flush( $args, $assoc_args ) {
+		$url = $this->check_url( $args[0] );
 
+		$request = new Request( $url );
+
+		if ( $request->delete() ) {
+			WP_CLI::success( __( 'Request and all corresponded response variants have been flushed.', 'dark-matter' ) );
+		} else {
+			WP_CLI::error( __( 'Could not flush Request nor response variants.', 'dark-matter' ) );
+		}
 	}
 
 	/**
