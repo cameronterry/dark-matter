@@ -37,6 +37,11 @@ if ( file_exists( $darkmatter_path . 'vendor/autoload.php' ) ) {
 	require_once $darkmatter_path . 'vendor/autoload.php';
 
 	/**
+	 * Define a global for the cache storage.
+	 */
+	global $darkmatter_cache_storage;
+
+	/**
 	 * Attempt to load any customisations.
 	 */
 	if ( defined( 'DARKMATTER_ADVANCEDCACHE_CUSTOM' ) ) {
@@ -47,6 +52,14 @@ if ( file_exists( $darkmatter_path . 'vendor/autoload.php' ) ) {
 
 	if ( file_exists( $darkmatter_customisations_path ) ) {
 		require_once $darkmatter_customisations_path;
+	}
+
+	/**
+	 * Check if the global has been setup and if it is inheriting `AbstractStorage`. If not, then use the default with
+	 * the plugin which utilises the Object Cache API.
+	 */
+	if ( empty( $darkmatter_cache_storage ) || ! $darkmatter_cache_storage instanceof \DarkMatter\AdvancedCache\Storage\AbstractStorage ) {
+		$darkmatter_cache_storage = new \DarkMatter\AdvancedCache\Storage\WPCacheStorage();
 	}
 
 	/**
