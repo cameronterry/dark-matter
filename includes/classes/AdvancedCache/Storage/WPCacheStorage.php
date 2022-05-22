@@ -1,6 +1,6 @@
 <?php
 /**
- * Foundational class for implementing a storage for Advanced Cache.
+ * Cache storage achieved through the WP Cache API.
  *
  * @package DarkMatter\AdvancedCache
  */
@@ -8,9 +8,9 @@
 namespace DarkMatter\AdvancedCache\Storage;
 
 /**
- * Class AbstractStorage
+ * Class WPCacheStorage
  */
-abstract class AbstractStorage {
+class WPCacheStorage extends AbstractStorage {
 	/**
 	 * Delete a value in cache.
 	 *
@@ -18,7 +18,9 @@ abstract class AbstractStorage {
 	 * @param string $group The group value appended to the $key.
 	 * @return bool True on success. False otherwise.
 	 */
-	abstract public function delete( $key, $group );
+	public function delete( $key, $group ) {
+		return wp_cache_delete( $key, $group );
+	}
 
 	/**
 	 * Retrieve a value in cache.
@@ -27,7 +29,9 @@ abstract class AbstractStorage {
 	 * @param string $group The group value appended to the $key.
 	 * @return mixed Cached value.
 	 */
-	abstract public function get( $key, $group );
+	public function get( $key, $group ) {
+		return wp_cache_get( $key, $group );
+	}
 
 	/**
 	 * Add / update value in cache.
@@ -38,5 +42,7 @@ abstract class AbstractStorage {
 	 * @param int    $expiration The expiration time, defaults to 0 (infinite / until modified).
 	 * @return bool True on success. False otherwise.
 	 */
-	abstract public function set( $key, $value, $group, $expiration = 0 );
+	public function set( $key, $value, $group, $expiration = 0 ) {
+		return wp_cache_set( $key, $value, $group, $expiration );
+	}
 }
