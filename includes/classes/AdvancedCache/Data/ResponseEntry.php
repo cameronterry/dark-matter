@@ -97,6 +97,16 @@ class ResponseEntry implements Storeable {
 	}
 
 	/**
+	 * Handle the Response Entry delete.
+	 *
+	 * @return bool
+	 */
+	public function delete() {
+		// TODO: Implement delete() method.
+		return false;
+	}
+
+	/**
 	 * Populate this Cache Entry with the data from JSON.
 	 *
 	 * @param string $json JSON string to extract the data from.

@@ -83,6 +83,15 @@ class Request implements Storeable {
 	}
 
 	/**
+	 * Delete the Request object.
+	 *
+	 * @return bool
+	 */
+	public function delete() {
+		return false;
+	}
+
+	/**
 	 * Convert the Request to JSON.
 	 *
 	 * @return string JSON string of the Request.
