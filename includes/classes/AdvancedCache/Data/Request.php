@@ -9,8 +9,6 @@ namespace DarkMatter\AdvancedCache\Data;
 
 use DarkMatter\Interfaces\Storeable;
 
-// @todo Add the ability to override the storage, defaults to Object Cache API.
-
 /**
  * Class Request
  */
@@ -76,7 +74,9 @@ class Request implements Storeable {
 		/**
 		 * Retrieve from cache if possible.
 		 */
-		$cache = wp_cache_get( $this->cache_key, 'dark-matter-fpc-request' );
+		global $darkmatter_cache_storage;
+
+		$cache = $darkmatter_cache_storage->get( $this->cache_key, 'dark-matter-fpc-request', 'request' );
 		if ( ! empty( $cache ) ) {
 			$this->from_json( $cache );
 		}
@@ -155,6 +155,7 @@ class Request implements Storeable {
 	 * @return bool True on success. False otherwise.
 	 */
 	public function save() {
-		return wp_cache_set( $this->cache_key, $this->to_json(), 'dark-matter-fpc-request' );
+		global $darkmatter_cache_storage;
+		return $darkmatter_cache_storage->set( $this->cache_key, $this->to_json(), 'dark-matter-fpc-request', 0, 'request' );
 	}
 }
