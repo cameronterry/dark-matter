@@ -12,6 +12,13 @@ namespace DarkMatter\Interfaces;
  */
 interface Storeable {
 	/**
+	 * Handles the deletion of the object in the store.
+	 *
+	 * @return bool
+	 */
+	public function delete();
+
+	/**
 	 * Converts the current object to a JSON string.
 	 *
 	 * @return string
