@@ -9,6 +9,7 @@ namespace DarkMatter;
 
 use DarkMatter\AdvancedCache\Admin\AdminBar;
 use DarkMatter\AdvancedCache\Admin\Invalidation;
+use DarkMatter\AdvancedCache\CLI\AdvancedCache;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -46,6 +47,10 @@ class DarkMatter {
 			if ( $obj instanceof Registerable ) {
 				$obj->register();
 			}
+
+			if ( $obj instanceof \WP_CLI_Command ) {
+				$obj::define();
+			}
 		}
 
 		return $objs;
@@ -63,6 +68,14 @@ class DarkMatter {
 				Invalidation::class,
 			]
 		);
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			$this->class_register(
+				[
+					AdvancedCache::class,
+				]
+			);
+		}
 	}
 
 	/**
