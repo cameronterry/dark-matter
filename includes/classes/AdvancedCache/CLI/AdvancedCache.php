@@ -92,7 +92,7 @@ class AdvancedCache extends WP_CLI_Command {
 		 * Remove the URL scheme.
 		 */
 		$protocol = wp_parse_url( $args[0], PHP_URL_SCHEME );
-		$url      = str_replace( $protocol, '', $args[0] );
+		$url      = str_replace( $protocol . '://', '', $args[0] );
 
 		$request  = new Request( $url );
 		$response = $request->get_variant( $variant_key );
