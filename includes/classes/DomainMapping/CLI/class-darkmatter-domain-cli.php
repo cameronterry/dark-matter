@@ -1,21 +1,26 @@
 <?php
 /**
- * Class DarkMatter_Domain_CLI
+ * CLI for managing domains.
  *
  * @package DarkMatter
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DomainMapping\CLI;
+
+use WP_CLI;
+use WP_CLI_Command;
 
 // phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduced backward compatibility (2.x.x) problems for pre-existing users.
 
 /**
- * Class DarkMatter_Domain_CLI
+ * Class Domains
+ *
+ * Previously called `DarkMatter_Domain_CLI`.
  *
  * @since 2.0.0
  */
-class DarkMatter_Domain_CLI {
+class Domains extends WP_CLI_Command {
 	/**
 	 * Add a domain to a site on the WordPress Network.
 	 *
@@ -81,7 +86,7 @@ class DarkMatter_Domain_CLI {
 		/**
 		 * Add the domain.
 		 */
-		$db     = DarkMatter_Domains::instance();
+		$db     = \DarkMatter_Domains::instance();
 		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'], $type );
 
 		if ( is_wp_error( $result ) ) {
@@ -119,6 +124,15 @@ class DarkMatter_Domain_CLI {
 		}
 
 		return DM_DOMAIN_TYPE_MAIN;
+	}
+
+	/**
+	 * Include this CLI amongst the others.
+	 *
+	 * @return void
+	 */
+	public static function define() {
+		WP_CLI::add_command( 'darkmatter domain', self::class );
 	}
 
 	/**
@@ -171,7 +185,7 @@ class DarkMatter_Domain_CLI {
 		}
 
 		if ( $opts['primary'] ) {
-			$db      = DarkMatter_Primary::instance();
+			$db      = \DarkMatter_Primary::instance();
 			$domains = $db->get_all();
 		} else {
 			/**
@@ -184,7 +198,7 @@ class DarkMatter_Domain_CLI {
 				$site_id = null;
 			}
 
-			$db      = DarkMatter_Domains::instance();
+			$db      = \DarkMatter_Domains::instance();
 			$domains = $db->get_domains( $site_id );
 		}
 
@@ -288,7 +302,7 @@ class DarkMatter_Domain_CLI {
 			]
 		);
 
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		/**
 		 * Remove the domain.
@@ -371,7 +385,7 @@ class DarkMatter_Domain_CLI {
 
 		$fqdn = $args[0];
 
-		$db            = DarkMatter_Domains::instance();
+		$db            = \DarkMatter_Domains::instance();
 		$domain_before = $db->get( $fqdn );
 
 		$opts = wp_parse_args(
@@ -462,4 +476,3 @@ class DarkMatter_Domain_CLI {
 		WP_CLI::success( $fqdn . __( ': successfully updated.', 'dark-matter' ) );
 	}
 }
-WP_CLI::add_command( 'darkmatter domain', 'DarkMatter_Domain_CLI' );
