@@ -37,6 +37,16 @@ if ( file_exists( $darkmatter_path . 'vendor/autoload.php' ) ) {
 	require_once $darkmatter_path . 'vendor/autoload.php';
 
 	/**
+	 * Ensure we can access the Advanced Cache processor and Abstract Storage, which are used in this file.
+	 */
+	if (
+		! class_exists( '\DarkMatter\AdvancedCache\Processor\AdvancedCache' )
+		|| ! class_exists( '\DarkMatter\AdvancedCache\Storage\AbstractStorage' )
+	) {
+		return;
+	}
+
+	/**
 	 * Define a global for the cache storage.
 	 */
 	global $darkmatter_cache_storage;
