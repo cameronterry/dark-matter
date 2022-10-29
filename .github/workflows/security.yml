@@ -15,7 +15,7 @@ jobs:
         with:
           args: --sarif-file-output=snyk-node.sarif
       - name: Upload result to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         with:
           category: snyk-node
           sarif_file: snyk-node.sarif
