@@ -1,17 +1,21 @@
 <?php
 /**
- * Class DM_REST_Domains_Controller
+ * REST API for management domains.
  *
  * @package DarkMatter
  * @since 2.0.0
  */
 
+namespace DarkMatter\DomainMapping\REST;
+
 /**
- * Class DM_REST_Domains_Controller
+ * Class Domains
+ *
+ * This was previous called `DM_REST_Domains_Controller`.
  *
  * @since 2.0.0
  */
-class DM_REST_Domains_Controller extends WP_REST_Controller {
+class Domains extends \WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
@@ -28,11 +32,11 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$item = $this->prepare_item_for_database( $request );
 
@@ -62,7 +66,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
@@ -75,11 +79,11 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$result = $db->delete( $request['domain'], $request['force'] );
 
@@ -109,7 +113,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
@@ -122,11 +126,11 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$result = $db->get( $request['domain'] );
 
@@ -298,8 +302,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_items( $request ) {
 		$site_id = null;
@@ -316,7 +320,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 			$site_id = get_current_blog_id();
 		}
 
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$response = array();
 
@@ -345,7 +349,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -358,7 +362,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return array Data provided by the call to the endpoint.
 	 */
 	protected function prepare_item_for_database( $request ) {
@@ -379,15 +383,15 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 				$value = $request[ $key ];
 			}
 
-			if ( WP_REST_Server::CREATABLE === $method && null === $value && 'is_primary' === $key ) {
+			if ( \WP_REST_Server::CREATABLE === $method && null === $value && 'is_primary' === $key ) {
 				$value = false;
 			}
 
-			if ( WP_REST_Server::CREATABLE === $method && null === $value && 'is_https' === $key ) {
+			if ( \WP_REST_Server::CREATABLE === $method && null === $value && 'is_https' === $key ) {
 				$value = false;
 			}
 
-			if ( WP_REST_Server::CREATABLE === $method && null === $value && 'is_active' === $key ) {
+			if ( \WP_REST_Server::CREATABLE === $method && null === $value && 'is_active' === $key ) {
 				$value = true;
 			}
 
@@ -402,8 +406,8 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  DM_Domain       $item Domain object to be prepared for response.
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \DM_Domain       $item Domain object to be prepared for response.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return array Prepared item for REST response.
 	 */
 	public function prepare_item_for_response( $item, $request ) {
@@ -480,10 +484,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 			$this->namespace,
 			$this->rest_base,
 			array(
-				'methods'             => WP_REST_Server::CREATABLE,
+				'methods'             => \WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'create_item' ),
 				'permission_callback' => array( $this, 'create_item_permissions_check' ),
-				'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+				'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
 			)
 		);
 
@@ -499,13 +503,13 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 					),
 				),
 				array(
-					'methods'             => WP_REST_Server::READABLE,
+					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_item' ),
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 					'schema'              => array( $this, 'get_item_schema' ),
 				),
 				array(
-					'methods'             => WP_REST_Server::DELETABLE,
+					'methods'             => \WP_REST_Server::DELETABLE,
 					'callback'            => array( $this, 'delete_item' ),
 					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
 					'args'                => array(
@@ -517,10 +521,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 					),
 				),
 				array(
-					'methods'             => WP_REST_Server::EDITABLE,
+					'methods'             => \WP_REST_Server::EDITABLE,
 					'callback'            => array( $this, 'update_item' ),
 					'permission_callback' => array( $this, 'update_item_permissions_check' ),
-					'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
 				),
 			)
 		);
@@ -529,7 +533,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 			$this->namespace,
 			$this->rest_base_plural,
 			array(
-				'methods'             => WP_REST_Server::READABLE,
+				'methods'             => \WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_items' ),
 				'permission_callback' => array( $this, 'get_items_permissions_check' ),
 				'schema'              => array( $this, 'get_item_schema' ),
@@ -548,7 +552,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 					),
 				),
 				array(
-					'methods'             => WP_REST_Server::READABLE,
+					'methods'             => \WP_REST_Server::READABLE,
 					'callback'            => array( $this, 'get_items' ),
 					'permission_callback' => array( $this, 'get_items_permissions_check' ),
 					'schema'              => array( $this, 'get_item_schema' ),
@@ -562,11 +566,11 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function update_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$item = $this->prepare_item_for_database( $request );
 
@@ -601,7 +605,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function update_item_permissions_check( $request ) {
@@ -609,16 +613,3 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'rest-update' ) );
 	}
 }
-
-/**
- * Setup the REST Controller for Domains for use.
- *
- * @since 2.0.0
- *
- * @return void
- */
-function dark_matter_domains_rest() {
-	$controller = new DM_REST_Domains_Controller();
-	$controller->register_routes();
-}
-add_action( 'rest_api_init', 'dark_matter_domains_rest' );
