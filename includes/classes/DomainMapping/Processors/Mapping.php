@@ -8,6 +8,7 @@
 
 namespace DarkMatter\DomainMapping\Processors;
 
+use DarkMatter\DomainMapping\Helpers;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -223,32 +224,7 @@ class Mapping implements Registerable {
 	 * @return string           If unmapped URL is found, then returns the primary URL. Untouched otherwise.
 	 */
 	public function map( $value = '', $blog_id = 0 ) {
-		/**
-		 * Ensure that we are working with a string.
-		 */
-		if ( ! is_string( $value ) ) {
-			return $value;
-		}
-
-		/**
-		 * Retrieve the current blog.
-		 */
-		$blog    = get_site( absint( $blog_id ) );
-		$primary = \DarkMatter_Primary::instance()->get( $blog->blog_id );
-
-		$unmapped = untrailingslashit( $blog->domain . $blog->path );
-
-		/**
-		 * If there is no primary domain or the unmapped version cannot be found
-		 * then we return the value as-is.
-		 */
-		if ( empty( $primary ) || false === stripos( $value, $unmapped ) ) {
-			return $value;
-		}
-
-		$domain = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain;
-
-		return preg_replace( "#https?://{$unmapped}#", $domain, $value );
+		return Helpers::instance()->map( $value, $blog_id );
 	}
 
 	/**
@@ -497,30 +473,7 @@ class Mapping implements Registerable {
 	 * @return mixed        If unmapped URL is found, then returns the primary URL. Untouched otherwise.
 	 */
 	public function unmap( $value = '' ) {
-		/**
-		 * Ensure that we are working with a string.
-		 */
-		if ( ! is_string( $value ) ) {
-			return $value;
-		}
-
-		/**
-		 * Retrieve the current blog.
-		 */
-		$blog    = get_site();
-		$primary = \DarkMatter_Primary::instance()->get();
-
-		/**
-		 * If there is no primary domain or the primary domain cannot be found
-		 * then we return the value as-is.
-		 */
-		if ( empty( $primary ) || false === stripos( $value, $primary->domain ) ) {
-			return $value;
-		}
-
-		$unmapped = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . untrailingslashit( $blog->domain . $blog->path );
-
-		return preg_replace( "#https?://{$primary->domain}#", $unmapped, $value );
+		return Helpers::instance()->unmap( $value );
 	}
 
 	/**

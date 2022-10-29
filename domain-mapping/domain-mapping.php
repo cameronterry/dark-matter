@@ -20,7 +20,6 @@ require_once DM_PATH . '/domain-mapping/inc/compat.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-media.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-domain.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
-require_once DM_PATH . '/domain-mapping/classes/class-dm-url.php';
 
 /**
  * Plugin compatibility.

@@ -37,8 +37,7 @@ class DM_Yoast {
 		 * If saving to the database, then make sure the permalink is unmapped.
 		 */
 		if ( $intend_to_save ) {
-			$dm_url               = DM_URL::instance();
-			$indexable->permalink = $dm_url->unmap( $indexable->permalink );
+			$indexable->permalink = \DarkMatter\DomainMapping\Helpers::instance()->unmap( $indexable->permalink );
 		}
 
 		return $intend_to_save;
