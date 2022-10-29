@@ -1,6 +1,6 @@
 <?php
 /**
- * Class DM_Database
+ * Handles any installation logic needed for the Domain Mapping module.
  *
  * @package DarkMatter
  * @since 2.0.0
@@ -9,11 +9,13 @@
 defined( 'ABSPATH' ) || die;
 
 /**
- * Class DM_Database
+ * Class Installer
+ *
+ * Previously called `DM_Database`.
  *
  * @since 2.0.0
  */
-class DM_Database {
+class Installer {
 	/**
 	 * Constructor.
 	 *
@@ -88,22 +90,4 @@ class DM_Database {
 
 		dbDelta( $sql );
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return DM_Database
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_Database::instance();
