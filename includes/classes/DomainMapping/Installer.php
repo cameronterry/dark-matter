@@ -6,7 +6,7 @@
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping;
 
 /**
  * Class Installer

@@ -20,7 +20,12 @@ class DarkMatter {
 	public function __construct() {
 		add_action( 'rest_api_init', [ $this, 'register_rest' ] );
 
+		/**
+		 * Register and handle Domain Mapping module.
+		 */
 		$this->register_domainmapping();
+
+		new DomainMapping\Installer();
 	}
 
 	/**
