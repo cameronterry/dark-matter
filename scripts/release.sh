@@ -18,7 +18,6 @@ rm -rf domain-mapping/ui
 rm -rf node_modules
 rm -rf scripts
 rm -rf tests
-rm -rf vendor
 rm -rf .*
 rm *.json
 rm *.lock
