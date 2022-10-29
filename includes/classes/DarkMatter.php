@@ -7,6 +7,7 @@
 
 namespace DarkMatter;
 
+use DarkMatter\DomainMapping;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -54,6 +55,11 @@ class DarkMatter {
 	 * @return void
 	 */
 	public function register_rest() {
+		$this->class_register(
+			[
+				DomainMapping\REST\Domains::class,
+			]
+		);
 	}
 
 	/**
