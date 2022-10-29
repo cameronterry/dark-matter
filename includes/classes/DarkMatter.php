@@ -5,8 +5,6 @@
  * @package DarkMatter
  */
 
-use DarkMatter\AdvancedCache\Processor\Instructions;
-
 /**
  * Class DarkMatter.
  */
