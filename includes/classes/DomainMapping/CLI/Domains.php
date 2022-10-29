@@ -6,7 +6,7 @@
  * @since 2.0.0
  */
 
-namespace DomainMapping\CLI;
+namespace DarkMatter\DomainMapping\CLI;
 
 use WP_CLI;
 use WP_CLI_Command;

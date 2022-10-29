@@ -19,6 +19,8 @@ class DarkMatter {
 	 */
 	public function __construct() {
 		add_action( 'rest_api_init', [ $this, 'register_rest' ] );
+
+		$this->register_domainmapping();
 	}
 
 	/**
@@ -51,6 +53,21 @@ class DarkMatter {
 		}
 
 		return $objs;
+	}
+
+	/**
+	 * Register the classes for Domain Mapping.
+	 *
+	 * @return void
+	 */
+	public function register_domainmapping() {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			$this->class_register(
+				[
+					DomainMapping\CLI\Domains::class,
+				]
+			);
+		}
 	}
 
 	/**
