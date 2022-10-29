@@ -66,6 +66,7 @@ class DarkMatter {
 				[
 					DomainMapping\CLI\Domains::class,
 					DomainMapping\CLI\Dropin::class,
+					DomainMapping\CLI\Restricted::class,
 				]
 			);
 		}

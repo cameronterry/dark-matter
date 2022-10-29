@@ -1,21 +1,24 @@
 <?php
 /**
- * Class DarkMatter_Restrict_CLI
+ * CLI for managing restricted domains.
  *
  * @package DarkMatter
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\CLI;
 
-// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduced backward compatibility (2.x.x) problems for pre-existing users.
+use WP_CLI;
+use WP_CLI_Command;
 
 /**
- * Class DarkMatter_Restrict_CLI
+ * Class Restricted
+ *
+ * Previously called `DarkMatter_Restrict_CLI`.
  *
  * @since 2.0.0
  */
-class DarkMatter_Restrict_CLI {
+class Restricted extends WP_CLI_Command {
 	/**
 	 * Add a domain to the restrict for the WordPress Network.
 	 *
@@ -41,7 +44,7 @@ class DarkMatter_Restrict_CLI {
 
 		$fqdn = $args[0];
 
-		$restricted = DarkMatter_Restrict::instance();
+		$restricted = \DarkMatter_Restrict::instance();
 		$result     = $restricted->add( $fqdn );
 
 		if ( is_wp_error( $result ) ) {
@@ -49,6 +52,15 @@ class DarkMatter_Restrict_CLI {
 		}
 
 		WP_CLI::success( $fqdn . __( ': is now restricted.', 'dark-matter' ) );
+	}
+
+	/**
+	 * Include this CLI amongst the others.
+	 *
+	 * @return void
+	 */
+	public static function define() {
+		WP_CLI::add_command( 'darkmatter restrict', self::class );
 	}
 
 	/**
@@ -94,7 +106,7 @@ class DarkMatter_Restrict_CLI {
 			$opts['format'] = 'table';
 		}
 
-		$db = DarkMatter_Restrict::instance();
+		$db = \DarkMatter_Restrict::instance();
 
 		$restricted = $db->get();
 
@@ -146,7 +158,7 @@ class DarkMatter_Restrict_CLI {
 
 		$fqdn = $args[0];
 
-		$restricted = DarkMatter_Restrict::instance();
+		$restricted = \DarkMatter_Restrict::instance();
 		$result     = $restricted->delete( $fqdn );
 
 		if ( is_wp_error( $result ) ) {
@@ -156,4 +168,3 @@ class DarkMatter_Restrict_CLI {
 		WP_CLI::success( $fqdn . __( ': is no longer restricted.', 'dark-matter' ) );
 	}
 }
-WP_CLI::add_command( 'darkmatter restrict', 'DarkMatter_Restrict_CLI' );
