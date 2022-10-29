@@ -42,7 +42,13 @@ define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 /**
  * Define global cache groups and other cache related settings for all modules.
  */
-wp_cache_add_global_groups( 'dark-matter' );
+wp_cache_add_global_groups(
+	[
+		'dark-matter',
+		'dark-matter-fpc-responses',
+		'dark-matter-fpc-request',
+	]
+);
 
 /**
  * Include the PSR-4 autoloader.

@@ -1,0 +1,79 @@
+<?php
+/**
+ * Plugin Name: Advanced Cache by Dark Matter
+ * Plugin URI: https://github.com/cameronterry/dark-matter
+ * Description: A version of advanced-cache.php drop-in plugin used in conjunction with Dark Matter full pge cache.
+ * Author: Cameron Terry
+ * Author URI: https://github.com/cameronterry/
+ * Text Domain: dark-matter
+ * License: GPLv2
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
+ *
+ * @since 3.0.0
+ *
+ * @package DarkMatter
+ */
+
+/**
+ * Make sure Object Cache is available.
+ */
+global $wp_object_cache;
+if ( ! is_a( $wp_object_cache, 'WP_Object_Cache' ) && ! ! include_once WP_CONTENT_DIR . '/object-cache.php' ) {
+	wp_cache_init();
+	wp_cache_add_global_groups(
+		[
+			'dark-matter-fpc-responses',
+			'dark-matter-fpc-request',
+		]
+	);
+}
+
+$darkmatter_path = ( dirname( __FILE__ ) . '/plugins/dark-matter/' );
+
+/**
+ * Bootstrap the AdvancedCache.
+ */
+if ( file_exists( $darkmatter_path . 'vendor/autoload.php' ) ) {
+	require_once $darkmatter_path . 'vendor/autoload.php';
+
+	/**
+	 * Ensure we can access the Advanced Cache processor and Abstract Storage, which are used in this file.
+	 */
+	if (
+		! class_exists( '\DarkMatter\AdvancedCache\Processor\AdvancedCache' )
+		|| ! class_exists( '\DarkMatter\AdvancedCache\Storage\AbstractStorage' )
+	) {
+		return;
+	}
+
+	/**
+	 * Define a global for the cache storage.
+	 */
+	global $darkmatter_cache_storage;
+
+	/**
+	 * Attempt to load any customisations.
+	 */
+	if ( defined( 'DARKMATTER_ADVANCEDCACHE_CUSTOM' ) ) {
+		$darkmatter_customisations_path = trailingslashit( DARKMATTER_ADVANCEDCACHE_CUSTOM );
+	} else {
+		$darkmatter_customisations_path = dirname( __FILE__ ) . '/mu-plugins/advanced-cache/dark-matter.php';
+	}
+
+	if ( file_exists( $darkmatter_customisations_path ) ) {
+		require_once $darkmatter_customisations_path;
+	}
+
+	/**
+	 * Check if the global has been setup and if it is inheriting `AbstractStorage`. If not, then use the default with
+	 * the plugin which utilises the Object Cache API.
+	 */
+	if ( empty( $darkmatter_cache_storage ) || ! $darkmatter_cache_storage instanceof \DarkMatter\AdvancedCache\Storage\AbstractStorage ) {
+		$darkmatter_cache_storage = new \DarkMatter\AdvancedCache\Storage\WPCacheStorage();
+	}
+
+	/**
+	 * Fire the Advanced Cache and let Dark Matter handle the request.
+	 */
+	new \DarkMatter\AdvancedCache\Processor\AdvancedCache();
+}
