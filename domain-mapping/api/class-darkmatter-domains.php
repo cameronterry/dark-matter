@@ -434,7 +434,14 @@ class DarkMatter_Domains {
 		 * Attempt to retrieve the domain from cache.
 		 */
 		$cache_key = md5( $fqdn );
-		$_domain   = wp_cache_get( $cache_key, 'dark-matter' );
+
+		/**
+		 * Make sure if the cache returns a value, that it's set to an object rather than an array.
+		 */
+		$_domain = wp_cache_get( $cache_key, 'dark-matter' );
+		if ( is_array( $_domain ) ) {
+			$_domain = (object) $_domain;
+		}
 
 		/**
 		 * If the domain cannot be retrieved from cache, attempt to retrieve it
@@ -454,18 +461,23 @@ class DarkMatter_Domains {
 			wp_cache_add( $cache_key, $_domain, 'dark-matter' );
 
 			/**
-			 * Update the primary cache if applicable.
-			 */
-			if ( $_domain->is_primary ) {
-				wp_cache_set( $_domain->blog_id . '-primary', 'dark-matter' );
-			}
-
-			/**
 			 * We update the last changed here as the cache was modified.
 			 */
 			$this->update_last_changed();
 		}
 
+		/**
+		 * When the domain is retrieved _and_ the domain is a "primary domain", then double-check that the primary
+		 * domain cache is set for it as well.
+		 */
+		$primary_cache_key = $_domain->blog_id . '-primary';
+		if ( $_domain->is_primary && empty( wp_cache_get( $primary_cache_key, 'dark-matter' ) ) ) {
+			wp_cache_set( $primary_cache_key, $_domain->domain, 'dark-matter' );
+		}
+
+		/**
+		 * Return the DM_Domain object version.
+		 */
 		return new DM_Domain( (object) $_domain );
 	}
 

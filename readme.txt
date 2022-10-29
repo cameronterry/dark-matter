@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 5.9.3
-Stable tag: 2.3.0
+Tested up to: 6.0.3
+Stable tag: 2.3.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,24 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.3.3 =
+
+* Updated the dependencies for Composer and Node.
+* Added version bump dependency to aid in future releases of Dark Matter.
+* Tested upto WordPress 6.0.3
+
+= 2.3.2 =
+
+* Fixed an uncaught issue with the way the cached domain is cast into an object.
+
+= 2.3.1 =
+
+* Fixed a major performance issue introduced in 2.3.0 for excessive database calls for primary domains.
+  * This was caused by a malformed cache set for primary domains, after it was moved to resolve an issue previously where it would update only the database when a new primary domain was set.
+  * Also removed an old call to set a primary domain, which is no longer needed and was causing irrelevant `UPDATE` SQL queries (it was essentially update the values to exactly what they were already).
+* Moved the primary domain cache set when retrieving a domain to slightly later in the process.
+* Atypical installations should not need to flush the cache. However, you may need to use WP CLI `wp cache flush` - or equivalent - after upgrading.
 
 = 2.3.0 =
 

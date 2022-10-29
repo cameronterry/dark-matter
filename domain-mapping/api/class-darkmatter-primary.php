@@ -95,8 +95,6 @@ class DarkMatter_Primary {
 
 				return false;
 			}
-
-			$this->set( $site_id, $primary_domain );
 		}
 
 		/**
