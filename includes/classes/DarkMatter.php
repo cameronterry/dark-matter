@@ -65,6 +65,7 @@ class DarkMatter {
 			$this->class_register(
 				[
 					DomainMapping\CLI\Domains::class,
+					DomainMapping\CLI\Dropin::class,
 				]
 			);
 		}

@@ -6,18 +6,19 @@
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\CLI;
 
-if ( ! defined( 'WP_CLI' ) ) {
-	return;
-}
+use WP_CLI;
+use WP_CLI_Command;
 
 /**
- * Class DarkMatter_Dropin_CLI
+ * Class Dropin
+ *
+ * Previously called `DarkMatter_Dropin_CLI`.
  *
  * @since 2.0.0
  */
-class DarkMatter_Dropin_CLI {
+class Dropin extends WP_CLI_Command {
 	/**
 	 * Helper command to see if the Sunrise dropin plugin within Dark Matter is
 	 * the same version as in use on the current WordPress installation.
@@ -30,7 +31,7 @@ class DarkMatter_Dropin_CLI {
 	 * @since 2.0.0
 	 */
 	public function check() {
-		$health_check = DM_HealthChecks::instance();
+		$health_check = \DM_HealthChecks::instance();
 
 		if ( $health_check->is_dropin_latest() ) {
 			WP_CLI::success( __( 'Current Sunrise dropin matches the Sunrise within Dark Matter plugin.', 'dark-matter' ) );
@@ -38,6 +39,15 @@ class DarkMatter_Dropin_CLI {
 		}
 
 		WP_CLI::error( __( 'Sunrise dropin does not match the Sunrise within Dark Matter plugin. Consider using the "update" command to correct this issue.', 'dark-matter' ) );
+	}
+
+	/**
+	 * Include this CLI amongst the others.
+	 *
+	 * @return void
+	 */
+	public static function define() {
+		WP_CLI::add_command( 'darkmatter dropin', self::class );
 	}
 
 	/**
@@ -100,4 +110,3 @@ class DarkMatter_Dropin_CLI {
 		}
 	}
 }
-WP_CLI::add_command( 'darkmatter dropin', 'DarkMatter_Dropin_CLI' );
