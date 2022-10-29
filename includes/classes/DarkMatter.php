@@ -58,6 +58,7 @@ class DarkMatter {
 		$this->class_register(
 			[
 				DomainMapping\REST\Domains::class,
+				DomainMapping\REST\Restricted::class,
 			]
 		);
 	}
