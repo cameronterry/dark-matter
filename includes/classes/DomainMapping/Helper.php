@@ -12,7 +12,7 @@ namespace DarkMatter\DomainMapping;
  *
  * @since 3.0.0
  */
-class Helpers {
+class Helper {
 	/**
 	 * Map the primary domain on the passed in value if it contains the unmapped URL and the Site has a primary domain.
 	 *
@@ -90,7 +90,7 @@ class Helpers {
 	/**
 	 * Return the Singleton Instance of the class.
 	 *
-	 * @return Helpers
+	 * @return Helper
 	 */
 	public static function instance() {
 		static $instance = false;

@@ -8,7 +8,7 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
-use DarkMatter\DomainMapping\Helpers;
+use DarkMatter\DomainMapping\Helper;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -224,7 +224,7 @@ class Mapping implements Registerable {
 	 * @return string           If unmapped URL is found, then returns the primary URL. Untouched otherwise.
 	 */
 	public function map( $value = '', $blog_id = 0 ) {
-		return Helpers::instance()->map( $value, $blog_id );
+		return Helper::instance()->map( $value, $blog_id );
 	}
 
 	/**
@@ -473,7 +473,7 @@ class Mapping implements Registerable {
 	 * @return mixed        If unmapped URL is found, then returns the primary URL. Untouched otherwise.
 	 */
 	public function unmap( $value = '' ) {
-		return Helpers::instance()->unmap( $value );
+		return Helper::instance()->unmap( $value );
 	}
 
 	/**
