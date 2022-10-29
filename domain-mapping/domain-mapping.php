@@ -42,9 +42,3 @@ require_once DM_PATH . '/domain-mapping/api/class-darkmatter-restrict.php';
 if ( DM_HealthChecks::instance()->cookie_domain_dm_set() && ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) ) {
 	require_once DM_PATH . '/domain-mapping/sso/class-dm-sso-cookie.php';
 }
-
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-domain-cli.php';
-	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-dropin-cli.php';
-	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-restrict-cli.php';
-}
