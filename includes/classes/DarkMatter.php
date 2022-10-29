@@ -17,7 +17,7 @@ class DarkMatter {
 	 * Constructor
 	 */
 	public function __construct() {
-
+		add_action( 'rest_api_init', [ $this, 'register_rest' ] );
 	}
 
 	/**
@@ -39,9 +39,21 @@ class DarkMatter {
 			if ( $obj instanceof Registerable ) {
 				$obj->register();
 			}
+
+			if ( $obj instanceof \WP_REST_Controller ) {
+				$obj->register_routes();
+			}
 		}
 
 		return $objs;
+	}
+
+	/**
+	 * Register REST routes. This is separate due to the need to be fired on the `rest_api_init` hook.
+	 *
+	 * @return void
+	 */
+	public function register_rest() {
 	}
 
 	/**
