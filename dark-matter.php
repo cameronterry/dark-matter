@@ -58,3 +58,8 @@ new DM_PluginUpdate();
  * Domain Mapping module.
  */
 require DM_PATH . '/domain-mapping/domain-mapping.php';
+
+/**
+ * Let the magic - and bugs ... probably bugs! - begin.
+ */
+\DarkMatter\DarkMatter::instance();
