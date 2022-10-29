@@ -41,6 +41,10 @@ class DarkMatter {
 				$obj->register();
 			}
 
+			if ( $obj instanceof \WP_CLI_Command ) {
+				$obj::define();
+			}
+
 			if ( $obj instanceof \WP_REST_Controller ) {
 				$obj->register_routes();
 			}
