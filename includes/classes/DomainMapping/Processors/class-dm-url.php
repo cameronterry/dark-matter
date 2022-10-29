@@ -1,19 +1,23 @@
 <?php
 /**
- * Class DM_URL
+ * Handles the mapping of URLs.
  *
  * @package DarkMatter
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die();
+namespace DarkMatter\DomainMapping\Processors;
+
+use DarkMatter\Interfaces\Registerable;
 
 /**
- * Class DM_URL
+ * Class Mapping
+ *
+ * Previously called `DM_URL`.
  *
  * @since 2.0.0
  */
-class DM_URL {
+class Mapping implements Registerable {
 	/**
 	 * Determine if the current request was mapped in `sunrise.php`.
 	 *
@@ -24,11 +28,11 @@ class DM_URL {
 	public $is_request_mapped = false;
 
 	/**
-	 * Constructor.
+	 * Register the hooks and actions.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
-	public function __construct() {
+	public function register() {
 		$this->is_request_mapped = ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
 
 		/**
@@ -147,7 +151,7 @@ class DM_URL {
 		 * Attempt to find the domain in Dark Matter. If the domain is found, then tell WordPress it is an internal
 		 * domain.
 		 */
-		$db     = DarkMatter_Domains::instance();
+		$db     = \DarkMatter_Domains::instance();
 		$domain = $db->find( $host );
 
 		if ( is_a( $domain, 'DM_Domain' ) ) {
@@ -193,7 +197,7 @@ class DM_URL {
 		 */
 		global $switched;
 		if ( $switched && $this->is_request_mapped ) {
-			$primary = DarkMatter_Primary::instance()->get();
+			$primary = \DarkMatter_Primary::instance()->get();
 
 			/**
 			 * If there is no primary or if it is inactive, then the site is not mapped.
@@ -230,7 +234,7 @@ class DM_URL {
 		 * Retrieve the current blog.
 		 */
 		$blog    = get_site( absint( $blog_id ) );
-		$primary = DarkMatter_Primary::instance()->get( $blog->blog_id );
+		$primary = \DarkMatter_Primary::instance()->get( $blog->blog_id );
 
 		$unmapped = untrailingslashit( $blog->domain . $blog->path );
 
@@ -397,8 +401,8 @@ class DM_URL {
 	 * Ensures the "raw" version of the content, typically used by Gutenberg through it's middleware pre-load / JS
 	 * hydrate process, gets handled the same as content (which runs through the `the_content` hook).
 	 *
-	 * @param  WP_REST_Response $item Individual post / item in the response that is being processed.
-	 * @return WP_REST_Response       Post / item with the content.raw, if present, mapped.
+	 * @param  \WP_REST_Response $item Individual post / item in the response that is being processed.
+	 * @return \WP_REST_Response       Post / item with the content.raw, if present, mapped.
 	 */
 	public function prepare_rest_post_item( $item = null ) {
 		if ( isset( $item->data['content']['raw'] ) ) {
@@ -504,7 +508,7 @@ class DM_URL {
 		 * Retrieve the current blog.
 		 */
 		$blog    = get_site();
-		$primary = DarkMatter_Primary::instance()->get();
+		$primary = \DarkMatter_Primary::instance()->get();
 
 		/**
 		 * If there is no primary domain or the primary domain cannot be found
@@ -538,22 +542,4 @@ class DM_URL {
 
 		return $uploads;
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return DM_URL
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_URL::instance();

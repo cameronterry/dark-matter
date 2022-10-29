@@ -66,6 +66,12 @@ class DarkMatter {
 	 * @return void
 	 */
 	public function register_domainmapping() {
+		$this->class_register(
+			[
+				DomainMapping\Processors\Mapping::class,
+			]
+		);
+
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$this->class_register(
 				[
