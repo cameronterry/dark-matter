@@ -73,11 +73,5 @@ abstract class AbstractInstruction {
 	protected function replace( $body ) {
 		$tag = \preg_replace('/[^a-zA-Z]+/', '', $this->tag );
 		return str_replace( "<!--instruction:{$tag}-->", $this->content, $body );
-
-//		$response_entry->body = preg_replace(
-//			"#<!--instruction:{$tag}-->(?s:.*?)<!--\/instruction:{$tag}-->#",
-//			$this->content,
-//			$response_entry->body
-//		);
 	}
 }
