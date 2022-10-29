@@ -6,7 +6,7 @@
  * @since 2.0.0
  */
 
-namespace DarkMatter\DomainMapping\Processors;
+namespace DarkMatter\DomainMapping\Processor;
 
 use DarkMatter\DomainMapping\Helpers;
 use DarkMatter\Interfaces\Registerable;

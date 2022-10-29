@@ -68,7 +68,7 @@ class DarkMatter {
 	public function register_domainmapping() {
 		$this->class_register(
 			[
-				DomainMapping\Processors\Mapping::class,
+				DomainMapping\Processor\Mapping::class,
 			]
 		);
 
