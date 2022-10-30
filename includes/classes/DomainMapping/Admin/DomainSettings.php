@@ -2,8 +2,9 @@
 /**
  * Settings page for controlling domains.
  *
+ * @since 3.0.0
+ *
  * @package DarkMatter\DomainMapping
- * @since 2.0.0
  */
 
 namespace DarkMatter\DomainMapping\Admin;
@@ -13,15 +14,15 @@ use DarkMatter\UI\AbstractAdminPage;
 /**
  * Class DomainSettings
  *
- * Previously called `DM_UI`.
+ * Based on the old class called `DM_UI`.
  *
- * @since 2.0.0
+ * @since 3.0.0
  */
 class DomainSettings extends AbstractAdminPage {
 	/**
 	 * Constructor
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
 	public function __construct() {
 		$this->slug       = 'domains';
@@ -34,7 +35,7 @@ class DomainSettings extends AbstractAdminPage {
 		 * @since 2.1.2
 		 *
 		 * @param string $capability Capability required to manage domains (upgrade_network / Super Admin).
-		 * @param string $context The context the permission is checked.
+		 * @param string $context    The context the permission is checked.
 		 */
 		$this->permission = apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'admin' );
 	}
@@ -42,7 +43,7 @@ class DomainSettings extends AbstractAdminPage {
 	/**
 	 * Enqueue assets for the Admin Page.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 *
 	 * @return void
 	 */
@@ -60,10 +61,10 @@ class DomainSettings extends AbstractAdminPage {
 		wp_localize_script(
 			'dark-matter-domains',
 			'dmSettings',
-			array(
+			[
 				'rest_root' => get_rest_url(),
 				'nonce'     => wp_create_nonce( 'wp_rest' ),
-			)
+			]
 		);
 
 		wp_enqueue_script( 'dark-matter-domains' );
@@ -72,9 +73,9 @@ class DomainSettings extends AbstractAdminPage {
 	}
 
 	/**
-	 * Very basic HTML output for the
+	 * Output the HTML container for the React app.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 *
 	 * @return void
 	 */
