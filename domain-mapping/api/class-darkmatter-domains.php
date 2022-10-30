@@ -153,7 +153,7 @@ class DarkMatter_Domains {
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
 	 * @param  integer $type       Domain type. Defaults to `1`, which is "main".
-	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
+	 * @return \DarkMatter\DomainMapping\Data\Domain|WP_Error Domain on success. WP_Error on failure.
 	 */
 	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true, $type = DM_DOMAIN_TYPE_MAIN ) {
 		$fqdn = $this->_basic_check( $fqdn );
@@ -235,7 +235,7 @@ class DarkMatter_Domains {
 				$this->primary_set( $fqdn, get_current_blog_id() );
 			}
 
-			$dm_domain = new DM_Domain( (object) $_domain );
+			$dm_domain = new \DarkMatter\DomainMapping\Data\Domain( (object) $_domain );
 
 			$this->update_last_changed();
 
@@ -247,7 +247,7 @@ class DarkMatter_Domains {
 			 *
 			 * @since 2.0.0
 			 *
-			 * @param DM_Domain $dm_domain Domain object of the newly added Domain.
+			 * @param \DarkMatter\DomainMapping\Data\Domain $dm_domain Domain object of the newly added Domain.
 			 */
 			do_action( 'darkmatter_domain_add', $dm_domain );
 
@@ -381,7 +381,7 @@ class DarkMatter_Domains {
 			 *
 			 * @since 2.0.0
 			 *
-			 * @param DM_Domain $_domain Domain object that was deleted.
+			 * @param \DarkMatter\DomainMapping\Data\Domain $_domain Domain object that was deleted.
 			 */
 			do_action( 'darkmatter_domain_delete', $_domain );
 
@@ -398,7 +398,7 @@ class DarkMatter_Domains {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn FQDN to search for.
-	 * @return DM_Domain|boolean       Domain object. False on failure or not found.
+	 * @return \DarkMatter\DomainMapping\Data\Domain|boolean Domain object. False on failure or not found.
 	 */
 	public function find( $fqdn = '' ) {
 		if ( empty( $fqdn ) ) {
@@ -414,7 +414,7 @@ class DarkMatter_Domains {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn FQDN to search for.
-	 * @return DM_Domain|boolean       Domain object. False otherwise.
+	 * @return \DarkMatter\DomainMapping\Data\Domain|boolean Domain object. False otherwise.
 	 */
 	public function get( $fqdn = '' ) {
 		if ( empty( $fqdn ) ) {
@@ -478,7 +478,7 @@ class DarkMatter_Domains {
 		/**
 		 * Return the DM_Domain object version.
 		 */
-		return new DM_Domain( (object) $_domain );
+		return new \DarkMatter\DomainMapping\Data\Domain( (object) $_domain );
 	}
 
 	/**
@@ -515,7 +515,7 @@ class DarkMatter_Domains {
 				 * Convert the domains into DM_Domain objects.
 				 */
 				foreach ( $this->network_media as $i => $media_domain ) {
-					$media_domains[ $i ] = new DM_Domain(
+					$media_domains[ $i ] = new \DarkMatter\DomainMapping\Data\Domain(
 						(object) [
 							'active'     => true,
 							'blog_id'    => get_current_blog_id(),
@@ -748,7 +748,7 @@ class DarkMatter_Domains {
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
 	 * @param  integer $type       Domain type. Defaults to `null`, do not change current value. Accepts `1` for main and `2` for Media.
-	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
+	 * @return \DarkMatter\DomainMapping\Data\Domain|WP_Error DM_Domain on success. WP_Error on failure.
 	 */
 	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true, $type = null ) {
 		$fqdn = $this->_basic_check( $fqdn );
@@ -841,7 +841,7 @@ class DarkMatter_Domains {
 				$this->primary_unset( $domain_before->domain, $domain_before->blog_id );
 			}
 
-			$domain_after = new DM_Domain( (object) $_domain );
+			$domain_after = new \DarkMatter\DomainMapping\Data\Domain( (object) $_domain );
 
 			$this->update_last_changed();
 
@@ -850,8 +850,8 @@ class DarkMatter_Domains {
 			 *
 			 * @since 2.0.0
 			 *
-			 * @param DM_Domain $domain_after  Domain object after the changes have been applied successfully.
-			 * @param DM_Domain $domain_before Domain object before.
+			 * @param \DarkMatter\DomainMapping\Data\Domain $domain_after  Domain object after the changes have been applied successfully.
+			 * @param \DarkMatter\DomainMapping\Data\Domain $domain_before Domain object before.
 			 */
 			do_action( 'darkmatter_domain_updated', $domain_after, $domain_before );
 

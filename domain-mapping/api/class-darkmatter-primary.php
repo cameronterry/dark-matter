@@ -61,7 +61,7 @@ class DarkMatter_Primary {
 	 * @since 2.0.0
 	 *
 	 * @param  integer $site_id Site ID to retrieve the primary domain for.
-	 * @return DM_Domain|boolean          Returns the DM_Domain object on success. False otherwise.
+	 * @return \DarkMatter\DomainMapping\Data\Domain|boolean Returns the DM_Domain object on success. False otherwise.
 	 */
 	public function get( $site_id = 0 ) {
 		$site_id = ( empty( $site_id ) ? get_current_blog_id() : $site_id );

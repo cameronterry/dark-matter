@@ -8,6 +8,8 @@
 
 namespace DarkMatter\DomainMapping\REST;
 
+use DarkMatter\DomainMapping\Data\Domain;
+
 /**
  * Class Domains
  *
@@ -406,7 +408,7 @@ class Domains extends \WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  \DM_Domain       $item Domain object to be prepared for response.
+	 * @param  Domain           $item Domain object to be prepared for response.
 	 * @param  \WP_REST_Request $request Current request.
 	 * @return array Prepared item for REST response.
 	 */
