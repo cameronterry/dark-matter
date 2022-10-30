@@ -27,6 +27,38 @@ class Helper {
 	}
 
 	/**
+	 * Checks the supply blog/site to ensure it is public.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param \WP_Site $blog Blog to check.
+	 * @return bool True if public. False otherwise.
+	 */
+	public function is_public( $blog ) {
+		/**
+		 * Make sure we have the right kind of object.
+		 */
+		if ( ! $blog instanceof \WP_Site ) {
+			return false;
+		}
+
+		return (
+			/**
+			 * Check the current blog is public and be compatible with plugins such as Restricted Site Access.
+			 */
+			0 < (int) $blog->public
+			/**
+			 * Check the current blog has not been archived.
+			 */
+			&& 0 === (int) $blog->archived
+			/**
+			 * Check the current blog has not been "soft" deleted.
+			 */
+			&& 0 === (int) $blog->deleted
+		);
+	}
+
+	/**
 	 * Map the primary domain on the passed in value if it contains the unmapped URL and the Site has a primary domain.
 	 *
 	 * @since 3.0.0
