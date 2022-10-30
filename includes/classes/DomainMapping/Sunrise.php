@@ -32,8 +32,8 @@ class Sunrise {
 		 * Find the domain based on the request.
 		 */
 		$domain = $this->get_domain();
-		if ( $domain && $domain->active && $this->set_globals( $domain ) ) {
-
+		if ( $domain && $domain->active && $this->set_globals( $domain ) && $domain->is_primary ) {
+			$this->update_globals( $domain );
 		}
 	}
 
@@ -118,5 +118,39 @@ class Sunrise {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Prepare WordPress globals to use the primary domain data instead.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param Data\Domain $primary Primary Domain data.
+	 * @return void
+	 */
+	private function update_globals( $primary ) {
+		/**
+		 * Store the current WP_Site object in another global, so it is available for comparison and reference.
+		 */
+		global $current_blog, $original_blog;
+		$original_blog = clone $current_blog;
+
+		/**
+		 * Update the domain and path to match the primary.
+		 */
+		$current_blog->domain = $primary->domain;
+		$current_blog->path   = '/';
+
+		/**
+		 * Update the cookie domain to be the primary domain.
+		 */
+		if ( ! defined( 'COOKIE_DOMAIN' ) ) {
+			define( 'COOKIE_DOMAIN', $primary->domain );
+		}
+
+		/**
+		 * Set the constant to state the current request has been mapped.
+		 */
+		define( 'DOMAIN_MAPPING', true );
 	}
 }
