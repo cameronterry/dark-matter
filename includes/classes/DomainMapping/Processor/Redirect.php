@@ -75,6 +75,27 @@ class Redirect implements Registerable {
 	}
 
 	/**
+	 * Check to see if the current request is an Admin Post action or an AJAX action. These two requests in Dark Matter
+	 * can be on either the admin domain or the primary domain.
+	 *
+	 * @param string $filename Filename.
+	 * @return bool True if request is AJAX, false otherwise.
+	 */
+	private function is_ajax( $filename = '' ) {
+		$ajax_filenames = [
+			'admin-post.php' => true,
+			'admin-ajax.php' => true,
+		];
+
+
+		if ( ! empty( $filename ) && array_key_exists( $filename, $ajax_filenames ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Performs various checks and, if required, performs the redirect.
 	 *
 	 * @since 3.0.0
@@ -82,7 +103,28 @@ class Redirect implements Registerable {
 	 * @return void
 	 */
 	public function maybe_redirect() {
+		/**
+		 * Do not perform redirects if it is the main site.
+		 *
+		 * Note: this is here inside the caller on `muplugins_loaded` as earlier is before the function is available for
+		 * use.
+		 */
+		if ( is_main_site() ) {
+			return;
+		}
 
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request     = ltrim( $request_uri, '/' );
+
+		/**
+		 * Get the filename and remove any query strings.
+		 */
+		$filename = basename( $request );
+		$filename = strtok( $filename, '?' );
+
+		if ( $this->is_ajax( $filename ) ) {
+			return;
+		}
 	}
 
 	/**
