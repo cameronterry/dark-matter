@@ -36,7 +36,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 			]
 		);
 	}
-	
+
 	/**
 	 * Media domains set by the `DM_NETWORK_MEDIA` constant.
 	 *
@@ -54,7 +54,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 		$expected = [];
 
 		foreach ( $constant_domains as $media_domain ) {
-			$expected[] = new DM_Domain(
+			$expected[] = new \DarkMatter\DomainMapping\Data\Domain(
 				(object) [
 					'active'     => true,
 					'blog_id'    => get_current_blog_id(),
@@ -114,7 +114,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 		$expected = [];
 
 		foreach ( $media_domains as $media_domain => $id ) {
-			$expected[] = new DM_Domain(
+			$expected[] = new \DarkMatter\DomainMapping\Data\Domain(
 				(object) [
 					'active'     => true,
 					'blog_id'    => get_current_blog_id(),
