@@ -97,27 +97,7 @@ class Sunrise {
 		$current_site = \WP_Network::get_instance( $current_blog->site_id );
 		$site_id      = $current_blog->site_id;
 
-		/**
-		 * Make sure the current blog is public.
-		 */
-		if (
-			/**
-			 * Check the current blog is public and be compatible with plugins such as Restricted Site Access.
-			 */
-			0 > (int) $current_blog->public
-			/**
-			 * Check the current blog has not been archived.
-			 */
-			&& 0 !== (int) $current_blog->archived
-			/**
-			 * Check the current blog has not been "soft" deleted.
-			 */
-			&& 0 !== (int) $current_blog->deleted
-		) {
-			return false;
-		}
-
-		return true;
+		return Helper::instance()->is_public( $current_blog );
 	}
 
 	/**
