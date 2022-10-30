@@ -2,6 +2,8 @@
 /**
  * Hello, this is the beginning of the Dark Matter plugin!
  *
+ * @since 3.0.0
+ *
  * @package DarkMatter
  */
 
@@ -12,10 +14,14 @@ use DarkMatter\Interfaces\Registerable;
 
 /**
  * Class DarkMatter.
+ *
+ * @since 3.0.0
  */
 class DarkMatter {
 	/**
 	 * Constructor
+	 *
+	 * @since 3.0.0
 	 */
 	public function __construct() {
 		add_action( 'rest_api_init', [ $this, 'register_rest' ] );
@@ -28,6 +34,8 @@ class DarkMatter {
 
 	/**
 	 * Register a set of classes used by the Dark Matter plugin.
+	 *
+	 * @since 3.0.0
 	 *
 	 * @param array $classes String of class names / namespaces to be instantiated.
 	 * @return array Array of the resultant objects.
@@ -61,6 +69,8 @@ class DarkMatter {
 	/**
 	 * Register the classes for Domain Mapping.
 	 *
+	 * @since 3.0.0
+	 *
 	 * @return void
 	 */
 	public function register_domainmapping() {
@@ -93,6 +103,8 @@ class DarkMatter {
 	/**
 	 * Register REST routes. This is separate due to the need to be fired on the `rest_api_init` hook.
 	 *
+	 * @since 3.0.0
+	 *
 	 * @return void
 	 */
 	public function register_rest() {
@@ -106,6 +118,8 @@ class DarkMatter {
 
 	/**
 	 * Return the Singleton Instance of the class.
+	 *
+	 * @since 3.0.0
 	 *
 	 * @return DarkMatter
 	 */
