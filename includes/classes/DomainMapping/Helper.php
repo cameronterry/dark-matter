@@ -16,6 +16,17 @@ use DarkMatter\DomainMapping\Manager\Primary;
  */
 class Helper {
 	/**
+	 * Retrieves the FQDN as request from the URL.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_request_fqdn() {
+		return ( empty( $_SERVER['HTTP_HOST'] ) ? '' : $_SERVER['HTTP_HOST'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	}
+
+	/**
 	 * Map the primary domain on the passed in value if it contains the unmapped URL and the Site has a primary domain.
 	 *
 	 * @since 3.0.0
