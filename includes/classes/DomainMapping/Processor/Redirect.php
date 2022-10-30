@@ -134,7 +134,7 @@ class Redirect implements Registerable {
 		 * Note: this is here inside the caller on `muplugins_loaded` as earlier is before the function is available for
 		 * use.
 		 */
-		global $original_blog;
+		$original_blog = get_site();
 		if ( is_main_site() || ! Helper::instance()->is_public( $original_blog ) ) {
 			return;
 		}
