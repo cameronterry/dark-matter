@@ -10,6 +10,7 @@
 namespace DarkMatter\DomainMapping\Processor;
 
 use DarkMatter\DomainMapping\Helper;
+use DarkMatter\DomainMapping\Manager\Primary;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -133,8 +134,8 @@ class Redirect implements Registerable {
 		 * Note: this is here inside the caller on `muplugins_loaded` as earlier is before the function is available for
 		 * use.
 		 */
-		global $current_blog;
-		if ( is_main_site() || ! Helper::instance()->is_public( $current_blog ) ) {
+		global $original_blog;
+		if ( is_main_site() || ! Helper::instance()->is_public( $original_blog ) ) {
 			return;
 		}
 
@@ -160,6 +161,47 @@ class Redirect implements Registerable {
 		if ( ! apply_filters( 'darkmatter_allow_logins', false ) && $is_admin && $host === $original_blog->domain ) {
 			return;
 		}
+
+		/**
+		 * Check we have a primary domain that we can, maybe, redirect to.
+		 */
+		$primary = Primary::instance()->get();
+		if ( ! $primary || ! $primary->active ) {
+			return;
+		}
+
+		/**
+		 * Final set of checks. Make sure we redirect were appropriate here, both for the admin side/admin domain and
+		 * the public side/primary domain.
+		 */
+		if ( $is_admin && $host !== $original_blog->domain ) {
+			$is_ssl_admin = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN );
+
+			$url = 'http' . ( $is_ssl_admin ? 's' : '' ) . '://' . $original_blog->domain . $original_blog->path . $request;
+		} elseif ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
+			$url = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain . '/' . $request;
+
+			/**
+			 * Make sure the Path - if this is a sub-folder Network - is removed from the URL. For subdomain Networks,
+			 * the path will be a single forward slash (/).
+			 */
+			if ( '/' !== $original_blog->path ) {
+				$path = '/' . trim( $original_blog->path, '/' ) . '/';
+				$url  = str_ireplace( $path, '/', $url );
+			}
+		}
+
+		/**
+		 * If the URL is empty, then there is no redirect to perform.
+		 */
+		if ( empty( $url ) ) {
+			return;
+		}
+
+		header( 'X-Redirect-By: Dark-Matter-Plugin' );
+		header( 'Location:' . $url, true, 301 );
+
+		die;
 	}
 
 	/**
