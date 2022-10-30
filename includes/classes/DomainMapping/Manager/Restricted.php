@@ -1,19 +1,22 @@
 <?php
 /**
- * Class DarkMatter_Restrict
+ * Manager for Restricted domains.
+ *
+ * @since 2.0.0
  *
  * @package DarkMatter
- * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\Manager;
 
 /**
- * Class DarkMatter_Restrict
+ * Class Restricted
+ *
+ * Previously called `DarkMatter_Restrict`.
  *
  * @since 2.0.0
  */
-class DarkMatter_Restrict {
+class Restricted {
 	/**
 	 * Restrict table name for database operations.
 	 *
@@ -39,11 +42,11 @@ class DarkMatter_Restrict {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn Fully qualified domain name.
-	 * @return WP_Error|boolean       True on pass. WP_Error on failure.
+	 * @return \WP_Error|boolean       True on pass. WP_Error on failure.
 	 */
 	private function _basic_checks( $fqdn ) {
 		if ( empty( $fqdn ) ) {
-			return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+			return new \WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
 		}
 
 		/**
@@ -51,26 +54,26 @@ class DarkMatter_Restrict {
 		 * with a double forward slash.
 		 */
 		if ( false === stripos( $fqdn, '//' ) ) {
-            // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
 			$domain_parts = parse_url( '//' . ltrim( $fqdn, '/' ) );
 		} else {
-            // phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
 			$domain_parts = parse_url( $fqdn );
 		}
 
 		if ( ! empty( $domain_parts['path'] ) || ! empty( $domain_parts['port'] ) || ! empty( $domain_parts['query'] ) ) {
-			return new WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
+			return new \WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
 		}
 
 		$fqdn = $domain_parts['host'];
 
 		if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $fqdn ) {
-			return new WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
+			return new \WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
 		}
 
-		$domains = DarkMatter_Domains::instance();
+		$domains = \DarkMatter_Domains::instance();
 		if ( $domains->is_exist( $fqdn ) ) {
-			return new WP_Error( 'used', __( 'This domain is in use.', 'dark-matter' ) );
+			return new \WP_Error( 'used', __( 'This domain is in use.', 'dark-matter' ) );
 		}
 
 		return $fqdn;
@@ -82,7 +85,7 @@ class DarkMatter_Restrict {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn Domain to be added to the reserve list.
-	 * @return WP_Error|boolean       True on success, WP_Error otherwise.
+	 * @return \WP_Error|boolean       True on success, WP_Error otherwise.
 	 */
 	public function add( $fqdn = '' ) {
 		$fqdn = $this->_basic_checks( $fqdn );
@@ -92,7 +95,7 @@ class DarkMatter_Restrict {
 		}
 
 		if ( $this->is_exist( $fqdn ) ) {
-			return new WP_Error( 'exists', __( 'The Domain is already Restricted.', 'dark-matter' ) );
+			return new \WP_Error( 'exists', __( 'The Domain is already Restricted.', 'dark-matter' ) );
 		}
 
 		/**
@@ -100,8 +103,8 @@ class DarkMatter_Restrict {
 		 */
 		global $wpdb;
 
-        // phpcs:ignore
-        $result = $wpdb->insert(
+		// phpcs:ignore
+		$result = $wpdb->insert(
 			$this->restrict_table,
 			array(
 				'domain' => $fqdn,
@@ -110,7 +113,7 @@ class DarkMatter_Restrict {
 		);
 
 		if ( ! $result ) {
-			return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
+			return new \WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
 		}
 
 		$this->refresh_cache();
@@ -133,7 +136,7 @@ class DarkMatter_Restrict {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn Domain to be deleted to the restrict list.
-	 * @return WP_Error|boolean       True on success, WP_Error otherwise.
+	 * @return \WP_Error|boolean       True on success, WP_Error otherwise.
 	 */
 	public function delete( $fqdn = '' ) {
 		$fqdn = $this->_basic_checks( $fqdn );
@@ -143,7 +146,7 @@ class DarkMatter_Restrict {
 		}
 
 		if ( ! $this->is_exist( $fqdn ) ) {
-			return new WP_Error( 'missing', __( 'The Domain is not found in the Restrict list.', 'dark-matter' ) );
+			return new \WP_Error( 'missing', __( 'The Domain is not found in the Restrict list.', 'dark-matter' ) );
 		}
 
 		/**
@@ -151,8 +154,8 @@ class DarkMatter_Restrict {
 		 */
 		global $wpdb;
 
-        // phpcs:ignore
-        $result = $wpdb->delete(
+		// phpcs:ignore
+		$result = $wpdb->delete(
 			$this->restrict_table,
 			array(
 				'domain' => $fqdn,
@@ -161,7 +164,7 @@ class DarkMatter_Restrict {
 		);
 
 		if ( ! $result ) {
-			return new WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
+			return new \WP_Error( 'unknown', __( 'An unknown error has occurred. The domain has not been removed from the Restrict list.', 'dark-matter' ) );
 		}
 
 		$this->refresh_cache();
@@ -211,8 +214,8 @@ class DarkMatter_Restrict {
 		 */
 		global $wpdb;
 
-        // phpcs:ignore
-        $restricted_domains = $wpdb->get_col( "SELECT domain FROM {$this->restrict_table} ORDER BY domain" );
+		// phpcs:ignore
+		$restricted_domains = $wpdb->get_col( "SELECT domain FROM {$this->restrict_table} ORDER BY domain" );
 
 		if ( empty( $restricted_domains ) ) {
 			$restricted_domains = array();
@@ -263,7 +266,7 @@ class DarkMatter_Restrict {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return DarkMatter_Restrict
+	 * @return Restricted
 	 */
 	public static function instance() {
 		static $instance = false;
