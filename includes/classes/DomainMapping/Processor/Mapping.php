@@ -86,8 +86,7 @@ class Mapping implements Registerable {
 		 * archived or deleted.
 		 */
 		$blog = get_site();
-
-		if ( (int) $blog->public < 0 || '0' !== $blog->archived || '0' !== $blog->deleted ) {
+		if ( Helper::instance()->is_public( $blog ) ) {
 			return;
 		}
 
