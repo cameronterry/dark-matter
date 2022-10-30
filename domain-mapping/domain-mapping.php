@@ -20,11 +20,6 @@ require_once DM_PATH . '/domain-mapping/inc/compat.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
 
 /**
- * Plugin compatibility.
- */
-require_once DM_PATH . '/domain-mapping/classes/third-party/class-dm-yoast.php';
-
-/**
  * Disable SSO if the COOKIE_DOMAIN constant is set.
  */
 if ( DM_HealthChecks::instance()->cookie_domain_dm_set() && ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) ) {
