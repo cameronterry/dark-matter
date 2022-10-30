@@ -28,6 +28,24 @@ class Helper {
 	}
 
 	/**
+	 * Get the filename from the request.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_request_filename() {
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request     = ltrim( $request_uri, '/' );
+
+		/**
+		 * Get the filename and remove any query strings.
+		 */
+		$filename = basename( $request );
+		return strtok( $filename, '?' );
+	}
+
+	/**
 	 * Determines if the request is admin, but unlike the `is_admin()`, will also check for the login and register page.
 	 *
 	 * @since 3.0.0
