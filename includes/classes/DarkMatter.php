@@ -66,12 +66,19 @@ class DarkMatter {
 	 * @return void
 	 */
 	public function register_domainmapping() {
-		$this->class_register(
-			[
-				DomainMapping\Processor\Mapping::class,
-				DomainMapping\Processor\Media::class,
-			]
-		);
+		$domainmapping_classes = [
+			DomainMapping\Processor\Mapping::class,
+			DomainMapping\Processor\Media::class,
+		];
+
+		if (
+			( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI )
+			&& ! is_main_site()
+		) {
+			$domainmapping_classes[] = DomainMapping\Admin\DomainSettings::class;
+		}
+
+		$this->class_register( $domainmapping_classes );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$this->class_register(
