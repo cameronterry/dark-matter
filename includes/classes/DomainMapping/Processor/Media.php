@@ -1,20 +1,22 @@
 <?php
 /**
- * Class DM_Media
+ * Handles the mapping of media domains.
  *
  * @package DarkMatter
  *
  * @since 2.2.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\Processor;
 
 /**
- * Class DM_Media
+ * Class Media
+ *
+ * Previously called `DM_Media`
  *
  * @since 2.2.0
  */
-class DM_Media {
+class Media {
 	/**
 	 * The ID of the current site.
 	 *
@@ -86,7 +88,7 @@ class DM_Media {
 			$unmapped,
 		];
 
-		$primary = DarkMatter_Primary::instance()->get( $site_id );
+		$primary = \DarkMatter_Primary::instance()->get( $site_id );
 		if ( ! empty( $primary ) ) {
 			$main_domains[] = $primary->domain;
 		}
@@ -306,8 +308,8 @@ class DM_Media {
 	 * Ensures the "raw" version of the content, typically used by Gutenberg through it's middleware pre-load / JS
 	 * hydrate process, gets handled the same as content (which runs through the `the_content` hook).
 	 *
-	 * @param  WP_REST_Response $item Individual post / item in the response that is being processed.
-	 * @return WP_REST_Response       Post / item with the content.raw, if present, mapped.
+	 * @param  \WP_REST_Response $item Individual post / item in the response that is being processed.
+	 * @return \WP_REST_Response       Post / item with the content.raw, if present, mapped.
 	 *
 	 * @since 2.2.0
 	 */
@@ -344,7 +346,7 @@ class DM_Media {
 		/**
 		 * Ensure we have media domains to use.
 		 */
-		$media_domains = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+		$media_domains = \DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
 		if ( empty( $media_domains ) ) {
 			$this->sites[ $site_id ] = false;
 			return;
@@ -421,22 +423,4 @@ class DM_Media {
 			$value
 		);
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @return DM_Media
-	 *
-	 * @since 2.2.0
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_Media::instance();

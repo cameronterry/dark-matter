@@ -69,6 +69,7 @@ class DarkMatter {
 		$this->class_register(
 			[
 				DomainMapping\Processor\Mapping::class,
+				DomainMapping\Processor\Media::class,
 			]
 		);
 
