@@ -77,27 +77,6 @@ class Redirect implements Registerable {
 	}
 
 	/**
-	 * Determines if the current request is an admin one.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $filename Filename.
-	 * @return bool True if admin request, false otherwise.
-	 */
-	private function is_admin( $filename = '' ) {
-		$admin_filenames = [
-			'wp-login.php'    => true,
-			'wp-register.php' => true,
-		];
-
-		if ( is_admin() || ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) ) {
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
 	 * Check to see if the current request is an Admin Post action or an AJAX action. These two requests in Dark Matter
 	 * can be on either the admin domain or the primary domain.
 	 *
@@ -152,7 +131,7 @@ class Redirect implements Registerable {
 			return;
 		}
 
-		$is_admin = $this->is_admin( $filename );
+		$is_admin = Helper::instance()->is_admin( $filename );
 		$host     = Helper::instance()->get_request_fqdn();
 
 		/**
