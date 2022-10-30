@@ -11,6 +11,8 @@ namespace DarkMatter\DomainMapping\Manager;
 
 // phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.unsetFound
 
+use \DarkMatter\DomainMapping\Data;
+
 /**
  * Class Primary
  *
@@ -64,7 +66,7 @@ class Primary {
 	 * @since 2.0.0
 	 *
 	 * @param int $site_id Site ID to retrieve the primary domain for.
-	 * @return Domain|boolean Returns the DM_Domain object on success. False otherwise.
+	 * @return Data\Domain|boolean Returns the DM_Domain object on success. False otherwise.
 	 */
 	public function get( $site_id = 0 ) {
 		$site_id = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
@@ -121,7 +123,7 @@ class Primary {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return array Array of DM_Domain objects of the Primary domains for each Site in the Network.
+	 * @return array Array of Domain objects of the Primary domains for each Site in the Network.
 	 */
 	public function get_all() {
 		global $wpdb;
