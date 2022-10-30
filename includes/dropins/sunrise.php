@@ -14,8 +14,13 @@
  * @package DarkMatter
  */
 
-$sunrise_path = ( dirname( __FILE__ ) . '/plugins/dark-matter/domain-mapping/inc/sunrise.php' );
+$dirname = ( dirname( __FILE__ ) . '/plugins/dark-matter/' );
 
-if ( is_readable( $sunrise_path ) ) {
-	require_once $sunrise_path;
+/**
+ * Include the PSR-4 autoloader.
+ */
+if ( file_exists( $dirname . 'vendor/autoload.php' ) ) {
+	require_once $dirname . 'vendor/autoload.php';
 }
+
+new \DarkMatter\DomainMapping\Sunrise();
