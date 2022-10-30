@@ -13,6 +13,7 @@ namespace DarkMatter\DomainMapping;
 
 use DarkMatter\DomainMapping\Data;
 use DarkMatter\DomainMapping\Manager;
+use DarkMatter\DomainMapping\Processor\Redirect;
 
 /**
  * Class Sunrise
@@ -35,6 +36,12 @@ class Sunrise {
 		if ( $domain && $domain->active && $this->set_globals( $domain ) && $domain->is_primary ) {
 			$this->update_globals( $domain );
 		}
+
+		/**
+		 * Hook up the redirect logic.
+		 */
+		$redirect = new Redirect();
+		$redirect->register();
 	}
 
 	/**
