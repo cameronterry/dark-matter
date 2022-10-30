@@ -9,6 +9,7 @@
 namespace DarkMatter\DomainMapping\Processor;
 
 use DarkMatter\DomainMapping\Helper;
+use DarkMatter\DomainMapping\Manager\Primary;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -198,7 +199,7 @@ class Mapping implements Registerable {
 		 */
 		global $switched;
 		if ( $switched && self::$is_request_mapped ) {
-			$primary = \DarkMatter_Primary::instance()->get();
+			$primary = Primary::instance()->get();
 
 			/**
 			 * If there is no primary or if it is inactive, then the site is not mapped.

@@ -7,6 +7,8 @@
 
 namespace DarkMatter\DomainMapping;
 
+use DarkMatter\DomainMapping\Manager\Primary;
+
 /**
  * Class Helpers
  *
@@ -34,7 +36,7 @@ class Helper {
 		 * Retrieve the current blog.
 		 */
 		$blog    = get_site( absint( $blog_id ) );
-		$primary = \DarkMatter_Primary::instance()->get( $blog->blog_id );
+		$primary = Primary::instance()->get( $blog->blog_id );
 
 		$unmapped = untrailingslashit( $blog->domain . $blog->path );
 
@@ -72,7 +74,7 @@ class Helper {
 		 * Retrieve the current blog.
 		 */
 		$blog    = get_site();
-		$primary = \DarkMatter_Primary::instance()->get();
+		$primary = Primary::instance()->get();
 
 		/**
 		 * If there is no primary domain or the primary domain cannot be found

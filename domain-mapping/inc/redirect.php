@@ -107,7 +107,7 @@ function darkmatter_maybe_redirect() {
 	$http_host = ( empty( $_SERVER['HTTP_HOST'] ) ? '' : filter_var( $_SERVER['HTTP_HOST'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
 
 	$host    = trim( $http_host, '/' );
-	$primary = DarkMatter_Primary::instance()->get();
+	$primary = \DarkMatter\DomainMapping\Manager\Primary::instance()->get();
 
 	$is_admin = false;
 

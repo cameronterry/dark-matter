@@ -9,6 +9,8 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
+use DarkMatter\DomainMapping\Manager\Primary;
+
 /**
  * Class Media
  *
@@ -88,7 +90,7 @@ class Media {
 			$unmapped,
 		];
 
-		$primary = \DarkMatter_Primary::instance()->get( $site_id );
+		$primary = Primary::instance()->get( $site_id );
 		if ( ! empty( $primary ) ) {
 			$main_domains[] = $primary->domain;
 		}

@@ -169,7 +169,7 @@ class DarkMatter_Domains {
 			return new WP_Error( 'exists', __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
 		}
 
-		$dm_primary = DarkMatter_Primary::instance();
+		$dm_primary = \DarkMatter\DomainMapping\Manager\Primary::instance();
 
 		if ( $is_primary ) {
 			$primary_domain = $dm_primary->get();
@@ -671,7 +671,7 @@ class DarkMatter_Domains {
 	 * @return void
 	 */
 	private function primary_set( $domain = '', $blog_id = 0 ) {
-		$current_primary = DarkMatter_Primary::instance()->get( $blog_id );
+		$current_primary = \DarkMatter\DomainMapping\Manager\Primary::instance()->get( $blog_id );
 
 		if ( ! empty( $current_primary ) && $domain !== $current_primary->domain ) {
 			$this->update( $current_primary->domain, false, null, true, $current_primary->active );
@@ -763,7 +763,7 @@ class DarkMatter_Domains {
 			return new WP_Error( 'not found', __( 'Cannot find the domain to update.', 'dark-matter' ) );
 		}
 
-		$dm_primary = DarkMatter_Primary::instance();
+		$dm_primary = \DarkMatter\DomainMapping\Manager\Primary::instance();
 
 		$_domain = array(
 			'active'  => ( ! $active ? false : true ),
