@@ -28,6 +28,27 @@ class Helper {
 	}
 
 	/**
+	 * Determines if the request is admin, but unlike the `is_admin()`, will also check for the login and register page.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $filename Filename.
+	 * @return bool True if admin, false otherwise.
+	 */
+	public function is_admin( $filename = '' ) {
+		$admin_filenames = [
+			'wp-login.php'    => true,
+			'wp-register.php' => true,
+		];
+
+		if ( is_admin() || ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Checks the supply blog/site to ensure it is public.
 	 *
 	 * @since 3.0.0
