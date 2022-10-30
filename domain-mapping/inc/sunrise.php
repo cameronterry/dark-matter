@@ -23,17 +23,18 @@ define( 'DARKMATTER_COOKIE_SET', ! defined( 'COOKIE_DOMAIN' ) );
 $dirname = str_replace( '/inc', '', dirname( __FILE__ ) );
 
 /**
- * Load the necessary parts of Dark Matter in to place.
+ * Include the PSR-4 autoloader.
  */
-require_once $dirname . '/api/class-darkmatter-domains.php';
-
+if ( file_exists( $dirname . 'vendor/autoload.php' ) ) {
+	require_once $dirname . 'vendor/autoload.php';
+}
 /**
  * Attempt to find the Site.
  */
 $fqdn = ( empty( $_SERVER['HTTP_HOST'] ) ? '' : $_SERVER['HTTP_HOST'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
 global $dm_domain;
-$dm_domain = DarkMatter_Domains::instance()->get( $fqdn );
+$dm_domain = \DarkMatter\DomainMapping\Manager\Domain::instance()->get( $fqdn );
 
 if ( $dm_domain && $dm_domain->active ) {
 	/**
