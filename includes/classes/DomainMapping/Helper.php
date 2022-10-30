@@ -54,6 +54,8 @@ class Helper {
 	 * @return bool True if admin, false otherwise.
 	 */
 	public function is_admin( $filename = '' ) {
+		$filename = empty( $filename ) ? $this->get_request_filename() : $filename;
+
 		$admin_filenames = [
 			'wp-login.php'    => true,
 			'wp-register.php' => true,
