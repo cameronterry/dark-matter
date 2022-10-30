@@ -10,7 +10,6 @@
 namespace DarkMatter\DomainMapping\Manager;
 
 // phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.unsetFound
-use DarkMatter\DomainMapping\Data\Domain;
 
 /**
  * Class Primary
@@ -111,7 +110,7 @@ class Primary {
 		/**
 		 * Retrieve the entire Domain object.
 		 */
-		$db      = \DarkMatter_Domains::instance();
+		$db      = Domain::instance();
 		$_domain = $db->get( $primary_domain );
 
 		return $_domain;
@@ -134,7 +133,7 @@ class Primary {
 			return array();
 		}
 
-		$db = \DarkMatter_Domains::instance();
+		$db = Domain::instance();
 
 		/**
 		 * Retrieve the DM_Domain objects for each of the primary domains.
@@ -158,13 +157,13 @@ class Primary {
 	 * @return boolean True on success, false otherwise.
 	 */
 	public function set( $site_id = 0, $domain = '' ) {
-		$new_primary_domain = \DarkMatter_Domains::instance()->get( $domain );
+		$new_primary_domain = Domain::instance()->get( $domain );
 
 		if ( $new_primary_domain->blog_id !== $site_id ) {
 			return false;
 		}
 
-		$result = \DarkMatter_Domains::instance()->update(
+		$result = Domain::instance()->update(
 			$new_primary_domain->domain,
 			true,
 			$new_primary_domain->is_https,
@@ -192,13 +191,13 @@ class Primary {
 	 * @return boolean          True on success. False otherwise.
 	 */
 	public function unset( $site_id = 0, $domain = '', $db = false ) {
-		$new_primary_domain = \DarkMatter_Domains::instance()->get( $domain );
+		$new_primary_domain = Domain::instance()->get( $domain );
 
 		if ( $new_primary_domain->blog_id !== $site_id ) {
 			return false;
 		}
 
-		$result = \DarkMatter_Domains::instance()->update(
+		$result = Domain::instance()->update(
 			$new_primary_domain->domain,
 			false,
 			$new_primary_domain->is_https,

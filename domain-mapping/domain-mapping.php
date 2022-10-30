@@ -24,8 +24,6 @@ require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
  */
 require_once DM_PATH . '/domain-mapping/classes/third-party/class-dm-yoast.php';
 
-require_once DM_PATH . '/domain-mapping/api/class-darkmatter-domains.php';
-
 /**
  * Disable SSO if the COOKIE_DOMAIN constant is set.
  */

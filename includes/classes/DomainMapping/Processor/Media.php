@@ -9,6 +9,7 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
+use DarkMatter\DomainMapping\Manager\Domain;
 use DarkMatter\DomainMapping\Manager\Primary;
 
 /**
@@ -348,7 +349,7 @@ class Media {
 		/**
 		 * Ensure we have media domains to use.
 		 */
-		$media_domains = \DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+		$media_domains = Domain::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
 		if ( empty( $media_domains ) ) {
 			$this->sites[ $site_id ] = false;
 			return;

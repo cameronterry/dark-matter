@@ -71,7 +71,7 @@ class Restricted {
 			return new \WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
 		}
 
-		$domains = \DarkMatter_Domains::instance();
+		$domains = Domain::instance();
 		if ( $domains->is_exist( $fqdn ) ) {
 			return new \WP_Error( 'used', __( 'This domain is in use.', 'dark-matter' ) );
 		}

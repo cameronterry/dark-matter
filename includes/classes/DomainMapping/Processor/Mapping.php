@@ -9,6 +9,7 @@
 namespace DarkMatter\DomainMapping\Processor;
 
 use DarkMatter\DomainMapping\Helper;
+use DarkMatter\DomainMapping\Manager\Domain;
 use DarkMatter\DomainMapping\Manager\Primary;
 use DarkMatter\Interfaces\Registerable;
 
@@ -153,7 +154,7 @@ class Mapping implements Registerable {
 		 * Attempt to find the domain in Dark Matter. If the domain is found, then tell WordPress it is an internal
 		 * domain.
 		 */
-		$db     = \DarkMatter_Domains::instance();
+		$db     = Domain::instance();
 		$domain = $db->find( $host );
 
 		if ( is_a( $domain, 'DM_Domain' ) ) {
