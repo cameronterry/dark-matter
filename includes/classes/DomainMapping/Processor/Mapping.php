@@ -46,6 +46,11 @@ class Mapping implements Registerable {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 
 		/**
+		 * Domain Mapping's definition of "is admin" includes the login and register pages.
+		 */
+		$is_admin = Helper::instance()->is_admin();
+
+		/**
 		 * Prevent accidental URL mapping on requests which are not GET requests for the admin area. For example; a POST
 		 * request will include the postback for saving a post.
 		 *
@@ -55,7 +60,14 @@ class Mapping implements Registerable {
 		 *
 		 * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
 		 */
-		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( $is_admin && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
+			return;
+		}
+
+		/**
+		 * This will detect the use of the register or login page, which is "admin" by domain mapping standards.
+		 */
+		if ( $is_admin && ! is_admin() ) {
 			return;
 		}
 
