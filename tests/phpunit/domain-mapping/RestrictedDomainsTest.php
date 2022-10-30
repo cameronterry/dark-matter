@@ -89,7 +89,7 @@ class RestrictedDomainsTest extends WP_UnitTestCase {
 		 */
 		switch_to_blog( $this->blog_id );
 
-		$result = DarkMatter_Domains::instance()->add( $domain );
+		$result = \DarkMatter\DomainMapping\Manager\Domain::instance()->add( $domain );
 		$this->assertWPError( $result, 'WP_Error for adding a restricted domain.' );
 		$this->assertSame( 'reserved', $result->get_error_code(), 'Correct WP_Error for restricted domain.' );
 	}

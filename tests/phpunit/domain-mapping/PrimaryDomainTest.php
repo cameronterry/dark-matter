@@ -19,7 +19,7 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 	/**
 	 * Holder for Domains class.
 	 *
-	 * @var DarkMatter_Domains|null
+	 * @var \DarkMatter\DomainMapping\Manager\Domain|null
 	 */
 	private $darkmatter_domains = null;
 
@@ -67,7 +67,7 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->darkmatter_domains = DarkMatter_Domains::instance();
+		$this->darkmatter_domains = \DarkMatter\DomainMapping\Manager\Domain::instance();
 		$this->darkmatter_primary = \DarkMatter\DomainMapping\Manager\Primary::instance();
 
 		switch_to_blog( self::$blog_id );

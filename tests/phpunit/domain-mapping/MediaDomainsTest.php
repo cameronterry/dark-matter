@@ -47,9 +47,9 @@ class MediaDomainsTest extends WP_UnitTestCase {
 			'cdn1.darkmatter.test',
 		];
 
-		DarkMatter_Domains::instance()->network_media = $constant_domains;
+		\DarkMatter\DomainMapping\Manager\Domain::instance()->network_media = $constant_domains;
 
-		$domains = DarkMatter_Domains::instance()->get_domains_by_type();
+		$domains = \DarkMatter\DomainMapping\Manager\Domain::instance()->get_domains_by_type();
 
 		$expected = [];
 
@@ -79,7 +79,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 		/**
 		 * Reset any hard-coded media domains.
 		 */
-		DarkMatter_Domains::instance()->network_media = [];
+		\DarkMatter\DomainMapping\Manager\Domain::instance()->network_media = [];
 
 		$media_domains = [
 			'cdn1.mappeddomain1.test' => -1,
@@ -93,7 +93,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 		 * Create domains.
 		 */
 		foreach ( $media_domains as $domain => $id ) {
-			$result = DarkMatter_Domains::instance()->add(
+			$result = \DarkMatter\DomainMapping\Manager\Domain::instance()->add(
 				$domain,
 				false,
 				true,
@@ -109,7 +109,7 @@ class MediaDomainsTest extends WP_UnitTestCase {
 		/**
 		 * Retrieve the domains.
 		 */
-		$domains = DarkMatter_Domains::instance()->get_domains_by_type();
+		$domains = \DarkMatter\DomainMapping\Manager\Domain::instance()->get_domains_by_type();
 
 		$expected = [];
 

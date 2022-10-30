@@ -64,7 +64,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 			]
 		);
 
-		DarkMatter_Domains::instance()->network_media = [
+		\DarkMatter\DomainMapping\Manager\Domain::instance()->network_media = [
 			$this->media_domain,
 		];
 
@@ -73,7 +73,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		/**
 		 * Add domains to the new site.
 		 */
-		DarkMatter_Domains::instance()->add(
+		\DarkMatter\DomainMapping\Manager\Domain::instance()->add(
 			$this->primary_domain,
 			true,
 			true
