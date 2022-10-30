@@ -24,8 +24,6 @@ class DarkMatter {
 		 * Register and handle Domain Mapping module.
 		 */
 		$this->register_domainmapping();
-
-		new DomainMapping\Installer();
 	}
 
 	/**
@@ -67,6 +65,7 @@ class DarkMatter {
 	 */
 	public function register_domainmapping() {
 		$domainmapping_classes = [
+			DomainMapping\Installer::class,
 			DomainMapping\Processor\Mapping::class,
 			DomainMapping\Processor\Media::class,
 		];
