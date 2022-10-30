@@ -9,6 +9,7 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
+use DarkMatter\DomainMapping\Helper;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -127,12 +128,13 @@ class Redirect implements Registerable {
 	 */
 	public function maybe_redirect() {
 		/**
-		 * Do not perform redirects if it is the main site.
+		 * Do not perform redirects if it is the main site or the site is _not_ public.
 		 *
 		 * Note: this is here inside the caller on `muplugins_loaded` as earlier is before the function is available for
 		 * use.
 		 */
-		if ( is_main_site() ) {
+		global $current_blog;
+		if ( is_main_site() || ! Helper::instance()->is_public( $current_blog ) ) {
 			return;
 		}
 
