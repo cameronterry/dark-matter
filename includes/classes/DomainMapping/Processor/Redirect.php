@@ -152,6 +152,14 @@ class Redirect implements Registerable {
 		}
 
 		$is_admin = $this->is_admin( $filename );
+		$host     = Helper::instance()->get_request_fqdn();
+
+		/**
+		 * Check if logins are allowed on mapped domains, as we shouldn't redirect here if it is allowed.
+		 */
+		if ( ! apply_filters( 'darkmatter_allow_logins', false ) && $is_admin && $host === $original_blog->domain ) {
+			return;
+		}
 	}
 
 	/**
@@ -164,13 +172,12 @@ class Redirect implements Registerable {
 	public function register() {
 		if ( $this->can_redirect() ) {
 			/**
-			 * We use `muplugins_loaded` action (introduced in WordPress 2.8.0) rather than
-			 * the "ms_loaded" (introduced in WordPress 4.6.0).
+			 * We use `muplugins_loaded` action (introduced in WordPress 2.8.0) rather than the "ms_loaded" (introduced
+			 * in WordPress 4.6.0).
 			 *
-			 * A hook on `muplugins_loaded` is used to ensure that WordPress has loaded the
-			 * Blog / Site globals. This is specifically useful when some one goes to the
-			 * Admin domain URL - http://my.sites.com/two/ - which is to redirect to the
-			 * primary domain - http://example.com.
+			 * A hook on `muplugins_loaded` is used to ensure that WordPress has loaded the Blog/Site globals. This is
+			 * specifically useful when someone goes to the Admin domain URL - http://my.sites.com/two/ - which is to
+			 * redirect to the primary domain - http://example.com.
 			 */
 			add_action( 'muplugins_loaded', [ $this, 'maybe_redirect' ], 20 );
 		}
