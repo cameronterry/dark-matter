@@ -118,15 +118,7 @@ class Redirect implements Registerable {
 			return;
 		}
 
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
-		$request     = ltrim( $request_uri, '/' );
-
-		/**
-		 * Get the filename and remove any query strings.
-		 */
-		$filename = basename( $request );
-		$filename = strtok( $filename, '?' );
-
+		$filename = Helper::instance()->get_request_filename();
 		if ( $this->is_ajax( $filename ) ) {
 			return;
 		}
