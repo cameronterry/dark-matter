@@ -142,6 +142,12 @@ class Redirect implements Registerable {
 		}
 
 		/**
+		 * Get the request so we can use it to build up the redirect URL.
+		 */
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request     = ltrim( $request_uri, '/' );
+
+		/**
 		 * Final set of checks. Make sure we redirect were appropriate here, both for the admin side/admin domain and
 		 * the public side/primary domain.
 		 */
