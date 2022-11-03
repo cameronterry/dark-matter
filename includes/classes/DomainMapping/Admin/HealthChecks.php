@@ -80,7 +80,7 @@ class HealthChecks {
 	 * @return bool True if sunrise.php exists. False otherwise.
 	 */
 	public function dropin_exists() {
-		return file_exists( DM_PATH . '/domain-mapping/sunrise.php' );
+		return file_exists( DM_PATH . '/includes/dropins/sunrise.php' );
 	}
 
 	/**
@@ -103,7 +103,7 @@ class HealthChecks {
 	 */
 	public function is_dropin_latest() {
 		$destination = WP_CONTENT_DIR . '/sunrise.php';
-		$source      = DM_PATH . '/domain-mapping/sunrise.php';
+		$source      = DM_PATH . '/includes/dropins/sunrise.php';
 
 		return filesize( $destination ) === filesize( $source ) && md5_file( $destination ) === md5_file( $source );
 	}
