@@ -1,9 +1,10 @@
 <?php
 /**
- * Class DM_HealthChecks
+ * Integration with WordPress Core's health setup.
  *
- * @package DarkMatter
  * @since 2.1.0
+ *
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\Admin;

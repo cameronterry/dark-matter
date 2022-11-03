@@ -1,9 +1,10 @@
 <?php
 /**
- * Class DarkMatter_Dropin_CLI
+ * CLI for managing the Domain Mapping dropin (sunrise.php).
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\CLI;

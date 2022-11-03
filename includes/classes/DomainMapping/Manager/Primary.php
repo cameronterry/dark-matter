@@ -4,7 +4,7 @@
  *
  * @since 2.0.0
  *
- * @package DarkMatter
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\Manager;

@@ -2,9 +2,9 @@
 /**
  * Handles the mapping of media domains.
  *
- * @package DarkMatter
- *
  * @since 2.2.0
+ *
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\Processor;

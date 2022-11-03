@@ -4,7 +4,7 @@
  *
  * @since 3.0.0
  *
- * @package DarkMatterPlugin\Domain
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\Processor;

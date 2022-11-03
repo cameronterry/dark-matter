@@ -2,8 +2,9 @@
 /**
  * Handles the mapping of URLs.
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\Processor;

@@ -2,8 +2,9 @@
 /**
  * Handles any installation logic needed for the Domain Mapping module.
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping;

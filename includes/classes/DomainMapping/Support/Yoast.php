@@ -4,7 +4,7 @@
  *
  * @since 2.1.3
  *
- * @package DarkMatter
+ * @package DarkMatter\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\Support;
