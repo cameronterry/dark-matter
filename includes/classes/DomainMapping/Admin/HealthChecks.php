@@ -6,14 +6,18 @@
  * @since 2.1.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\Admin;
+
+use DarkMatter\DomainMapping\Manager\Primary;
 
 /**
- * Class DM_HealthChecks
+ * Class HealthChecks
+ *
+ * Previously called `DM_HealthChecks`.
  *
  * @since 2.1.0
  */
-class DM_HealthChecks {
+class HealthChecks {
 	/**
 	 * Constructor.
 	 *
@@ -223,12 +227,11 @@ class DM_HealthChecks {
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
 			),
-			'description' => '',
 			'actions'     => '',
 			'test'        => 'darkmatter_domain_mapping_primary_domain_set',
 		];
 
-		$primary = DarkMatter_Primary::instance()->get();
+		$primary = Primary::instance()->get();
 
 		if ( empty( $primary ) ) {
 			$result['label']          = __( 'You have not a set a primary domain.', 'dark-matter' );
@@ -308,22 +311,4 @@ class DM_HealthChecks {
 
 		return $result;
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @since 2.1.0
-	 *
-	 * @return DM_HealthChecks
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_HealthChecks::instance();

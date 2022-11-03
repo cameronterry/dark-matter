@@ -87,6 +87,8 @@ class DarkMatter {
 			$domainmapping_classes[] = DomainMapping\Admin\DomainSettings::class;
 		}
 
+		$domainmapping_classes[] = DomainMapping\Admin\HealthChecks::class;
+
 		if ( defined( 'WPSEO_VERSION' ) ) {
 			$domainmapping_classes = DomainMapping\Support\Yoast::class;
 		}
