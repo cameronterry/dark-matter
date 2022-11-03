@@ -74,6 +74,29 @@ class DarkMatter {
 	 * @return void
 	 */
 	public function register_domainmapping() {
+		/**
+		 * Domain type constants.
+		 */
+		define( 'DM_DOMAIN_TYPE_MAIN', 1 );
+		define( 'DM_DOMAIN_TYPE_MEDIA', 2 );
+
+		/**
+		 * Basic compatibility/configuration for bbPress and WooCommerce.
+		 */
+		if (
+			/**
+			 * Detect if WooCommerce is installed.
+			 */
+			class_exists( 'WooCommerce' )
+			||
+			/**
+			 * Detect if bbPress is installed.
+			 */
+			class_exists( 'bbPress' )
+		) {
+			add_filter( 'darkmatter_allow_logins', '__return_true' );
+		}
+
 		$domainmapping_classes = [
 			DomainMapping\Installer::class,
 			DomainMapping\Processor\Mapping::class,

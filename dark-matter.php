@@ -55,9 +55,11 @@ require_once DM_PATH . '/dark-matter/class-dm-pluginupdate.php';
 new DM_PluginUpdate();
 
 /**
- * Domain Mapping module.
+ * Disable SSO if the COOKIE_DOMAIN constant is set.
  */
-require DM_PATH . '/domain-mapping/domain-mapping.php';
+if ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) {
+	require_once DM_PATH . '/domain-mapping/sso/class-dm-sso-cookie.php';
+}
 
 /**
  * Let the magic - and bugs ... probably bugs! - begin.
