@@ -8,6 +8,7 @@
 
 namespace DarkMatter\DomainMapping\CLI;
 
+use DarkMatter\DomainMapping\Admin\HealthChecks;
 use WP_CLI;
 use WP_CLI_Command;
 
@@ -31,8 +32,7 @@ class Dropin extends WP_CLI_Command {
 	 * @since 2.0.0
 	 */
 	public function check() {
-		$health_check = \DM_HealthChecks::instance();
-
+		$health_check = new HealthChecks();
 		if ( $health_check->is_dropin_latest() ) {
 			WP_CLI::success( __( 'Current Sunrise dropin matches the Sunrise within Dark Matter plugin.', 'dark-matter' ) );
 			return;
@@ -76,7 +76,7 @@ class Dropin extends WP_CLI_Command {
 	 */
 	public function update( $args, $assoc_args ) {
 		$destination = WP_CONTENT_DIR . '/sunrise.php';
-		$source      = DM_PATH . '/domain-mapping/sunrise.php';
+		$source      = DM_PATH . '/includes/dropins/sunrise.php';
 
 		$opts = wp_parse_args(
 			$assoc_args,

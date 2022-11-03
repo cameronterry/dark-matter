@@ -8,6 +8,7 @@
 
 namespace DarkMatter\DomainMapping\CLI;
 
+use DarkMatter\DomainMapping\Manager;
 use WP_CLI;
 use WP_CLI_Command;
 
@@ -86,7 +87,7 @@ class Domains extends WP_CLI_Command {
 		/**
 		 * Add the domain.
 		 */
-		$db     = \DarkMatter_Domains::instance();
+		$db     = Manager\Domain::instance();
 		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'], $type );
 
 		if ( is_wp_error( $result ) ) {
@@ -185,7 +186,7 @@ class Domains extends WP_CLI_Command {
 		}
 
 		if ( $opts['primary'] ) {
-			$db      = \DarkMatter_Primary::instance();
+			$db      = Manager\Primary::instance();
 			$domains = $db->get_all();
 		} else {
 			/**
@@ -198,7 +199,7 @@ class Domains extends WP_CLI_Command {
 				$site_id = null;
 			}
 
-			$db      = \DarkMatter_Domains::instance();
+			$db      = Manager\Domain::instance();
 			$domains = $db->get_domains( $site_id );
 		}
 
@@ -302,7 +303,7 @@ class Domains extends WP_CLI_Command {
 			]
 		);
 
-		$db = \DarkMatter_Domains::instance();
+		$db = Manager\Domain::instance();
 
 		/**
 		 * Remove the domain.
@@ -385,7 +386,7 @@ class Domains extends WP_CLI_Command {
 
 		$fqdn = $args[0];
 
-		$db            = \DarkMatter_Domains::instance();
+		$db            = Manager\Domain::instance();
 		$domain_before = $db->get( $fqdn );
 
 		$opts = wp_parse_args(

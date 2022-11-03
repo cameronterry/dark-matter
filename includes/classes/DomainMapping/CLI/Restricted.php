@@ -8,6 +8,7 @@
 
 namespace DarkMatter\DomainMapping\CLI;
 
+use \DarkMatter\DomainMapping\Manager;
 use WP_CLI;
 use WP_CLI_Command;
 
@@ -44,7 +45,7 @@ class Restricted extends WP_CLI_Command {
 
 		$fqdn = $args[0];
 
-		$restricted = \DarkMatter_Restrict::instance();
+		$restricted = Manager\Restricted::instance();
 		$result     = $restricted->add( $fqdn );
 
 		if ( is_wp_error( $result ) ) {
@@ -106,7 +107,7 @@ class Restricted extends WP_CLI_Command {
 			$opts['format'] = 'table';
 		}
 
-		$db = \DarkMatter_Restrict::instance();
+		$db = Manager\Restricted::instance();
 
 		$restricted = $db->get();
 
@@ -158,7 +159,7 @@ class Restricted extends WP_CLI_Command {
 
 		$fqdn = $args[0];
 
-		$restricted = \DarkMatter_Restrict::instance();
+		$restricted = Manager\Restricted::instance();
 		$result     = $restricted->delete( $fqdn );
 
 		if ( is_wp_error( $result ) ) {
