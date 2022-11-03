@@ -8,6 +8,8 @@
 
 namespace DarkMatter\DomainMapping\REST;
 
+use \DarkMatter\DomainMapping\Manager;
+
 /**
  * Class Restricted
  *
@@ -35,7 +37,7 @@ class Restricted extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = \DarkMatter_Restrict::instance();
+		$db = Manager\Restricted::instance();
 
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
@@ -89,7 +91,7 @@ class Restricted extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = \DarkMatter_Restrict::instance();
+		$db = Manager\Restricted::instance();
 
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
@@ -133,7 +135,7 @@ class Restricted extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_items( $request ) {
-		$db = \DarkMatter_Restrict::instance();
+		$db = Manager\Restricted::instance();
 
 		return rest_ensure_response( $db->get() );
 	}

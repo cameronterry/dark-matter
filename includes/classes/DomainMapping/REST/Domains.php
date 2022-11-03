@@ -8,7 +8,8 @@
 
 namespace DarkMatter\DomainMapping\REST;
 
-use DarkMatter\DomainMapping\Data\Domain;
+use DarkMatter\DomainMapping\Data;
+use \DarkMatter\DomainMapping\Manager;
 
 /**
  * Class Domains
@@ -38,7 +39,7 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = \DarkMatter_Domains::instance();
+		$db = Manager\Domain::instance();
 
 		$item = $this->prepare_item_for_database( $request );
 
@@ -85,7 +86,7 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = \DarkMatter_Domains::instance();
+		$db = Manager\Domain::instance();
 
 		$result = $db->delete( $request['domain'], $request['force'] );
 
@@ -132,7 +133,7 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_item( $request ) {
-		$db = \DarkMatter_Domains::instance();
+		$db = Manager\Domain::instance();
 
 		$result = $db->get( $request['domain'] );
 
@@ -322,7 +323,7 @@ class Domains extends \WP_REST_Controller {
 			$site_id = get_current_blog_id();
 		}
 
-		$db = \DarkMatter_Domains::instance();
+		$db = Manager\Domain::instance();
 
 		$response = array();
 
@@ -408,7 +409,7 @@ class Domains extends \WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  Domain           $item Domain object to be prepared for response.
+	 * @param  Data\Domain      $item    Domain object to be prepared for response.
 	 * @param  \WP_REST_Request $request Current request.
 	 * @return array Prepared item for REST response.
 	 */
@@ -572,7 +573,7 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function update_item( $request ) {
-		$db = \DarkMatter_Domains::instance();
+		$db = Manager\Domain::instance();
 
 		$item = $this->prepare_item_for_database( $request );
 
