@@ -39,19 +39,20 @@ class DM_URL {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 
 		/**
-		 * Domain Mapping's definition of "is admin" includes the login and register pages.
+		 * Ensure we do not map on the login and register pages.
 		 */
 		$admin_filenames = [
 			'wp-login.php'    => true,
 			'wp-register.php' => true,
 		];
 		$filename        = $this->get_request_filename();
-		if ( is_admin() || ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) ) {
+		if ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) {
 			/**
 			 * Ensure the "Go to [site name]" and Privacy Policy links still go to the mapped domain.
 			 */
 			add_filter( 'login_site_html_link', [ $this, 'map' ] ); // Supports WordPress 5.7+ only.
 			add_filter( 'privacy_policy_url', [ $this, 'map' ] ); // Supports WordPress 4.9.6+ only.
+
 			return;
 		}
 
@@ -65,7 +66,7 @@ class DM_URL {
 		 *
 		 * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
 		 */
-		if ( ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
 			return;
 		}
 
