@@ -66,7 +66,7 @@ class DM_URL {
 		 *
 		 * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
 		 */
-		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}
 
@@ -149,7 +149,7 @@ class DM_URL {
 	 * @return string
 	 */
 	public function get_request_filename() {
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_unslash( wp_strip_all_tags( $_SERVER['REQUEST_URI'] ) ) );
 		$request     = ltrim( $request_uri, '/' );
 
 		/**
