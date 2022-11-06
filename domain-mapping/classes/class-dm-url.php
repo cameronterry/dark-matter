@@ -291,7 +291,7 @@ class DM_URL {
 		 * affect database and cache updates to ensure compatibility if the
 		 * domain mapping is changed or removed.
 		 */
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 
 		/**
 		 * This is called for all requests as it is possible for the REST API to be called and process without a cURL
