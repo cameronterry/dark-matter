@@ -126,6 +126,22 @@ class DM_URL {
 	}
 
 	/**
+	 * Get the filename, if it has one, from the current request.
+	 *
+	 * @return string
+	 */
+	public function get_request_filename() {
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request     = ltrim( $request_uri, '/' );
+
+		/**
+		 * Get the filename and remove any query strings.
+		 */
+		$filename = basename( $request );
+		return strtok( $filename, '?' );
+	}
+
+	/**
 	 * Checks to ensure that "mapped" domains are considered internal to WordPress and not external.
 	 *
 	 * @since 2.0.0
