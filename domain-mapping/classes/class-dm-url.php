@@ -47,6 +47,11 @@ class DM_URL {
 		];
 		$filename        = $this->get_request_filename();
 		if ( is_admin() || ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) ) {
+			/**
+			 * Ensure the "Go to [site name]" and Privacy Policy links still go to the mapped domain.
+			 */
+			add_filter( 'login_site_html_link', [ $this, 'map' ] ); // Supports WordPress 5.7+ only.
+			add_filter( 'privacy_policy_url', [ $this, 'map' ] ); // Supports WordPress 4.9.6+ only.
 			return;
 		}
 
