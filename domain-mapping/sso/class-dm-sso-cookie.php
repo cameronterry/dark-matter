@@ -112,7 +112,7 @@ class DM_SSO_Cookie {
 	private function is_admin_domain() {
 		$network = get_network();
 
-		$http_host = ( empty( $_SERVER['HTTP_HOST'] ) ? '' : filter_var( $_SERVER['HTTP_HOST'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$http_host = ( empty( $_SERVER['HTTP_HOST'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['HTTP_HOST'] ) ) );
 
 		if ( ! empty( $network ) && false === stripos( $network->domain, $http_host ) ) {
 			return false;
@@ -141,13 +141,12 @@ class DM_SSO_Cookie {
 		echo '// dm_sso' . PHP_EOL;
 
 		if ( is_user_logged_in() ) {
-			$referer = ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+			$referer = ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) );
 
 			$action = sprintf(
 				'darkmatter-sso|%1$s|%2$s',
 				$referer,
-				md5( empty( $_SERVER['HTTP_USER_AGENT'] ) ? '' : filter_var( $_SERVER['HTTP_USER_AGENT'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) ),
-				get_current_user_id()
+				md5( empty( $_SERVER['HTTP_USER_AGENT'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) )
 			);
 
 			/**
@@ -189,7 +188,7 @@ class DM_SSO_Cookie {
 		echo '// dm_sso' . PHP_EOL;
 
 		if ( false === is_user_logged_in() ) {
-			$referer = ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+			$referer = ( empty( $_SERVER['HTTP_REFERER'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) );
 
 			$url = add_query_arg(
 				array(
@@ -296,7 +295,7 @@ class DM_SSO_Cookie {
 	 * @return void
 	 */
 	public function validate_token() {
-		$dm_action = filter_input( INPUT_GET, '__dm_action', FILTER_SANITIZE_STRING );
+		$dm_action = ( empty( $_GET['__dm_action'] ) ? '' : wp_strip_all_tags( wp_unslash( $_GET['__dm_action'] ) ) );
 
 		/**
 		 * Ensure that URLs with the __dm_action query string are not cached by browsers.
@@ -320,14 +319,13 @@ class DM_SSO_Cookie {
 			/**
 			 * Validate the token provided in the URL.
 			 */
-			$user_id = wp_validate_auth_cookie( filter_input( INPUT_GET, 'auth', FILTER_SANITIZE_STRING ), 'auth' );
-			$nonce   = filter_input( INPUT_GET, 'nonce', FILTER_SANITIZE_STRING );
+			$user_id = wp_validate_auth_cookie( wp_strip_all_tags( wp_unslash( $_GET['auth'] ) ), 'auth' );
+			$nonce   = wp_strip_all_tags( wp_unslash( $_GET['nonce'] ) );
 
 			$action = sprintf(
 				'darkmatter-sso|%1$s|%2$s',
-				( empty( $_SERVER['HTTP_REFERER'] ) ? '' : filter_var( $_SERVER['HTTP_REFERER'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) ),
-				md5( empty( $_SERVER['HTTP_USER_AGENT'] ) ? '' : filter_var( $_SERVER['HTTP_USER_AGENT'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) ),
-				$user_id
+				( empty( $_SERVER['HTTP_REFERER'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) ),
+				md5( empty( $_SERVER['HTTP_USER_AGENT'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['HTTP_USER_AGENT'] ) ) )
 			);
 
 			/**
