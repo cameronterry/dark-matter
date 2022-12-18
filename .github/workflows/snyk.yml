@@ -1,6 +1,6 @@
-name: Security Checks
+name: Snyk Scan
 
-on: pull_request
+on: workflow_dispatch # Temporarily disabling due to a peculiar error.
 
 jobs:
   security:
