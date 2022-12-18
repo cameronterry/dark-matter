@@ -47,9 +47,22 @@ class Mapping implements Registerable {
 		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
 
 		/**
-		 * Domain Mapping's definition of "is admin" includes the login and register pages.
+		 * Ensure we do not map on the login and register pages.
 		 */
-		$is_admin = Helper::instance()->is_admin();
+		$admin_filenames = [
+			'wp-login.php'    => true,
+			'wp-register.php' => true,
+		];
+		$filename        = $this->get_request_filename();
+		if ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) {
+			/**
+			 * Ensure the "Go to [site name]" and Privacy Policy links still go to the mapped domain.
+			 */
+			add_filter( 'login_site_html_link', [ $this, 'map' ] ); // Supports WordPress 5.7+ only.
+			add_filter( 'privacy_policy_url', [ $this, 'map' ] ); // Supports WordPress 4.9.6+ only.
+
+			return;
+		}
 
 		/**
 		 * Prevent accidental URL mapping on requests which are not GET requests for the admin area. For example; a POST
@@ -61,14 +74,7 @@ class Mapping implements Registerable {
 		 *
 		 * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
 		 */
-		if ( $is_admin && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
-			return;
-		}
-
-		/**
-		 * This will detect the use of the register or login page, which is "admin" by domain mapping standards.
-		 */
-		if ( $is_admin && ! is_admin() ) {
+		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}
 
@@ -142,6 +148,22 @@ class Mapping implements Registerable {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Get the filename, if it has one, from the current request.
+	 *
+	 * @return string
+	 */
+	public function get_request_filename() {
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_unslash( wp_strip_all_tags( $_SERVER['REQUEST_URI'] ) ) );
+		$request     = ltrim( $request_uri, '/' );
+
+		/**
+		 * Get the filename and remove any query strings.
+		 */
+		$filename = basename( $request );
+		return strtok( $filename, '?' );
 	}
 
 	/**
@@ -285,7 +307,7 @@ class Mapping implements Registerable {
 		 * affect database and cache updates to ensure compatibility if the
 		 * domain mapping is changed or removed.
 		 */
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 
 		/**
 		 * This is called for all requests as it is possible for the REST API to be called and process without a cURL
