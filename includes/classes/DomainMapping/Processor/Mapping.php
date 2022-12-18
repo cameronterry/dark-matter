@@ -53,7 +53,7 @@ class Mapping implements Registerable {
 			'wp-login.php'    => true,
 			'wp-register.php' => true,
 		];
-		$filename        = $this->get_request_filename();
+		$filename        = Helper::instance()->get_request_filename();
 		if ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) {
 			/**
 			 * Ensure the "Go to [site name]" and Privacy Policy links still go to the mapped domain.
@@ -148,22 +148,6 @@ class Mapping implements Registerable {
 		}
 
 		return $url;
-	}
-
-	/**
-	 * Get the filename, if it has one, from the current request.
-	 *
-	 * @return string
-	 */
-	public function get_request_filename() {
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_unslash( wp_strip_all_tags( $_SERVER['REQUEST_URI'] ) ) );
-		$request     = ltrim( $request_uri, '/' );
-
-		/**
-		 * Get the filename and remove any query strings.
-		 */
-		$filename = basename( $request );
-		return strtok( $filename, '?' );
 	}
 
 	/**

@@ -37,7 +37,7 @@ class Helper {
 	 * @return string
 	 */
 	public function get_request_filename() {
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 		$request     = ltrim( $request_uri, '/' );
 
 		/**
