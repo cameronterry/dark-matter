@@ -53,9 +53,9 @@ class Restricted extends \WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response(
-			array(
+			[
 				'domain' => $domain,
-			)
+			]
 		);
 
 		$response->set_status( '201' );
@@ -107,10 +107,10 @@ class Restricted extends \WP_REST_Controller {
 		}
 
 		return rest_ensure_response(
-			array(
+			[
 				'deleted' => true,
 				'domain'  => $domain,
-			)
+			]
 		);
 	}
 
@@ -168,8 +168,8 @@ class Restricted extends \WP_REST_Controller {
 			$this->rest_base,
 			[
 				'methods'             => \WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'create_item' ),
-				'permission_callback' => array( $this, 'create_item_permissions_check' ),
+				'callback'            => [ $this, 'create_item' ],
+				'permission_callback' => [ $this, 'create_item_permissions_check' ],
 			]
 		);
 
@@ -178,8 +178,8 @@ class Restricted extends \WP_REST_Controller {
 			$this->rest_base,
 			[
 				'methods'             => \WP_REST_Server::DELETABLE,
-				'callback'            => array( $this, 'delete_item' ),
-				'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+				'callback'            => [ $this, 'delete_item' ],
+				'permission_callback' => [ $this, 'delete_item_permissions_check' ],
 			]
 		);
 
@@ -188,8 +188,8 @@ class Restricted extends \WP_REST_Controller {
 			$this->rest_base,
 			[
 				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 			]
 		);
 	}

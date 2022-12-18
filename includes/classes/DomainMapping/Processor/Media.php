@@ -47,13 +47,13 @@ class Media {
 	 * @since 2.2.0
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'init' ), 10 );
-		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
-		add_action( 'switch_blog', array( $this, 'switch_blog' ), 10, 1 );
+		add_action( 'init', [ $this, 'init' ], 10 );
+		add_action( 'rest_api_init', [ $this, 'prepare_rest' ] );
+		add_action( 'switch_blog', [ $this, 'switch_blog' ], 10, 1 );
 
-		add_filter( 'the_content', array( $this, 'map' ), 100, 1 );
-		add_filter( 'wp_get_attachment_url', array( $this, 'map_url' ), 100, 1 );
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
+		add_filter( 'the_content', [ $this, 'map' ], 100, 1 );
+		add_filter( 'wp_get_attachment_url', [ $this, 'map_url' ], 100, 1 );
+		add_filter( 'wp_insert_post_data', [ $this, 'insert_post' ], -10, 1 );
 	}
 
 	/**
@@ -300,10 +300,10 @@ class Media {
 		/**
 		 * Loop all post types with REST endpoints to fix the mapping for content.raw property.
 		 */
-		$rest_post_types = get_post_types( array( 'show_in_rest' => true ) );
+		$rest_post_types = get_post_types( [ 'show_in_rest' => true ] );
 
 		foreach ( $rest_post_types as $post_type ) {
-			add_filter( "rest_prepare_{$post_type}", array( $this, 'prepare_rest_post_item' ), 10, 1 );
+			add_filter( "rest_prepare_{$post_type}", [ $this, 'prepare_rest_post_item' ], 10, 1 );
 		}
 	}
 

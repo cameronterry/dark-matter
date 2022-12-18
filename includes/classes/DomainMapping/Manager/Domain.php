@@ -9,7 +9,7 @@
 
 namespace DarkMatter\DomainMapping\Manager;
 
-Use DarkMatter\DomainMapping\Data;
+use DarkMatter\DomainMapping\Data;
 
 /**
  * Class Domain
@@ -196,26 +196,26 @@ class Domain {
 			return new \WP_Error( 'type', __( 'The type for the new domain is not supported.', 'dark-matter' ) );
 		}
 
-		$_domain = array(
+		$_domain = [
 			'active'     => ( ! $active ? false : true ),
 			'blog_id'    => get_current_blog_id(),
 			'domain'     => $fqdn,
 			'is_primary' => ( ! $is_primary ? false : true ),
 			'is_https'   => ( ! $is_https ? false : true ),
 			'type'       => ( ! empty( $type ) ? $type : DM_DOMAIN_TYPE_MAIN ),
-		);
+		];
 
 		$result = $this->wpdb->insert(
 			$this->dm_table,
 			$_domain,
-			array(
+			[
 				'%d',
 				'%d',
 				'%s',
 				'%d',
 				'%d',
 				'%d',
-			)
+			]
 		);
 
 		if ( $result ) {
@@ -581,7 +581,7 @@ class Domain {
 		/**
 		 * Retrieve the domain details, probably from cache, and get an array of `DM_Domain` objects.
 		 */
-		$domains = array();
+		$domains = [];
 
 		foreach ( $_domains as $_domain ) {
 			$domains[] = $this->get( $_domain );
@@ -620,7 +620,7 @@ class Domain {
 		/**
 		 * Retrieve the domain details from the cache. If the cache is
 		 */
-		$domains = array();
+		$domains = [];
 
 		foreach ( $_domains as $_domain ) {
 			$domains[] = $this->get( $_domain );
@@ -770,11 +770,11 @@ class Domain {
 
 		$dm_primary = \DarkMatter\DomainMapping\Manager\Primary::instance();
 
-		$_domain = array(
+		$_domain = [
 			'active'  => ( ! $active ? false : true ),
 			'blog_id' => $domain_before->blog_id,
 			'domain'  => $fqdn,
-		);
+		];
 
 		/**
 		 * Determine if there is an attempt to update the "is primary" field.
@@ -808,9 +808,9 @@ class Domain {
 		$result = $this->wpdb->update(
 			$this->dm_table,
 			$_domain,
-			array(
+			[
 				'id' => $domain_before->id,
-			)
+			]
 		);
 
 		if ( $result ) {

@@ -182,7 +182,7 @@ class Domains extends WP_CLI_Command {
 			]
 		);
 
-		if ( ! in_array( $opts['format'], array( 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
+		if ( ! in_array( $opts['format'], [ 'table', 'json', 'csv', 'yaml', 'count' ] ) ) {
 			$opts['format'] = 'table';
 		}
 
@@ -212,13 +212,13 @@ class Domains extends WP_CLI_Command {
 				$no_val  = __( 'No', 'dark-matter' );
 				$yes_val = __( 'Yes', 'dark-matter' );
 
-				$columns = array(
+				$columns = [
 					'F.Q.D.N.' => $domain->domain,
 					'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
 					'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
 					'Active'   => ( $domain->active ? $yes_val : $no_val ),
 					'Type'     => ( DM_DOMAIN_TYPE_MEDIA === $domain->type ? 'Media' : 'Main' ),
-				);
+				];
 
 				/**
 				 * If the query is the root Site and we are displaying all domains,

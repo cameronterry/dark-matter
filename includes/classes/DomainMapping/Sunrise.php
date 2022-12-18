@@ -6,7 +6,7 @@
  *
  * @package DarkMatterPlugin\DomainMapping
  *
- * @phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+ * @phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
  */
 
 namespace DarkMatter\DomainMapping;

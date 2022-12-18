@@ -120,10 +120,10 @@ class HealthChecks {
 		$result = [
 			'label'       => __( 'Dark Matter single-sign on (bringing the admin bar to the public-facing side) is enabled.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
+			],
 			'description' => sprintf(
 				'<p>%s</p>',
 				__( 'Dark Matter single-sign on is enabled and can load the admin bar when WordPress users are visiting the public-facing side of your site.', 'dark-matter' )
@@ -160,10 +160,10 @@ class HealthChecks {
 		$result = [
 			'label'       => __( 'Sunrise dropin is enabled and up-to-date.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
+			],
 			'description' => sprintf(
 				'<p>%s</p>',
 				__( 'Sunrise is the name of the dropin file which maps custom domains to your WordPress sites.', 'dark-matter' )
@@ -224,10 +224,10 @@ class HealthChecks {
 		$result = [
 			'label'       => __( 'You have a primary domain.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
+			],
 			'actions'     => '',
 			'test'        => 'darkmatter_domain_mapping_primary_domain_set',
 		];
@@ -277,10 +277,10 @@ class HealthChecks {
 		$result = [
 			'label'       => __( 'Your SSL configuration is compatible with Dark Matter.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
+			],
 			'description' => sprintf(
 				'<p>%s</p>',
 				__( 'Your admin area is secured by HTTPS and compatible with domain mapping.', 'dark-matter' )

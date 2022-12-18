@@ -166,136 +166,136 @@ class Domains extends \WP_REST_Controller {
 			'$schema'    => 'http://json-schema.org/draft-04/schema#',
 			'title'      => 'Domain',
 			'type'       => 'object',
-			'properties' => array(
-				'id'         => array(
-					'context'     => array( 'view', 'edit' ),
+			'properties' => [
+				'id'         => [
+					'context'     => [ 'view', 'edit' ],
 					'description' => __( 'Unique identifier for the object.', 'dark-matter' ),
 					'readonly'    => true,
 					'type'        => 'integer',
-				),
-				'domain'     => array(
-					'context'     => array( 'view', 'edit' ),
+				],
+				'domain'     => [
+					'context'     => [ 'view', 'edit' ],
 					'default'     => '',
 					'description' => __( 'Domain name.', 'dark-matter' ),
 					'required'    => true,
 					'type'        => 'string',
-				),
-				'is_primary' => array(
-					'context'     => array( 'view', 'edit' ),
+				],
+				'is_primary' => [
+					'context'     => [ 'view', 'edit' ],
 					'default'     => null,
 					'description' => __( 'Domain is the primary domain for the Site.', 'dark-matter' ),
 					'required'    => false,
 					'type'        => 'boolean',
-				),
-				'is_active'  => array(
-					'context'     => array( 'view', 'edit' ),
+				],
+				'is_active'  => [
+					'context'     => [ 'view', 'edit' ],
 					'default'     => null,
 					'description' => __( 'Domain is currently being used.', 'dark-matter' ),
 					'required'    => false,
 					'type'        => 'boolean',
-				),
-				'is_https'   => array(
-					'context'     => array( 'view', 'edit' ),
+				],
+				'is_https'   => [
+					'context'     => [ 'view', 'edit' ],
 					'default'     => null,
 					'description' => __( 'Domain is to be available on the HTTPS protocol.', 'dark-matter' ),
 					'required'    => false,
 					'type'        => 'boolean',
-				),
-				'type'       => array(
-					'context'     => array( 'view', 'edit' ),
+				],
+				'type'       => [
+					'context'     => [ 'view', 'edit' ],
 					'default'     => null,
 					'description' => __( 'Type of domain.', 'dark-matter' ),
 					'required'    => false,
 					'type'        => 'integer',
-				),
-				'site'       => array(
+				],
+				'site'       => [
 					'description' => __( 'Site ID the domain is assigned against.', 'dark-matter' ),
 					'type'        => 'object',
-					'context'     => array( 'view', 'edit' ),
+					'context'     => [ 'view', 'edit' ],
 					'readonly'    => true,
-					'properties'  => array(
-						'blog_id'      => array(
-							'context'     => array( 'view', 'edit' ),
+					'properties'  => [
+						'blog_id'      => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Site ID.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'integer',
-						),
-						'site_id'      => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'site_id'      => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'The ID of the site\'s parent network.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'integer',
-						),
-						'domain'       => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'domain'       => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Domain of the site.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'string',
-						),
-						'path'         => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'path'         => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Path of the site.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'string',
-						),
-						'registered'   => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'registered'   => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'The date on which the site was created or registered.', 'dark-matter' ),
 							'format'      => 'date-time',
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'string',
-						),
-						'last_updated' => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'last_updated' => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'The date and time on which site settings were last updated.', 'dark-matter' ),
 							'format'      => 'date-time',
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'string',
-						),
-						'public'       => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'public'       => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Whether the site should be treated as public.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'integer',
-						),
-						'archived'     => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'archived'     => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Whether the site should be treated as archived.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'boolean',
-						),
-						'mature'       => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'mature'       => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Whether the site should be treated as mature.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'boolean',
-						),
-						'spam'         => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'spam'         => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Whether the site should be treated as spam.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'boolean',
-						),
-						'deleted'      => array(
-							'context'     => array( 'view', 'edit' ),
+						],
+						'deleted'      => [
+							'context'     => [ 'view', 'edit' ],
 							'description' => __( 'Whether the site should be treated as deleted.', 'dark-matter' ),
 							'readonly'    => true,
 							'required'    => false,
 							'type'        => 'boolean',
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 		);
 
 		return $schema;
@@ -326,7 +326,7 @@ class Domains extends \WP_REST_Controller {
 
 		$db = Manager\Domain::instance();
 
-		$response = array();
+		$response = [];
 
 		$result = $db->get_domains( $site_id );
 
@@ -370,13 +370,13 @@ class Domains extends \WP_REST_Controller {
 	 * @return array Data provided by the call to the endpoint.
 	 */
 	protected function prepare_item_for_database( $request ) {
-		$item = array(
+		$item = [
 			'domain'     => '',
 			'is_primary' => null,
 			'is_https'   => null,
 			'is_active'  => null,
 			'type'       => null,
-		);
+		];
 
 		$method = $request->get_method();
 
@@ -417,7 +417,7 @@ class Domains extends \WP_REST_Controller {
 	public function prepare_item_for_response( $item, $request ) {
 		$fields = $this->get_fields_for_response( $request );
 
-		$data = array();
+		$data = [];
 
 		if ( in_array( 'id', $fields, true ) ) {
 			$data['id'] = $item->id;
@@ -487,81 +487,81 @@ class Domains extends \WP_REST_Controller {
 		register_rest_route(
 			$this->namespace,
 			$this->rest_base,
-			array(
+			[
 				'methods'             => \WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'create_item' ),
-				'permission_callback' => array( $this, 'create_item_permissions_check' ),
+				'callback'            => [ $this, 'create_item' ],
+				'permission_callback' => [ $this, 'create_item_permissions_check' ],
 				'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
-			)
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			$this->rest_base . '/(?P<domain>.+)',
-			array(
-				'args' => array(
-					'domain' => array(
+			[
+				'args' => [
+					'domain' => [
 						'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
 						'required'    => true,
 						'type'        => 'string',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_item' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'schema'              => array( $this, 'get_item_schema' ),
-				),
-				array(
+					'callback'            => [ $this, 'get_item' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+					'schema'              => [ $this, 'get_item_schema' ],
+				],
+				[
 					'methods'             => \WP_REST_Server::DELETABLE,
-					'callback'            => array( $this, 'delete_item' ),
-					'permission_callback' => array( $this, 'delete_item_permissions_check' ),
-					'args'                => array(
-						'force' => array(
+					'callback'            => [ $this, 'delete_item' ],
+					'permission_callback' => [ $this, 'delete_item_permissions_check' ],
+					'args'                => [
+						'force' => [
 							'default'     => false,
 							'description' => __( 'Force Dark Matter to remove the domain. This is required if you wish to remove a Primary domain from a Site.', 'dark-matter' ),
 							'type'        => 'boolean',
-						),
-					),
-				),
-				array(
+						],
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::EDITABLE,
-					'callback'            => array( $this, 'update_item' ),
-					'permission_callback' => array( $this, 'update_item_permissions_check' ),
+					'callback'            => [ $this, 'update_item' ],
+					'permission_callback' => [ $this, 'update_item_permissions_check' ],
 					'args'                => $this->get_endpoint_args_for_item_schema( \WP_REST_Server::CREATABLE ),
-				),
-			)
+				],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			$this->rest_base_plural,
-			array(
+			[
 				'methods'             => \WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
-				'schema'              => array( $this, 'get_item_schema' ),
-			)
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
+				'schema'              => [ $this, 'get_item_schema' ],
+			]
 		);
 
 		register_rest_route(
 			$this->namespace,
 			$this->rest_base_plural . '/(?P<site_id>[\d]+)',
-			array(
-				'args' => array(
-					'site_id' => array(
+			[
+				'args' => [
+					'site_id' => [
 						'description' => __( 'Site ID to retrieve a list of Domains.', 'dark-matter' ),
 						'required'    => true,
 						'type'        => 'integer',
-					),
-				),
-				array(
+					],
+				],
+				[
 					'methods'             => \WP_REST_Server::READABLE,
-					'callback'            => array( $this, 'get_items' ),
-					'permission_callback' => array( $this, 'get_items_permissions_check' ),
-					'schema'              => array( $this, 'get_item_schema' ),
-				),
-			)
+					'callback'            => [ $this, 'get_items' ],
+					'permission_callback' => [ $this, 'get_items_permissions_check' ],
+					'schema'              => [ $this, 'get_item_schema' ],
+				],
+			]
 		);
 	}
 

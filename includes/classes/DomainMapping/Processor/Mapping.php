@@ -43,8 +43,8 @@ class Mapping implements Registerable {
 		 * In some circumstances, we always want to process the logic regardless of request type, circumstances,
 		 * conditions, etc. (like ensuring saved post data is unmapped properly).
 		 */
-		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
+		add_filter( 'http_request_host_is_external', [ $this, 'is_external' ], 10, 2 );
+		add_filter( 'wp_insert_post_data', [ $this, 'insert_post' ], -10, 1 );
 
 		/**
 		 * Ensure we do not map on the login and register pages.
@@ -104,13 +104,13 @@ class Mapping implements Registerable {
 		 * the unmapped and mapped domain - like REST API and XMLRPC - will not
 		 * be properly detected for the rewrite rules.
 		 */
-		add_action( 'muplugins_loaded', array( $this, 'prepare' ), -10 );
+		add_action( 'muplugins_loaded', [ $this, 'prepare' ], -10 );
 
 		/**
 		 * Jetpack compatibility. This filter ensures that Jetpack gets the
 		 * correct domain for the home URL.
 		 */
-		add_action( 'jetpack_sync_home_url', array( $this, 'map' ), 10, 1 );
+		add_action( 'jetpack_sync_home_url', [ $this, 'map' ], 10, 1 );
 	}
 
 	/**
@@ -138,10 +138,10 @@ class Mapping implements Registerable {
 			return $url;
 		}
 
-		$valid_paths = array(
+		$valid_paths = [
 			'admin-ajax.php' => true,
 			'admin-post.php' => true,
-		);
+		];
 
 		if ( array_key_exists( $filename, $valid_paths ) ) {
 			return $this->map( $url, $blog_id );
@@ -267,14 +267,14 @@ class Mapping implements Registerable {
 		 * manipulating `post_content`, usually on the "normal" priority (10). For domain mapping, we want to ensure we
 		 * catch every thing after WordPress core and any plugins, so we run later in the process to achieve that.
 		 */
-		add_filter( 'the_content', array( $this, 'map' ), 5, 1 );
+		add_filter( 'the_content', [ $this, 'map' ], 5, 1 );
 
 		/**
 		 * Please note: the `$this->map()` method will check for unmapped URLs before committing to an regex replace. So
 		 * most of the time, this will go "nothing to do here". And the rest of time, catch any edge cases that produce
 		 * unmapped URLs.
 		 */
-		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
+		add_filter( 'the_content', [ $this, 'map' ], 50, 1 );
 
 		/**
 		 * We only wish to affect `the_content` for Previews and nothing else.
@@ -300,7 +300,7 @@ class Mapping implements Registerable {
 		 * action is always called here and not just when the request is called (as in previous versions of Dark
 		 * Matter).
 		 */
-		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
+		add_action( 'rest_api_init', [ $this, 'prepare_rest' ] );
 
 		/**
 		 * We have to stop here for the REST API as the later filters and hooks can cause the REST API endpoints to 404
@@ -311,7 +311,7 @@ class Mapping implements Registerable {
 		}
 
 		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'prepare_admin' ) );
+			add_action( 'init', [ $this, 'prepare_admin' ] );
 			return;
 		}
 
@@ -319,16 +319,16 @@ class Mapping implements Registerable {
 		 * Every thing here is designed to ensure all URLs throughout WordPress
 		 * is consistent. This is the public serving / theme powered code.
 		 */
-		add_filter( 'admin_url', array( $this, 'adminurl' ), -10, 3 );
-		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-		add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
-		add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
-		add_filter( 'get_shortlink', array( $this, 'map' ), -10, 4 );
+		add_filter( 'admin_url', [ $this, 'adminurl' ], -10, 3 );
+		add_filter( 'home_url', [ $this, 'siteurl' ], -10, 4 );
+		add_filter( 'site_url', [ $this, 'siteurl' ], -10, 4 );
+		add_filter( 'content_url', [ $this, 'map' ], -10, 1 );
+		add_filter( 'get_shortlink', [ $this, 'map' ], -10, 4 );
 
-		add_filter( 'script_loader_tag', array( $this, 'map' ), -10, 4 );
-		add_filter( 'style_loader_tag', array( $this, 'map' ), -10, 4 );
+		add_filter( 'script_loader_tag', [ $this, 'map' ], -10, 4 );
+		add_filter( 'style_loader_tag', [ $this, 'map' ], -10, 4 );
 
-		add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
+		add_filter( 'upload_dir', [ $this, 'upload' ], 10, 1 );
 	}
 
 	/**
@@ -341,7 +341,7 @@ class Mapping implements Registerable {
 	 * @return void
 	 */
 	public function prepare_admin() {
-		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+		add_filter( 'home_url', [ $this, 'siteurl' ], -10, 4 );
 
 		/**
 		 * The Preview link in the metabox of Post Publish cannot be handled by the home_url hook. This is because it
@@ -350,13 +350,13 @@ class Mapping implements Registerable {
 		 * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-admin/includes/meta-boxes.php#L57 Preview Metabox call to get Preview URL.
 		 * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312 Query string parameter "preview=true" being added to the URL.
 		 */
-		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+		add_filter( 'preview_post_link', [ $this, 'unmap' ], 10, 1 );
 
 		/**
 		 * To prepare the Classic Editor, we need to attach to a very late hook to ensure that `get_current_screen()` is
 		 * available and returns something useful.
 		 */
-		add_action( 'edit_form_top', array( $this, 'prepare_classic_editor' ) );
+		add_action( 'edit_form_top', [ $this, 'prepare_classic_editor' ] );
 	}
 
 	/**
@@ -367,7 +367,7 @@ class Mapping implements Registerable {
 		$screen = get_current_screen();
 
 		if ( is_a( $screen, 'WP_Screen' ) && 'post' === $screen->base && 'edit' === $screen->parent_base ) {
-			add_filter( 'the_editor_content', array( $this, 'map' ), 10, 1 );
+			add_filter( 'the_editor_content', [ $this, 'map' ], 10, 1 );
 		}
 	}
 
@@ -379,9 +379,9 @@ class Mapping implements Registerable {
 	 * @return void
 	 */
 	public function prepare_rest() {
-		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+		add_filter( 'home_url', [ $this, 'siteurl' ], -10, 4 );
 
-		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+		add_filter( 'preview_post_link', [ $this, 'unmap' ], 10, 1 );
 
 		/**
 		 * Loop all post types with REST endpoints to fix the mapping for content.raw property.
@@ -389,7 +389,7 @@ class Mapping implements Registerable {
 		$rest_post_types = get_post_types( [ 'show_in_rest' => true ] );
 
 		foreach ( $rest_post_types as $post_type ) {
-			add_filter( "rest_prepare_{$post_type}", array( $this, 'prepare_rest_post_item' ), 10, 1 );
+			add_filter( "rest_prepare_{$post_type}", [ $this, 'prepare_rest_post_item' ], 10, 1 );
 		}
 	}
 
@@ -429,10 +429,10 @@ class Mapping implements Registerable {
 			return $url;
 		}
 
-		$valid_schemes = array(
+		$valid_schemes = [
 			'http'  => true,
 			'https' => true,
-		);
+		];
 
 		if ( ! is_admin() ) {
 			$valid_schemes['json'] = true;

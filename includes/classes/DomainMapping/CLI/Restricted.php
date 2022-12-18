@@ -104,7 +104,7 @@ class Restricted extends WP_CLI_Command {
 			]
 		);
 
-		if ( ! in_array( $opts['format'], array( 'ids', 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
+		if ( ! in_array( $opts['format'], [ 'ids', 'table', 'json', 'csv', 'yaml', 'count' ] ) ) {
 			$opts['format'] = 'table';
 		}
 

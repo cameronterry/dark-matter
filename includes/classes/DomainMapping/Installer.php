@@ -23,7 +23,7 @@ class Installer {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'maybe_upgrade' ) );
+		add_action( 'init', [ $this, 'maybe_upgrade' ] );
 	}
 
 	/**
