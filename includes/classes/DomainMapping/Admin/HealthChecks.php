@@ -4,7 +4,7 @@
  *
  * @since 2.1.0
  *
- * @package DarkMatter\DomainMapping
+ * @package DarkMatterPlugin\DomainMapping
  */
 
 namespace DarkMatter\DomainMapping\Admin;

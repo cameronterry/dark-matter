@@ -4,7 +4,7 @@
  *
  * @since 3.0.0
  *
- * @package DarkMatter\DomainMapping
+ * @package DarkMatterPlugin\DomainMapping
  *
  * @phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
  */
