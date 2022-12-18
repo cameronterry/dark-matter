@@ -13,7 +13,7 @@ use DarkMatter\DomainMapping\Manager;
 use WP_CLI;
 use WP_CLI_Command;
 
-// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduced backward compatibility (2.x.x) problems for pre-existing users.
+// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduce backward compatibility (2.x.x) problems for pre-existing users.
 
 /**
  * Class Domains
