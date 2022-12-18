@@ -64,7 +64,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 			]
 		);
 
-		DarkMatter_Domains::instance()->network_media = [
+		\DarkMatter\DomainMapping\Manager\Domain::instance()->network_media = [
 			$this->media_domain,
 		];
 
@@ -73,7 +73,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		/**
 		 * Add domains to the new site.
 		 */
-		DarkMatter_Domains::instance()->add(
+		\DarkMatter\DomainMapping\Manager\Domain::instance()->add(
 			$this->primary_domain,
 			true,
 			true
@@ -188,7 +188,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_rest_url() {
-		DM_URL::instance()->is_request_mapped = true;
+		\DarkMatter\DomainMapping\Processor\Mapping::$is_request_mapped = true;
 
 		$this->assertEquals(
 			/**
@@ -199,6 +199,6 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 			'REST API URL'
 		);
 
-		DM_URL::instance()->is_request_mapped = false;
+		\DarkMatter\DomainMapping\Processor\Mapping::$is_request_mapped = false;
 	}
 }

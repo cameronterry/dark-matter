@@ -1,19 +1,22 @@
 <?php
 /**
- * Class DM_Domain
+ * Data type for a singular domain.
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\Data;
 
 /**
- * Class DM_Domain
+ * Class Domain
+ *
+ * Previously named `DM_Domain`.
  *
  * @since 2.0.0
  */
-class DM_Domain {
+class Domain {
 	/**
 	 * Database ID.
 	 *
@@ -83,7 +86,7 @@ class DM_Domain {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param DM_Domain|object $domain A domain object.
+	 * @param Domain|object $domain A domain object.
 	 */
 	public function __construct( $domain ) {
 		foreach ( get_object_vars( $domain ) as $key => $value ) {

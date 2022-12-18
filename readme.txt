@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 6.0.3
-Stable tag: 2.3.3
+Tested up to: 6.1
+Stable tag: 2.3.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,16 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.3.4 =
+
+* Fixed an issue where assets such as CSS and JavaScript were mapped on login/register pages, even if the URL is on the admin domain. This was found in the forthcoming 3.0.0 release.
+* PHP 8.1 compatibility fixes and tweaks. Dark Matter now supports versions 7.0 to 8.1, in line with WordPress Core.
+* Plugin development changes:
+  * Added GitHub Dependency Review action, which runs on every pull request. [More information can be found on GitHub here](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/about-dependency-review).
+  * Temporarily disabled the Snyk check due to a peculiar error.
+* Composer and NPM dependencies updated.
+* Tested upto WordPress 6.1
 
 = 2.3.3 =
 

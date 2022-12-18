@@ -2,31 +2,31 @@
 /**
  * Compatibility adjustments for supporting Yoast SEO.
  *
- * @package DarkMatter
+ * @since 2.1.3
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
+namespace DarkMatter\DomainMapping\Support;
+
+use DarkMatter\DomainMapping\Helper;
+use DarkMatter\Interfaces\Registerable;
+
 /**
- * Class DM_Yoast
+ * Class Yoast
+ *
+ * Previously called `DM_Yoast`.
  *
  * @since 2.1.3
  */
-class DM_Yoast {
-	/**
-	 * DM_Yoast constructor.
-	 */
-	public function __construct() {
-		if ( defined( 'WPSEO_VERSION' ) ) {
-			return;
-		}
-
-		add_filter( 'wpseo_should_save_indexable', [ $this, 'fix_indexable_permalinks' ], 10, 2 );
-	}
-
+class Yoast implements Registerable {
 	/**
 	 * Correct indexables permalinks to be unmapped prior to save to the database. This works with versions 15.1+ of
 	 * Yoast SEO. Version 15.1 - which contains the `wpseo_should_save_indexable` was released on 14th October 2020.
 	 *
 	 * @link https://github.com/Yoast/wordpress-seo/blob/15.1/src/builders/indexable-builder.php#L296
+	 *
+	 * @since 2.1.3
 	 *
 	 * @param boolean                        $intend_to_save Whether the indexable is to be saved or not.
 	 * @param \Yoast\WP\SEO\Models\Indexable $indexable The indexable to be saved.
@@ -37,15 +37,18 @@ class DM_Yoast {
 		 * If saving to the database, then make sure the permalink is unmapped.
 		 */
 		if ( $intend_to_save ) {
-			$dm_url               = DM_URL::instance();
-			$indexable->permalink = $dm_url->unmap( $indexable->permalink );
+			$indexable->permalink = Helper::instance()->unmap( $indexable->permalink );
 		}
 
 		return $intend_to_save;
 	}
-}
 
-/**
- * Only instantiate this class if Yoast SEO is in use.
- */
-new DM_Yoast();
+	/**
+	 * Register hooks for this class.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		add_filter( 'wpseo_should_save_indexable', [ $this, 'fix_indexable_permalinks' ], 10, 2 );
+	}
+}

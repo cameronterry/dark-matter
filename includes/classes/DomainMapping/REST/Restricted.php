@@ -1,17 +1,24 @@
 <?php
 /**
- * Class DM_REST_Restricted_Controller
+ * REST API for management of Restricted domains.
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
+namespace DarkMatter\DomainMapping\REST;
+
+use \DarkMatter\DomainMapping\Manager;
+
 /**
- * Class DM_REST_Restricted_Controller
+ * Class Restricted
+ *
+ * This was previously called `DM_REST_Restricted_Controller`.
  *
  * @since 2.0.0
  */
-class DM_REST_Restricted_Controller extends WP_REST_Controller {
+class Restricted extends \WP_REST_Controller {
 	/**
 	 * Constructor.
 	 *
@@ -27,11 +34,11 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = DarkMatter_Restrict::instance();
+		$db = Manager\Restricted::instance();
 
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
@@ -46,9 +53,9 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 		}
 
 		$response = rest_ensure_response(
-			array(
+			[
 				'domain' => $domain,
-			)
+			]
 		);
 
 		$response->set_status( '201' );
@@ -61,7 +68,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function create_item_permissions_check( $request ) {
@@ -81,11 +88,11 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = DarkMatter_Restrict::instance();
+		$db = Manager\Restricted::instance();
 
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
@@ -100,10 +107,10 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 		}
 
 		return rest_ensure_response(
-			array(
+			[
 				'deleted' => true,
 				'domain'  => $domain,
-			)
+			]
 		);
 	}
 
@@ -112,7 +119,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function delete_item_permissions_check( $request ) {
@@ -125,11 +132,11 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @param  \WP_REST_Request $request Current request.
+	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_items( $request ) {
-		$db = DarkMatter_Restrict::instance();
+		$db = Manager\Restricted::instance();
 
 		return rest_ensure_response( $db->get() );
 	}
@@ -140,7 +147,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  WP_REST_Request $request Current request.
+	 * @param  \WP_REST_Request $request Current request.
 	 * @return boolean True if the current user is a Super Admin. False otherwise.
 	 */
 	public function get_items_permissions_check( $request ) {
@@ -160,9 +167,9 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 			$this->namespace,
 			$this->rest_base,
 			[
-				'methods'             => WP_REST_Server::CREATABLE,
-				'callback'            => array( $this, 'create_item' ),
-				'permission_callback' => array( $this, 'create_item_permissions_check' ),
+				'methods'             => \WP_REST_Server::CREATABLE,
+				'callback'            => [ $this, 'create_item' ],
+				'permission_callback' => [ $this, 'create_item_permissions_check' ],
 			]
 		);
 
@@ -170,9 +177,9 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 			$this->namespace,
 			$this->rest_base,
 			[
-				'methods'             => WP_REST_Server::DELETABLE,
-				'callback'            => array( $this, 'delete_item' ),
-				'permission_callback' => array( $this, 'delete_item_permissions_check' ),
+				'methods'             => \WP_REST_Server::DELETABLE,
+				'callback'            => [ $this, 'delete_item' ],
+				'permission_callback' => [ $this, 'delete_item_permissions_check' ],
 			]
 		);
 
@@ -180,23 +187,10 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 			$this->namespace,
 			$this->rest_base,
 			[
-				'methods'             => WP_REST_Server::READABLE,
-				'callback'            => array( $this, 'get_items' ),
-				'permission_callback' => array( $this, 'get_items_permissions_check' ),
+				'methods'             => \WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'get_items' ],
+				'permission_callback' => [ $this, 'get_items_permissions_check' ],
 			]
 		);
 	}
 }
-
-/**
- * Setup the REST Controller for Domains for use.
- *
- * @since 2.0.0
- *
- * @return void
- */
-function dark_matter_restricted_rest() {
-	$controller = new DM_REST_Restricted_Controller();
-	$controller->register_routes();
-}
-add_action( 'rest_api_init', 'dark_matter_restricted_rest' );

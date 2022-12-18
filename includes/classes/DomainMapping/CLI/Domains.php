@@ -1,21 +1,28 @@
 <?php
 /**
- * Class DarkMatter_Domain_CLI
+ * CLI for managing domains.
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\CLI;
 
-// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduced backward compatibility (2.x.x) problems for pre-existing users.
+use DarkMatter\DomainMapping\Manager;
+use WP_CLI;
+use WP_CLI_Command;
+
+// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduce backward compatibility (2.x.x) problems for pre-existing users.
 
 /**
- * Class DarkMatter_Domain_CLI
+ * Class Domains
+ *
+ * Previously called `DarkMatter_Domain_CLI`.
  *
  * @since 2.0.0
  */
-class DarkMatter_Domain_CLI {
+class Domains extends WP_CLI_Command {
 	/**
 	 * Add a domain to a site on the WordPress Network.
 	 *
@@ -81,7 +88,7 @@ class DarkMatter_Domain_CLI {
 		/**
 		 * Add the domain.
 		 */
-		$db     = DarkMatter_Domains::instance();
+		$db     = Manager\Domain::instance();
 		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'], $type );
 
 		if ( is_wp_error( $result ) ) {
@@ -119,6 +126,15 @@ class DarkMatter_Domain_CLI {
 		}
 
 		return DM_DOMAIN_TYPE_MAIN;
+	}
+
+	/**
+	 * Include this CLI amongst the others.
+	 *
+	 * @return void
+	 */
+	public static function define() {
+		WP_CLI::add_command( 'darkmatter domain', self::class );
 	}
 
 	/**
@@ -166,12 +182,12 @@ class DarkMatter_Domain_CLI {
 			]
 		);
 
-		if ( ! in_array( $opts['format'], array( 'table', 'json', 'csv', 'yaml', 'count' ) ) ) {
+		if ( ! in_array( $opts['format'], [ 'table', 'json', 'csv', 'yaml', 'count' ] ) ) {
 			$opts['format'] = 'table';
 		}
 
 		if ( $opts['primary'] ) {
-			$db      = DarkMatter_Primary::instance();
+			$db      = Manager\Primary::instance();
 			$domains = $db->get_all();
 		} else {
 			/**
@@ -184,7 +200,7 @@ class DarkMatter_Domain_CLI {
 				$site_id = null;
 			}
 
-			$db      = DarkMatter_Domains::instance();
+			$db      = Manager\Domain::instance();
 			$domains = $db->get_domains( $site_id );
 		}
 
@@ -196,13 +212,13 @@ class DarkMatter_Domain_CLI {
 				$no_val  = __( 'No', 'dark-matter' );
 				$yes_val = __( 'Yes', 'dark-matter' );
 
-				$columns = array(
+				$columns = [
 					'F.Q.D.N.' => $domain->domain,
 					'Primary'  => ( $domain->is_primary ? $yes_val : $no_val ),
 					'Protocol' => ( $domain->is_https ? 'HTTPS' : 'HTTP' ),
 					'Active'   => ( $domain->active ? $yes_val : $no_val ),
 					'Type'     => ( DM_DOMAIN_TYPE_MEDIA === $domain->type ? 'Media' : 'Main' ),
-				);
+				];
 
 				/**
 				 * If the query is the root Site and we are displaying all domains,
@@ -288,7 +304,7 @@ class DarkMatter_Domain_CLI {
 			]
 		);
 
-		$db = DarkMatter_Domains::instance();
+		$db = Manager\Domain::instance();
 
 		/**
 		 * Remove the domain.
@@ -371,7 +387,7 @@ class DarkMatter_Domain_CLI {
 
 		$fqdn = $args[0];
 
-		$db            = DarkMatter_Domains::instance();
+		$db            = Manager\Domain::instance();
 		$domain_before = $db->get( $fqdn );
 
 		$opts = wp_parse_args(
@@ -462,4 +478,3 @@ class DarkMatter_Domain_CLI {
 		WP_CLI::success( $fqdn . __( ': successfully updated.', 'dark-matter' ) );
 	}
 }
-WP_CLI::add_command( 'darkmatter domain', 'DarkMatter_Domain_CLI' );

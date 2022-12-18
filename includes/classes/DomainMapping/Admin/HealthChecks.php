@@ -1,19 +1,24 @@
 <?php
 /**
- * Class DM_HealthChecks
+ * Integration with WordPress Core's health setup.
  *
- * @package DarkMatter
  * @since 2.1.0
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\Admin;
+
+use DarkMatter\DomainMapping\Manager\Primary;
 
 /**
- * Class DM_HealthChecks
+ * Class HealthChecks
+ *
+ * Previously called `DM_HealthChecks`.
  *
  * @since 2.1.0
  */
-class DM_HealthChecks {
+class HealthChecks {
 	/**
 	 * Constructor.
 	 *
@@ -76,7 +81,7 @@ class DM_HealthChecks {
 	 * @return bool True if sunrise.php exists. False otherwise.
 	 */
 	public function dropin_exists() {
-		return file_exists( DM_PATH . '/domain-mapping/sunrise.php' );
+		return file_exists( DM_PATH . '/includes/dropins/sunrise.php' );
 	}
 
 	/**
@@ -99,7 +104,7 @@ class DM_HealthChecks {
 	 */
 	public function is_dropin_latest() {
 		$destination = WP_CONTENT_DIR . '/sunrise.php';
-		$source      = DM_PATH . '/domain-mapping/sunrise.php';
+		$source      = DM_PATH . '/includes/dropins/sunrise.php';
 
 		return filesize( $destination ) === filesize( $source ) && md5_file( $destination ) === md5_file( $source );
 	}
@@ -115,10 +120,10 @@ class DM_HealthChecks {
 		$result = [
 			'label'       => __( 'Dark Matter single-sign on (bringing the admin bar to the public-facing side) is enabled.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
+			],
 			'description' => sprintf(
 				'<p>%s</p>',
 				__( 'Dark Matter single-sign on is enabled and can load the admin bar when WordPress users are visiting the public-facing side of your site.', 'dark-matter' )
@@ -155,10 +160,10 @@ class DM_HealthChecks {
 		$result = [
 			'label'       => __( 'Sunrise dropin is enabled and up-to-date.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
+			],
 			'description' => sprintf(
 				'<p>%s</p>',
 				__( 'Sunrise is the name of the dropin file which maps custom domains to your WordPress sites.', 'dark-matter' )
@@ -219,16 +224,15 @@ class DM_HealthChecks {
 		$result = [
 			'label'       => __( 'You have a primary domain.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
-			'description' => '',
+			],
 			'actions'     => '',
 			'test'        => 'darkmatter_domain_mapping_primary_domain_set',
 		];
 
-		$primary = DarkMatter_Primary::instance()->get();
+		$primary = Primary::instance()->get();
 
 		if ( empty( $primary ) ) {
 			$result['label']          = __( 'You have not a set a primary domain.', 'dark-matter' );
@@ -273,10 +277,10 @@ class DM_HealthChecks {
 		$result = [
 			'label'       => __( 'Your SSL configuration is compatible with Dark Matter.', 'dark-matter' ),
 			'status'      => 'good',
-			'badge'       => array(
+			'badge'       => [
 				'label' => __( 'Domain Mapping', 'dark-matter' ),
 				'color' => 'green',
-			),
+			],
 			'description' => sprintf(
 				'<p>%s</p>',
 				__( 'Your admin area is secured by HTTPS and compatible with domain mapping.', 'dark-matter' )
@@ -308,22 +312,4 @@ class DM_HealthChecks {
 
 		return $result;
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @since 2.1.0
-	 *
-	 * @return DM_HealthChecks
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_HealthChecks::instance();

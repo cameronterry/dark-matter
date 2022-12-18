@@ -44,6 +44,7 @@ abstract class AbstractAdminPage implements Registerable {
 	protected $parent_slug = 'options-general.php';
 
 	/**
+	 * Capability/permission required to view the page.
 	 *
 	 * @since 3.0.0
 	 *

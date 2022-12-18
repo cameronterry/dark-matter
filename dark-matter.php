@@ -3,7 +3,7 @@
  * Plugin Name: Dark Matter
  * Plugin URI: https://github.com/cameronterry/dark-matter
  * Description: A highly opinionated domain mapping plugin for WordPress.
- * Version: 2.3.3
+ * Version: 2.3.4
  * Author: Cameron Terry
  * Author URI: https://github.com/cameronterry/
  * Text Domain: dark-matter
@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '2.3.3' );
+define( 'DM_VERSION', '2.3.4' );
 define( 'DM_DB_VERSION', '20210517' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -55,9 +55,11 @@ require_once DM_PATH . '/dark-matter/class-dm-pluginupdate.php';
 new DM_PluginUpdate();
 
 /**
- * Domain Mapping module.
+ * Disable SSO if the COOKIE_DOMAIN constant is set.
  */
-require DM_PATH . '/domain-mapping/domain-mapping.php';
+if ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) {
+	require_once DM_PATH . '/domain-mapping/sso/class-dm-sso-cookie.php';
+}
 
 /**
  * Let the magic - and bugs ... probably bugs! - begin.

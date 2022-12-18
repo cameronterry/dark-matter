@@ -1,19 +1,27 @@
 <?php
 /**
- * Class DM_URL
+ * Handles the mapping of URLs.
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
-defined( 'ABSPATH' ) || die();
+namespace DarkMatter\DomainMapping\Processor;
+
+use DarkMatter\DomainMapping\Helper;
+use DarkMatter\DomainMapping\Manager\Domain;
+use DarkMatter\DomainMapping\Manager\Primary;
+use DarkMatter\Interfaces\Registerable;
 
 /**
- * Class DM_URL
+ * Class Mapping
+ *
+ * Previously called `DM_URL`.
  *
  * @since 2.0.0
  */
-class DM_URL {
+class Mapping implements Registerable {
 	/**
 	 * Determine if the current request was mapped in `sunrise.php`.
 	 *
@@ -21,22 +29,40 @@ class DM_URL {
 	 *
 	 * @var bool
 	 */
-	public $is_request_mapped = false;
+	public static $is_request_mapped = false;
 
 	/**
-	 * Constructor.
+	 * Register the hooks and actions.
 	 *
-	 * @since 2.0.0
+	 * @since 3.0.0
 	 */
-	public function __construct() {
-		$this->is_request_mapped = ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+	public function register() {
+		self::$is_request_mapped = ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
 
 		/**
 		 * In some circumstances, we always want to process the logic regardless of request type, circumstances,
 		 * conditions, etc. (like ensuring saved post data is unmapped properly).
 		 */
-		add_filter( 'http_request_host_is_external', array( $this, 'is_external' ), 10, 2 );
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
+		add_filter( 'http_request_host_is_external', [ $this, 'is_external' ], 10, 2 );
+		add_filter( 'wp_insert_post_data', [ $this, 'insert_post' ], -10, 1 );
+
+		/**
+		 * Ensure we do not map on the login and register pages.
+		 */
+		$admin_filenames = [
+			'wp-login.php'    => true,
+			'wp-register.php' => true,
+		];
+		$filename        = Helper::instance()->get_request_filename();
+		if ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) {
+			/**
+			 * Ensure the "Go to [site name]" and Privacy Policy links still go to the mapped domain.
+			 */
+			add_filter( 'login_site_html_link', [ $this, 'map' ] ); // Supports WordPress 5.7+ only.
+			add_filter( 'privacy_policy_url', [ $this, 'map' ] ); // Supports WordPress 4.9.6+ only.
+
+			return;
+		}
 
 		/**
 		 * Prevent accidental URL mapping on requests which are not GET requests for the admin area. For example; a POST
@@ -48,7 +74,7 @@ class DM_URL {
 		 *
 		 * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
 		 */
-		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== $_SERVER['REQUEST_METHOD'] ) {
+		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) {
 			return;
 		}
 
@@ -67,8 +93,7 @@ class DM_URL {
 		 * archived or deleted.
 		 */
 		$blog = get_site();
-
-		if ( (int) $blog->public < 0 || '0' !== $blog->archived || '0' !== $blog->deleted ) {
+		if ( ! Helper::instance()->is_public( $blog ) ) {
 			return;
 		}
 
@@ -79,13 +104,13 @@ class DM_URL {
 		 * the unmapped and mapped domain - like REST API and XMLRPC - will not
 		 * be properly detected for the rewrite rules.
 		 */
-		add_action( 'muplugins_loaded', array( $this, 'prepare' ), -10 );
+		add_action( 'muplugins_loaded', [ $this, 'prepare' ], -10 );
 
 		/**
 		 * Jetpack compatibility. This filter ensures that Jetpack gets the
 		 * correct domain for the home URL.
 		 */
-		add_action( 'jetpack_sync_home_url', array( $this, 'map' ), 10, 1 );
+		add_action( 'jetpack_sync_home_url', [ $this, 'map' ], 10, 1 );
 	}
 
 	/**
@@ -113,10 +138,10 @@ class DM_URL {
 			return $url;
 		}
 
-		$valid_paths = array(
+		$valid_paths = [
 			'admin-ajax.php' => true,
 			'admin-post.php' => true,
-		);
+		];
 
 		if ( array_key_exists( $filename, $valid_paths ) ) {
 			return $this->map( $url, $blog_id );
@@ -147,7 +172,7 @@ class DM_URL {
 		 * Attempt to find the domain in Dark Matter. If the domain is found, then tell WordPress it is an internal
 		 * domain.
 		 */
-		$db     = DarkMatter_Domains::instance();
+		$db     = Domain::instance();
 		$domain = $db->find( $host );
 
 		if ( is_a( $domain, 'DM_Domain' ) ) {
@@ -192,8 +217,8 @@ class DM_URL {
 		 * the context can be mapped (i.e. it has an active primary domain) and if so, we say the request is mapped.
 		 */
 		global $switched;
-		if ( $switched && $this->is_request_mapped ) {
-			$primary = DarkMatter_Primary::instance()->get();
+		if ( $switched && self::$is_request_mapped ) {
+			$primary = Primary::instance()->get();
 
 			/**
 			 * If there is no primary or if it is inactive, then the site is not mapped.
@@ -205,7 +230,7 @@ class DM_URL {
 			return true;
 		}
 
-		return $this->is_request_mapped;
+		return self::$is_request_mapped;
 	}
 
 	/**
@@ -219,32 +244,7 @@ class DM_URL {
 	 * @return string           If unmapped URL is found, then returns the primary URL. Untouched otherwise.
 	 */
 	public function map( $value = '', $blog_id = 0 ) {
-		/**
-		 * Ensure that we are working with a string.
-		 */
-		if ( ! is_string( $value ) ) {
-			return $value;
-		}
-
-		/**
-		 * Retrieve the current blog.
-		 */
-		$blog    = get_site( absint( $blog_id ) );
-		$primary = DarkMatter_Primary::instance()->get( $blog->blog_id );
-
-		$unmapped = untrailingslashit( $blog->domain . $blog->path );
-
-		/**
-		 * If there is no primary domain or the unmapped version cannot be found
-		 * then we return the value as-is.
-		 */
-		if ( empty( $primary ) || false === stripos( $value, $unmapped ) ) {
-			return $value;
-		}
-
-		$domain = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . $primary->domain;
-
-		return preg_replace( "#https?://{$unmapped}#", $domain, $value );
+		return Helper::instance()->map( $value, $blog_id );
 	}
 
 	/**
@@ -267,14 +267,14 @@ class DM_URL {
 		 * manipulating `post_content`, usually on the "normal" priority (10). For domain mapping, we want to ensure we
 		 * catch every thing after WordPress core and any plugins, so we run later in the process to achieve that.
 		 */
-		add_filter( 'the_content', array( $this, 'map' ), 5, 1 );
+		add_filter( 'the_content', [ $this, 'map' ], 5, 1 );
 
 		/**
 		 * Please note: the `$this->map()` method will check for unmapped URLs before committing to an regex replace. So
 		 * most of the time, this will go "nothing to do here". And the rest of time, catch any edge cases that produce
 		 * unmapped URLs.
 		 */
-		add_filter( 'the_content', array( $this, 'map' ), 50, 1 );
+		add_filter( 'the_content', [ $this, 'map' ], 50, 1 );
 
 		/**
 		 * We only wish to affect `the_content` for Previews and nothing else.
@@ -291,7 +291,7 @@ class DM_URL {
 		 * affect database and cache updates to ensure compatibility if the
 		 * domain mapping is changed or removed.
 		 */
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : filter_var( $_SERVER['REQUEST_URI'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW ) );
+		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
 
 		/**
 		 * This is called for all requests as it is possible for the REST API to be called and process without a cURL
@@ -300,7 +300,7 @@ class DM_URL {
 		 * action is always called here and not just when the request is called (as in previous versions of Dark
 		 * Matter).
 		 */
-		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
+		add_action( 'rest_api_init', [ $this, 'prepare_rest' ] );
 
 		/**
 		 * We have to stop here for the REST API as the later filters and hooks can cause the REST API endpoints to 404
@@ -311,7 +311,7 @@ class DM_URL {
 		}
 
 		if ( is_admin() ) {
-			add_action( 'init', array( $this, 'prepare_admin' ) );
+			add_action( 'init', [ $this, 'prepare_admin' ] );
 			return;
 		}
 
@@ -319,16 +319,16 @@ class DM_URL {
 		 * Every thing here is designed to ensure all URLs throughout WordPress
 		 * is consistent. This is the public serving / theme powered code.
 		 */
-		add_filter( 'admin_url', array( $this, 'adminurl' ), -10, 3 );
-		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
-		add_filter( 'site_url', array( $this, 'siteurl' ), -10, 4 );
-		add_filter( 'content_url', array( $this, 'map' ), -10, 1 );
-		add_filter( 'get_shortlink', array( $this, 'map' ), -10, 4 );
+		add_filter( 'admin_url', [ $this, 'adminurl' ], -10, 3 );
+		add_filter( 'home_url', [ $this, 'siteurl' ], -10, 4 );
+		add_filter( 'site_url', [ $this, 'siteurl' ], -10, 4 );
+		add_filter( 'content_url', [ $this, 'map' ], -10, 1 );
+		add_filter( 'get_shortlink', [ $this, 'map' ], -10, 4 );
 
-		add_filter( 'script_loader_tag', array( $this, 'map' ), -10, 4 );
-		add_filter( 'style_loader_tag', array( $this, 'map' ), -10, 4 );
+		add_filter( 'script_loader_tag', [ $this, 'map' ], -10, 4 );
+		add_filter( 'style_loader_tag', [ $this, 'map' ], -10, 4 );
 
-		add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
+		add_filter( 'upload_dir', [ $this, 'upload' ], 10, 1 );
 	}
 
 	/**
@@ -341,7 +341,7 @@ class DM_URL {
 	 * @return void
 	 */
 	public function prepare_admin() {
-		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+		add_filter( 'home_url', [ $this, 'siteurl' ], -10, 4 );
 
 		/**
 		 * The Preview link in the metabox of Post Publish cannot be handled by the home_url hook. This is because it
@@ -350,13 +350,13 @@ class DM_URL {
 		 * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-admin/includes/meta-boxes.php#L57 Preview Metabox call to get Preview URL.
 		 * @link https://github.com/WordPress/WordPress/blob/5.2.2/wp-includes/link-template.php#L1311-L1312 Query string parameter "preview=true" being added to the URL.
 		 */
-		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+		add_filter( 'preview_post_link', [ $this, 'unmap' ], 10, 1 );
 
 		/**
 		 * To prepare the Classic Editor, we need to attach to a very late hook to ensure that `get_current_screen()` is
 		 * available and returns something useful.
 		 */
-		add_action( 'edit_form_top', array( $this, 'prepare_classic_editor' ) );
+		add_action( 'edit_form_top', [ $this, 'prepare_classic_editor' ] );
 	}
 
 	/**
@@ -367,7 +367,7 @@ class DM_URL {
 		$screen = get_current_screen();
 
 		if ( is_a( $screen, 'WP_Screen' ) && 'post' === $screen->base && 'edit' === $screen->parent_base ) {
-			add_filter( 'the_editor_content', array( $this, 'map' ), 10, 1 );
+			add_filter( 'the_editor_content', [ $this, 'map' ], 10, 1 );
 		}
 	}
 
@@ -379,9 +379,9 @@ class DM_URL {
 	 * @return void
 	 */
 	public function prepare_rest() {
-		add_filter( 'home_url', array( $this, 'siteurl' ), -10, 4 );
+		add_filter( 'home_url', [ $this, 'siteurl' ], -10, 4 );
 
-		add_filter( 'preview_post_link', array( $this, 'unmap' ), 10, 1 );
+		add_filter( 'preview_post_link', [ $this, 'unmap' ], 10, 1 );
 
 		/**
 		 * Loop all post types with REST endpoints to fix the mapping for content.raw property.
@@ -389,7 +389,7 @@ class DM_URL {
 		$rest_post_types = get_post_types( [ 'show_in_rest' => true ] );
 
 		foreach ( $rest_post_types as $post_type ) {
-			add_filter( "rest_prepare_{$post_type}", array( $this, 'prepare_rest_post_item' ), 10, 1 );
+			add_filter( "rest_prepare_{$post_type}", [ $this, 'prepare_rest_post_item' ], 10, 1 );
 		}
 	}
 
@@ -397,8 +397,8 @@ class DM_URL {
 	 * Ensures the "raw" version of the content, typically used by Gutenberg through it's middleware pre-load / JS
 	 * hydrate process, gets handled the same as content (which runs through the `the_content` hook).
 	 *
-	 * @param  WP_REST_Response $item Individual post / item in the response that is being processed.
-	 * @return WP_REST_Response       Post / item with the content.raw, if present, mapped.
+	 * @param  \WP_REST_Response $item Individual post / item in the response that is being processed.
+	 * @return \WP_REST_Response       Post / item with the content.raw, if present, mapped.
 	 */
 	public function prepare_rest_post_item( $item = null ) {
 		if ( isset( $item->data['content']['raw'] ) ) {
@@ -429,10 +429,10 @@ class DM_URL {
 			return $url;
 		}
 
-		$valid_schemes = array(
+		$valid_schemes = [
 			'http'  => true,
 			'https' => true,
-		);
+		];
 
 		if ( ! is_admin() ) {
 			$valid_schemes['json'] = true;
@@ -493,30 +493,7 @@ class DM_URL {
 	 * @return mixed        If unmapped URL is found, then returns the primary URL. Untouched otherwise.
 	 */
 	public function unmap( $value = '' ) {
-		/**
-		 * Ensure that we are working with a string.
-		 */
-		if ( ! is_string( $value ) ) {
-			return $value;
-		}
-
-		/**
-		 * Retrieve the current blog.
-		 */
-		$blog    = get_site();
-		$primary = DarkMatter_Primary::instance()->get();
-
-		/**
-		 * If there is no primary domain or the primary domain cannot be found
-		 * then we return the value as-is.
-		 */
-		if ( empty( $primary ) || false === stripos( $value, $primary->domain ) ) {
-			return $value;
-		}
-
-		$unmapped = 'http' . ( $primary->is_https ? 's' : '' ) . '://' . untrailingslashit( $blog->domain . $blog->path );
-
-		return preg_replace( "#https?://{$primary->domain}#", $unmapped, $value );
+		return Helper::instance()->unmap( $value );
 	}
 
 	/**
@@ -538,22 +515,4 @@ class DM_URL {
 
 		return $uploads;
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return DM_URL
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_URL::instance();

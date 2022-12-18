@@ -1,19 +1,24 @@
 <?php
 /**
- * Class DarkMatter_Domains
+ * Handles the management of domains.
  *
- * @package DarkMatter
  * @since 2.0.0
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\Manager;
+
+use DarkMatter\DomainMapping\Data;
 
 /**
- * Class DarkMatter_Domains
+ * Class Domain
+ *
+ * Previously called `DarkMatter_Domains`.
  *
  * @since 2.0.0
  */
-class DarkMatter_Domains {
+class Domain {
 	/**
 	 * The Domain Mapping table name for use by the various methods.
 	 *
@@ -59,8 +64,8 @@ class DarkMatter_Domains {
 		 */
 		$this->wpdb = $wpdb;
 
-		if ( defined( 'DM_NETWORK_MEDIA' ) && ! empty( DM_NETWORK_MEDIA ) ) {
-			$this->network_media = DM_NETWORK_MEDIA;
+		if ( defined( '\DM_NETWORK_MEDIA' ) && ! empty( \DM_NETWORK_MEDIA ) ) {
+			$this->network_media = \DM_NETWORK_MEDIA;
 		}
 	}
 
@@ -70,11 +75,11 @@ class DarkMatter_Domains {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn Fully qualified domain name.
-	 * @return WP_Error|boolean       True on pass. WP_Error on failure.
+	 * @return \WP_Error|boolean       True on pass. WP_Error on failure.
 	 */
 	private function _basic_check( $fqdn = '' ) {
 		if ( empty( $fqdn ) ) {
-			return new WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+			return new \WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
 		}
 
 		/**
@@ -90,7 +95,7 @@ class DarkMatter_Domains {
 		}
 
 		if ( ! empty( $domain_parts['path'] ) || ! empty( $domain_parts['port'] ) || ! empty( $domain_parts['query'] ) ) {
-			return new WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
+			return new \WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
 		}
 
 		$fqdn = $domain_parts['host'];
@@ -99,20 +104,20 @@ class DarkMatter_Domains {
 		 * Check to ensure we have a valid domain to work with.
 		 */
 		if ( ! filter_var( $fqdn, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME ) ) {
-			return new WP_Error( 'domain', __( 'The domain is not valid.', 'dark-matter' ) );
+			return new \WP_Error( 'domain', __( 'The domain is not valid.', 'dark-matter' ) );
 		}
 
 		if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $fqdn ) {
-			return new WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
+			return new \WP_Error( 'wp-config', __( 'You cannot configure the WordPress Network primary domain.', 'dark-matter' ) );
 		}
 
 		if ( is_main_site() ) {
-			return new WP_Error( 'root', __( 'Domains cannot be mapped to the main / root Site.', 'dark-matter' ) );
+			return new \WP_Error( 'root', __( 'Domains cannot be mapped to the main / root Site.', 'dark-matter' ) );
 		}
 
-		$reserve = DarkMatter_Restrict::instance();
+		$reserve = \DarkMatter\DomainMapping\Manager\Restricted::instance();
 		if ( $reserve->is_exist( $fqdn ) ) {
-			return new WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
+			return new \WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
 		}
 
 		/**
@@ -153,7 +158,7 @@ class DarkMatter_Domains {
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
 	 * @param  integer $type       Domain type. Defaults to `1`, which is "main".
-	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
+	 * @return Data\Domain|\WP_Error Domain on success. WP_Error on failure.
 	 */
 	public function add( $fqdn = '', $is_primary = false, $is_https = false, $force = true, $active = true, $type = DM_DOMAIN_TYPE_MAIN ) {
 		$fqdn = $this->_basic_check( $fqdn );
@@ -166,10 +171,10 @@ class DarkMatter_Domains {
 		 * Check that the FQDN is not already stored in the database.
 		 */
 		if ( $this->is_exist( $fqdn ) ) {
-			return new WP_Error( 'exists', __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
+			return new \WP_Error( 'exists', __( 'This domain is already assigned to a Site.', 'dark-matter' ) );
 		}
 
-		$dm_primary = DarkMatter_Primary::instance();
+		$dm_primary = Primary::instance();
 
 		if ( $is_primary ) {
 			$primary_domain = $dm_primary->get();
@@ -179,7 +184,7 @@ class DarkMatter_Domains {
 			 */
 			if ( ! empty( $primary_domain ) ) {
 				if ( ! $force ) {
-					return new WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
+					return new \WP_Error( 'primary', __( 'You cannot add this domain as the primary domain without using the force flag.', 'dark-matter' ) );
 				}
 			}
 		}
@@ -188,29 +193,29 @@ class DarkMatter_Domains {
 		 * Check the type is valid.
 		 */
 		if ( DM_DOMAIN_TYPE_MAIN !== $type && DM_DOMAIN_TYPE_MEDIA !== $type ) {
-			return new WP_Error( 'type', __( 'The type for the new domain is not supported.', 'dark-matter' ) );
+			return new \WP_Error( 'type', __( 'The type for the new domain is not supported.', 'dark-matter' ) );
 		}
 
-		$_domain = array(
+		$_domain = [
 			'active'     => ( ! $active ? false : true ),
 			'blog_id'    => get_current_blog_id(),
 			'domain'     => $fqdn,
 			'is_primary' => ( ! $is_primary ? false : true ),
 			'is_https'   => ( ! $is_https ? false : true ),
 			'type'       => ( ! empty( $type ) ? $type : DM_DOMAIN_TYPE_MAIN ),
-		);
+		];
 
 		$result = $this->wpdb->insert(
 			$this->dm_table,
 			$_domain,
-			array(
+			[
 				'%d',
 				'%d',
 				'%s',
 				'%d',
 				'%d',
 				'%d',
-			)
+			]
 		);
 
 		if ( $result ) {
@@ -235,7 +240,7 @@ class DarkMatter_Domains {
 				$this->primary_set( $fqdn, get_current_blog_id() );
 			}
 
-			$dm_domain = new DM_Domain( (object) $_domain );
+			$dm_domain = new Data\Domain( (object) $_domain );
 
 			$this->update_last_changed();
 
@@ -247,14 +252,14 @@ class DarkMatter_Domains {
 			 *
 			 * @since 2.0.0
 			 *
-			 * @param DM_Domain $dm_domain Domain object of the newly added Domain.
+			 * @param Data\Domain $dm_domain Domain object of the newly added Domain.
 			 */
 			do_action( 'darkmatter_domain_add', $dm_domain );
 
 			return $dm_domain;
 		}
 
-		return new WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
+		return new \WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
 	}
 
 	/**
@@ -322,7 +327,7 @@ class DarkMatter_Domains {
 	 *
 	 * @param  string  $fqdn FQDN to be deleted.
 	 * @param  boolean $force Force the FQDN to be deleted, even if it is the primary domain.
-	 * @return WP_Error|boolean True on success. False otherwise.
+	 * @return \WP_Error|boolean True on success. False otherwise.
 	 */
 	public function delete( $fqdn = '', $force = true ) {
 		$fqdn = $this->_basic_check( $fqdn );
@@ -335,7 +340,7 @@ class DarkMatter_Domains {
 		 * Cannot delete what does not exist.
 		 */
 		if ( ! $this->is_exist( $fqdn ) ) {
-			return new WP_Error( 'exists', __( 'The domain cannot be found.', 'dark-matter' ) );
+			return new \WP_Error( 'exists', __( 'The domain cannot be found.', 'dark-matter' ) );
 		}
 
 		/**
@@ -344,7 +349,7 @@ class DarkMatter_Domains {
 		$_domain = $this->get( $fqdn );
 
 		if ( ! $_domain || get_current_blog_id() !== $_domain->blog_id ) {
-			return new WP_Error( 'not found', __( 'The domain cannot be found.', 'dark-matter' ) );
+			return new \WP_Error( 'not found', __( 'The domain cannot be found.', 'dark-matter' ) );
 		}
 
 		/**
@@ -355,7 +360,7 @@ class DarkMatter_Domains {
 			if ( $force ) {
 				$this->primary_unset( $_domain->domain, $_domain->blog_id );
 			} else {
-				return new WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
+				return new \WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
 			}
 		}
 
@@ -381,14 +386,14 @@ class DarkMatter_Domains {
 			 *
 			 * @since 2.0.0
 			 *
-			 * @param DM_Domain $_domain Domain object that was deleted.
+			 * @param Data\Domain $_domain Domain object that was deleted.
 			 */
 			do_action( 'darkmatter_domain_delete', $_domain );
 
 			return true;
 		}
 
-		return new WP_Error( 'unknown', __( 'Sorry, the domain could not be deleted. An unknown error occurred.', 'dark-matter' ) );
+		return new \WP_Error( 'unknown', __( 'Sorry, the domain could not be deleted. An unknown error occurred.', 'dark-matter' ) );
 
 	}
 
@@ -398,7 +403,7 @@ class DarkMatter_Domains {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn FQDN to search for.
-	 * @return DM_Domain|boolean       Domain object. False on failure or not found.
+	 * @return Data\Domain|boolean Domain object. False on failure or not found.
 	 */
 	public function find( $fqdn = '' ) {
 		if ( empty( $fqdn ) ) {
@@ -414,7 +419,7 @@ class DarkMatter_Domains {
 	 * @since 2.0.0
 	 *
 	 * @param  string $fqdn FQDN to search for.
-	 * @return DM_Domain|boolean       Domain object. False otherwise.
+	 * @return Data\Domain|boolean Domain object. False otherwise.
 	 */
 	public function get( $fqdn = '' ) {
 		if ( empty( $fqdn ) ) {
@@ -478,7 +483,7 @@ class DarkMatter_Domains {
 		/**
 		 * Return the DM_Domain object version.
 		 */
-		return new DM_Domain( (object) $_domain );
+		return new Data\Domain( (object) $_domain );
 	}
 
 	/**
@@ -515,7 +520,7 @@ class DarkMatter_Domains {
 				 * Convert the domains into DM_Domain objects.
 				 */
 				foreach ( $this->network_media as $i => $media_domain ) {
-					$media_domains[ $i ] = new DM_Domain(
+					$media_domains[ $i ] = new Data\Domain(
 						(object) [
 							'active'     => true,
 							'blog_id'    => get_current_blog_id(),
@@ -576,7 +581,7 @@ class DarkMatter_Domains {
 		/**
 		 * Retrieve the domain details, probably from cache, and get an array of `DM_Domain` objects.
 		 */
-		$domains = array();
+		$domains = [];
 
 		foreach ( $_domains as $_domain ) {
 			$domains[] = $this->get( $_domain );
@@ -615,7 +620,7 @@ class DarkMatter_Domains {
 		/**
 		 * Retrieve the domain details from the cache. If the cache is
 		 */
-		$domains = array();
+		$domains = [];
 
 		foreach ( $_domains as $_domain ) {
 			$domains[] = $this->get( $_domain );
@@ -671,7 +676,7 @@ class DarkMatter_Domains {
 	 * @return void
 	 */
 	private function primary_set( $domain = '', $blog_id = 0 ) {
-		$current_primary = DarkMatter_Primary::instance()->get( $blog_id );
+		$current_primary = \DarkMatter\DomainMapping\Manager\Primary::instance()->get( $blog_id );
 
 		if ( ! empty( $current_primary ) && $domain !== $current_primary->domain ) {
 			$this->update( $current_primary->domain, false, null, true, $current_primary->active );
@@ -748,7 +753,7 @@ class DarkMatter_Domains {
 	 * @param  boolean $force      Whether the update should be forced.
 	 * @param  boolean $active     Default is active. Set to false if you wish to add a domain but not make it active.
 	 * @param  integer $type       Domain type. Defaults to `null`, do not change current value. Accepts `1` for main and `2` for Media.
-	 * @return DM_Domain|WP_Error             DM_Domain on success. WP_Error on failure.
+	 * @return Data\Domain|\WP_Error DM_Domain on success. WP_Error on failure.
 	 */
 	public function update( $fqdn = '', $is_primary = null, $is_https = null, $force = true, $active = true, $type = null ) {
 		$fqdn = $this->_basic_check( $fqdn );
@@ -760,16 +765,16 @@ class DarkMatter_Domains {
 		$domain_before = $this->get( $fqdn );
 
 		if ( ! $domain_before ) {
-			return new WP_Error( 'not found', __( 'Cannot find the domain to update.', 'dark-matter' ) );
+			return new \WP_Error( 'not found', __( 'Cannot find the domain to update.', 'dark-matter' ) );
 		}
 
-		$dm_primary = DarkMatter_Primary::instance();
+		$dm_primary = \DarkMatter\DomainMapping\Manager\Primary::instance();
 
-		$_domain = array(
+		$_domain = [
 			'active'  => ( ! $active ? false : true ),
 			'blog_id' => $domain_before->blog_id,
 			'domain'  => $fqdn,
-		);
+		];
 
 		/**
 		 * Determine if there is an attempt to update the "is primary" field.
@@ -779,7 +784,7 @@ class DarkMatter_Domains {
 			 * Any update to the "is primary" requires the force flag.
 			 */
 			if ( ! $force ) {
-				return new WP_Error( 'primary', __( 'You cannot update the primary flag without setting the force parameter to true', 'dark-matter' ) );
+				return new \WP_Error( 'primary', __( 'You cannot update the primary flag without setting the force parameter to true', 'dark-matter' ) );
 			}
 
 			$_domain['is_primary'] = $is_primary;
@@ -796,16 +801,16 @@ class DarkMatter_Domains {
 			if ( DM_DOMAIN_TYPE_MAIN === $type || DM_DOMAIN_TYPE_MEDIA === $type ) {
 				$_domain['type'] = $type;
 			} else {
-				return new WP_Error( 'type', __( 'The type for the new domain is not supported.', 'dark-matter' ) );
+				return new \WP_Error( 'type', __( 'The type for the new domain is not supported.', 'dark-matter' ) );
 			}
 		}
 
 		$result = $this->wpdb->update(
 			$this->dm_table,
 			$_domain,
-			array(
+			[
 				'id' => $domain_before->id,
-			)
+			]
 		);
 
 		if ( $result ) {
@@ -841,7 +846,7 @@ class DarkMatter_Domains {
 				$this->primary_unset( $domain_before->domain, $domain_before->blog_id );
 			}
 
-			$domain_after = new DM_Domain( (object) $_domain );
+			$domain_after = new Data\Domain( (object) $_domain );
 
 			$this->update_last_changed();
 
@@ -850,15 +855,15 @@ class DarkMatter_Domains {
 			 *
 			 * @since 2.0.0
 			 *
-			 * @param DM_Domain $domain_after  Domain object after the changes have been applied successfully.
-			 * @param DM_Domain $domain_before Domain object before.
+			 * @param Data\Domain $domain_after  Domain object after the changes have been applied successfully.
+			 * @param Data\Domain $domain_before Domain object before.
 			 */
 			do_action( 'darkmatter_domain_updated', $domain_after, $domain_before );
 
 			return $domain_after;
 		}
 
-		return new WP_Error( 'unknown', __( 'Sorry, the domain could not be updated. An unknown error occurred.', 'dark-matter' ) );
+		return new \WP_Error( 'unknown', __( 'Sorry, the domain could not be updated. An unknown error occurred.', 'dark-matter' ) );
 	}
 
 	/**
@@ -877,7 +882,7 @@ class DarkMatter_Domains {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return DarkMatter_Domains
+	 * @return Domain
 	 */
 	public static function instance() {
 		static $instance = false;

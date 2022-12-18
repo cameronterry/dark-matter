@@ -1,20 +1,25 @@
 <?php
 /**
- * Class DM_Media
- *
- * @package DarkMatter
+ * Handles the mapping of media domains.
  *
  * @since 2.2.0
+ *
+ * @package DarkMatterPlugin\DomainMapping
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatter\DomainMapping\Processor;
+
+use DarkMatter\DomainMapping\Manager\Domain;
+use DarkMatter\DomainMapping\Manager\Primary;
 
 /**
- * Class DM_Media
+ * Class Media
+ *
+ * Previously called `DM_Media`
  *
  * @since 2.2.0
  */
-class DM_Media {
+class Media {
 	/**
 	 * The ID of the current site.
 	 *
@@ -42,13 +47,13 @@ class DM_Media {
 	 * @since 2.2.0
 	 */
 	public function __construct() {
-		add_action( 'init', array( $this, 'init' ), 10 );
-		add_action( 'rest_api_init', array( $this, 'prepare_rest' ) );
-		add_action( 'switch_blog', array( $this, 'switch_blog' ), 10, 1 );
+		add_action( 'init', [ $this, 'init' ], 10 );
+		add_action( 'rest_api_init', [ $this, 'prepare_rest' ] );
+		add_action( 'switch_blog', [ $this, 'switch_blog' ], 10, 1 );
 
-		add_filter( 'the_content', array( $this, 'map' ), 100, 1 );
-		add_filter( 'wp_get_attachment_url', array( $this, 'map_url' ), 100, 1 );
-		add_filter( 'wp_insert_post_data', array( $this, 'insert_post' ), -10, 1 );
+		add_filter( 'the_content', [ $this, 'map' ], 100, 1 );
+		add_filter( 'wp_get_attachment_url', [ $this, 'map_url' ], 100, 1 );
+		add_filter( 'wp_insert_post_data', [ $this, 'insert_post' ], -10, 1 );
 	}
 
 	/**
@@ -86,7 +91,7 @@ class DM_Media {
 			$unmapped,
 		];
 
-		$primary = DarkMatter_Primary::instance()->get( $site_id );
+		$primary = Primary::instance()->get( $site_id );
 		if ( ! empty( $primary ) ) {
 			$main_domains[] = $primary->domain;
 		}
@@ -295,10 +300,10 @@ class DM_Media {
 		/**
 		 * Loop all post types with REST endpoints to fix the mapping for content.raw property.
 		 */
-		$rest_post_types = get_post_types( array( 'show_in_rest' => true ) );
+		$rest_post_types = get_post_types( [ 'show_in_rest' => true ] );
 
 		foreach ( $rest_post_types as $post_type ) {
-			add_filter( "rest_prepare_{$post_type}", array( $this, 'prepare_rest_post_item' ), 10, 1 );
+			add_filter( "rest_prepare_{$post_type}", [ $this, 'prepare_rest_post_item' ], 10, 1 );
 		}
 	}
 
@@ -306,8 +311,8 @@ class DM_Media {
 	 * Ensures the "raw" version of the content, typically used by Gutenberg through it's middleware pre-load / JS
 	 * hydrate process, gets handled the same as content (which runs through the `the_content` hook).
 	 *
-	 * @param  WP_REST_Response $item Individual post / item in the response that is being processed.
-	 * @return WP_REST_Response       Post / item with the content.raw, if present, mapped.
+	 * @param  \WP_REST_Response $item Individual post / item in the response that is being processed.
+	 * @return \WP_REST_Response       Post / item with the content.raw, if present, mapped.
 	 *
 	 * @since 2.2.0
 	 */
@@ -344,7 +349,7 @@ class DM_Media {
 		/**
 		 * Ensure we have media domains to use.
 		 */
-		$media_domains = DarkMatter_Domains::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+		$media_domains = Domain::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
 		if ( empty( $media_domains ) ) {
 			$this->sites[ $site_id ] = false;
 			return;
@@ -421,22 +426,4 @@ class DM_Media {
 			$value
 		);
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @return DM_Media
-	 *
-	 * @since 2.2.0
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_Media::instance();
