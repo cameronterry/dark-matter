@@ -63,6 +63,29 @@ class Token {
 	}
 
 	/**
+	 * Retrieve a token by Token ID or User ID.
+	 *
+	 * @param string $id   ID to retrieve token.
+	 * @param string $type ID type; "token" or "user".
+	 * @return false|string|array Data from the Token, either as an array or string. Can return false if cache entry has
+	 *                            been deleted.
+	 */
+	public function get( $id, $type = 'user' ) {
+		$prefix = [
+			'token' => 'dmp_token_',
+			'user'  => 'dmp_token_for_',
+		];
+
+		if ( ! array_key_exists( $type, $prefix ) ) {
+			return [];
+		}
+
+		$key = sprintf( '%1$s%2$s', $prefix[ $type ], $id );
+
+		return wp_cache_get( $key, 'dark-matter-plugin' );
+	}
+
+	/**
 	 * Update a token.
 	 *
 	 * Note: this will extend the length of time the token will remain.
