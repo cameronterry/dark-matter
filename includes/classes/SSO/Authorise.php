@@ -144,7 +144,7 @@ class Authorise implements Registerable {
 		$this->get_data();
 
 		if ( empty( $this->data['action'] ) ) {
-			add_action( 'init', [ $this, 'initiate' ] );
+			add_action( 'init', [ $this, 'initiate' ], 11 );
 		}
 
 		/**
@@ -155,7 +155,7 @@ class Authorise implements Registerable {
 		}
 
 		if ( ! empty( $this->data ) && 'dmp_auth_verify' === $this->data['action'] ) {
-			add_action('init', [$this, 'verify']);
+			add_action( 'init', [ $this, 'verify' ], 11 );
 		}
 	}
 
