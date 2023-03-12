@@ -74,6 +74,10 @@ class Authorise implements Registerable {
 	 * @return void
 	 */
 	public function handle() {
+		if ( is_user_logged_in() ) {
+			return;
+		}
+
 		/**
 		 * Check to see if the token exists.
 		 */
@@ -92,7 +96,7 @@ class Authorise implements Registerable {
 		$url = admin_url();
 		$url = add_query_arg(
 			[
-				'action' => 'dmp_auth_check',
+				'action' => 'dmp_auth_verify',
 				'token'  => $this->data,
 			],
 			$url
@@ -121,14 +125,13 @@ class Authorise implements Registerable {
 			return;
 		}
 
-		Token::instance()->create(
-			$user_id,
-			'',
-			[
-				'user_id' => $user_id,
-				'nonce'   => wp_create_nonce( sprintf( 'dmp_auth_check_%s', $user_id ) ),
-			]
-		);
+		$data = [
+			'user_id' => $user_id,
+			'nonce'   => wp_create_nonce( sprintf( 'dmp_auth_check_%s', $user_id ) ),
+		];
+
+		$token_id = Token::instance()->create( $user_id, '', $data );
+		var_dump( $token_id, $data, $user_id );
 	}
 
 	/**
@@ -137,25 +140,22 @@ class Authorise implements Registerable {
 	 * @return void
 	 */
 	public function register() {
-		/**
-		 * If they are already logged in, then our work here is done.
-		 */
-		if ( is_user_logged_in() ) {
-			return;
-		}
-
 		$this->get_data();
+
+		if ( empty( $this->data ) ) {
+			add_action( 'init', [ $this, 'initiate' ] );
+		}
 
 		/**
 		 * Check if the current request has data and has the action.
 		 */
-		if ( empty( $this->data ) || 'dmp_auth_check' === $this->data['action'] ) {
-			return;
+		if ( ! empty( $this->data ) && 'dmp_auth_check' === $this->data['action'] ) {
+			add_action( 'template_redirect', [ $this, 'handle' ] ); // TODO: Should probably be a custom action from DMP when a mapped request has been determined.
 		}
 
-		add_action( 'template_redirect', [ $this, 'handle' ] ); // TODO: Should probably be a custom action from DMP when a mapped request has been determined.
-		add_action( 'init', [ $this, 'initiate' ] );
-		add_action( 'init', [ $this, 'verify' ] );
+		if ( ! empty( $this->data ) && 'dmp_auth_verify' === $this->data['action'] ) {
+			add_action('init', [$this, 'verify']);
+		}
 	}
 
 	/**
