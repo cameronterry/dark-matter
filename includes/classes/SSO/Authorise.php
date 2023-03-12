@@ -21,6 +21,29 @@ class Authorise implements Registerable {
 	private $data = [];
 
 	/**
+	 * Ensure the admin request is valid.
+	 *
+	 * @return bool True to proceed. False otherwise.
+	 */
+	private function is_valid_admin() {
+		/**
+		 * If they are not logged in, then we ignore it.
+		 */
+		if ( ! is_user_logged_in() ) {
+			return false;
+		}
+
+		/**
+		 * Make sure we are an admin request and that it is
+		 */
+		if ( wp_doing_ajax() || ! is_admin() ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Get the URL data.
 	 *
 	 * @return void
@@ -101,5 +124,50 @@ class Authorise implements Registerable {
 		}
 
 		add_action( 'template_redirect', [ $this, 'handle' ] );
+		add_action( 'init', [ $this, 'verify' ] );
+	}
+
+	/**
+	 * Verify a request provided by the handle method.
+	 *
+	 * @return void
+	 */
+	public function verify() {
+		if ( ! $this->is_valid_admin() ) {
+			return;
+		}
+
+		$user_id = get_current_user_id();
+
+		$token_data = Token::instance()->get( $user_id );
+		if ( empty( $token_data ) ) {
+			return;
+		}
+
+		/**
+		 * Make sure the Token we are verifying is for the same user as us.
+		 */
+		if ( $token_data['user_id'] !== $user_id ) {
+			return;
+		}
+
+		/**
+		 * Verify the nonce properly now.
+		 *
+		 * As this is processed on the admin domain, the person's session is up and running, which will mean the nonce
+		 * verify is meaningful.
+		 */
+		if ( ! wp_verify_nonce( $token_data['nonce'], sprintf( 'dmp_auth_check_%s', $user_id ) ) ) {
+			return;
+		}
+
+		/**
+		 * Action that is fired when the SSO is authorised with a crafted URL from the front-end.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param array $token_data Data from the Token that completed the authorisation.
+		 */
+		do_action( 'darkmatterplugin.sso.authorised', $token_data );
 	}
 }
