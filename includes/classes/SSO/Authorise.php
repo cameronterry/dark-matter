@@ -21,11 +21,11 @@ class Authorise implements Registerable {
 	private $data = [];
 
 	/**
-	 * Handle actions and filters for this SSO Authorise.
+	 * Get the URL data.
 	 *
 	 * @return void
 	 */
-	public function register() {
+	private function get_data() {
 		$this->data = filter_var_array(
 			$_GET,
 			[
@@ -43,6 +43,15 @@ class Authorise implements Registerable {
 				],
 			]
 		);
+	}
+
+	/**
+	 * Handle actions and filters for this SSO Authorise.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		$this->get_data();
 
 		/**
 		 * Check if the current request has data and has the action.
