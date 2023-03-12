@@ -97,7 +97,8 @@ class Authorise implements Registerable {
 		$url = add_query_arg(
 			[
 				'action' => 'dmp_auth_verify',
-				'token'  => $this->data,
+				'token'  => $this->data['token'],
+				'nonce'  => $this->data['nonce'],
 			],
 			$url
 		);
@@ -142,7 +143,7 @@ class Authorise implements Registerable {
 	public function register() {
 		$this->get_data();
 
-		if ( empty( $this->data ) ) {
+		if ( empty( $this->data['action'] ) ) {
 			add_action( 'init', [ $this, 'initiate' ] );
 		}
 
@@ -170,7 +171,12 @@ class Authorise implements Registerable {
 
 		$user_id = get_current_user_id();
 
-		$token_data = Token::instance()->get( $user_id );
+		$token_id = Token::instance()->get( $user_id );
+		if ( empty( $token_id ) || $this->data['token'] !== $token_id ) {
+			return;
+		}
+
+		$token_data = Token::instance()->get( $token_id, 'token' );
 		if ( empty( $token_data ) ) {
 			return;
 		}
