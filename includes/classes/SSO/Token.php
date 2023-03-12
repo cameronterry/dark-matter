@@ -63,6 +63,25 @@ class Token {
 	}
 
 	/**
+	 * Update a token.
+	 *
+	 * Note: this will extend the length of time the token will remain.
+	 *
+	 * @param int   $token_id Token ID.
+	 * @param array $data     Data.
+	 * @return bool True on success. False otherwise.
+	 */
+	public function set( $token_id, $data = [] ) {
+		if ( empty( $token_id ) ) {
+			return false;
+		}
+
+		wp_cache_set( sprintf( 'dmp_token_%s', $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
+
+		return true;
+	}
+
+	/**
 	 * Singleton implementation.
 	 *
 	 * @return Token
