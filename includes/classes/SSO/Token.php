@@ -34,14 +34,32 @@ class Token {
 		/**
 		 * Create an entry so that Token can be found by looking up a WP User ID.
 		 */
-		wp_cache_set( sprintf( 'dmp_auth_for_%s', $user_id ), $token_id, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( 'dmp_token_for_%s', $user_id ), $token_id, 'dark-matter-plugin', HOUR_IN_SECONDS );
 
 		/**
 		 * Create the actual token entry with the appropriate data.
 		 */
-		wp_cache_set( sprintf( 'dmp_auth_token_%s', $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( 'dmp_token_%s', $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
 
 		return $token_id;
+	}
+
+	/**
+	 * Delete a token.
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param string $token_id Token ID.
+	 * @return bool True on success. False otherwise.
+	 */
+	public function delete( $user_id, $token_id ) {
+		if ( is_integer( $user_id ) && ! empty( $token_id ) ) {
+			wp_cache_delete( sprintf( 'dmp_token_for_%s', $user_id ), 'dark-matter-plugin' );
+			wp_cache_delete( sprintf( 'dmp_token_%s', $token_id ), 'dark-matter-plugin' );
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
