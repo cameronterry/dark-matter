@@ -102,6 +102,36 @@ class Authorise implements Registerable {
 	}
 
 	/**
+	 * Initiate the Authorise process by creating a token.
+	 *
+	 * @return void
+	 */
+	public function initiate() {
+		if ( ! $this->is_valid_admin() ) {
+			return;
+		}
+
+		$user_id = get_current_user_id();
+
+		/**
+		 * Check to see if a Token already exists.
+		 */
+		$token = Token::instance()->get( $user_id );
+		if ( ! empty( $token ) ) {
+			return;
+		}
+
+		Token::instance()->create(
+			$user_id,
+			'',
+			[
+				'user_id' => $user_id,
+				'nonce'   => wp_create_nonce( sprintf( 'dmp_auth_check_%s', $user_id ) ),
+			]
+		);
+	}
+
+	/**
 	 * Handle actions and filters for this SSO Authorise.
 	 *
 	 * @return void
@@ -123,7 +153,8 @@ class Authorise implements Registerable {
 			return;
 		}
 
-		add_action( 'template_redirect', [ $this, 'handle' ] );
+		add_action( 'template_redirect', [ $this, 'handle' ] ); // TODO: Should probably be a custom action from DMP when a mapped request has been determined.
+		add_action( 'init', [ $this, 'initiate' ] );
 		add_action( 'init', [ $this, 'verify' ] );
 	}
 
