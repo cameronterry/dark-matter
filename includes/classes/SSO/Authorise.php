@@ -203,8 +203,9 @@ class Authorise implements Registerable {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param array $token_data Data from the Token that completed the authorisation.
+		 * @param string $token_id   Token ID.
+		 * @param array  $token_data Data from the Token that completed the authorisation.
 		 */
-		do_action( 'darkmatterplugin.sso.authorised', $token_data );
+		do_action( 'darkmatterplugin.sso.authorised', $token_id, $token_data );
 	}
 }
