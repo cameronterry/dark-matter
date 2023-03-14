@@ -212,6 +212,8 @@ class Authorise implements Registerable {
 			return;
 		}
 
+		$this->token_api->delete( $user_id, $token_id );
+
 		/**
 		 * Action that is fired when the SSO is authorised with a crafted URL from the front-end.
 		 *
