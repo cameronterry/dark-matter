@@ -12,6 +12,22 @@ namespace DarkMatter\SSO;
  */
 class Token {
 	/**
+	 * Token name prefix.
+	 *
+	 * @var string
+	 */
+	private $prefix = '';
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $prefix Token prefix.
+	 */
+	public function __construct( $prefix = '' ) {
+		$this->prefix = $prefix ?? 'dmp_token_';
+	}
+
+	/**
 	 * Create a token.
 	 *
 	 * @param int    $user_id  User ID.
@@ -27,19 +43,19 @@ class Token {
 		/**
 		 * No Token ID, then generate one.
 		 */
-		if ( ! empty( $token_id ) ) {
+		if ( empty( $token_id ) ) {
 			$token_id = wp_generate_password( 20, false );
 		}
 
 		/**
 		 * Create an entry so that Token can be found by looking up a WP User ID.
 		 */
-		wp_cache_set( sprintf( 'dmp_token_for_%s', $user_id ), $token_id, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( '%1$sfor_%2$s', $this->prefix, $user_id ), $token_id, 'dark-matter-plugin', HOUR_IN_SECONDS );
 
 		/**
 		 * Create the actual token entry with the appropriate data.
 		 */
-		wp_cache_set( sprintf( 'dmp_token_%s', $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( '%1$s%2$s', $this->prefix, $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
 
 		return $token_id;
 	}
@@ -53,8 +69,8 @@ class Token {
 	 */
 	public function delete( $user_id, $token_id ) {
 		if ( is_integer( $user_id ) && ! empty( $token_id ) ) {
-			wp_cache_delete( sprintf( 'dmp_token_for_%s', $user_id ), 'dark-matter-plugin' );
-			wp_cache_delete( sprintf( 'dmp_token_%s', $token_id ), 'dark-matter-plugin' );
+			wp_cache_delete( sprintf( '%1$sfor_%2$s', $this->prefix, $user_id ), 'dark-matter-plugin' );
+			wp_cache_delete( sprintf( '%1$s%2$s', $this->prefix, $token_id ), 'dark-matter-plugin' );
 
 			return true;
 		}
@@ -72,8 +88,8 @@ class Token {
 	 */
 	public function get( $id, $type = 'user' ) {
 		$prefix = [
-			'token' => 'dmp_token_',
-			'user'  => 'dmp_token_for_',
+			'token' => $this->prefix,
+			'user'  => sprintf( '%1$sfor_', $this->prefix ),
 		];
 
 		if ( ! array_key_exists( $type, $prefix ) ) {
@@ -99,23 +115,8 @@ class Token {
 			return false;
 		}
 
-		wp_cache_set( sprintf( 'dmp_token_%s', $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( '%1$s%2$s', $this->prefix, $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
 
 		return true;
-	}
-
-	/**
-	 * Singleton implementation.
-	 *
-	 * @return Token
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
 	}
 }
