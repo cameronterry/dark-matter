@@ -68,8 +68,9 @@ class Authenticate implements Registerable {
 		$nonce   = wp_create_nonce( sprintf( 'dmp_login_check_%s', $user_id ) );
 
 		$data = [
-			'user_id' => $user_id,
-			'nonce'   => $nonce,
+			'nonce'         => $nonce,
+			'session_token' => wp_get_session_token(),
+			'user_id'       => $user_id,
 		];
 
 		// Create a new token with User ID in the data.
