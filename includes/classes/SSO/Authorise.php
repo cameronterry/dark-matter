@@ -21,6 +21,20 @@ class Authorise implements Registerable {
 	private $data = [];
 
 	/**
+	 * Token API.
+	 *
+	 * @var null|Token
+	 */
+	private $token_api = null;
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		$this->token_api = new Token( 'dmp_auth_token' );
+	}
+
+	/**
 	 * Ensure the admin request is valid.
 	 *
 	 * @return bool True to proceed. False otherwise.
@@ -81,7 +95,7 @@ class Authorise implements Registerable {
 		/**
 		 * Check to see if the token exists.
 		 */
-		$token_data = Token::instance()->get( $this->data['token'], 'token' );
+		$token_data = $this->token_api->get( $this->data['token'], 'token' );
 		if ( empty( $token_data['nonce'] ) && empty( $token_data['user_id'] ) ) {
 			return;
 		}
@@ -121,7 +135,7 @@ class Authorise implements Registerable {
 		/**
 		 * Check to see if a Token already exists.
 		 */
-		$token = Token::instance()->get( $user_id );
+		$token = $this->token_api->get( $user_id );
 		if ( ! empty( $token ) ) {
 			return;
 		}
@@ -131,7 +145,7 @@ class Authorise implements Registerable {
 			'nonce'   => wp_create_nonce( sprintf( 'dmp_auth_check_%s', $user_id ) ),
 		];
 
-		$token_id = Token::instance()->create( $user_id, '', $data );
+		$token_id = $this->token_api->create( $user_id, '', $data );
 		var_dump( $token_id, $data, $user_id );
 	}
 
@@ -171,12 +185,12 @@ class Authorise implements Registerable {
 
 		$user_id = get_current_user_id();
 
-		$token_id = Token::instance()->get( $user_id );
+		$token_id = $this->token_api->get( $user_id );
 		if ( empty( $token_id ) || $this->data['token'] !== $token_id ) {
 			return;
 		}
 
-		$token_data = Token::instance()->get( $token_id, 'token' );
+		$token_data = $this->token_api->get( $token_id, 'token' );
 		if ( empty( $token_data ) ) {
 			return;
 		}
