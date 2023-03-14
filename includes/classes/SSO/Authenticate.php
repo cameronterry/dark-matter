@@ -28,6 +28,31 @@ class Authenticate implements Registerable {
 	}
 
 	/**
+	 * Retrieve the URL data.
+	 *
+	 * @return array|false|null
+	 */
+	private function get_data() {
+		return filter_var_array(
+			$_GET,
+			[
+				'action' => [
+					'filter'  => FILTER_CALLBACK,
+					'options' => 'sanitize_text_field',
+				],
+				'nonce'  => [
+					'filter'  => FILTER_CALLBACK,
+					'options' => 'sanitize_text_field',
+				],
+				'token'  => [
+					'filter'  => FILTER_CALLBACK,
+					'options' => 'sanitize_text_field',
+				],
+			]
+		);
+	}
+
+	/**
 	 * Prepare a redirect to the mapped domain which can be used for authentication and log on.
 	 *
 	 * @param string $token_id   Token ID.
