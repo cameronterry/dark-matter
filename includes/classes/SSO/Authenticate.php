@@ -96,5 +96,55 @@ class Authenticate implements Registerable {
 	 */
 	public function register() {
 		add_action( 'darkmatterplugin.sso.authorised', [ $this, 'prepare' ], 10, 2 );
+
+		// Add action to log in the user.
+		add_action( 'template_redirect', [ $this, 'signin' ] ); // TODO: Should probably be a custom action from DMP when a mapped request has been determined.
+	}
+
+	/**
+	 * Perform sign-in request.
+	 *
+	 * @return void
+	 */
+	public function signin() {
+		$data = $this->get_data();
+
+		if ( 'dmp_auth_do' !== $data['action'] ) {
+			return;
+		}
+
+		/**
+		 * Check to see if the token exists.
+		 */
+		$token_data = $this->token_api->get( $data['token'], 'token' );
+		if ( empty( $token_data['nonce'] ) && empty( $token_data['user_id'] ) ) {
+			return;
+		}
+
+		/**
+		 * Check the nonce matches.
+		 */
+		if ( $data['nonce'] !== $token_data['nonce'] ) {
+			return;
+		}
+
+		wp_set_auth_cookie( $token_data['user_id'], false, '', $token_data['session_token'] );
+		wp_set_current_user( $token_data['user_id'] );
+
+		/**
+		 * With the person signed in, perform an actual verification on the nonce. If it fails, then immediately clear
+		 * the auth cookies.
+		 */
+		if ( ! wp_verify_nonce( $token_data['nonce'], sprintf( 'dmp_login_check_%s', $token_data['user_id'] ) ) ) {
+			/**
+			 * Sadly the `wp_verify_nonce()` does not provide a way to supply the relevant data without the auth cookies
+			 * being set. Hence this weird "create" and "destroy" immediately approach to cookies.
+			 */
+			wp_clear_auth_cookie();
+			return;
+		}
+
+		wp_safe_redirect( home_url( '/' ), 302, 'DarkMatterPlugin' );
+		die;
 	}
 }
