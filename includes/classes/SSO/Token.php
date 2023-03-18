@@ -12,6 +12,13 @@ namespace DarkMatter\SSO;
  */
 class Token {
 	/**
+	 * Token cache group.
+	 *
+	 * @var string
+	 */
+	private $cache_group = 'dark-matter-plugin-tokens';
+
+	/**
 	 * Token name prefix.
 	 *
 	 * @var string
@@ -21,10 +28,20 @@ class Token {
 	/**
 	 * Constructor.
 	 *
-	 * @param string $prefix Token prefix.
+	 * @param string $prefix       Token prefix.
+	 * @param string $cache_group  Override the cache group.
+	 * @param bool   $cache_global Add the cache group to the global groups, so available across the network.
 	 */
-	public function __construct( $prefix = '' ) {
+	public function __construct( $prefix = '', $cache_group = '', $cache_global = false ) {
 		$this->prefix = $prefix ?? 'dmp_token_';
+
+		if ( ! empty( $cache_group ) ) {
+			$this->cache_group = $cache_group;
+		}
+
+		if ( $cache_global ) {
+			wp_cache_add_global_groups( $this->cache_group );
+		}
 	}
 
 	/**
@@ -50,12 +67,12 @@ class Token {
 		/**
 		 * Create an entry so that Token can be found by looking up a WP User ID.
 		 */
-		wp_cache_set( sprintf( '%1$sfor_%2$s', $this->prefix, $user_id ), $token_id, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( '%1$sfor_%2$s', $this->prefix, $user_id ), $token_id, $this->cache_group, HOUR_IN_SECONDS );
 
 		/**
 		 * Create the actual token entry with the appropriate data.
 		 */
-		wp_cache_set( sprintf( '%1$s%2$s', $this->prefix, $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( '%1$s%2$s', $this->prefix, $token_id ), $data, $this->cache_group, HOUR_IN_SECONDS );
 
 		return $token_id;
 	}
@@ -69,8 +86,8 @@ class Token {
 	 */
 	public function delete( $user_id, $token_id ) {
 		if ( is_integer( $user_id ) && ! empty( $token_id ) ) {
-			wp_cache_delete( sprintf( '%1$sfor_%2$s', $this->prefix, $user_id ), 'dark-matter-plugin' );
-			wp_cache_delete( sprintf( '%1$s%2$s', $this->prefix, $token_id ), 'dark-matter-plugin' );
+			wp_cache_delete( sprintf( '%1$sfor_%2$s', $this->prefix, $user_id ), $this->cache_group );
+			wp_cache_delete( sprintf( '%1$s%2$s', $this->prefix, $token_id ), $this->cache_group );
 
 			return true;
 		}
@@ -98,7 +115,7 @@ class Token {
 
 		$key = sprintf( '%1$s%2$s', $prefix[ $type ], $id );
 
-		return wp_cache_get( $key, 'dark-matter-plugin' );
+		return wp_cache_get( $key, $this->cache_group );
 	}
 
 	/**
@@ -115,7 +132,7 @@ class Token {
 			return false;
 		}
 
-		wp_cache_set( sprintf( '%1$s%2$s', $this->prefix, $token_id ), $data, 'dark-matter-plugin', HOUR_IN_SECONDS );
+		wp_cache_set( sprintf( '%1$s%2$s', $this->prefix, $token_id ), $data, $this->cache_group, HOUR_IN_SECONDS );
 
 		return true;
 	}
