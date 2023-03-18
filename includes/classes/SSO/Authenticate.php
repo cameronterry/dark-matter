@@ -133,8 +133,13 @@ class Authenticate implements Registerable {
 		wp_set_auth_cookie( $token_data['user_id'], false, '', $token_data['session_token'] );
 		wp_set_current_user( $token_data['user_id'] );
 
-		// Verify nonce doesn't work because the above does not update $_COOKIE.
-
+		/**
+		 * `wp_verify_nonce()` works with `$_COOKIE` to retrieve the auth cookies and despite being set above, the auth
+		 * cookies are not available in this manner. This means the retrieving the current WP User and get the session
+		 * token does not work, meaning the nonce always fails.
+		 *
+		 * The below allows us to perform the check with the need for `$_COOKIE` being updated.
+		 */
 		$verify_nonce = verify_nonce(
 			$token_data['nonce'],
 			sprintf( 'dmp_login_check_%s', $token_data['user_id'] ),
