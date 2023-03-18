@@ -8,6 +8,7 @@
 namespace DarkMatter\SSO;
 
 use DarkMatter\Interfaces\Registerable;
+use function DarkMatter\Functions\verify_nonce;
 
 /**
  * Class Authenticate
@@ -132,14 +133,23 @@ class Authenticate implements Registerable {
 		wp_set_auth_cookie( $token_data['user_id'], false, '', $token_data['session_token'] );
 		wp_set_current_user( $token_data['user_id'] );
 
+		// Verify nonce doesn't work because the above does not update $_COOKIE.
+
+		$verify_nonce = verify_nonce(
+			$token_data['nonce'],
+			sprintf( 'dmp_login_check_%s', $token_data['user_id'] ),
+			$token_data['user_id'],
+			$token_data['session_token']
+		);
+
 		/**
 		 * With the person signed in, perform an actual verification on the nonce. If it fails, then immediately clear
 		 * the auth cookies.
 		 */
-		if ( ! wp_verify_nonce( $token_data['nonce'], sprintf( 'dmp_login_check_%s', $token_data['user_id'] ) ) ) {
+		if ( ! $verify_nonce ) {
 			/**
 			 * Sadly the `wp_verify_nonce()` does not provide a way to supply the relevant data without the auth cookies
-			 * being set. Hence this weird "create" and "destroy" immediately approach to cookies.
+			 * being set. However, this weird "create" and "destroy" immediately approach to cookies.
 			 */
 			wp_clear_auth_cookie();
 			return;
