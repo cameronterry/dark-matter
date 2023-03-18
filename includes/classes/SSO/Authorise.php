@@ -31,7 +31,7 @@ class Authorise implements Registerable {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->token_api = new Token( 'dmp_auth_token' );
+		$this->token_api = new Token( 'dmp_auth_token', 'dark-matter-plugin-authtokens', true );
 	}
 
 	/**
