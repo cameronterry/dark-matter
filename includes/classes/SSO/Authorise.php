@@ -146,8 +146,7 @@ class Authorise implements Registerable {
 			'nonce'   => wp_create_nonce( sprintf( 'dmp_auth_check_%s', $user_id ) ),
 		];
 
-		$token_id = $this->token_api->create( $user_id, '', $data );
-		var_dump( $token_id, $data, $user_id );
+		$this->token_api->create( $user_id, '', $data );
 	}
 
 	/**
