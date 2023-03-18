@@ -118,6 +118,7 @@ class Authorise implements Registerable {
 		);
 
 		wp_safe_redirect( $url, 302, 'Dark-Matter-Plugin' );
+		die;
 	}
 
 	/**
