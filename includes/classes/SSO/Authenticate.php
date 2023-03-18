@@ -25,7 +25,7 @@ class Authenticate implements Registerable {
 	 * Constructor.
 	 */
 	public function __construct() {
-		$this->token_api = new Token( 'dmp_login_token' );
+		$this->token_api = new Token( 'dmp_login_token', 'dark-matter-plugin-authdo' );
 	}
 
 	/**
