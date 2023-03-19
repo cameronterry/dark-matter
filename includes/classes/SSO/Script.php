@@ -42,10 +42,62 @@ class Script implements Registerable {
 					return;
 				}
 
-				window.localStorage.setItem( 'dmp_token_id', <?php echo wp_json_encode( $token_id ); ?> );
-				window.localStorage.setItem( 'dmp_token_nonce', <?php echo wp_json_encode( $token_data['nonce'] ); ?> );
+				window.localStorage.setItem( 'dmpTokenId', <?php echo wp_json_encode( $token_id ); ?> );
+				window.localStorage.setItem( 'dmpTokenNonce', <?php echo wp_json_encode( $token_data['nonce'] ); ?> );
 			} )();
 		</script>
+		<?php
+	}
+
+	/**
+	 * Use `admin-post.php?action=` convention which is the endpoint used for the `<iframe>` on the primary domain side
+	 * of the SSO.
+	 *
+	 * @return void
+	 */
+	public function iframe_endpoint() {
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
+		$domain = untrailingslashit( home_url() );
+
+		header(
+			sprintf( 'Content-Security-Policy: frame-ancestors %s', $domain )
+		);
+
+		/**
+		 * Very basic HTML output, which is done to ensure the browser doesn't accidentally do something weird.
+		 */
+		?>
+		<!DOCTYPE html>
+		<html <?php language_attributes(); ?>>
+			<head>
+				<title><?php echo esc_html( wp_get_document_title() ); ?></title>
+			</head>
+			<body>
+				<!-- <?php esc_html_e( 'This request is used as part of the SSO function for Dark Matter Plugin.', 'dark-matter-plugin' ); ?> -->
+				<script>
+					( function () {
+						if ( ! window.localStorage ) {
+							return;
+						}
+
+						var tokenId = window.localStorage.getItem( 'dmpTokenId' );
+						var tokenNonce = window.localStorage.getItem( 'dmpTokenNonce' );
+						if ( tokenId && tokenNonce ) {
+							window.postMessage(
+								{
+									tokenId,
+									tokenNonce
+								},
+									<?php echo wp_json_encode( home_url( '/' ) ); ?>
+							);
+						}
+					} )();
+				</script>
+			</body>
+		</html>
 		<?php
 	}
 
@@ -63,7 +115,8 @@ class Script implements Registerable {
 		/**
 		 * Visitor-side.
 		 */
-		add_action( 'wp_footer', [ $this, 'iframe' ], 2000 );
+		add_action( 'admin_post_nopriv_dmpsso', [ $this, 'iframe_endpoint' ], 2000 );
+		add_action( 'admin_post_dmpsso', [ $this, 'iframe_endpoint' ], 2000 );
 		add_action( 'wp_footer', [ $this, 'visitor' ], 2000 );
 	}
 
