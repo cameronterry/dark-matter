@@ -32,7 +32,7 @@ class Admin implements Registerable {
 		$admin_bar->add_node(
 			[
 				'id'     => 'dark-matter-plugin-signin',
-				'href'   => Authorise::get_check_url(),
+				'href'   => $check_url,
 				'parent' => 'site-name',
 				'title'  => __( 'Log into Site', 'dark-matter-plugin' ),
 			]
