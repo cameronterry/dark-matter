@@ -34,7 +34,12 @@ class DarkMatter {
 		 */
 		$this->register_domainmapping();
 
-		$this->register_sso();
+		/**
+		 * SSO is a web-based process and not needed in the CLI.
+		 */
+		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
+			$this->register_sso();
+		}
 	}
 
 	/**
