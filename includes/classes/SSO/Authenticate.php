@@ -89,6 +89,7 @@ class Authenticate implements Registerable {
 
 		// Redirect to the mapped domain to log them in.
 		wp_safe_redirect( $url, 302, 'DarkMatterPlugin' );
+		die;
 	}
 
 	/**

@@ -58,6 +58,35 @@ class Authorise implements Registerable {
 	}
 
 	/**
+	 * Helper method to get the check URL for logging in a person to the primary domain.
+	 *
+	 * @return string
+	 */
+	public static function get_check_url() {
+		$user_id   = get_current_user_id();
+		$token_api = new Token( 'dmp_auth_token', 'dark-matter-plugin-authtokens', true );
+
+		$token_id = $token_api->get( $user_id );
+		if ( empty( $token_id ) ) {
+			return '';
+		}
+
+		$token_data = $token_api->get( $token_id, 'token' );
+		if ( empty( $token_data['nonce'] ) && empty( $token_data['user_id'] ) ) {
+			return '';
+		}
+
+		return add_query_arg(
+			[
+				'action' => 'dmp_auth_check',
+				'token'  => $token_id,
+				'nonce'  => $token_data['nonce'],
+			],
+			home_url( '/' )
+		);
+	}
+
+	/**
 	 * Get the URL data.
 	 *
 	 * @return void
