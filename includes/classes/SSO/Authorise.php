@@ -155,6 +155,10 @@ class Authorise implements Registerable {
 	 * @return void
 	 */
 	public function register() {
+		if ( wp_doing_ajax() ) {
+			return;
+		}
+
 		$this->get_data();
 
 		if ( empty( $this->data['action'] ) ) {
@@ -168,7 +172,13 @@ class Authorise implements Registerable {
 			add_action( 'template_redirect', [ $this, 'handle' ] ); // TODO: Should probably be a custom action from DMP when a mapped request has been determined.
 		}
 
-		if ( ! empty( $this->data ) && 'dmp_auth_verify' === $this->data['action'] ) {
+		/**
+		 * Verification must only occur on the admin domain (unmapped).
+		 */
+		if (
+			! empty( $this->data )
+			&& ( is_admin() )
+			&& 'dmp_auth_verify' === $this->data['action'] ) {
 			add_action( 'init', [ $this, 'verify' ], 11 );
 		}
 	}
