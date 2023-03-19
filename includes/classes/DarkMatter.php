@@ -11,6 +11,7 @@ namespace DarkMatter;
 
 use DarkMatter\DomainMapping;
 use DarkMatter\Interfaces\Registerable;
+use DarkMatter\SSO\Admin;
 use DarkMatter\SSO\Authenticate;
 use DarkMatter\SSO\Authorise;
 use DarkMatter\SSO\Testing;
@@ -163,6 +164,7 @@ class DarkMatter {
 	public function register_sso() {
 		$this->class_register(
 			[
+				Admin::class,
 				Authorise::class,
 				Authenticate::class,
 			]
