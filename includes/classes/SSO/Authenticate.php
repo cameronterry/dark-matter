@@ -49,6 +49,10 @@ class Authenticate implements Registerable {
 					'filter'  => FILTER_CALLBACK,
 					'options' => 'sanitize_text_field',
 				],
+				'key'    => [
+					'filter'  => FILTER_CALLBACK,
+					'options' => 'sanitize_key',
+				],
 			]
 		);
 	}
@@ -68,11 +72,28 @@ class Authenticate implements Registerable {
 		$user_id = get_current_user_id();
 		$nonce   = wp_create_nonce( sprintf( 'dmp_login_check_%s', $user_id ) );
 
+		/**
+		 * Generate a random key.
+		 */
+		$key = wp_hash( $user_id . wp_rand() . microtime(), 'dmp_authenticate' );
+
 		$data = [
-			'nonce'         => $nonce,
-			'session_token' => wp_get_session_token(),
-			'user_id'       => $user_id,
+			'key'     => $key,
+			'nonce'   => $nonce,
+			'user_id' => $user_id,
 		];
+
+		/**
+		 * Hashed the key and store it. This will be used to cross-reference later.
+		 */
+		$hashed_key = wp_hash( wp_json_encode( $data ), 'dmp_authenticate' );
+		$data['key'] = $hashed_key;
+
+		/**
+		 * Now add the session token. As this data is a bit more sensitive, we only want to store this in the within the
+		 * Cache API/Token logic but not include it in the one-way hash for the URL.
+		 */
+		$data['session_token'] = wp_get_session_token();
 
 		// Create a new token with User ID in the data.
 		$token_id = $this->token_api->create( $user_id, '', $data );
@@ -82,6 +103,7 @@ class Authenticate implements Registerable {
 				'action' => 'dmp_auth_do',
 				'token'  => $token_id,
 				'nonce'  => $nonce,
+				'key'    => $key,
 				't'      => time(), // Cache buster
 			],
 			home_url( '/' )
@@ -128,6 +150,25 @@ class Authenticate implements Registerable {
 		 * Check the nonce matches.
 		 */
 		if ( $data['nonce'] !== $token_data['nonce'] ) {
+			return;
+		}
+
+		/**
+		 * Check the key hash and make sure it is valid.
+		 */
+		$unverified_key = wp_hash(
+			wp_json_encode(
+				[
+					'key'     => $data['key'],
+					'nonce'   => $data['nonce'],
+					'user_id' => $token_data['user_id'],
+				]
+			),
+			'dmp_authenticate'
+		);
+
+		$hashes_match = $unverified_key && hash_equals( $token_data['key'], $unverified_key );
+		if ( ! $hashes_match ) {
 			return;
 		}
 
