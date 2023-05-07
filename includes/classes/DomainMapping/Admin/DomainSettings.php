@@ -58,13 +58,17 @@ class DomainSettings extends AbstractAdminPage {
 			true
 		);
 
-		wp_localize_script(
+		$inline_data = [
+			'endpoints' => [
+				'domains' => 'dm/v1/domains',
+			],
+		];
+		wp_add_inline_script(
 			'dark-matter-domains',
-			'dmSettings',
-			[
-				'rest_root' => get_rest_url(),
-				'nonce'     => wp_create_nonce( 'wp_rest' ),
-			]
+			sprintf(
+				'var dmp = %s;',
+				wp_json_encode( $inline_data )
+			)
 		);
 
 		wp_enqueue_script( 'dark-matter-domains' );
