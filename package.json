@@ -37,14 +37,12 @@
   "homepage": "https://github.com/cameronterry/dark-matter#readme",
   "devDependencies": {
     "@babel/core": "^7.17.9",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@wordpress/dependency-extraction-webpack-plugin": "^4.15.0",
     "@wordpress/eslint-plugin": "^14.5",
     "babel-loader": "^9.0.0",
     "css-loader": "^6.7.1",
-    "cssnano": "^6.0.1",
     "eslint": "^8.13.0",
     "eslint-webpack-plugin": "^4.0.1",
     "lint-staged": "^13.0.3",
@@ -58,14 +56,6 @@
     "style-loader": "^3.3.1",
     "version-bump-prompt": "^6.1.0",
     "webpack": "^5.72.0",
-    "webpack-cli": "^5.0.1",
-    "webpack-remove-empty-scripts": "^1.0.1",
-    "webpackbar": "^5.0.2"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.17.9",
-    "@wordpress/i18n": "^4.6.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+    "webpack-cli": "^5.0.1"
   }
 }
