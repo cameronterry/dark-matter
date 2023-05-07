@@ -48,13 +48,13 @@ class DomainSettings extends AbstractAdminPage {
 	 * @return void
 	 */
 	public function enqueue() {
-		$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' );
+		$asset = require DM_PATH . 'dist/domain-mapping.asset.php';
 
 		wp_register_script(
 			'dark-matter-domains',
-			DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping' . $min . '.js',
-			[ 'wp-i18n' ],
-			DM_VERSION,
+			DM_PLUGIN_URL . 'dist/domain-mapping.js',
+			$asset['dependencies'],
+			$asset['version'],
 			true
 		);
 
@@ -69,7 +69,12 @@ class DomainSettings extends AbstractAdminPage {
 
 		wp_enqueue_script( 'dark-matter-domains' );
 
-		wp_enqueue_style( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping-style' . $min . '.css', [], DM_VERSION );
+		wp_enqueue_style(
+			'dark-matter-domains',
+			DM_PLUGIN_URL . 'dist/domain-mapping.css',
+			[],
+			DM_VERSION
+		);
 	}
 
 	/**
