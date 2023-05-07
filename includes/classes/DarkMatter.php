@@ -11,6 +11,10 @@ namespace DarkMatter;
 
 use DarkMatter\DomainMapping;
 use DarkMatter\Interfaces\Registerable;
+use DarkMatter\SSO\Admin;
+use DarkMatter\SSO\Authenticate;
+use DarkMatter\SSO\Authorise;
+use DarkMatter\SSO\Testing;
 
 /**
  * Class DarkMatter.
@@ -30,6 +34,13 @@ class DarkMatter {
 		 * Register and handle Domain Mapping module.
 		 */
 		$this->register_domainmapping();
+
+		/**
+		 * SSO is a web-based process and not needed in the CLI.
+		 */
+		if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
+			$this->register_sso();
+		}
 	}
 
 	/**
@@ -141,6 +152,21 @@ class DarkMatter {
 			[
 				DomainMapping\REST\Domains::class,
 				DomainMapping\REST\Restricted::class,
+			]
+		);
+	}
+
+	/**
+	 * Single Sign-On functionality.
+	 *
+	 * @return void
+	 */
+	public function register_sso() {
+		$this->class_register(
+			[
+				Admin::class,
+				Authorise::class,
+				Authenticate::class,
 			]
 		);
 	}

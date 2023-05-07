@@ -51,15 +51,13 @@ if ( file_exists( DM_PATH . 'vendor/autoload.php' ) ) {
 	require_once DM_PATH . 'vendor/autoload.php';
 }
 
-require_once DM_PATH . '/dark-matter/class-dm-pluginupdate.php';
+require_once DM_PATH . 'dark-matter/class-dm-pluginupdate.php';
 new DM_PluginUpdate();
 
 /**
- * Disable SSO if the COOKIE_DOMAIN constant is set.
+ * Non-autoloader files.
  */
-if ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) {
-	require_once DM_PATH . '/domain-mapping/sso/class-dm-sso-cookie.php';
-}
+require_once DM_PATH . '/includes/utility/functions.php';
 
 /**
  * Let the magic - and bugs ... probably bugs! - begin.
