@@ -1,53 +1,66 @@
 .dmp__control-toggle {
     --toggle-size: 1rem;
 
-    & label {
-        background: var(--grey);
-        border: calc(var(--toggle-size) * .2) solid var(--grey);
-        border-radius: var(--toggle-size);
-        cursor: pointer;
-        display: block;
-        height: var(--toggle-size);
-        position: relative;
-        text-indent: -9999px;
-        transition: 0.3s;
-        width: calc(var(--toggle-size) * 2);
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 
-        &:active {
+    & .control {
+        display: inline-flex;
 
+        & label {
+            background: var(--grey);
+            border: calc(var(--toggle-size) * .2) solid var(--grey);
+            border-radius: var(--toggle-size);
+            cursor: pointer;
+            display: block;
+            height: var(--toggle-size);
+            position: relative;
+            text-indent: -9999px;
+            transition: 0.3s;
+            width: calc(var(--toggle-size) * 2);
+
+            &:active {
+
+                &:after {
+                    width: calc(var(--toggle-size) * 1.3);
+                }
+            }
+
+            /**
+             * Inner circle/toggle icon.
+             */
             &:after {
-                width: calc(var(--toggle-size) * 1.3);
+                background: var(--bright);
+                border-radius: var(--toggle-size);
+                content: '';
+                height: var(--toggle-size);
+                left: 0;
+                position: absolute;
+                transition: 0.3s;
+                width: var(--toggle-size);
             }
         }
 
-        /**
-         * Inner circle/toggle icon.
-         */
-        &:after {
-            background: var(--bright);
-            border-radius: var(--toggle-size);
-            content: '';
-            height: var(--toggle-size);
-            left: 0;
-            position: absolute;
-            transition: 0.3s;
-            width: var(--toggle-size);
+        & input[type=checkbox] {
+            height: 0;
+            width: 0;
+            visibility: hidden;
+
+            &:checked + label {
+                background: var(--primary-color);
+                border-color: var(--primary-color);
+
+                &:after {
+                    left: 100%;
+                    transform: translateX(-100%);
+                }
+            }
         }
     }
 
-    & input[type=checkbox] {
-        height: 0;
-        width: 0;
-        visibility: hidden;
-
-        &:checked + label {
-            background: var(--primary-color);
-            border-color: var(--primary-color);
-
-            &:after {
-                left: 100%;
-                transform: translateX(-100%);
-            }
-        }
+    & .label {
+        display: flex;
     }
 }
