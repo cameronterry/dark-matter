@@ -29,7 +29,7 @@ class Grid extends Component {
 				{
 					domains.length > 0 &&
 					domains.map( ( item ) => {
-						return <Card key={ item.id } domain={ item.domain } />;
+						return <Card key={ item.id } { ...item } />;
 					} )
 				}
 			</>
