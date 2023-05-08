@@ -2,16 +2,19 @@
     --toggle-size: 1rem;
 
     align-items: center;
+    border-top: 1px solid var(--gray-two);
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-top: .5rem;
+    padding-top: .5rem;
 
     & .control {
         display: inline-flex;
 
         & label {
-            background: var(--grey);
-            border: calc(var(--toggle-size) * .2) solid var(--grey);
+            background: var(--gray);
+            border: calc(var(--toggle-size) * .2) solid var(--gray);
             border-radius: var(--toggle-size);
             cursor: pointer;
             display: block;
