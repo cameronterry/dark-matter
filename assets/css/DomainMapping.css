@@ -1,3 +1,13 @@
+/**
+ * Globals.
+ */
+@import "global/colors.css";
+
+/**
+ * Controls.
+ */
+@import "controls/toggle.css";
+
 .dmp__domain-grid {
     box-sizing: border-box;
     display: grid;
