@@ -9,6 +9,7 @@ module.exports = {
 		'domain-mapping': path.resolve( process.cwd(), './assets/js/DomainMapping.js' ),
 	},
 	output: {
+		clean: true,
 		// where we want our built file to go to and be named
 		// I name it index.build.js so I keep index files separate
 		filename: '[name].js',
@@ -23,23 +24,20 @@ module.exports = {
 			{
 				// basically tells webpack to use babel with the correct presets
 				test: /\.js$/,
+				exclude: /node_modules/,
 				loader: 'babel-loader',
 			},
 			{
 				test: /\.css$/,
 				use: [
+					MiniCssExtractPlugin.loader,
 					{
-						loader: MiniCssExtractPlugin.loader,
-					},
-					{
-						loader: 'css-loader',
+						loader: "css-loader",
 						options: {
-							importLoaders: 1
+							importLoaders: 1,
 						}
 					},
-					{
-						loader: 'postcss-loader',
-					}
+					"postcss-loader",
 				]
 			}
 		]
