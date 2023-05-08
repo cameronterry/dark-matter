@@ -6,7 +6,7 @@ import { render } from '@wordpress/element';
 /**
  * Internal Dependencies
  */
-import Grid from './components/Domain/Grid';
+import Grid from './components/domain/Grid';
 
 import '../css/DomainMapping.css';
 
