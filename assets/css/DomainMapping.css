@@ -6,6 +6,7 @@
 /**
  * Controls.
  */
+@import "controls/info.css";
 @import "controls/toggle.css";
 
 .dmp__domain-grid {
@@ -27,5 +28,13 @@
 
     & h2 {
         font-size: 0.875rem;
+    }
+
+    & .success {
+        color: var(--primary-green);
+    }
+
+    & .warning {
+        color: var(--primary-red);
     }
 }
