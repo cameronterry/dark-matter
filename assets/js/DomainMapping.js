@@ -1,7 +1,7 @@
 /**
  * WordPress dependencies.
  */
-import { render } from '@wordpress/element';
+import { createRoot, render } from '@wordpress/element';
 
 /**
  * Internal Dependencies
@@ -17,5 +17,10 @@ import '../js/data/domains';
 
 if ( document.body.classList.contains( 'settings_page_domains' ) ) {
 	const rootElement = document.getElementById( 'root' );
-	render( <Grid />, rootElement );
+
+	if ( createRoot ) {
+		createRoot( rootElement ).render( <Grid /> );
+	} else {
+		render( <Grid />, rootElement );
+	}
 }
