@@ -90,7 +90,10 @@ class DomainSettings extends AbstractAdminPage {
 	 */
 	public function render() {
 		?>
-		<div id="root"></div>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Domains', 'darkmatterplugin' ); ?></h1>
+			<div id="root"></div>
+		</div>
 		<?php
 	}
 }
