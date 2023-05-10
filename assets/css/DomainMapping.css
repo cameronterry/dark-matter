@@ -1,6 +1,7 @@
 /**
  * Globals.
  */
+@import "global/breakpoints.css";
 @import "global/colors.css";
 
 /**
@@ -13,9 +14,12 @@
     box-sizing: border-box;
     display: grid;
     gap: 1.5rem;
-    grid-template-columns: repeat(6,minmax(0,1fr));
-    padding-right: 20px;
     padding-top: 20px;
+
+    @media (--bp-medium) {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        padding-right: 20px;
+    }
 }
 
 .dmp__domain-card {
