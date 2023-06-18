@@ -26,11 +26,21 @@ class Card extends Component {
 		this.handlePrimary = this.handlePrimary.bind( this );
 	}
 
+	/**
+	 * Handle for toggling the Primary checkbox.
+	 *
+	 * @param {MouseEvent} e Event details.
+	 */
 	handlePrimary( e ) {
 		const { domain } = this.props;
 		console.log( domain, e ); // eslint-disable-line
 	}
 
+	/**
+	 * Render the Card for a single domain.
+	 *
+	 * @returns {JSX.Element}
+	 */
 	render() {
 		const { domain, is_active, is_https, is_primary, type } = this.props;
 
