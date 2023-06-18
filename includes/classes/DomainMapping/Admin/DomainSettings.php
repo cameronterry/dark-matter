@@ -76,7 +76,9 @@ class DomainSettings extends AbstractAdminPage {
 		wp_enqueue_style(
 			'dark-matter-domains',
 			DM_PLUGIN_URL . 'dist/domain-mapping.css',
-			[],
+			[
+				'wp-components',
+			],
 			DM_VERSION
 		);
 	}
