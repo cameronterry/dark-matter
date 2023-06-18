@@ -3,6 +3,8 @@
 /**
  * WordPress Dependencies.
  */
+import { compose } from '@wordpress/compose';
+import { withDispatch } from '@wordpress/data';
 import { Component } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -23,7 +25,24 @@ class Card extends Component {
 	constructor( props ) {
 		super( props );
 
+		this.handleRemove = this.handleRemove.bind( this );
 		this.handlePrimary = this.handlePrimary.bind( this );
+	}
+
+	/**
+	 * Handle for toggling the Primary checkbox.
+	 *
+	 * @param {MouseEvent} e Event details.
+	 */
+	handleRemove( e ) {
+		e.preventDefault();
+
+		const { removeDomain, domain } = this.props;
+
+		// eslint-disable-next-line no-alert
+		if ( window.confirm( __( 'Are you sure you wish to remove this domain?', 'darkmatterplugin' ) ) ) {
+			removeDomain( domain );
+		}
 	}
 
 	/**
@@ -39,7 +58,7 @@ class Card extends Component {
 	/**
 	 * Render the Card for a single domain.
 	 *
-	 * @returns {JSX.Element}
+	 * @return {JSX.Element} Card JSX.
 	 */
 	render() {
 		const { domain, is_active, is_https, is_primary, type } = this.props;
@@ -73,9 +92,25 @@ class Card extends Component {
 				<ToggleControl checked={ is_active } label={ __( 'Active', 'darkmatterplugin' ) } onChange={ ( e ) => {
 					console.log( e ); // eslint-disable-line
 				} } />
+				<div className="dmp__domain-card__actions">
+					<button
+						className="components-button is-secondary is-destructive"
+						onClick={ this.handleRemove }
+					>
+						{ __( 'Remove', 'darkmatterplugin' ) }
+					</button>
+				</div>
 			</div>
 		);
 	}
 }
 
-export default Card;
+export default compose( [
+	withDispatch( ( dispatch ) => {
+		return {
+			removeDomain( domain ) {
+				dispatch( 'darkmatterplugin/domains' ).removeDomain( domain );
+			},
+		};
+	} ),
+] )( Card );
