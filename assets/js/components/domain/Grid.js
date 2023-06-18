@@ -8,7 +8,7 @@ import { withSelect } from '@wordpress/data';
 /**
  * Internal dependencies.
  */
-import { Card } from './Card';
+import Card from './Card';
 
 class Grid extends Component {
 	render() {
