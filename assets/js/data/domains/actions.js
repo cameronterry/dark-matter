@@ -1,3 +1,10 @@
+export function removeDomain( domain ) {
+	return {
+		type: 'REMOVE_DOMAIN',
+		domain,
+	};
+}
+
 /**
  * Action for updating the domains state for a specific page.
  *
