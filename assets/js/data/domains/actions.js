@@ -1,6 +1,31 @@
-export function removeDomain( domain ) {
+/* global dmp */
+
+/**
+ * WordPress dependencies.
+ */
+import apiFetch from '@wordpress/api-fetch';
+
+/**
+ * Action for removing a domain.
+ *
+ * @param {string} domain
+ * @return {{domain, type: string}} Action object.
+ */
+export async function removeDomain( domain ) {
+	const response = await apiFetch( {
+		path: `${ dmp.endpoints.domain }/${ domain }`,
+		method: 'DELETE',
+	} );
+
+	if ( response.deleted ) {
+		return {
+			type: 'REMOVE_DOMAIN',
+			domain,
+		};
+	}
+
 	return {
-		type: 'REMOVE_DOMAIN',
+		type: 'API_ERROR',
 		domain,
 	};
 }
