@@ -60,6 +60,7 @@ class DomainSettings extends AbstractAdminPage {
 
 		$inline_data = [
 			'endpoints' => [
+				'domain'  => 'dm/v1/domain',
 				'domains' => 'dm/v1/domains',
 			],
 		];
