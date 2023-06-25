@@ -42,6 +42,22 @@ const store = createReduxStore( 'darkmatterplugin/domains', {
 					},
 				};
 			}
+			case 'UPDATE_DOMAIN': {
+				const updateIndex = state.domains.findIndex( ( item ) => {
+					return item.domain === action.domain;
+				} );
+
+				return {
+					...state,
+					domains: [
+						...state.slice( 0, updateIndex ),
+						{
+							...action,
+						},
+						...state.slice( updateIndex + 1 ),
+					],
+				};
+			}
 			default:
 				return state;
 		}

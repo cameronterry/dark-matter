@@ -12,22 +12,29 @@ import apiFetch from '@wordpress/api-fetch';
  * @return {{domain, type: string}} Action object.
  */
 export async function removeDomain( domain ) {
-	const response = await apiFetch( {
-		path: `${ dmp.endpoints.domain }/${ domain }`,
-		method: 'DELETE',
-	} );
+	try {
+		const response = await apiFetch( {
+			path: `${ dmp.endpoints.domain }/${ domain }`,
+			method: 'DELETE',
+		} );
 
-	if ( response.deleted ) {
+		if ( response.deleted ) {
+			return {
+				type: 'REMOVE_DOMAIN',
+				domain,
+			};
+		}
+
 		return {
-			type: 'REMOVE_DOMAIN',
+			type: 'PROCESS_ERROR',
+			domain,
+		};
+	} catch ( error ) {
+		return {
+			type: 'API_ERROR',
 			domain,
 		};
 	}
-
-	return {
-		type: 'API_ERROR',
-		domain,
-	};
 }
 
 /**
@@ -43,6 +50,40 @@ export function setDomains( pagination, domains ) {
 		domains,
 		pagination,
 	};
+}
+
+/**
+ * Action for removing a domain.
+ *
+ * @param {string} domain Domain to update
+ * @param {Object} data   Object
+ * @return {{domain, type: string}} Action object.
+ */
+export async function updateDomain( domain, data ) {
+	try {
+		const response = await apiFetch( {
+			path: `${ dmp.endpoints.domain }/${ domain }`,
+			method: 'PUT',
+			data,
+		} );
+
+		if ( ! response.error ) {
+			return {
+				type: 'UPDATE_DOMAIN',
+				response,
+			};
+		}
+
+		return {
+			type: 'PROCESS_ERROR',
+			domain,
+		};
+	} catch ( error ) {
+		return {
+			type: 'API_ERROR',
+			domain,
+		};
+	}
 }
 
 /**
