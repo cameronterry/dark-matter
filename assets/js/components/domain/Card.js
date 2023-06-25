@@ -108,9 +108,7 @@ class Card extends Component {
 export default compose( [
 	withDispatch( ( dispatch ) => {
 		return {
-			removeDomain( domain ) {
-				dispatch( 'darkmatterplugin/domains' ).removeDomain( domain );
-			},
+			removeDomain: dispatch( 'darkmatterplugin/domains' ).removeDomain,
 		};
 	} ),
 ] )( Card );
