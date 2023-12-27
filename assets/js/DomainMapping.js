@@ -6,7 +6,8 @@ import { createRoot, render } from '@wordpress/element';
 /**
  * Internal Dependencies
  */
-import Grid from './components/domain/Grid';
+//import Grid from './components/domain/Grid';
+import Table from './components/domain/Table';
 
 import '../css/DomainMapping.css';
 
@@ -19,8 +20,8 @@ if ( document.body.classList.contains( 'settings_page_domains' ) ) {
 	const rootElement = document.getElementById( 'root' );
 
 	if ( createRoot ) {
-		createRoot( rootElement ).render( <Grid /> );
+		createRoot( rootElement ).render( <Table /> );
 	} else {
-		render( <Grid />, rootElement );
+		render( <Table />, rootElement );
 	}
 }
