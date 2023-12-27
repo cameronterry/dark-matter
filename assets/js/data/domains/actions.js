@@ -8,14 +8,18 @@ import apiFetch from '@wordpress/api-fetch';
 /**
  * Action for removing a domain.
  *
- * @param {string} domain
+ * @param {string}  domain
+ * @param {boolean} force
  * @return {{domain, type: string}} Action object.
  */
-export async function removeDomain( domain ) {
+export async function removeDomain( domain, force = false ) {
 	try {
 		const response = await apiFetch( {
 			path: `${ dmp.endpoints.domain }/${ domain }`,
 			method: 'DELETE',
+			data: {
+				force,
+			},
 		} );
 
 		if ( response.deleted ) {
