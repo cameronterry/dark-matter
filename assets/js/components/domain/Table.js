@@ -3,7 +3,7 @@
  */
 import { Button, ToggleControl } from '@wordpress/components';
 import { compose } from '@wordpress/compose';
-import { withSelect } from '@wordpress/data';
+import { withDispatch, withSelect } from '@wordpress/data';
 import { Component } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -15,7 +15,7 @@ import classNames from 'classnames';
 /**
  * Internal dependencies
  */
-// import { ToggleControl } from '../controls/ToggleControl';
+import { DeleteDomain } from './modals/DeleteDomain';
 
 const DOMAIN_TYPE = {
 	1: __( 'Main', 'darkmatterplugin' ),
@@ -56,16 +56,28 @@ class Table extends Component {
 					visible: true,
 				},
 			],
+			deleteDomain: null,
 		};
 	}
 
 	render() {
+		const { deleteDomain } = this.state;
+
 		return (
 			<div className="dmp__domain-table-wrapper">
 				<table className="dmp__domain-table">
 					{ this.renderHeaders() }
 					{ this.renderDomains() }
 				</table>
+				{ !! deleteDomain && (
+					<DeleteDomain
+						domain={ deleteDomain.domain }
+						isPrimary={ deleteDomain.is_primary }
+						onClose={ () => {
+							this.setState( { deleteDomain: null } );
+						} }
+					/>
+				) }
 			</div>
 		);
 	}
@@ -75,6 +87,10 @@ class Table extends Component {
 			return (
 				<>
 					<Button
+						onClick={ ( e ) => {
+							e.preventDefault();
+							this.setState( { deleteDomain: { ...domain } } );
+						} }
 						icon="trash"
 						label={ __( 'Remove domain', 'darkmatterplugin' ) }
 					/>
@@ -86,7 +102,7 @@ class Table extends Component {
 				return DOMAIN_TYPE[ domainType ];
 			}
 
-			return __( 'Custom Type', 'darkmatterplugin' );
+			return __( 'Custom', 'darkmatterplugin' );
 		} else if ( 'toggle' === field.type ) {
 			return (
 				<div className="dmp__domain-table-toggle">
@@ -116,7 +132,7 @@ class Table extends Component {
 			<tbody>
 				{ domains.length > 0 && domains.map( ( domain ) => {
 					return (
-						<tr key={ `domain-row-${ domain.id }` }>
+						<tr key={ `domain-row-${ domain.id }` } data-domain={ domain.domain }>
 							{ displayFields.length > 0 && displayFields.map( ( field ) => {
 								const className = classNames( 'dmp__domain-column', `dmp__domain-field-${ field.name }` );
 
@@ -160,6 +176,11 @@ export default compose( [
 		return {
 			getDomains: select( 'darkmatterplugin/domains' ).getDomains,
 			pagination: select( 'darkmatterplugin/domains' ).getPagination(),
+		};
+	} ),
+	withDispatch( ( dispatch ) => {
+		return {
+			removeDomain: dispatch( 'darkmatterplugin/domains' ).removeDomain,
 		};
 	} ),
 ] )( Table );
