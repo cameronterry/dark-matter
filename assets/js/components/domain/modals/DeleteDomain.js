@@ -6,6 +6,7 @@ import {
 	CheckboxControl,
 	Modal,
 } from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
 import {
 	createInterpolateElement,
 	useState,
@@ -15,8 +16,9 @@ import { __, sprintf } from '@wordpress/i18n';
 export const DeleteDomain = ( {
 	domain = null,
 	isPrimary = false,
-	onClose = null,
+	onClose,
 } ) => {
+	const { removeDomain } = useDispatch( 'darkmatterplugin/domains' );
 	const [ forceDelete, setForceDelete ] = useState( false );
 
 	return (
@@ -33,29 +35,29 @@ export const DeleteDomain = ( {
 					)
 				}
 			>
+				<p>
+					{
+						createInterpolateElement(
+							sprintf(
+								/* translators: %s: domain. */
+								__( 'Are you sure you wish to delete, <strong>%1$s</strong>? This action cannot be undone.', 'darkmatterplugin' ),
+								domain
+							),
+							{
+								strong: <strong />,
+							}
+						)
+					}
+				</p>
 				{
-					isPrimary ? (
+					isPrimary && (
 						<>
 							<p>
 								{
 									createInterpolateElement(
 										sprintf(
 											/* translators: %s: domain. */
-											__( 'Are you sure you wish to delete, <strong>%1$s</strong>?', 'darkmatterplugin' ),
-											domain
-										),
-										{
-											strong: <strong />,
-										}
-									)
-								}
-							</p>
-							<p>
-								{
-									createInterpolateElement(
-										sprintf(
-											/* translators: %s: domain. */
-											__( '<strong>%1$s</strong>, is a primary domain, and removing can negatively impact visitors to your website and SEO.', 'darkmatterplugin' ),
+											__( '<strong>%1$s</strong>, is a primary domain, and deleting this domain can negatively impact visitors to your website and SEO.', 'darkmatterplugin' ),
 											domain
 										),
 										{
@@ -69,31 +71,25 @@ export const DeleteDomain = ( {
 								onChange={ () => {
 									setForceDelete( ! forceDelete );
 								} }
-								value={ forceDelete }
+								checked={ forceDelete }
 							/>
 						</>
-					) : (
-						<p>
-							{
-								sprintf(
-									/* translators: %s: domain. */
-									__( 'Are you sure you wish to delete, %s?', 'darkmatterplugin' ),
-									domain
-								)
-							}
-						</p>
 					)
 				}
 				<div className="dmp__domain-modal-buttons">
 					<Button
-						variant="primary"
 						className="dmp__delete is-destructive"
+						onClick={ () => {
+							removeDomain( domain, forceDelete );
+							onClose();
+						} }
+						variant="secondary"
 					>
 						{ __( 'Delete', 'darkmatterplugin' ) }
 					</Button>
 					<Button
-						variant="secondary"
 						onClick={ onClose }
+						variant="teritary"
 					>
 						{ __( 'Cancel', 'darkmatterplugin' ) }
 					</Button>
