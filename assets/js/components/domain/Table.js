@@ -88,13 +88,17 @@ class Table extends Component {
 
 			return __( 'Custom Type', 'darkmatterplugin' );
 		} else if ( 'toggle' === field.type ) {
-			return <ToggleControl
-				checked={ domain[ field.name ] }
-				label={ field.label }
-				onChange={ ( e ) => {
-					console.log( e ); // eslint-disable-line
-				} }
-			/>;
+			return (
+				<div className="dmp__domain-table-toggle">
+					<ToggleControl
+						checked={ domain[ field.name ] }
+						label={ field.label }
+						onChange={ ( e ) => {
+							console.log( e ); // eslint-disable-line
+						} }
+					/>
+				</div>
+			);
 		}
 
 		return domain[ field.name ];

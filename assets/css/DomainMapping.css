@@ -9,7 +9,13 @@
  */
 @import "controls/info.css";
 
+.dmp__domain-table-wrapper {
+    margin-top: 1rem;
+}
+
 .dmp__domain-table {
+    background-color: var(--bright);
+    border-collapse: collapse;
     text-align: left;
     width: 100%;
 
@@ -18,8 +24,15 @@
         & td {
             padding: .5rem;
 
-            & .dmp__domain-field-domain {
+            &.dmp__domain-field-domain {
                 font-weight: bold;
+            }
+
+            & .dmp__domain-table-toggle {
+
+                & .components-toggle-control {
+                    margin-bottom: 0;
+                }
             }
         }
     }

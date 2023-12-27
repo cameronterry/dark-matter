@@ -94,8 +94,11 @@ class DomainSettings extends AbstractAdminPage {
 	public function render() {
 		?>
 		<div class="wrap">
-			<h1><?php esc_html_e( 'Domains', 'darkmatterplugin' ); ?></h1>
-			<div id="root"></div>
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Domains', 'darkmatterplugin' ); ?></h1>
+			<a href="#" class="page-title-action"><?php esc_html_e( 'Add New Domain', 'darkmatterplugin' ); ?></a>
+			<hr class="wp-header-end" />
+
+			<div id="dmp-root"></div>
 		</div>
 		<?php
 	}

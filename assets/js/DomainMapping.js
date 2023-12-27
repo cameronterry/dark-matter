@@ -16,7 +16,7 @@ import '../css/DomainMapping.css';
 import '../js/data/domains';
 
 if ( document.body.classList.contains( 'settings_page_domains' ) ) {
-	const rootElement = document.getElementById( 'root' );
+	const rootElement = document.getElementById( 'dmp-root' );
 
 	if ( createRoot ) {
 		createRoot( rootElement ).render( <Table /> );
