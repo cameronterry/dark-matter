@@ -6,7 +6,6 @@ import { createRoot, render } from '@wordpress/element';
 /**
  * Internal Dependencies
  */
-//import Grid from './components/domain/Grid';
 import Table from './components/domain/Table';
 
 import '../css/DomainMapping.css';
