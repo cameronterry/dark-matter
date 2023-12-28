@@ -27,7 +27,6 @@ export async function addDomain( data, throwOnError = false ) {
 			method: 'POST',
 			data,
 		} );
-		console.log( 'add-domain', newDomain ); // eslint-disable-line
 
 		if ( ! newDomain.error ) {
 			return {
