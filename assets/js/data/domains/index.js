@@ -17,6 +17,17 @@ const DEFAULT_STATE = {
 const store = createReduxStore( 'darkmatterplugin/domains', {
 	reducer( state = DEFAULT_STATE, action = {} ) {
 		switch ( action.type ) {
+			case 'ADD_DOMAIN': {
+				state.domains.unshift( action.domain );
+
+				return {
+					...state,
+					pagination: {
+						...state.pagination,
+						totalItems: state.pagination.totalItems + 1,
+					},
+				};
+			}
 			case 'REMOVE_DOMAIN': {
 				const removeIndex = state.domains.findIndex( ( item ) => {
 					return item.domain === action.domain;

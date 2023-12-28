@@ -6,6 +6,47 @@
 import apiFetch from '@wordpress/api-fetch';
 
 /**
+ * Action for updating a domain.
+ *
+ * @param {Object}  data            New domain record to be added.
+ * @param {string}  data.domain     Domain, without the protocol.
+ * @param {boolean} data.is_primary Whether the domain is primary or secondary.
+ * @param {boolean} data.is_active  Is Active or not Active.
+ * @param {boolean} data.is_https   Use HTTP or HTTPS.
+ * @param {string}  data.type       Domain type: "main" or "media".
+ * @param {boolean} throwOnError    Throw an error. Defaults to `false`.
+ * @return {{domain, type: string}} Action object.
+ */
+export async function addDomain( data, throwOnError = false ) {
+	let error;
+	let newDomain = false;
+
+	try {
+		newDomain = await apiFetch( {
+			path: `${ dmp.endpoints.domain }`,
+			method: 'POST',
+			data,
+		} );
+		console.log( 'add-domain', newDomain ); // eslint-disable-line
+
+		if ( ! newDomain.error ) {
+			return {
+				type: 'ADD_DOMAIN',
+				newDomain,
+			};
+		}
+	} catch ( _error ) {
+		error = _error;
+	}
+
+	if ( error && throwOnError ) {
+		throw error;
+	}
+
+	return newDomain;
+}
+
+/**
  * Action for removing a domain.
  *
  * @param {string}  domain
@@ -57,7 +98,7 @@ export function setDomains( pagination, domains ) {
 }
 
 /**
- * Action for removing a domain.
+ * Action for updating a domain.
  *
  * @param {string} domain Domain to update
  * @param {Object} data   Object
