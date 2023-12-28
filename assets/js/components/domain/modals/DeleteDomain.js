@@ -16,12 +16,14 @@ import { __, sprintf } from '@wordpress/i18n';
 const FORCE_DELETE_DEFAULT = false;
 
 /**
+ * Modal for handling the domain deletion, with logic for Primary domains.
  *
- * @param {string} domain
- * @param {boolean} isPrimary
- * @param {func} onClose
- * @returns {JSX.Element}
- * @constructor
+ * @param {Object}  deleteDomain
+ * @param {string}  deleteDomain.domain
+ * @param {boolean} deleteDomain.isPrimary
+ * @param {*}       deleteDomain.onClose
+ * @return {JSX.Element} Modal for handling the deletion of the specified domain.
+ * @class
  */
 export const DeleteDomainModal = ( {
 	domain = null,
@@ -46,7 +48,7 @@ export const DeleteDomainModal = ( {
 		if ( onClose ) {
 			onClose();
 		}
-	}
+	};
 
 	return (
 		<>
