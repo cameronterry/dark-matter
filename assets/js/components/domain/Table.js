@@ -15,7 +15,7 @@ import classNames from 'classnames';
 /**
  * Internal dependencies
  */
-import { DeleteDomain } from './modals/DeleteDomain';
+import { DeleteDomainModal } from './modals/DeleteDomain';
 
 const DOMAIN_TYPE = {
 	1: __( 'Main', 'darkmatterplugin' ),
@@ -70,7 +70,7 @@ class Table extends Component {
 					{ this.renderDomains() }
 				</table>
 				{ !! deleteDomain && (
-					<DeleteDomain
+					<DeleteDomainModal
 						domain={ deleteDomain.domain }
 						isPrimary={ deleteDomain.is_primary }
 						onClose={ () => {

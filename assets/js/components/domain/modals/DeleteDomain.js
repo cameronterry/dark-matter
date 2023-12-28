@@ -13,19 +13,46 @@ import {
 } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
-export const DeleteDomain = ( {
+const FORCE_DELETE_DEFAULT = false;
+
+/**
+ *
+ * @param {string} domain
+ * @param {boolean} isPrimary
+ * @param {func} onClose
+ * @returns {JSX.Element}
+ * @constructor
+ */
+export const DeleteDomainModal = ( {
 	domain = null,
 	isPrimary = false,
 	onClose,
 } ) => {
 	const { removeDomain } = useDispatch( 'darkmatterplugin/domains' );
-	const [ forceDelete, setForceDelete ] = useState( false );
+	const [ forceDelete, setForceDelete ] = useState( FORCE_DELETE_DEFAULT );
+
+	/**
+	 * There is no point giving the option to save if the domain is a primary, and they have not checked the "force
+	 * delete" option, as the REST API will just return an error.
+	 */
+	const deleteDisabled = ( isPrimary && ! forceDelete );
+
+	const closeModal = () => {
+		setForceDelete( FORCE_DELETE_DEFAULT );
+
+		/**
+		 * Handle the supplied onClose event handler.
+		 */
+		if ( onClose ) {
+			onClose();
+		}
+	}
 
 	return (
 		<>
 			<Modal
 				className="dmp__domain-modal"
-				onRequestClose={ onClose }
+				onRequestClose={ closeModal }
 				size="medium"
 				title={
 					sprintf(
@@ -79,16 +106,17 @@ export const DeleteDomain = ( {
 				<div className="dmp__domain-modal-buttons">
 					<Button
 						className="dmp__delete is-destructive"
+						disabled={ deleteDisabled }
 						onClick={ () => {
 							removeDomain( domain, forceDelete );
-							onClose();
+							closeModal();
 						} }
 						variant="secondary"
 					>
 						{ __( 'Delete', 'darkmatterplugin' ) }
 					</Button>
 					<Button
-						onClick={ onClose }
+						onClick={ closeModal }
 						variant="teritary"
 					>
 						{ __( 'Cancel', 'darkmatterplugin' ) }
