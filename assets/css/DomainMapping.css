@@ -9,46 +9,32 @@
  */
 @import "controls/info.css";
 @import "controls/modal.css";
+@import "controls/table.css";
 
-.dmp__domain-table-wrapper {
-    margin-top: 1rem;
-}
-
-.dmp__domain-table {
+.dmp__domain-management {
     background-color: var(--bright);
-    border-collapse: collapse;
-    text-align: left;
-    width: 100%;
+    margin-top: 1rem;
 
-    & tbody {
+    & .dmp__domain-management-toolbar {
+        display: flex;
+        flex-flow: wrap;
+        gap: calc(.5rem);
+        padding: 1rem;
+        width: 100%;
 
-        & td {
-            padding: .5rem;
+        & .components-button {
+            height: 32px;
+        }
+    }
 
-            &.dmp__domain-field-domain {
-                font-weight: bold;
-            }
+    & .dmp__domain-table {
 
-            & .dmp__domain-table-toggle {
-
-                & .components-toggle-control {
-                    margin-bottom: 0;
+        & tr {
+            & td, th {
+                &:first-child {
+                    padding-left: 1rem;
                 }
             }
         }
-    }
-
-    & thead {
-        & th {
-            background-color: var(--gray-two);
-            border-top: 1px solid var(--gray);
-            color: var(--dark);
-            font-weight: normal;
-            padding: .5rem;
-        }
-    }
-
-    & tr {
-        border-top: 1px solid var(--gray);
     }
 }
