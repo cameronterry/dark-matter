@@ -1,7 +1,11 @@
 /**
  * WordPress dependencies
  */
-import { Button, SearchControl } from '@wordpress/components';
+import {
+	Button,
+	Notice,
+	SearchControl,
+} from '@wordpress/components';
 import { Component } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
@@ -24,6 +28,7 @@ class DomainManagement extends Component {
 	render() {
 		return (
 			<div className="dmp__domain-management">
+				{ this.renderNotices() }
 				{ this.renderToolbar() }
 				<Table />
 				{ this.renderModals() }
@@ -47,17 +52,43 @@ class DomainManagement extends Component {
 									{
 										id: newDomain.id,
 										message: sprintf(
+											/* translators: %s: domain */
 											__( 'Domain, %s, successfully added.', 'darkmatterplugin' ),
 											newDomain.domain
 										),
 										status: 'success',
-									}
+									},
 								],
 							} );
 						} }
 					/>
 				) }
 			</>
+		);
+	}
+
+	renderNotices() {
+		const { notices } = this.state;
+
+		return (
+			<div className="dmp__domain-management-notices">
+				{ notices.length > 0 && notices.map( ( { id, message, status } ) => {
+					return <Notice
+						key={ id }
+						onDismiss={ () => {
+							const removeIndex = notices.findIndex( ( item ) => {
+								return id === item.id;
+							} );
+
+							notices.splice( removeIndex, 1 );
+							this.setState( { ...this.state, notices: [ ...notices ] } );
+						} }
+						status={ status }
+					>
+						{ message }
+					</Notice>;
+				} ) }
+			</div>
 		);
 	}
 

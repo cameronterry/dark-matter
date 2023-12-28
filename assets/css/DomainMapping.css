@@ -15,6 +15,10 @@
     background-color: var(--bright);
     margin-top: 1rem;
 
+    & .dmp__domain-management-notices {
+        padding: 1rem 1rem 0;
+    }
+
     & .dmp__domain-management-toolbar {
         display: flex;
         flex-flow: wrap;
