@@ -15,9 +15,9 @@ import apiFetch from '@wordpress/api-fetch';
  * @param {boolean} data.is_https   Use HTTP or HTTPS.
  * @param {string}  data.type       Domain type: "main" or "media".
  * @param {boolean} throwOnError    Throw an error. Defaults to `false`.
- * @return {{domain, type: string}} Action object.
+ * @return {*} Test.
  */
-export async function addDomain( data, throwOnError = false ) {
+export const addDomain = ( data, throwOnError = false ) => async ( { dispatch } ) => {
 	let error;
 	let newDomain = false;
 
@@ -29,10 +29,12 @@ export async function addDomain( data, throwOnError = false ) {
 		} );
 
 		if ( ! newDomain.error ) {
-			return {
+			dispatch( {
 				type: 'ADD_DOMAIN',
-				newDomain,
-			};
+				domain: newDomain,
+			} );
+
+			return newDomain;
 		}
 	} catch ( _error ) {
 		error = _error;
@@ -43,7 +45,7 @@ export async function addDomain( data, throwOnError = false ) {
 	}
 
 	return newDomain;
-}
+};
 
 /**
  * Action for removing a domain.
