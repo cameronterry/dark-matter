@@ -44,22 +44,29 @@ class DomainManagement extends Component {
 				{ modalNewDomainOpen && (
 					<NewDomainModal
 						onClose={ ( newDomain ) => {
-							this.setState( {
-								...this.state,
-								modalNewDomainOpen: false,
-								notices: [
-									...this.state.notices,
-									{
-										id: newDomain.id,
-										message: sprintf(
-											/* translators: %s: domain */
-											__( 'Domain, %s, successfully added.', 'darkmatterplugin' ),
-											newDomain.domain
-										),
-										status: 'success',
-									},
-								],
-							} );
+							if ( newDomain ) {
+								this.setState( {
+									...this.state,
+									modalNewDomainOpen: false,
+									notices: [
+										...this.state.notices,
+										{
+											id: newDomain.id,
+											message: sprintf(
+												/* translators: %s: domain */
+												__( 'Domain, %s, successfully added.', 'darkmatterplugin' ),
+												newDomain.domain
+											),
+											status: 'success',
+										},
+									],
+								} );
+							} else {
+								this.setState( {
+									...this.state,
+									modalNewDomainOpen: false,
+								} );
+							}
 						} }
 					/>
 				) }

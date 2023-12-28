@@ -104,7 +104,9 @@ const NewDomainModal = ( props ) => {
 		<>
 			<Modal
 				className="dmp__domain-modal"
-				onRequestClose={ closeModal }
+				onRequestClose={ () => {
+					closeModal();
+				} }
 				size="medium"
 				title={ __( 'Add New Domain', 'darkmatterplugin' ) }
 			>
@@ -171,7 +173,9 @@ const NewDomainModal = ( props ) => {
 					/>
 					<div className="dmp__domain-modal-buttons">
 						<Button
-							onClick={ closeModal }
+							onClick={ () => {
+								closeModal();
+							} }
 							variant="teritary"
 						>
 							{ __( 'Cancel', 'darkmatterplugin' ) }
