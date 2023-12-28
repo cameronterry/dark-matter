@@ -1,5 +1,11 @@
 .dmp__domain-modal {
 
+    & form {
+        display: flex;
+        flex-direction: column;
+        gap: calc(.5rem);
+    }
+
     & .dmp__domain-modal-buttons {
         display: flex;
         gap: calc(.5rem);
