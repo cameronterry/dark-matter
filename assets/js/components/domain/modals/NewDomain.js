@@ -9,9 +9,12 @@
 import {
 	Button,
 	Modal,
+	Notice,
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
+import { compose } from '@wordpress/compose';
+import { withDispatch } from '@wordpress/data';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 
@@ -20,23 +23,73 @@ const NEW_DOMAIN_DEFAULT = {
 	is_primary: false,
 	is_https: true,
 	is_active: true,
-	type: 'main',
+	type: 1,
+	notices: [],
 };
 
-export const NewDomainModal = ( {
-	onClose,
-} ) => {
+const NewDomainModal = ( props ) => {
+	const { addDomain, onClose } = props;
+
 	const [ newDomain, setNewDomain ] = useState( NEW_DOMAIN_DEFAULT );
 
-	const closeModal = () => {
+	const closeModal = ( domain = null ) => {
 		setNewDomain( NEW_DOMAIN_DEFAULT );
 
 		/**
 		 * Handle the supplied onClose event handler.
 		 */
 		if ( onClose ) {
-			onClose();
+			onClose( domain );
 		}
+	};
+
+	const submitForm = async ( e ) => {
+		e.preventDefault();
+
+		let message = {};
+		const unknownError = {
+			id: `notice-${ Date.now() }`,
+			message: __( 'An unknown error has occurred.', 'darkmatterplugin' ),
+			status: 'error',
+		};
+
+		try {
+			const response = await addDomain( newDomain, true );
+			closeModal( response );
+
+			return;
+		} catch ( _error ) {
+			if ( _error.code ) {
+				switch ( _error.code ) {
+					case 'exists':
+						message = {
+							id: `notice-${ Date.now() }`,
+							message: _error.message,
+							status: 'error',
+						};
+
+						break;
+					case 'primary':
+						message = {
+							id: `notice-${ Date.now() }`,
+							message: _error.message,
+							status: 'warning',
+						};
+
+						break;
+					default:
+						message = unknownError;
+				}
+			}
+		}
+
+		setNewDomain( {
+			...newDomain,
+			notices: [
+				...notices,
+				{ ...message },
+			],
+		} );
 	};
 
 	const {
@@ -44,6 +97,7 @@ export const NewDomainModal = ( {
 		is_primary,
 		is_https,
 		is_active,
+		notices,
 	} = newDomain;
 
 	return (
@@ -54,7 +108,24 @@ export const NewDomainModal = ( {
 				size="medium"
 				title={ __( 'Add New Domain', 'darkmatterplugin' ) }
 			>
-				<form>
+				<form onSubmit={ submitForm }>
+					{ notices.length > 0 && notices.map( ( { id, status, message } ) => {
+						return <Notice
+							key={ id }
+							onDismiss={ () => {
+								const removeIndex = notices.findIndex( ( item ) => {
+									return id === item.id;
+								} );
+
+								notices.splice( removeIndex, 1 );
+								setNewDomain( { ...newDomain, notices: [ ...notices ] } );
+							} }
+							status={ status }
+						>
+							{ message }
+						</Notice>;
+					} ) }
+
 					<TextControl
 						label={ __( 'Domain', 'darkmatterplugin' ) }
 						onChange={ ( value ) => {
@@ -106,6 +177,7 @@ export const NewDomainModal = ( {
 							{ __( 'Cancel', 'darkmatterplugin' ) }
 						</Button>
 						<Button
+							type="submit"
 							variant="primary"
 						>
 							{ __( 'Add Domain', 'darkmatterplugin' ) }
@@ -116,3 +188,11 @@ export const NewDomainModal = ( {
 		</>
 	);
 };
+
+export default compose( [
+	withDispatch( ( dispatch ) => {
+		return {
+			addDomain: dispatch( 'darkmatterplugin/domains' ).addDomain,
+		};
+	} ),
+] )( NewDomainModal );

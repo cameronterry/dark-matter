@@ -3,13 +3,13 @@
  */
 import { Button, SearchControl } from '@wordpress/components';
 import { Component } from '@wordpress/element';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 /**
  * Internal dependencies
  */
 import Table from './domain/Table';
-import { NewDomainModal } from './domain/modals/NewDomain';
+import NewDomainModal from './domain/modals/NewDomain';
 
 class DomainManagement extends Component {
 	constructor( props ) {
@@ -17,6 +17,7 @@ class DomainManagement extends Component {
 
 		this.state = {
 			modalNewDomainOpen: false,
+			notices: [],
 		};
 	}
 
@@ -37,8 +38,22 @@ class DomainManagement extends Component {
 			<>
 				{ modalNewDomainOpen && (
 					<NewDomainModal
-						onClose={ () => {
-							this.setState( { modalNewDomainOpen: false } );
+						onClose={ ( newDomain ) => {
+							this.setState( {
+								...this.state,
+								modalNewDomainOpen: false,
+								notices: [
+									...this.state.notices,
+									{
+										id: newDomain.id,
+										message: sprintf(
+											__( 'Domain, %s, successfully added.', 'darkmatterplugin' ),
+											newDomain.domain
+										),
+										status: 'success',
+									}
+								],
+							} );
 						} }
 					/>
 				) }
