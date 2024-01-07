@@ -31,7 +31,7 @@ export const addDomain = ( data, throwOnError = false ) => async ( { dispatch } 
 		if ( ! newDomain.error ) {
 			dispatch( {
 				type: 'ADD_DOMAIN',
-				domain: newDomain,
+				domain: data,
 			} );
 
 			return newDomain;
