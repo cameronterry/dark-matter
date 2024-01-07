@@ -1,0 +1,6 @@
+/**
+ * Used by WordPress Core in the admin.
+ */
+@custom-media --bp-small ( max-width: 600px );
+@custom-media --bp-medium ( min-width: 600px );
+@custom-media --bp-large ( min-width: 1200px );

@@ -1,0 +1,44 @@
+/**
+ * Globals.
+ */
+@import "global/breakpoints.css";
+@import "global/colors.css";
+
+/**
+ * Controls.
+ */
+@import "controls/info.css";
+@import "controls/modal.css";
+@import "controls/table.css";
+
+.dmp__domain-management {
+    background-color: var(--bright);
+    margin-top: 1rem;
+
+    & .dmp__domain-management-notices {
+        padding: 1rem 1rem 0;
+    }
+
+    & .dmp__domain-management-toolbar {
+        display: flex;
+        flex-flow: wrap;
+        gap: calc(.5rem);
+        padding: 1rem;
+        width: 100%;
+
+        & .components-button {
+            height: 32px;
+        }
+    }
+
+    & .dmp__domain-table {
+
+        & tr {
+            & td, th {
+                &:first-child {
+                    padding-left: 1rem;
+                }
+            }
+        }
+    }
+}

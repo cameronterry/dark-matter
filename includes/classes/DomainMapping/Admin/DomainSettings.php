@@ -48,28 +48,40 @@ class DomainSettings extends AbstractAdminPage {
 	 * @return void
 	 */
 	public function enqueue() {
-		$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' );
+		$asset = require DM_PATH . 'dist/domain-mapping.asset.php';
 
 		wp_register_script(
 			'dark-matter-domains',
-			DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping' . $min . '.js',
-			[ 'wp-i18n' ],
-			DM_VERSION,
+			DM_PLUGIN_URL . 'dist/domain-mapping.js',
+			$asset['dependencies'],
+			$asset['version'],
 			true
 		);
 
-		wp_localize_script(
+		$inline_data = [
+			'endpoints' => [
+				'domain'  => 'dm/v1/domain',
+				'domains' => 'dm/v1/domains',
+			],
+		];
+		wp_add_inline_script(
 			'dark-matter-domains',
-			'dmSettings',
-			[
-				'rest_root' => get_rest_url(),
-				'nonce'     => wp_create_nonce( 'wp_rest' ),
-			]
+			sprintf(
+				'var dmp = %s;',
+				wp_json_encode( $inline_data )
+			)
 		);
 
 		wp_enqueue_script( 'dark-matter-domains' );
 
-		wp_enqueue_style( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping-style' . $min . '.css', [], DM_VERSION );
+		wp_enqueue_style(
+			'dark-matter-domains',
+			DM_PLUGIN_URL . 'dist/domain-mapping.css',
+			[
+				'wp-components',
+			],
+			DM_VERSION
+		);
 	}
 
 	/**
@@ -81,7 +93,12 @@ class DomainSettings extends AbstractAdminPage {
 	 */
 	public function render() {
 		?>
-		<div id="root"></div>
+		<div class="wrap">
+			<h1 class="wp-heading-inline"><?php esc_html_e( 'Domains', 'darkmatterplugin' ); ?></h1>
+			<hr class="wp-header-end" />
+
+			<div id="dmp-root"></div>
+		</div>
 		<?php
 	}
 }

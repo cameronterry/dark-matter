@@ -1,0 +1,38 @@
+.dmp__domain-table {
+    background-color: var(--bright);
+    border-collapse: collapse;
+    text-align: left;
+    width: 100%;
+
+    & tbody {
+
+        & td {
+            padding: .5rem;
+
+            &.dmp__domain-field-domain {
+                font-weight: bold;
+            }
+
+            & .dmp__domain-table-toggle {
+
+                & .components-toggle-control {
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+
+    & thead {
+        & th {
+            background-color: var(--gray-two);
+            border-top: 1px solid var(--gray);
+            color: var(--dark);
+            font-weight: normal;
+            padding: .5rem;
+        }
+    }
+
+    & tr {
+        border-top: 1px solid var(--gray);
+    }
+}
