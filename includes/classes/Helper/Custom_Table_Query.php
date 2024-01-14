@@ -153,6 +153,8 @@ abstract class Custom_Table_Query {
 	}
 
 	/**
+	 * Parses arguments passed to the query with default query parameters.
+	 *
 	 * @param string|array $query Array or URL query string of parameters.
 	 * @return void
 	 */
