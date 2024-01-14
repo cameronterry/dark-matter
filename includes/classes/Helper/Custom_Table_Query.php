@@ -180,7 +180,7 @@ abstract class Custom_Table_Query {
 	}
 
 	/**
-	 * Populates found_sites and max_num_pages properties for the current query if the limit clause was used.
+	 * Populates found_records and max_num_pages properties for the current query if the limit clause was used.
 	 *
 	 * @global \wpdb $wpdb WordPress database abstraction object.
 	 *
@@ -191,14 +191,14 @@ abstract class Custom_Table_Query {
 
 		if ( $this->query_vars['number'] && ! $this->query_vars['no_found_rows'] ) {
 			/**
-			 * Filters the query used to retrieve found site count.
+			 * Filters the query used to retrieve found record count.
 			 *
-			 * @param string             $found_sites_query SQL query. Default 'SELECT FOUND_ROWS()'.
-			 * @param Custom_Table_Query $site_query        The `Custom_Table_Query` instance.
+			 * @param string             $found_records_query SQL query. Default 'SELECT FOUND_ROWS()'.
+			 * @param Custom_Table_Query $site_query          The `Custom_Table_Query` instance.
 			 */
-			$found_sites_query = apply_filters( "found_{$this->hook_name}_query", 'SELECT FOUND_ROWS()', $this );
+			$found_records_query = apply_filters( "found_{$this->hook_name}_query", 'SELECT FOUND_ROWS()', $this );
 
-			$this->found_records = (int) $wpdb->get_var( $found_sites_query );
+			$this->found_records = (int) $wpdb->get_var( $found_records_query );
 
 			if ( ! empty( $this->query_vars['records_per_page'] ) ) {
 				$this->max_num_pages = ceil( $this->found_records / $this->query_vars['records_per_page'] );
