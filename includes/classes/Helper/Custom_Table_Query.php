@@ -73,19 +73,18 @@ abstract class Custom_Table_Query {
 	public function __constructor( $query = '' ) {
 		$this->query_var_defaults = $this->get_query_defaults(
 			[
-				'count'                  => false,
-				'fields'                 => '',
-				'ID'                     => '',
-				'number'                 => 100,
-				'no_found_rows'          => true,
-				'offset'                 => '',
-				'orderby'                => 'id',
-				'order'                  => 'ASC',
-				'records_per_page'       => 10,
-				'search'                 => '',
-				'search_columns'         => [],
-				'update_site_cache'      => true,
-				'update_site_meta_cache' => true,
+				'count'               => false,
+				'fields'              => '',
+				'ID'                  => '',
+				'number'              => 100,
+				'no_found_rows'       => true,
+				'offset'              => '',
+				'orderby'             => 'id',
+				'order'               => 'ASC',
+				'records_per_page'    => 10,
+				'search'              => '',
+				'search_columns'      => [],
+				'update_record_cache' => true,
 			]
 		);
 
