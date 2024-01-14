@@ -47,6 +47,13 @@ abstract class Custom_Table_Query {
 	protected $query_vars = [];
 
 	/**
+	 * List of records located by the query.
+	 *
+	 * @var array
+	 */
+	public $records = [];
+
+	/**
 	 * SQL for database query.
 	 *
 	 * @var string
@@ -102,12 +109,73 @@ abstract class Custom_Table_Query {
 	abstract protected function get_query_defaults( $general_defaults = [] );
 
 	/**
+	 * Retrieves a list of record IDs matching the query vars.
+	 *
+	 * @return array
+	 */
+	public function get_record_ids() {
+		return [];
+	}
+
+	/**
 	 * Retrieves a list of records matching the query vars.
 	 *
 	 * @return array|int List of record objects, a list of record IDs when 'fields' is set to 'ids', or the number of
 	 *                   records when 'count' is passed as a query var.
 	 */
 	public function get_records() {
+		$this->parse_query();
+
+		/**
+		 * Fires before records are retrieved.
+		 *
+		 * @param Custom_Table_Query $query Current instance of `Custom_Table_Query` (passed by reference)
+		 */
+		do_action_ref_array( "pre_get_{$this->hook_name}", [ &$this ] );
+
+		$record_data = null;
+
+		/**
+		 * Filter the record data before the database query takes place. Non-null value to bypass default record
+		 * queries.
+		 *
+		 * @param array|int|null     $record_data Return an array of site data to short-circuit the record query, record
+		 *                                        count as an integer if 'count' is set, or null to run normal queries.
+		 * @param Custom_Table_Query $query       The Custom_Table_Query instance, passed by reference.
+		 * @return array|int|null
+		 */
+		$record_data = apply_filters_ref_array( "{$this->hook_name}_pre_query", [ $record_data, &$this ] );
+		if ( null !== $record_data ) {
+			if ( is_array( $record_data ) && ! $this->query_vars['count'] ) {
+				$this->records = $record_data;
+			}
+
+			return $record_data;
+		}
+
+		/**
+		 * Remove anything not supported by the class.
+		 */
+		$_args = wp_array_slice_assoc( $this->query_vars, array_keys( $this->query_var_defaults ) );
+
+		/**
+		 * Ignore fields which do not affect the outcome of the query for the cache key.
+		 */
+		unset( $_args['fields'], $_args['update_records_cache'] );
+
+		$record_ids = $this->get_record_ids();
+		if ( ! empty( $record_ids ) ) {
+			$this->set_found_records();
+		}
+
+		/**
+		 * As we already have IDs, job done.
+		 */
+		if ( 'ids' === $this->query_vars['fields'] ) {
+			$this->records = $record_ids;
+			return $this->records;
+		}
+
 		return [];
 	}
 
