@@ -101,6 +101,13 @@ abstract class Custom_Table_Query {
 	}
 
 	/**
+	 * Custom name for actions and filters within the custom query.
+	 *
+	 * @return string Name to be used with actions and filters.
+	 */
+	abstract protected function get_hookname();
+
+	/**
 	 * Get the default values for the query.
 	 *
 	 * @param array $general_defaults General defaults, including the cache variables and pagination.
@@ -109,11 +116,20 @@ abstract class Custom_Table_Query {
 	abstract protected function get_query_defaults( $general_defaults = [] );
 
 	/**
+	 * Retrieve the name of the custom table.
+	 *
+	 * @return string Name of the custom table. Must include `$wpdb->prefix` if site specific or `$wpdb->base_prefix` or network specific.
+	 */
+	abstract protected function get_tablename();
+
+	/**
 	 * Retrieves a list of record IDs matching the query vars.
 	 *
 	 * @return array
 	 */
 	public function get_record_ids() {
+		$order = $this->parse_order( $this->query_vars['order'] );
+
 		return [];
 	}
 
@@ -273,11 +289,4 @@ abstract class Custom_Table_Query {
 			}
 		}
 	}
-
-	/**
-	 * Custom name for actions and filters within the custom query.
-	 *
-	 * @return string
-	 */
-	abstract protected function set_hookname();
 }
