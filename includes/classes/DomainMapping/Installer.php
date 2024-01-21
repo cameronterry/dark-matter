@@ -9,6 +9,9 @@
 
 namespace DarkMatter\DomainMapping;
 
+use DarkMatter\DomainMapping\Data\DomainMapping;
+use DarkMatter\DomainMapping\Data\RestrictedDomain;
+
 /**
  * Class Installer
  *
@@ -18,11 +21,28 @@ namespace DarkMatter\DomainMapping;
  */
 class Installer {
 	/**
+	 * Class for handling the custom table for Domain Mapping.
+	 *
+	 * @var DomainMapping
+	 */
+	public static $domain_table;
+
+	/**
+	 * Class for handling the custom table for Restricted Domains.
+	 *
+	 * @var RestrictedDomain
+	 */
+	public static $restricted_domain;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 2.0.0
 	 */
 	public function __construct() {
+		self::$domain_table      = new DomainMapping();
+		self::$restricted_domain = new RestrictedDomain();
+
 		add_action( 'init', [ $this, 'maybe_upgrade' ] );
 	}
 
@@ -42,53 +62,8 @@ class Installer {
 			 */
 			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-			$this->upgrade_domains();
-			$this->upgrade_restrict();
+			self::$domain_table->create_update_table();
+			self::$restricted_domain->create_update_table();
 		}
-	}
-
-	/**
-	 * Upgrade the domains table.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void
-	 */
-	public function upgrade_domains() {
-		global $wpdb;
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE `{$wpdb->base_prefix}domain_mapping` (
-            id BIGINT(20) NOT NULL AUTO_INCREMENT,
-            blog_id BIGINT(20) NOT NULL,
-            is_primary TINYINT(4) DEFAULT '0',
-            domain VARCHAR(255) NOT NULL,
-            active TINYINT(4) DEFAULT '1',
-            is_https TINYINT(4) DEFAULT '0',
-            type TINYINT(4) DEFAULT '1',
-            PRIMARY KEY  (id)
-        ) $charset_collate;";
-
-		dbDelta( $sql );
-	}
-
-	/**
-	 * Upgrade the Reserve domains table.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void
-	 */
-	public function upgrade_restrict() {
-		global $wpdb;
-		$charset_collate = $wpdb->get_charset_collate();
-
-		$sql = "CREATE TABLE `{$wpdb->base_prefix}domain_restrict` (
-            id BIGINT(20) NOT NULL AUTO_INCREMENT,
-            domain VARCHAR(255) NOT NULL,
-            PRIMARY KEY  (id)
-        ) $charset_collate;";
-
-		dbDelta( $sql );
 	}
 }
