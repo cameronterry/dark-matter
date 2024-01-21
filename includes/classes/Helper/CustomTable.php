@@ -10,7 +10,7 @@ namespace DarkMatter\Helper;
 /**
  * Abstract Class Custom_Table
  */
-abstract class Custom_Table {
+abstract class CustomTable {
 	/**
 	 * Field definition.
 	 *
@@ -31,15 +31,17 @@ abstract class Custom_Table {
 
 		$types = $this->get_types();
 
-		$columns = [];
+		$columns_sql = [];
 		foreach ( $columns as $name => $definition ) {
 			$definition = wp_parse_args(
 				$definition,
 				[
-					'default'      => '',
-					'queryable'    => false,
-					'type'         => '',
-					'type_storage' => 0,
+					'autoincrement' => false,
+					'default'       => false,
+					'nullable'      => true,
+					'queryable'     => false,
+					'type'          => '',
+					'type_storage'  => 0,
 				]
 			);
 
@@ -54,7 +56,7 @@ abstract class Custom_Table {
 			 * Handle the storage value if required.
 			 */
 			$type = $types[ $definition['type'] ];
-			if ( false !== stripos( '%s', $type ) ) {
+			if ( false !== stripos( $type['format'], '%s' ) ) {
 				if ( empty( $definition['type_storage'] ) ) {
 					return false;
 				}
@@ -62,31 +64,28 @@ abstract class Custom_Table {
 				$column = sprintf(
 					'%1$s %2$s',
 					$name,
-					sprintf( $type, $definition['type_storage'] )
+					sprintf( $type['format'], $definition['type_storage'] )
 				);
 			} else {
 				$column = $name;
 			}
 
-			/**
-			 * Handle extras.
-			 */
-			if ( isset( $definition['nullable'] ) ) {
-				$column .= ' ' . $definition['nullable'] ? 'NULL' : 'NOT NULL';
+			if ( isset( $definition['nullable'] ) && ! $definition['nullable'] ) {
+				$column .= ' NOT NULL';
 			}
 
-			if ( isset( $definition['default'] ) ) {
+			if ( isset( $definition['default'] ) && false !== $definition['default'] ) {
 				$column .= ' ' . sprintf( 'DEFAULT \'%1$s\'', $definition['default'] );
 			}
 
-			if ( isset( $definition['autoincrement'] ) && $definition['autoincrement'] && $types[ $definition['type'] ] ) {
+			if ( isset( $definition['autoincrement'] ) && $definition['autoincrement'] && $type['numeric'] ) {
 				$column .= ' AUTO_INCREMENT';
 			}
 
-			$columns[] = $column;
+			$columns_sql[] = $column;
 		}
 
-		return $columns;
+		return $columns_sql;
 	}
 
 	/**
@@ -196,19 +195,40 @@ abstract class Custom_Table {
 			/**
 			 * Datetime types.
 			 */
-			'DATETIME'    => false,
+			'DATETIME'    => [
+				'format'  => 'DATETIME',
+				'numeric' => false,
+			],
 			/**
 			 * Numeric types.
 			 */
-			'BIGINT(%s)'  => true,
-			'INT(%s)'     => true,
-			'TINYINT(%s)' => true,
+			'BIGINT'      => [
+				'format'  => 'BIGINT(%s)',
+				'numeric' => true,
+			],
+			'INT'         => [
+				'format'  => 'INT(%s)',
+				'numeric' => true,
+			],
+			'TINYINT'     => [
+				'format'  => 'TINYINT(%s)',
+				'numeric' => true,
+			],
 			/**
 			 * String types.
 			 */
-			'CHAR(%s)'    => false,
-			'VARCHAR(%s)' => false,
-			'LONGTEXT'    => false,
+			'CHAR'        => [
+				'format'  => 'CHAR(%s)',
+				'numeric' => false,
+			],
+			'VARCHAR'     => [
+				'format'  => 'VARCHAR(%s)',
+				'numeric' => false,
+			],
+			'LONGTEXT'    => [
+				'format'  => 'LONGTEXT',
+				'numeric' => false,
+			],
 		];
 	}
 
@@ -236,14 +256,17 @@ abstract class Custom_Table {
 
 		$indexes = $this->define_indexes();
 		if ( ! empty( $indexes ) ) {
-			$body[] = implode( ',' . PHP_EOL, $columns );
+			$body[] = implode( ',' . PHP_EOL, $indexes );
 		}
 
 		$charset_collate = $this->get_charset_collate();
 
 		$sql = sprintf(
-			'CREATE TABLE %1$s (%2$s) %3$s',
-			self::$tablename,
+			'CREATE TABLE %1$s (
+%2$s
+)
+%3$s',
+			$this->get_tablename(),
 			implode( ',' . PHP_EOL, $body ),
 			$charset_collate
 		);
