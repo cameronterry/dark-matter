@@ -162,7 +162,7 @@ abstract class CustomTable {
 	 *
 	 * @return array
 	 */
-	protected abstract function get_columns();
+	public abstract function get_columns();
 
 	/**
 	 * Define indexes for the table. Note: the array keys must match columns defined in `$this->get_columns()`.
