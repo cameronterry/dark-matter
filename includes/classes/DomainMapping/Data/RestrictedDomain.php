@@ -18,7 +18,7 @@ class RestrictedDomain extends CustomTable {
 	 *
 	 * @return array
 	 */
-	protected function get_columns() {
+	public function get_columns() {
 		return [
 			'id'         => [
 				'autoincrement' => true,
@@ -57,7 +57,7 @@ class RestrictedDomain extends CustomTable {
 	 *
 	 * @return string
 	 */
-	protected function get_tablename() {
+	public function get_tablename() {
 		global $wpdb;
 		return $wpdb->base_prefix . 'domain_restrict';
 	}
