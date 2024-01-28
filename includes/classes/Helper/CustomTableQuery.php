@@ -1,0 +1,211 @@
+<?php
+/**
+ * Class for supporting a custom query for the Custom Table class.
+ *
+ * @see \DarkMatter\Helper\CustomTable
+ *
+ * @package DarkMatterPlugin\Helper
+ */
+
+namespace DarkMatter\Helper;
+
+/**
+ * Class CustomTableQuery
+ */
+abstract class CustomTableQuery extends CustomQuery {
+	/**
+	 * Custom table defintion.
+	 *
+	 * @var CustomTable
+	 */
+	protected $custom_table;
+
+	/**
+	 * Default values for the custom table.
+	 *
+	 * @var array
+	 */
+	private $var_defaults = [];
+
+	/**
+	 * Custom hook name.
+	 *
+	 * @var string
+	 */
+	private $hook_name = '';
+
+	/**
+	 * Table to be queried.
+	 *
+	 * @var string
+	 */
+	private $table_name = '';
+
+	/**
+	 * Constructor.
+	 *
+	 * @param CustomTable $custom_table Custom table class to use.
+	 * @param string      $hook_name    Customise the hook name. Will default to the table name, minus the prefix.
+	 */
+	public function __construct( $custom_table, $hook_name = '' ) {
+		$this->custom_table = $custom_table;
+
+		$this->table_name = $this->custom_table->get_tablename();
+
+		if ( ! empty( $hook_name ) ) {
+			$this->hook_name = $hook_name;
+		} else {
+			global $wpdb;
+			$this->hook_name = str_ireplace( $wpdb->prefix, '', $this->table_name );
+		}
+
+		$this->var_defaults = $this->define_fields();
+
+		parent::__constructor();
+	}
+
+	/**
+	 * Define the custom fields for the query.
+	 *
+	 * @return array
+	 */
+	private function define_fields() {
+		$columns = $this->custom_table->get_columns();
+		if ( empty( $columns ) ) {
+			return [];
+		}
+
+		$types = $this->get_types();
+
+		$var_defaults = [];
+		foreach ( $columns as $column_name => $column ) {
+			/**
+			 * Skip non-queryable columns.
+			 */
+			if ( isset( $column['queryable'] ) && ! $column['queryable'] ) {
+				continue;
+			}
+
+			/**
+			 * Skip unsupported types.
+			 */
+			if ( ! array_key_exists( $column_name, $types ) ) {
+				continue;
+			}
+
+			$type = $types[ $column_name ];
+			if ( isset( $column['nullable'] ) && $column['nullable'] ) {
+				$value = null;
+			} elseif ( ! empty( $column['default'] ) ) {
+				$value = $column['default'];
+
+				if ( $type['numeric'] ) {
+					$value = absint( $value );
+				}
+			}
+
+			$var_defaults[ $column_name ] = $value;
+		}
+
+		return $var_defaults;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function get_fields() {
+		return $this->var_defaults;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function get_hook_name() {
+		return $this->hook_name;
+	}
+
+	/**
+	 * Return the ID - aka. Primary Key - column.
+	 *
+	 * @return string
+	 */
+	protected function get_id_column() {
+		return $this->custom_table->get_primary_key();
+	}
+
+	/**
+	 * Return a record object, usually a class of the Data.
+	 *
+	 * @param int|string $record_id Record ID.
+	 * @return mixed
+	 */
+	public abstract function get_record( $record_id );
+
+	/**
+	 * Return an array of full objects.
+	 *
+	 * @return array|int
+	 */
+	public function get_records() {
+		$record_ids = parent::get_records();
+		if ( 'ids' === $this->query_vars['fields'] ) {
+			return $record_ids;
+		}
+
+		return array_map( [ $this, 'get_record' ], $record_ids );
+	}
+
+	/**
+	 * Return the table name. Defined in the constructor.
+	 */
+	protected function get_tablename() {
+		return $this->table_name;
+	}
+
+	/**
+	 * Return a set of supported (by this class) SQL types. The bool value states if the key can be "auto incremented".
+	 *
+	 * @return array
+	 */
+	private function get_types() {
+		return [
+			/**
+			 * Datetime types.
+			 */
+			'DATETIME'    => [
+				'format'  => 'DATETIME',
+				'numeric' => false,
+			],
+			/**
+			 * Numeric types.
+			 */
+			'BIGINT'      => [
+				'format'  => 'BIGINT(%s)',
+				'numeric' => true,
+			],
+			'INT'         => [
+				'format'  => 'INT(%s)',
+				'numeric' => true,
+			],
+			'TINYINT'     => [
+				'format'  => 'TINYINT(%s)',
+				'numeric' => true,
+			],
+			/**
+			 * String types.
+			 */
+			'CHAR'        => [
+				'format'  => 'CHAR(%s)',
+				'numeric' => false,
+			],
+			'VARCHAR'     => [
+				'format'  => 'VARCHAR(%s)',
+				'numeric' => false,
+			],
+			'LONGTEXT'    => [
+				'format'  => 'LONGTEXT',
+				'numeric' => false,
+			],
+		];
+	}
+}

@@ -19,6 +19,31 @@ abstract class CustomTable {
 	protected static $fields = [];
 
 	/**
+	 * Helper method for adding a record to the Custom Table.
+	 *
+	 * @param array $data Data, with keys matching the columns of the Custom Table.
+	 * @return bool|int|\mysqli_result|null
+	 */
+	protected function add( $data = [] ) {
+		if ( empty( $data ) ) {
+			return false;
+		}
+
+		$columns = $this->get_columns();
+		if ( empty( $columns ) ) {
+			return false;
+		}
+
+		$_args = wp_array_slice_assoc( $data, array_keys( $columns ) );
+		if ( empty( $_args ) ) {
+			return false;
+		}
+
+		global $wpdb;
+		return $wpdb->insert( $this->get_tablename(), $_args );
+	}
+
+	/**
 	 * Translates the column definitions into something supported by SQL's Create Table.
 	 *
 	 * @return string[]|false
@@ -163,6 +188,26 @@ abstract class CustomTable {
 	 * @return array
 	 */
 	public abstract function get_columns();
+
+	/**
+	 * Retrieve a single record.
+	 *
+	 * @param int|string $id     ID to return.
+	 * @param string     $output Optional. The required return type. One of OBJECT, ARRAY_A, or ARRAY_N, which
+	 *                           correspond to an stdClass object, an associative array, or a numeric array,
+	 *                           respectively. Default OBJECT.
+	 * @return array|object|\stdClass|null
+	 */
+	public function get_record( $id, $output = OBJECT ) {
+		global $wpdb;
+		return $wpdb->get_row(
+			$wpdb->prepare(
+				"SELECT * FROM {$this->get_tablename()} WHERE {$this->get_primary_key()} = %s",
+				$id
+			),
+			$output
+		);
+	}
 
 	/**
 	 * Define indexes for the table. Note: the array keys must match columns defined in `$this->get_columns()`.

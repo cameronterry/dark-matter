@@ -241,15 +241,8 @@ abstract class CustomQuery {
 			$this->set_found_records();
 		}
 
-		/**
-		 * As we already have IDs, job done.
-		 */
-		if ( 'ids' === $this->query_vars['fields'] ) {
-			$this->records = $record_ids;
-			return $this->records;
-		}
-
-		return [];
+		$this->records = $record_ids;
+		return $record_ids;
 	}
 
 	/**
