@@ -83,7 +83,7 @@ abstract class CustomQuery {
 				'count'               => false,
 				'fields'              => '',
 				'ID'                  => '',
-				'no_found_rows'       => true,
+				'no_found_rows'       => false,
 				'offset'              => '',
 				'orderby'             => 'id',
 				'order'               => 'ASC',
@@ -105,7 +105,7 @@ abstract class CustomQuery {
 	 *
 	 * @return array
 	 */
-	abstract protected static function get_fields();
+	abstract protected function get_fields();
 
 	/**
 	 * Custom name for actions and filters within the custom query.
@@ -121,25 +121,8 @@ abstract class CustomQuery {
 	 * @return array
 	 */
 	protected function get_query_defaults( $general_defaults = [] ) {
-		$record_fields = self::get_fields();
-
-		/**
-		 * Convert the field definitions into query vars.
-		 */
-		$record_query_defaults = [];
-		foreach ( $record_fields as $name => $definition ) {
-			$definition = wp_parse_args(
-				$definition,
-				[
-					'default'   => false,
-					'primary'   => false,
-					'queryable' => false,
-					'type'      => '',
-				]
-			);
-		}
-
-		return array_merge( $record_query_defaults, $general_defaults );
+		$custom_defaults = $this->get_fields();
+		return array_merge( $custom_defaults, $general_defaults );
 	}
 
 	/**
@@ -152,7 +135,7 @@ abstract class CustomQuery {
 	/**
 	 * Retrieves a list of record IDs matching the query vars.
 	 *
-	 * @return array
+	 * @return int|array
 	 */
 	public function get_record_ids() {
 		$order = $this->parse_order( $this->query_vars['order'] );
@@ -166,7 +149,50 @@ abstract class CustomQuery {
 		$page_start = absint( ( $page - 1 ) * $this->query_vars['records_per_page'] ) . ', ';
 		$limits = 'LIMIT ' . $page_start . $records_per_page;
 
-		return [];
+		global $wpdb;
+
+		/**
+		 * Fields
+		 */
+		if ( $this->query_vars['count'] ) {
+			$fields = 'COUNT(*)';
+		} else {
+			$fields = "{$this->get_tablename()}.id";
+		}
+
+		$join = '';
+
+		$where = implode( ' AND ', $this->sql_clauses['where'] );
+
+		if ( ! empty( $where ) ) {
+			$where = "WHERE {$where}";
+		}
+
+		$found_rows = '';
+		if ( ! $this->query_vars['no_found_rows'] ) {
+			$found_rows = 'SQL_CALC_FOUND_ROWS';
+		}
+
+		$this->sql_clauses['select']  = "SELECT $found_rows $fields";
+		$this->sql_clauses['from']    = "FROM {$this->get_tablename()} $join";
+		$this->sql_clauses['limits']  = $limits;
+
+		$this->request = "
+			{$this->sql_clauses['select']}
+			{$this->sql_clauses['from']}
+			{$where}
+			{$this->sql_clauses['groupby']}
+			{$this->sql_clauses['orderby']}
+			{$this->sql_clauses['limits']}
+		";
+
+		if ( $this->query_vars['count'] ) {
+			return (int) $wpdb->get_var( $this->request );
+		}
+
+		$record_ids = $wpdb->get_col( $this->request );
+
+		return $record_ids;
 	}
 
 	/**
