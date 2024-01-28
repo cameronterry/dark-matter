@@ -12,13 +12,6 @@ namespace DarkMatter\Helper;
  */
 abstract class CustomQuery {
 	/**
-	 * Primary field. Matches the name used in SQL queries.
-	 *
-	 * @var string
-	 */
-	protected $field_primary = '';
-
-	/**
 	 * The amount of found sites for the current query.
 	 *
 	 * @var int
@@ -125,6 +118,8 @@ abstract class CustomQuery {
 		return array_merge( $custom_defaults, $general_defaults );
 	}
 
+	abstract protected function get_id_column();
+
 	/**
 	 * Retrieve the name of the custom table.
 	 *
@@ -157,7 +152,7 @@ abstract class CustomQuery {
 		if ( $this->query_vars['count'] ) {
 			$fields = 'COUNT(*)';
 		} else {
-			$fields = "{$this->get_tablename()}.id";
+			$fields = "{$this->get_tablename()}.{$this->get_id_column()}";
 		}
 
 		$join = '';

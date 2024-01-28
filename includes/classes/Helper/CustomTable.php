@@ -176,7 +176,7 @@ abstract class CustomTable {
 	 *
 	 * @return string
 	 */
-	protected abstract function get_primary_key();
+	public abstract function get_primary_key();
 
 	/**
 	 * The name of the database table.

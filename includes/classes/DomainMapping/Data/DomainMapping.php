@@ -84,7 +84,7 @@ class DomainMapping extends CustomTable {
 	 *
 	 * @return string
 	 */
-	protected function get_primary_key() {
+	public function get_primary_key() {
 		return 'id';
 	}
 
