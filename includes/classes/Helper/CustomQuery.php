@@ -40,6 +40,13 @@ abstract class CustomQuery {
 	protected $query_vars = [];
 
 	/**
+	 * Query variables used for constructing the WHERE clause.
+	 *
+	 * @var array
+	 */
+	protected $query_vars_where = [];
+
+	/**
 	 * List of records located by the query.
 	 *
 	 * @var array
@@ -114,8 +121,8 @@ abstract class CustomQuery {
 	 * @return array
 	 */
 	protected function get_query_defaults( $general_defaults = [] ) {
-		$custom_defaults = $this->get_fields();
-		return array_merge( $custom_defaults, $general_defaults );
+		$this->query_vars_where = $this->get_fields();
+		return array_merge( $this->query_vars_where, $general_defaults );
 	}
 
 	abstract protected function get_id_column();
@@ -156,6 +163,22 @@ abstract class CustomQuery {
 		}
 
 		$join = '';
+
+		foreach ( $this->query_vars_where as $name => $default ) {
+			if ( ! isset( $this->query_vars[ $name ] ) || empty( $this->query_vars[ $name ] ) ) {
+				continue;
+			}
+
+			if ( false !== stripos( $name, '__in' ) ) {
+				$column_name = strtok( $name, '__' );
+				$this->sql_clauses['where'][ $name ] = "{$this->get_tablename()}.$column_name IN ( '" . implode( "', '", $wpdb->_escape( $this->query_vars[ $name ] ) ) . "' )";
+			} elseif ( false !== stripos( $name, '__not__in' ) ) {
+				$column_name = strtok( $name, '__' );
+				$this->sql_clauses['where'][ $name ] = "{$this->get_tablename()}.$column_name NOT IN ( '" . implode( "', '", $wpdb->_escape( $this->query_vars[ $name ] ) ) . "' )";
+			} else {
+				$this->sql_clauses['where'][ $name ] = "{$this->get_tablename()}.$name = '" . $wpdb->_escape( $this->query_vars[ $name ] ) . "'";
+			}
+		}
 
 		$where = implode( ' AND ', $this->sql_clauses['where'] );
 

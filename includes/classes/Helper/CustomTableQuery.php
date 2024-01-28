@@ -59,7 +59,7 @@ abstract class CustomTableQuery extends CustomQuery {
 			$this->hook_name = str_ireplace( $wpdb->prefix, '', $this->table_name );
 		}
 
-		$this->var_defaults = $this->define_fields();
+		$this->var_defaults = $this->query_vars_where = $this->define_fields();
 
 		parent::__constructor();
 	}
@@ -89,11 +89,11 @@ abstract class CustomTableQuery extends CustomQuery {
 			/**
 			 * Skip unsupported types.
 			 */
-			if ( ! array_key_exists( $column_name, $types ) ) {
+			if ( ! array_key_exists( $column['type'], $types ) ) {
 				continue;
 			}
 
-			$type = $types[ $column_name ];
+			$type = $types[ $column['type'] ];
 			if ( isset( $column['nullable'] ) && $column['nullable'] ) {
 				$value = null;
 			} elseif ( ! empty( $column['default'] ) ) {
@@ -105,6 +105,14 @@ abstract class CustomTableQuery extends CustomQuery {
 			}
 
 			$var_defaults[ $column_name ] = $value;
+
+			/**
+			 * Add the __in and __not_in support.
+			 */
+			if ( isset( $column['queryable_in'] ) && $column['queryable_in'] ) {
+				$var_defaults[ "{$column_name}__in" ]     = [];
+				$var_defaults[ "{$column_name}__not_in" ] = [];
+			}
 		}
 
 		return $var_defaults;
