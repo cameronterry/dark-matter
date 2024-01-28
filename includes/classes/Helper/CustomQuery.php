@@ -10,20 +10,20 @@ namespace DarkMatter\Helper;
 /**
  * Abstract class Custom_Table_Query
  */
-abstract class Custom_Table_Query {
+abstract class CustomQuery {
+	/**
+	 * Primary field. Matches the name used in SQL queries.
+	 *
+	 * @var string
+	 */
+	protected $field_primary = '';
+
 	/**
 	 * The amount of found sites for the current query.
 	 *
 	 * @var int
 	 */
 	public $found_records = 0;
-
-	/**
-	 * Name used for actions and filters within this class.
-	 *
-	 * @var string
-	 */
-	protected $hook_name = '';
 
 	/**
 	 * The number of pages.
@@ -83,11 +83,11 @@ abstract class Custom_Table_Query {
 				'count'               => false,
 				'fields'              => '',
 				'ID'                  => '',
-				'number'              => 100,
 				'no_found_rows'       => true,
 				'offset'              => '',
 				'orderby'             => 'id',
 				'order'               => 'ASC',
+				'page'                => 1,
 				'records_per_page'    => 10,
 				'search'              => '',
 				'search_columns'      => [],
@@ -101,11 +101,18 @@ abstract class Custom_Table_Query {
 	}
 
 	/**
+	 * Return fields and definitions.
+	 *
+	 * @return array
+	 */
+	abstract protected static function get_fields();
+
+	/**
 	 * Custom name for actions and filters within the custom query.
 	 *
 	 * @return string Name to be used with actions and filters.
 	 */
-	abstract protected function get_hookname();
+	abstract protected function get_hook_name();
 
 	/**
 	 * Get the default values for the query.
@@ -113,7 +120,27 @@ abstract class Custom_Table_Query {
 	 * @param array $general_defaults General defaults, including the cache variables and pagination.
 	 * @return array
 	 */
-	abstract protected function get_query_defaults( $general_defaults = [] );
+	protected function get_query_defaults( $general_defaults = [] ) {
+		$record_fields = self::get_fields();
+
+		/**
+		 * Convert the field definitions into query vars.
+		 */
+		$record_query_defaults = [];
+		foreach ( $record_fields as $name => $definition ) {
+			$definition = wp_parse_args(
+				$definition,
+				[
+					'default'   => false,
+					'primary'   => false,
+					'queryable' => false,
+					'type'      => '',
+				]
+			);
+		}
+
+		return array_merge( $record_query_defaults, $general_defaults );
+	}
 
 	/**
 	 * Retrieve the name of the custom table.
@@ -130,6 +157,15 @@ abstract class Custom_Table_Query {
 	public function get_record_ids() {
 		$order = $this->parse_order( $this->query_vars['order'] );
 
+		/**
+		 * Handle pagination.
+		 */
+		$page = absint( $this->query_vars['page'] );
+		$records_per_page = absint( $this->query_vars['records_per_page'] );
+
+		$page_start = absint( ( $page - 1 ) * $this->query_vars['records_per_page'] ) . ', ';
+		$limits = 'LIMIT ' . $page_start . $records_per_page;
+
 		return [];
 	}
 
@@ -145,9 +181,9 @@ abstract class Custom_Table_Query {
 		/**
 		 * Fires before records are retrieved.
 		 *
-		 * @param Custom_Table_Query $query Current instance of `Custom_Table_Query` (passed by reference)
+		 * @param CustomQuery $query Current instance of `Custom_Table_Query` (passed by reference)
 		 */
-		do_action_ref_array( "pre_get_{$this->hook_name}", [ &$this ] );
+		do_action_ref_array( "pre_get_{$this->get_hook_name()}", [ &$this ] );
 
 		$record_data = null;
 
@@ -157,10 +193,10 @@ abstract class Custom_Table_Query {
 		 *
 		 * @param array|int|null     $record_data Return an array of site data to short-circuit the record query, record
 		 *                                        count as an integer if 'count' is set, or null to run normal queries.
-		 * @param Custom_Table_Query $query       The Custom_Table_Query instance, passed by reference.
+		 * @param CustomQuery $query       The Custom_Table_Query instance, passed by reference.
 		 * @return array|int|null
 		 */
-		$record_data = apply_filters_ref_array( "{$this->hook_name}_pre_query", [ $record_data, &$this ] );
+		$record_data = apply_filters_ref_array( "{$this->get_hook_name()}_pre_query", [ $record_data, &$this ] );
 		if ( null !== $record_data ) {
 			if ( is_array( $record_data ) && ! $this->query_vars['count'] ) {
 				$this->records = $record_data;
@@ -248,7 +284,7 @@ abstract class Custom_Table_Query {
 
 		$this->query_vars = wp_parse_args( $query, $this->query_var_defaults );
 
-		do_action_ref_array( "parse_{$this->hook_name}_query", [ &$this ] );
+		do_action_ref_array( "parse_{$this->get_hook_name()}_query", [ &$this ] );
 	}
 
 	/**
@@ -278,9 +314,9 @@ abstract class Custom_Table_Query {
 			 * Filters the query used to retrieve found record count.
 			 *
 			 * @param string             $found_records_query SQL query. Default 'SELECT FOUND_ROWS()'.
-			 * @param Custom_Table_Query $site_query          The `Custom_Table_Query` instance.
+			 * @param CustomQuery $site_query          The `Custom_Table_Query` instance.
 			 */
-			$found_records_query = apply_filters( "found_{$this->hook_name}_query", 'SELECT FOUND_ROWS()', $this );
+			$found_records_query = apply_filters( "found_{$this->get_hook_name()}_query", 'SELECT FOUND_ROWS()', $this );
 
 			$this->found_records = (int) $wpdb->get_var( $found_records_query );
 
