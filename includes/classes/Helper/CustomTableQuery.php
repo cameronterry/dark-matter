@@ -102,6 +102,8 @@ abstract class CustomTableQuery extends CustomQuery {
 				if ( $type['numeric'] ) {
 					$value = absint( $value );
 				}
+			} else {
+				$value = null;
 			}
 
 			$var_defaults[ $column_name ] = $value;
