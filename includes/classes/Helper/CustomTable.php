@@ -183,7 +183,7 @@ abstract class CustomTable {
 	 *
 	 * @return string
 	 */
-	protected abstract function get_tablename();
+	public abstract function get_tablename();
 
 	/**
 	 * Return a set of supported (by this class) SQL types. The bool value states if the key can be "auto incremented".
