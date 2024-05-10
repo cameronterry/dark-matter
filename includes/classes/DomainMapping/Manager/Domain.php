@@ -19,14 +19,6 @@ use DarkMatter\DomainMapping\Data;
  * @since 2.0.0
  */
 class Domain {
-	/**
-	 * The Domain Mapping table name for use by the various methods.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @var string
-	 */
-	private $dmtable = '';
 
 	/**
 	 * Hard-coded media domains, most likely through `DM_NETWORK_MEDIA` constant.
@@ -53,11 +45,6 @@ class Domain {
 	 */
 	public function __construct() {
 		global $wpdb;
-
-		/**
-		 * Setup the table name for use throughout the methods.
-		 */
-		$this->dm_table = $wpdb->base_prefix . 'domain_mapping';
 
 		/**
 		 * Store a reference to $wpdb as it will be used a lot.
@@ -425,6 +412,19 @@ class Domain {
 		if ( empty( $fqdn ) ) {
 			return false;
 		}
+
+		$query = new Data\DomainQuery();
+
+		$records = $query->query(
+			[
+				'domain' => $fqdn,
+			]
+		);
+		if ( empty( $records ) ) {
+			return false;
+		}
+
+		return $records[0];
 
 		/**
 		 * If the domain provided is the DOMAIN_CURRENT_SITE / network domain,
