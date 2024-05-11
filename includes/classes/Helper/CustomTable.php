@@ -355,4 +355,26 @@ abstract class CustomTable {
 
 		return wp_unslash( $_args );
 	}
+
+	/**
+	 * Update a database record.
+	 *
+	 * @param array $data Record to be updated.
+	 * @return bool|int|\mysqli_result|null
+	 */
+	public function update( $data ) {
+		$data = $this->parse_args( $data );
+		if ( empty( $data ) || empty( $data[ $this->get_primary_key() ] ) ) {
+			return false;
+		}
+
+		global $wpdb;
+		return $wpdb->update(
+			$this->get_tablename(),
+			$data,
+			[
+				$this->get_primary_key() => $data[ $this->get_primary_key() ]
+			]
+		);
+	}
 }
