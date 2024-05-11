@@ -44,24 +44,13 @@ abstract class CustomTableQuery extends CustomQuery {
 	/**
 	 * Constructor.
 	 *
+	 * @param array       $query        Query arguments.
 	 * @param CustomTable $custom_table Custom table class to use.
 	 * @param string      $hook_name    Customise the hook name. Will default to the table name, minus the prefix.
 	 */
-	public function __construct( $custom_table, $hook_name = '' ) {
-		$this->custom_table = $custom_table;
-
-		$this->table_name = $this->custom_table->get_tablename();
-
-		if ( ! empty( $hook_name ) ) {
-			$this->hook_name = $hook_name;
-		} else {
-			global $wpdb;
-			$this->hook_name = str_ireplace( $wpdb->prefix, '', $this->table_name );
-		}
-
-		$this->var_defaults = $this->query_vars_where = $this->define_fields();
-
-		parent::__constructor();
+	public function __construct( $query, $custom_table, $hook_name = '' ) {
+		$this->init( $custom_table, $hook_name );
+		parent::__constructor( $query );
 	}
 
 	/**
@@ -217,5 +206,27 @@ abstract class CustomTableQuery extends CustomQuery {
 				'numeric' => false,
 			],
 		];
+	}
+
+	/**
+	 * Initialise the custom table and hook.
+	 *
+	 * @param CustomTable $custom_table Custom table class to use.
+	 * @param string      $hook_name    Customise the hook name. Will default to the table name, minus the prefix.
+	 * @return void
+	 */
+	protected function init( $custom_table, $hook_name = '' ) {
+		$this->custom_table = $custom_table;
+
+		$this->table_name = $this->custom_table->get_tablename();
+
+		if ( ! empty( $hook_name ) ) {
+			$this->hook_name = $hook_name;
+		} else {
+			global $wpdb;
+			$this->hook_name = str_ireplace( $wpdb->prefix, '', $this->table_name );
+		}
+
+		$this->var_defaults = $this->query_vars_where = $this->define_fields();
 	}
 }
