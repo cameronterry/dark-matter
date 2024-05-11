@@ -84,11 +84,11 @@ abstract class CustomQuery {
 				'fields'              => '',
 				'ID'                  => '',
 				'no_found_rows'       => false,
+				'number'              => 10,
 				'offset'              => '',
 				'orderby'             => 'id',
 				'order'               => 'ASC',
 				'page'                => 1,
-				'records_per_page'    => 10,
 				'search'              => '',
 				'search_columns'      => [],
 				'update_record_cache' => true,
@@ -145,11 +145,11 @@ abstract class CustomQuery {
 		/**
 		 * Handle pagination.
 		 */
-		$page = absint( $this->query_vars['page'] );
-		$records_per_page = absint( $this->query_vars['records_per_page'] );
+		$page   = absint( $this->query_vars['page'] );
+		$number = absint( $this->query_vars['number'] );
 
-		$page_start = absint( ( $page - 1 ) * $this->query_vars['records_per_page'] ) . ', ';
-		$limits = 'LIMIT ' . $page_start . $records_per_page;
+		$page_start = absint( ( $page - 1 ) * $this->query_vars['number'] ) . ', ';
+		$limits = 'LIMIT ' . $page_start . $number;
 
 		global $wpdb;
 
@@ -357,8 +357,8 @@ abstract class CustomQuery {
 
 			$this->found_records = (int) $wpdb->get_var( $found_records_query );
 
-			if ( ! empty( $this->query_vars['records_per_page'] ) ) {
-				$this->max_num_pages = ceil( $this->found_records / $this->query_vars['records_per_page'] );
+			if ( ! empty( $this->query_vars['number'] ) ) {
+				$this->max_num_pages = ceil( $this->found_records / $this->query_vars['number'] );
 			}
 		}
 	}
