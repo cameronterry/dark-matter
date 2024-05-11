@@ -115,19 +115,21 @@ class Primary {
 	 * @return boolean True on success, false otherwise.
 	 */
 	public function set( $site_id = 0, $domain = '' ) {
-		$new_primary_domain = Domain::instance()->get( $domain );
+		$query = new Data\DomainQuery();
 
+		$new_primary_domain = $query->get_by_domain( $domain );
 		if ( $new_primary_domain->blog_id !== $site_id ) {
 			return false;
 		}
 
-		$result = Domain::instance()->update(
-			$new_primary_domain->domain,
-			true,
-			$new_primary_domain->is_https,
-			true,
-			$new_primary_domain->active,
-			DM_DOMAIN_TYPE_MAIN
+		$data = new Data\DomainMapping();
+		$result = $data->update(
+			[
+				'id'         => $new_primary_domain->id,
+				'domain'     => $new_primary_domain->domain,
+				'is_primary' => true,
+			],
+			true
 		);
 
 		if ( is_wp_error( $result ) ) {
