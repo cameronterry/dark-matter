@@ -170,6 +170,24 @@ class DomainMapping extends CustomTable {
 	}
 
 	/**
+	 * Retrieve the primary domain for a blog (i.e. site).
+	 *
+	 * @param int $blog_id Blog ID.
+	 * @return string|null
+	 */
+	public function get_primary_domain_id( $blog_id = 0 ) {
+		$blog_id = empty( $blog_id ) ? get_current_blog_id() : $blog_id;
+
+		global $wpdb;
+		return $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID FROM {$this->get_tablename()} WHERE is_primary = 1 AND blog_id = %s LIMIT 0, 1",
+				$blog_id
+			)
+		);
+	}
+
+	/**
 	 * Column for the primary key.
 	 *
 	 * @return string
@@ -186,5 +204,84 @@ class DomainMapping extends CustomTable {
 	public function get_tablename() {
 		global $wpdb;
 		return $wpdb->base_prefix . 'domain_mapping';
+	}
+
+	/**
+	 * Update a domain record.
+	 *
+	 * @param array $data  Data record to be updated. Is merged with the pre-existing record, only new values need to be included.
+	 * @param bool  $force Force update. Set to true when changing a primary domain.
+	 * @return bool|Domain|\WP_Error|null
+	 */
+	public function update( $data = [], $force = false ) {
+		if ( empty( $data['id'] ) || empty( $data['domain'] ) ) {
+			return false;
+		}
+
+		$domain = $this->check( $data['domain'] );
+		if ( is_wp_error( $domain ) ) {
+			return $domain;
+		}
+
+		if ( null !== $data['type'] ) {
+			$type_check = $this->check_type( $data['type'] );
+			if ( is_wp_error( $type_check ) ) {
+				return $type_check;
+			}
+		}
+
+		$before = $this->get_record( $data['id'] );
+		if ( ! $before instanceof Domain ) {
+			return false;
+		}
+
+		$data = wp_parse_args( $data, $before->to_array() );
+
+		/**
+		 * Determine if there is an attempt to update the "is primary" field.
+		 */
+		$current_primary = null;
+		if ( null !== $data['is_primary'] && $data['is_primary'] !== $before->is_primary ) {
+			/**
+			 * Any update to the "is primary" requires the force flag.
+			 */
+			if ( ! $force ) {
+				return new \WP_Error( 'primary', __( 'You cannot update the primary flag without setting the force parameter to true', 'dark-matter' ) );
+			}
+
+			$current_primary = $this->get_primary_domain_id( $data['blog_id'] );
+		}
+
+		$result = parent::update( $data );
+		if ( $result ) {
+			/**
+			 * If there was an old primary, then we need to unset it.
+			 */
+			if ( ! empty( $current_primary ) ) {
+				$this->update(
+					[
+						'id'         => $current_primary,
+						'is_primary' => false,
+					],
+					$force
+				);
+			}
+
+			$after = new Domain( (object) $data );
+
+			/**
+			 * Fires when a domain is updated.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param Domain $domain_after  Domain object after the changes have been applied successfully.
+			 * @param Domain $domain_before Domain object before.
+			 */
+			do_action( 'darkmatter_domain_updated', $after, $before );
+
+			return $after;
+		}
+
+		return false;
 	}
 }
