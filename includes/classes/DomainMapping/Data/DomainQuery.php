@@ -24,6 +24,26 @@ class DomainQuery extends CustomTableQuery {
 	}
 
 	/**
+	 * Retrieve a Domain record by a domain name.
+	 *
+	 * @param string $domain Full domain name, excluding any protocol.
+	 * @return Domain|false
+	 */
+	public function get_by_domain( $domain ) {
+		$query = $this->query(
+			[
+				'domain' => $domain,
+			]
+		);
+
+		if ( empty( $query ) ) {
+			return false;
+		}
+
+		return $query[0];
+	}
+
+	/**
 	 * Retrieve the Domain object for a record ID.
 	 *
 	 * @param int $record_id Record ID.
