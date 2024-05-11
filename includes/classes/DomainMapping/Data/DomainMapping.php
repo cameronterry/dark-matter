@@ -214,16 +214,24 @@ class DomainMapping extends CustomTable {
 	 * @return bool|Domain|\WP_Error|null
 	 */
 	public function update( $data = [], $force = false ) {
-		if ( empty( $data['id'] ) || empty( $data['domain'] ) ) {
+		/**
+		 * Bare minimum needed to update a record.
+		 */
+		if ( empty( $data['id'] ) ) {
 			return false;
 		}
 
-		$domain = $this->check( $data['domain'] );
-		if ( is_wp_error( $domain ) ) {
-			return $domain;
+		/**
+		 * If a domain is supplied, we need to make sure it is valid.
+		 */
+		if ( ! empty( $data['domain'] ) ) {
+			$domain = $this->check( $data['domain'] );
+			if ( is_wp_error( $domain ) ) {
+				return $domain;
+			}
 		}
 
-		if ( null !== $data['type'] ) {
+		if ( ! empty( $data['type'] ) ) {
 			$type_check = $this->check_type( $data['type'] );
 			if ( is_wp_error( $type_check ) ) {
 				return $type_check;
@@ -231,6 +239,10 @@ class DomainMapping extends CustomTable {
 		}
 
 		$before = $this->get_record( $data['id'] );
+		if ( ! empty( $before ) ) {
+			$before = new Domain( $before );
+		}
+
 		if ( ! $before instanceof Domain ) {
 			return false;
 		}
