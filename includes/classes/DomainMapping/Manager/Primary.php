@@ -21,6 +21,14 @@ use \DarkMatter\DomainMapping\Data;
  * @since 2.0.0
  */
 class Primary {
+	/**
+	 * The Domain Mapping table name for use by the various methods.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @var string
+	 */
+	private $dmtable = '';
 
 	/**
 	 * Reference to the global $wpdb and is more for code cleaniness.
@@ -40,6 +48,11 @@ class Primary {
 	 */
 	public function __construct() {
 		global $wpdb;
+
+		/**
+		 * Setup the table name for use throughout the methods.
+		 */
+		$this->dm_table = $wpdb->base_prefix . 'domain_mapping';
 
 		/**
 		 * Store a reference to $wpdb as it will be used a lot.
