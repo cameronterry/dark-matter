@@ -71,51 +71,19 @@ class Primary {
 	public function get( $site_id = 0 ) {
 		$site_id = ( empty( $site_id ) ? get_current_blog_id() : $site_id );
 
-		/**
-		 * Attempt to retrieve the domain from cache.
-		 */
-		$cache_key      = $site_id . '-primary';
-		$primary_domain = wp_cache_get( $cache_key, 'dark-matter' );
+		$query = new Data\DomainQuery(
+			[
+				'blog_id'    => $site_id,
+				'is_primary' => true,
+				'number'     => 1,
+			]
+		);
 
-		/**
-		 * If the Cache is unavailable, then attempt to load the domain from the
-		 * database and re-prime the cache.
-		 */
-		if ( ! $primary_domain ) {
-            // phpcs:ignore
-            $primary_domain = $this->wpdb->get_var( $this->wpdb->prepare( "SELECT domain FROM {$this->dm_table} WHERE is_primary = 1 AND blog_id = %s", $site_id ) );
-
-			if ( empty( $primary_domain ) ) {
-				/**
-				 * Set the cached value for Primary Domain to "none". This will
-				 * stop spurious database queries for some thing that has not
-				 * been setup up.
-				 */
-				wp_cache_set( $cache_key, 'none', 'dark-matter' );
-
-				/**
-				 * As the cache is modified, we update the `last_changed`.
-				 */
-				$this->update_last_changed();
-
-				return false;
-			}
-		}
-
-		/**
-		 * Return false if the cache value is "none".
-		 */
-		if ( 'none' === $primary_domain ) {
+		if ( empty( $query->records ) ) {
 			return false;
 		}
 
-		/**
-		 * Retrieve the entire Domain object.
-		 */
-		$db      = Domain::instance();
-		$_domain = $db->get( $primary_domain );
-
-		return $_domain;
+		return $query->records[0];
 	}
 
 	/**
@@ -123,30 +91,18 @@ class Primary {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @return array Array of Domain objects of the Primary domains for each Site in the Network.
+	 * @return Data\Domain[] of Domain objects of the Primary domains for each Site in the Network.
 	 */
-	public function get_all() {
-		global $wpdb;
+	public function get_all( $count = 10, $page = 1 ) {
+		$query = new Data\DomainQuery(
+			[
+				'number'     => $count,
+				'page'       => $page,
+				'is_primary' => true,
+			]
+		);
 
-        // phpcs:ignore
-        $_domains = $wpdb->get_col( "SELECT domain FROM {$this->dm_table} WHERE is_primary = 1 ORDER BY blog_id DESC, domain" );
-
-		if ( empty( $_domains ) ) {
-			return array();
-		}
-
-		$db = Domain::instance();
-
-		/**
-		 * Retrieve the DM_Domain objects for each of the primary domains.
-		 */
-		$domains = array();
-
-		foreach ( $_domains as $_domain ) {
-			$domains[] = $db->get( $_domain );
-		}
-
-		return $domains;
+		return $query->records;
 	}
 
 	/**
