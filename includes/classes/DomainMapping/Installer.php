@@ -40,8 +40,7 @@ class Installer {
 	 * @since 2.0.0
 	 */
 	public function __construct() {
-		self::$domain_table      = new DomainMapping();
-		self::$restricted_domain = new RestrictedDomain();
+		self::prepare_tables();
 
 		add_action( 'init', [ $this, 'maybe_upgrade' ] );
 	}
@@ -65,5 +64,15 @@ class Installer {
 			self::$domain_table->create_update_table();
 			self::$restricted_domain->create_update_table();
 		}
+	}
+
+	/**
+	 * Prepare the table classes for use.
+	 *
+	 * @return void
+	 */
+	public static function prepare_tables() {
+		self::$domain_table      = new DomainMapping();
+		self::$restricted_domain = new RestrictedDomain();
 	}
 }
