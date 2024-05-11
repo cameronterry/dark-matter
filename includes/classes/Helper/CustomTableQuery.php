@@ -151,7 +151,8 @@ abstract class CustomTableQuery extends CustomQuery {
 			return $record_ids;
 		}
 
-		return array_map( [ $this, 'get_record' ], $record_ids );
+		$this->records = array_map( [ $this, 'get_record' ], $record_ids );
+		return $this->records;
 	}
 
 	/**
