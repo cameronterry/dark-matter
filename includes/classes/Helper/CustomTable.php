@@ -343,6 +343,16 @@ abstract class CustomTable {
 			return false;
 		}
 
-		return $_args;
+		foreach ( $_args as $field => $value ) {
+			if ( is_callable( $columns[ $field ]['sanitize'] ) ) {
+				$value = call_user_func_array( $columns[ $field ]['sanitize'], $value );
+			} else {
+				$value = sanitize_text_field( $value );
+			}
+
+			$_args[ $field ] = $value;
+		}
+
+		return wp_unslash( $_args );
 	}
 }
