@@ -29,18 +29,13 @@ abstract class CustomTable {
 			return false;
 		}
 
-		$columns = $this->get_columns();
-		if ( empty( $columns ) ) {
-			return false;
-		}
-
-		$_args = wp_array_slice_assoc( $data, array_keys( $columns ) );
-		if ( empty( $_args ) ) {
+		$data = $this->parse_args( $data );
+		if ( empty( $data ) ) {
 			return false;
 		}
 
 		global $wpdb;
-		return $wpdb->insert( $this->get_tablename(), $_args );
+		return $wpdb->insert( $this->get_tablename(), $data );
 	}
 
 	/**
@@ -329,5 +324,25 @@ abstract class CustomTable {
 	protected function get_charset_collate() {
 		global $wpdb;
 		return $wpdb->get_charset_collate();
+	}
+
+	/**
+	 * Parsed the data args prior to database entry.
+	 *
+	 * @param array $data Data to be parsed.
+	 * @return array|false
+	 */
+	protected function parse_args( $data ) {
+		$columns = $this->get_columns();
+		if ( empty( $columns ) ) {
+			return false;
+		}
+
+		$_args = wp_array_slice_assoc( $data, array_keys( $columns ) );
+		if ( empty( $_args ) ) {
+			return false;
+		}
+
+		return $_args;
 	}
 }
