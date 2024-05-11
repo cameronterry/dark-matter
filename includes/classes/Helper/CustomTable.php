@@ -344,7 +344,7 @@ abstract class CustomTable {
 		}
 
 		foreach ( $_args as $field => $value ) {
-			if ( is_callable( $columns[ $field ]['sanitize'] ) ) {
+			if ( ! empty( $columns[ $field ]['sanitize'] ) && is_callable( $columns[ $field ]['sanitize'] ) ) {
 				$value = call_user_func_array( $columns[ $field ]['sanitize'], $value );
 			} else {
 				$value = sanitize_text_field( $value );
