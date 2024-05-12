@@ -46,6 +46,30 @@ class DomainQuery extends CustomTableQuery {
 	}
 
 	/**
+	 * Get the primary domain for the blog ID.
+	 *
+	 * @param int $blog_id Blog to retrieve the primary domain for. Will default to the current blog ID if not supplied.
+	 * @return false|Domain
+	 */
+	public function get_primary_domain( $blog_id = 0 ) {
+		$blog_id = empty( $blog_id ) ? get_current_blog_id() : $blog_id;
+
+		$query = $this->query(
+			[
+				'domain'     => $blog_id,
+				'is_primary' => true,
+				'number'     => 1,
+			]
+		);
+
+		if ( empty( $query ) ) {
+			return false;
+		}
+
+		return $query[0];
+	}
+
+	/**
 	 * Retrieve the Domain object for a record ID.
 	 *
 	 * @param int $record_id Record ID.
