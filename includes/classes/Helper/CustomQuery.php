@@ -169,6 +169,10 @@ abstract class CustomQuery {
 				continue;
 			}
 
+			if ( 'any' === $this->query_vars[ $name ] ) {
+				continue;
+			}
+
 			if ( false !== stripos( $name, '__in' ) ) {
 				$column_name = strtok( $name, '__' );
 				$this->sql_clauses['where'][ $name ] = "{$this->get_tablename()}.$column_name IN ( '" . implode( "', '", $wpdb->_escape( $this->query_vars[ $name ] ) ) . "' )";

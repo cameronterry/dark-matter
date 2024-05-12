@@ -32,7 +32,9 @@ class DomainQuery extends CustomTableQuery {
 	public function get_by_domain( $domain ) {
 		$query = $this->query(
 			[
+				'active' => 'any',
 				'domain' => $domain,
+				'number' => 1,
 			]
 		);
 
