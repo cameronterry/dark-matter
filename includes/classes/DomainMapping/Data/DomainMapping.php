@@ -281,6 +281,26 @@ class DomainMapping extends CustomTable {
 
 			$after = new Domain( (object) $data );
 
+			if ( $before->is_primary && ! $after->is_primary ) {
+				/**
+				 * Fires when a domain is unset to be the primary for a Site.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param Domain $domain Domain object.
+				 */
+				do_action( 'darkmatter_primary_unset', $after );
+			} elseif ( ! $before->is_primary && $after->is_primary ) {
+				/**
+				 * Fires when a domain is set to be the primary for a Site.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param Domain $domain Domain object.
+				 */
+				do_action( 'darkmatter_primary_set', $after );
+			}
+
 			/**
 			 * Fires when a domain is updated.
 			 *
