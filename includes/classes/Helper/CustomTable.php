@@ -349,6 +349,10 @@ abstract class CustomTable {
 	 * @return array|false
 	 */
 	protected function parse_args( $data ) {
+		if ( empty( $data[ $this->get_primary_key() ] ) ) {
+			return false;
+		}
+
 		$columns = $this->get_columns();
 		if ( empty( $columns ) ) {
 			return false;
@@ -380,7 +384,7 @@ abstract class CustomTable {
 	 */
 	public function update( $data ) {
 		$data = $this->parse_args( $data );
-		if ( empty( $data ) || empty( $data[ $this->get_primary_key() ] ) ) {
+		if ( false === $data ) {
 			return false;
 		}
 
