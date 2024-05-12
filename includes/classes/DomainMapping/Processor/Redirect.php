@@ -9,8 +9,9 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
+use DarkMatter\DomainMapping\Data\Domain;
+use DarkMatter\DomainMapping\Data\DomainQuery;
 use DarkMatter\DomainMapping\Helper;
-use DarkMatter\DomainMapping\Manager\Primary;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -136,8 +137,9 @@ class Redirect implements Registerable {
 		/**
 		 * Check we have a primary domain that we can, maybe, redirect to.
 		 */
-		$primary = Primary::instance()->get();
-		if ( ! $primary || ! $primary->active ) {
+		$query = new DomainQuery();
+		$primary = $query->get_primary_domain();
+		if ( ! $primary instanceof Domain || ! $primary->active ) {
 			return;
 		}
 

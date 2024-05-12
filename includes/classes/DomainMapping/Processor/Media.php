@@ -9,8 +9,8 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
-use DarkMatter\DomainMapping\Manager\Domain;
-use DarkMatter\DomainMapping\Manager\Primary;
+use DarkMatter\DomainMapping\Data\Domain;
+use DarkMatter\DomainMapping\Data\DomainQuery;
 
 /**
  * Class Media
@@ -78,7 +78,7 @@ class Media {
 		 * Ensure the site is actually a site.
 		 */
 		$blog = get_site( $site_id );
-		if ( ! is_a( $blog, 'WP_Site' ) ) {
+		if ( ! $blog instanceof \WP_Site ) {
 			return [];
 		}
 
@@ -91,8 +91,10 @@ class Media {
 			$unmapped,
 		];
 
-		$primary = Primary::instance()->get( $site_id );
-		if ( ! empty( $primary ) ) {
+		$query = new DomainQuery();
+		$primary = $query->get_primary_domain( $site_id );
+
+		if ( $primary instanceof Domain ) {
 			$main_domains[] = $primary->domain;
 		}
 
@@ -349,15 +351,19 @@ class Media {
 		/**
 		 * Ensure we have media domains to use.
 		 */
-		$media_domains = Domain::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
-		if ( empty( $media_domains ) ) {
+		$media_domains = new DomainQuery(
+			[
+				'type' => DM_DOMAIN_TYPE_MEDIA,
+			]
+		);
+		if ( empty( $media_domains->records ) ) {
 			$this->sites[ $site_id ] = false;
 			return;
 		}
 
 		/**
 		 * Seemingly WordPress' `wp_get_attachment_url()` doesn't seem to fully work as intended for `switch_to_blog()`.
-		 * Therefore we must add the requesters' main domains in order for the map / unmap to work, as the media assets
+		 * Therefore, we must add the requesters' main domains in order for the map / unmap to work, as the media assets
 		 * will be served on the requesters' domains rather than the domain of the site it belongs to.
 		 */
 		$main_domains = array_filter(
