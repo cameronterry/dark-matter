@@ -249,7 +249,7 @@ class DomainMapping extends CustomTable {
 	public function delete( $id, $force = false ) {
 		$domain = $this->get_record( $id );
 		if ( empty( $domain ) ) {
-			return false;
+			return new \WP_Error( 'not found', __( 'The domain cannot be found.', 'dark-matter' ) );
 		}
 
 		$domain = new Domain( $domain );
