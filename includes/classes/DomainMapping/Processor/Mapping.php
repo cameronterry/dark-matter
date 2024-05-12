@@ -9,9 +9,9 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
+use DarkMatter\DomainMapping\Data\Domain;
+use DarkMatter\DomainMapping\Data\DomainQuery;
 use DarkMatter\DomainMapping\Helper;
-use DarkMatter\DomainMapping\Manager\Domain;
-use DarkMatter\DomainMapping\Manager\Primary;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -172,10 +172,10 @@ class Mapping implements Registerable {
 		 * Attempt to find the domain in Dark Matter. If the domain is found, then tell WordPress it is an internal
 		 * domain.
 		 */
-		$db     = Domain::instance();
-		$domain = $db->find( $host );
+		$query  = new DomainQuery();
+		$domain = $query->get_by_domain( $host );
 
-		if ( is_a( $domain, 'DM_Domain' ) ) {
+		if ( $domain instanceof Domain ) {
 			return true;
 		}
 
@@ -218,7 +218,8 @@ class Mapping implements Registerable {
 		 */
 		global $switched;
 		if ( $switched && self::$is_request_mapped ) {
-			$primary = Primary::instance()->get();
+			$query = new DomainQuery();
+			$primary = $query->get_primary_domain();
 
 			/**
 			 * If there is no primary or if it is inactive, then the site is not mapped.
@@ -248,7 +249,7 @@ class Mapping implements Registerable {
 	}
 
 	/**
-	 * Setup the actions to handle the URL mappings.
+	 * Set up the actions to handle the URL mappings.
 	 *
 	 * @since 2.0.0
 	 *
