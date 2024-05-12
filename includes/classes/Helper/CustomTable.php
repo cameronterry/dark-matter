@@ -315,6 +315,22 @@ abstract class CustomTable {
 	}
 
 	/**
+	 * Delete a database table record.
+	 *
+	 * @param int $id Identifier of the record to delete.
+	 * @return bool|int|\mysqli_result|null
+	 */
+	public function delete( $id ) {
+		global $wpdb;
+		return $wpdb->delete(
+			$this->get_tablename(),
+			[
+				$this->get_primary_key() => $id,
+			],
+		);
+	}
+
+	/**
 	 * Charset for the table. Defaults to `$wpdb->get_charset_collate()`.
 	 *
 	 * @see wpdb::get_charset_collate()
@@ -357,7 +373,7 @@ abstract class CustomTable {
 	}
 
 	/**
-	 * Update a database record.
+	 * Update a database table record.
 	 *
 	 * @param array $data Record to be updated.
 	 * @return bool|int|\mysqli_result|null
