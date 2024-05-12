@@ -21,44 +21,6 @@ use \DarkMatter\DomainMapping\Data;
  * @since 2.0.0
  */
 class Primary {
-	/**
-	 * The Domain Mapping table name for use by the various methods.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @var string
-	 */
-	private $dmtable = '';
-
-	/**
-	 * Reference to the global $wpdb and is more for code cleaniness.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @var boolean
-	 */
-	private $wpdb = false;
-
-	/**
-	 * Constructor
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return void
-	 */
-	public function __construct() {
-		global $wpdb;
-
-		/**
-		 * Setup the table name for use throughout the methods.
-		 */
-		$this->dm_table = $wpdb->base_prefix . 'domain_mapping';
-
-		/**
-		 * Store a reference to $wpdb as it will be used a lot.
-		 */
-		$this->wpdb = $wpdb;
-	}
 
 	/**
 	 * Retrieve the Primary domain for a Site.
@@ -115,28 +77,7 @@ class Primary {
 	 * @return boolean True on success, false otherwise.
 	 */
 	public function set( $site_id = 0, $domain = '' ) {
-		$query = new Data\DomainQuery();
-
-		$new_primary_domain = $query->get_by_domain( $domain );
-		if ( $new_primary_domain->blog_id !== $site_id ) {
-			return false;
-		}
-
-		$data = new Data\DomainMapping();
-		$result = $data->update(
-			[
-				'id'         => $new_primary_domain->id,
-				'domain'     => $new_primary_domain->domain,
-				'is_primary' => true,
-			],
-			true
-		);
-
-		if ( is_wp_error( $result ) ) {
-			return false;
-		}
-
-		return true;
+		return $this->change( $site_id, $domain, true );
 	}
 
 	/**
@@ -151,19 +92,33 @@ class Primary {
 	 * @return boolean          True on success. False otherwise.
 	 */
 	public function unset( $site_id = 0, $domain = '', $db = false ) {
-		$new_primary_domain = Domain::instance()->get( $domain );
+		return $this->change( $site_id, $domain );
+	}
 
+	/**
+	 * Helper method to change the is_primary domain.
+	 *
+	 * @param integer $site_id    Site ID to unset the primary domain for.
+	 * @param string  $domain     Optional. If provided, will only affect that domain's record.
+	 * @param boolean $is_primary Set to true to perform a database update.
+	 * @return boolean True on success. False otherwise.
+	 */
+	private function change( $site_id = 0, $domain = '', $is_primary = false ) {
+		$query = new Data\DomainQuery();
+
+		$new_primary_domain = $query->get_by_domain( $domain );
 		if ( $new_primary_domain->blog_id !== $site_id ) {
 			return false;
 		}
 
-		$result = Domain::instance()->update(
-			$new_primary_domain->domain,
-			false,
-			$new_primary_domain->is_https,
-			true,
-			$new_primary_domain->active,
-			DM_DOMAIN_TYPE_MAIN
+		$data = new Data\DomainMapping();
+		$result = $data->update(
+			[
+				'id'         => $new_primary_domain->id,
+				'domain'     => $new_primary_domain->domain,
+				'is_primary' => $is_primary,
+			],
+			true
 		);
 
 		if ( is_wp_error( $result ) ) {
