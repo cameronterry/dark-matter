@@ -99,7 +99,7 @@ class DomainMapping extends CustomTable {
 	 * @param string $domain Domain to check.
 	 * @return \WP_Error|null
 	 */
-	private function check( $domain ) {
+	private function check_fqdn( $domain ) {
 		if ( empty( $domain ) ) {
 			return new \WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
 		}
@@ -355,7 +355,7 @@ class DomainMapping extends CustomTable {
 		 * If a domain is supplied, we need to make sure it is valid.
 		 */
 		if ( ! empty( $data['domain'] ) ) {
-			$domain = $this->check( $data['domain'] );
+			$domain = $this->check_fqdn( $data['domain'] );
 			if ( is_wp_error( $domain ) ) {
 				return $domain;
 			}
