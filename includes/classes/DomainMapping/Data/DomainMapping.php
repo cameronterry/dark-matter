@@ -161,6 +161,57 @@ class DomainMapping extends CustomTable {
 	}
 
 	/**
+	 * Delete a domain.
+	 *
+	 * @param int  $id    Domain database table ID.
+	 * @param bool $force Force the deletion. Required if the domain being deleted is primary.
+	 * @return bool|int|\mysqli_result|\WP_Error|null
+	 */
+	public function delete( $id, $force = false ) {
+		$domain = $this->get_record( $id );
+		if ( empty( $domain ) ) {
+			return false;
+		}
+
+		$domain = new Domain( $domain );
+		if ( get_current_blog_id() !== $domain->blog_id ) {
+			return new \WP_Error( 'not found', __( 'The domain cannot be found.', 'dark-matter' ) );
+		}
+
+		if ( $domain->is_primary && ! $force ) {
+			return new \WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
+		} else {
+			/**
+			 * Fires when a domain is set to be the primary for a Site.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param Domain $domain Domain object.
+			 */
+			do_action( 'darkmatter_primary_set', $domain );
+		}
+
+		$result = parent::delete( $domain->id );
+		if ( $result ) {
+			/**
+			 * Fire action when a domain is deleted.
+			 *
+			 * Fires after a domain is successfully deleted to the database.
+			 * This is also after the domain is deleted from cache.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param Domain $_domain Domain object that was deleted.
+			 */
+			do_action( 'darkmatter_domain_delete', $domain );
+
+			return true;
+		}
+
+		return new \WP_Error( 'unknown', __( 'Sorry, the domain could not be deleted. An unknown error occurred.', 'dark-matter' ) );
+	}
+
+	/**
 	 * Not used currently.
 	 *
 	 * @return false

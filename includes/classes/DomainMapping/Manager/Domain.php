@@ -325,76 +325,20 @@ class Domain {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  string  $fqdn FQDN to be deleted.
+	 * @param  string  $fqdn  FQDN to be deleted.
 	 * @param  boolean $force Force the FQDN to be deleted, even if it is the primary domain.
 	 * @return \WP_Error|boolean True on success. False otherwise.
 	 */
 	public function delete( $fqdn = '', $force = true ) {
-		$fqdn = $this->_basic_check( $fqdn );
+		$query = new Data\DomainQuery();
 
-		if ( is_wp_error( $fqdn ) ) {
-			return $fqdn;
-		}
-
-		/**
-		 * Cannot delete what does not exist.
-		 */
-		if ( ! $this->is_exist( $fqdn ) ) {
+		$domain = $query->get_by_domain( $fqdn );
+		if ( ! $domain instanceof Data\Domain ) {
 			return new \WP_Error( 'exists', __( 'The domain cannot be found.', 'dark-matter' ) );
 		}
 
-		/**
-		 * Check to make sure the domain is assigned to the site.
-		 */
-		$_domain = $this->get( $fqdn );
-
-		if ( ! $_domain || get_current_blog_id() !== $_domain->blog_id ) {
-			return new \WP_Error( 'not found', __( 'The domain cannot be found.', 'dark-matter' ) );
-		}
-
-		/**
-		 * Check to make sure that the domain is not a primary and if it is that
-		 * the force flag has been provided.
-		 */
-		if ( $_domain->is_primary ) {
-			if ( $force ) {
-				$this->primary_unset( $_domain->domain, $_domain->blog_id );
-			} else {
-				return new \WP_Error( 'primary', __( 'This domain is the primary domain for this Site. Please provide the force flag to delete.', 'dark-matter' ) );
-			}
-		}
-
-		$result = $this->wpdb->delete(
-			$this->dm_table,
-			array(
-				'domain' => $fqdn,
-			),
-			array( '%s' )
-		);
-
-		if ( $result ) {
-			/**
-			 * Clear the caches, including the domain.
-			 */
-			$this->_clear_caches( $fqdn );
-
-			/**
-			 * Fire action when a domain is deleted.
-			 *
-			 * Fires after a domain is successfully deleted to the database.
-			 * This is also after the domain is deleted from cache.
-			 *
-			 * @since 2.0.0
-			 *
-			 * @param Data\Domain $_domain Domain object that was deleted.
-			 */
-			do_action( 'darkmatter_domain_delete', $_domain );
-
-			return true;
-		}
-
-		return new \WP_Error( 'unknown', __( 'Sorry, the domain could not be deleted. An unknown error occurred.', 'dark-matter' ) );
-
+		$data = new Data\DomainMapping();
+		return $data->delete( $domain->id, $force );
 	}
 
 	/**
