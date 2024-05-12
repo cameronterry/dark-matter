@@ -10,7 +10,7 @@
 namespace DarkMatter\DomainMapping\REST;
 
 use DarkMatter\DomainMapping\Data;
-use \DarkMatter\DomainMapping\Manager;
+use DarkMatter\DomainMapping\Data\DomainQuery;
 
 /**
  * Class Domains
@@ -40,15 +40,13 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = Manager\Domain::instance();
-
 		$item = $this->prepare_item_for_database( $request );
+		$data = new Data\DomainMapping();
 
-		$result = $db->add( $item['domain'], $item['is_primary'], $item['is_https'], $request['force'], $item['is_active'] );
+		$result = $data->add( $item, $request['force'] );
 
 		/**
-		 * Return errors as-is. This is maintain consistency and parity with the
-		 * WP CLI commands.
+		 * Return errors as-is. This is to maintain consistency and parity with the WP CLI commands.
 		 */
 		if ( is_wp_error( $result ) ) {
 			return rest_ensure_response( $result );
@@ -88,9 +86,23 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = Manager\Domain::instance();
+		$query = new DomainQuery();
 
-		$result = $db->delete( $request['domain'], $request['force'] );
+		$domain = $query->get_by_domain( $request['domain'] );
+		if ( ! $domain instanceof Data\Domain ) {
+			return rest_ensure_response(
+				new \WP_Error(
+					'rest_domain_not_found',
+					__( 'Domain cannot be found.', 'dark-matter' ),
+					[
+						'status' => 404,
+					]
+				)
+			);
+		}
+
+		$data   = new Data\DomainMapping();
+		$result = $data->delete( $domain->id, $request['force'] );
 
 		/**
 		 * Return errors as-is. This is maintain consistency and parity with the
@@ -103,14 +115,12 @@ class Domains extends \WP_REST_Controller {
 		/**
 		 * Handle the response for the REST endpoint.
 		 */
-		$response = rest_ensure_response(
-			array(
+		return rest_ensure_response(
+			[
 				'deleted' => true,
 				'domain'  => $request['domain'],
-			)
+			]
 		);
-
-		return $response;
 	}
 
 	/**
@@ -135,22 +145,29 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_item( $request ) {
-		$db = Manager\Domain::instance();
-
-		$result = $db->get( $request['domain'] );
+		$query  = new Data\DomainQuery();
+		$domain = $query->get_by_domain( $request['domain'] );
 
 		/**
-		 * Return errors as-is. This is maintain consistency and parity with the
+		 * Return errors as-is. This is to maintain consistency and parity with the
 		 * WP CLI commands.
 		 */
-		if ( is_wp_error( $result ) ) {
-			return rest_ensure_response( $result );
+		if ( ! $domain instanceof Data\Domain ) {
+			return rest_ensure_response(
+				new \WP_Error(
+					'rest_domain_not_found',
+					__( 'Domain cannot be found.', 'dark-matter' ),
+					[
+						'status' => 404,
+					]
+				)
+			);
 		}
 
 		/**
 		 * Handle the response for the REST endpoint.
 		 */
-		$response = $this->prepare_item_for_response( $result, $request );
+		$response = $this->prepare_item_for_response( $domain, $request );
 
 		return rest_ensure_response( $response );
 	}
@@ -325,25 +342,18 @@ class Domains extends \WP_REST_Controller {
 			$site_id = get_current_blog_id();
 		}
 
-		$db = Manager\Domain::instance();
-
-		$response = [];
-
-		$result = $db->get_domains( $site_id );
-
-		/**
-		 * Return errors as-is. This is maintain consistency and parity with the
-		 * WP CLI commands.
-		 */
-		if ( is_wp_error( $result ) ) {
-			return rest_ensure_response( $result );
-		}
+		$query = new Data\DomainQuery(
+			[
+				'active'  => 'any',
+				'site_id' => $site_id,
+			]
+		);
 
 		/**
 		 * Process the domains and prepare each for the JSON response.
 		 */
-		foreach ( $result as $dm_domain ) {
-			$response[] = $this->prepare_item_for_response( $dm_domain, $request );
+		foreach ( $query->records as $domain ) {
+			$response[] = $this->prepare_item_for_response( $domain, $request );
 		}
 
 		return rest_ensure_response( $response );
@@ -575,18 +585,10 @@ class Domains extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function update_item( $request ) {
-		$db = Manager\Domain::instance();
-
 		$item = $this->prepare_item_for_database( $request );
+		$data = new Data\DomainMapping();
 
-		$result = $db->update(
-			$item['domain'],
-			$item['is_primary'],
-			$item['is_https'],
-			$request['force'],
-			$item['is_active'],
-			$item['type']
-		);
+		$result = $data->update( $item, $request['force'] );
 
 		/**
 		 * Return errors as-is. This is maintain consistency and parity with the
@@ -600,9 +602,7 @@ class Domains extends \WP_REST_Controller {
 		 * Prepare response for successfully adding a domain.
 		 */
 		$response = $this->prepare_item_for_response( $result, $request );
-		$response = rest_ensure_response( $response );
-
-		return $response;
+		return rest_ensure_response( $response );
 	}
 
 	/**
