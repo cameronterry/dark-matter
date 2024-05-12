@@ -22,7 +22,7 @@ class DomainMapping extends CustomTable {
 	 * @return Domain|false|\WP_Error|null
 	 */
 	public function add( $data = [], $force = false ) {
-		$data = $this->parse_args( $data );
+		$data = $this->parse_args( $data, false );
 		if ( false === $data ) {
 			return false;
 		}

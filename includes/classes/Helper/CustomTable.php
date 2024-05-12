@@ -29,7 +29,7 @@ abstract class CustomTable {
 			return false;
 		}
 
-		$data = $this->parse_args( $data );
+		$data = $this->parse_args( $data, false );
 		if ( empty( $data ) ) {
 			return false;
 		}
@@ -348,8 +348,8 @@ abstract class CustomTable {
 	 * @param array $data Data to be parsed.
 	 * @return array|false
 	 */
-	protected function parse_args( $data ) {
-		if ( empty( $data[ $this->get_primary_key() ] ) ) {
+	protected function parse_args( $data, $check_primary_key = true ) {
+		if ( $check_primary_key && empty( $data[ $this->get_primary_key() ] ) ) {
 			return false;
 		}
 
