@@ -15,6 +15,85 @@ use DarkMatter\Helper\CustomTable;
 class DomainMapping extends CustomTable {
 
 	/**
+	 * Add a domain to the database table.
+	 *
+	 * @param array $data  Data to be used to create the domain.
+	 * @param bool  $force Force the creation. Required if the domain is set to be primary and is to replace the current primary.
+	 * @return Domain|false|\WP_Error|null
+	 */
+	public function add( $data = [], $force = false ) {
+		$data = $this->parse_args( $data );
+		if ( false === $data ) {
+			return false;
+		}
+
+		/**
+		 * If a domain is supplied, we need to make sure it is valid.
+		 */
+		if ( ! empty( $data['domain'] ) ) {
+			$domain = $this->check_fqdn( $data['domain'] );
+			if ( is_wp_error( $domain ) ) {
+				return $domain;
+			}
+		}
+
+		$current_primary = null;
+		if ( $data['is_primary'] ) {
+			$current_primary = $this->get_primary_domain_id();
+
+			if ( ! $force && ! empty( $current_primary ) ) {
+				return new \WP_Error(
+					'primary',
+					__(
+						'You cannot add this domain as the primary domain without using the force flag.',
+						'dark-matter'
+					)
+				);
+			}
+		}
+
+		$result = parent::add( $data );
+		if ( $result ) {
+			$domain = new Domain( (object) $data );
+
+			if ( ! empty( $current_primary ) ) {
+				$this->update(
+					[
+						'id'         => $current_primary,
+						'is_primary' => false,
+					],
+					$force
+				);
+
+				/**
+				 * Fires when a domain is set to be the primary for a Site.
+				 *
+				 * @since 2.0.0
+				 *
+				 * @param Domain $domain Domain object.
+				 */
+				do_action( 'darkmatter_primary_set', $domain );
+			}
+
+			/**
+			 * Fire action when a domain is added.
+			 *
+			 * Fires after a domain is successfully added to the database. This
+			 * is also post insertion to the cache.
+			 *
+			 * @since 2.0.0
+			 *
+			 * @param Domain $domain Domain object of the newly added Domain.
+			 */
+			do_action( 'darkmatter_domain_add', $domain );
+
+			return $domain;
+		}
+
+		return new \WP_Error( 'unknown', __( 'Sorry, the domain could not be added. An unknown error occurred.', 'dark-matter' ) );
+	}
+
+	/**
 	 * Check to ensure the string domain passes some basic checks.
 	 *
 	 * @param string $domain Domain to check.
