@@ -7,6 +7,7 @@
 
 namespace DarkMatter\DomainMapping\Data;
 
+use DarkMatter\DomainMapping\Helper;
 use DarkMatter\Helper\CustomTable;
 
 /**
@@ -100,33 +101,9 @@ class DomainMapping extends CustomTable {
 	 * @return \WP_Error|null
 	 */
 	private function check_fqdn( $domain ) {
-		if ( empty( $domain ) ) {
-			return new \WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
-		}
-
-		/**
-		 * Ensure that the URL is purely a domain. In order for the parse_url() to work, the domain must be prefixed
-		 * with a double forward slash.
-		 */
-		if ( false === stripos( $domain, '//' ) ) {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
-			$domain_parts = parse_url( '//' . ltrim( $domain, '/' ) );
-		} else {
-			// phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
-			$domain_parts = parse_url( $domain );
-		}
-
-		if ( ! empty( $domain_parts['path'] ) || ! empty( $domain_parts['port'] ) || ! empty( $domain_parts['query'] ) ) {
-			return new \WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
-		}
-
-		$domain = $domain_parts['host'];
-
-		/**
-		 * Check to ensure we have a valid domain to work with.
-		 */
-		if ( ! filter_var( $domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME ) ) {
-			return new \WP_Error( 'domain', __( 'The domain is not valid.', 'dark-matter' ) );
+		$domain = Helper::instance()->check_domain( $domain );
+		if ( is_wp_error( $domain ) ) {
+			return $domain;
 		}
 
 		if ( defined( 'DOMAIN_CURRENT_SITE' ) && DOMAIN_CURRENT_SITE === $domain ) {
@@ -143,7 +120,7 @@ class DomainMapping extends CustomTable {
 			]
 		);
 		if ( ! empty( $restricted_query->records ) ) {
-			return new \WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
+			return new \WP_Error( 'restricted', __( 'This domain has been restricted. Please contact your site administrator.', 'dark-matter' ) );
 		}
 
 		/**
