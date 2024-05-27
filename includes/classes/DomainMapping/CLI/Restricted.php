@@ -172,13 +172,28 @@ class Restricted extends WP_CLI_Command {
 
 		$fqdn = $args[0];
 
-		$restricted = Manager\Restricted::instance();
-		$result     = $restricted->delete( $fqdn );
+		$query     = new RestrictedDomainQuery();
+		$domain_id = $query->get_id_by_domain( $fqdn );
+		if ( empty( $domain_id ) ) {
+			WP_CLI::error(
+				sprintf(
+					/* translators: %s: restricted domain that cannot be found. */
+					__( 'Cannot find domain: %s', 'dark-matter' ),
+					$fqdn
+				)
+			);
+		}
+
+		$data   = new RestrictedDomain();
+		$result = $data->delete( $domain_id );
 
 		if ( is_wp_error( $result ) ) {
 			WP_CLI::error( $result->get_error_message() );
+		} elseif ( $result ) {
+			WP_CLI::success( $fqdn . __( ': is no longer restricted.', 'dark-matter' ) );
+			return;
 		}
 
-		WP_CLI::success( $fqdn . __( ': is no longer restricted.', 'dark-matter' ) );
+		WP_CLI::error( __( 'An unknown error has occurred.', 'dark-matter' ) );
 	}
 }
