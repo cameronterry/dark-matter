@@ -9,6 +9,8 @@
 
 namespace DarkMatter\DomainMapping\REST;
 
+use DarkMatter\DomainMapping\Data\RestrictedDomain;
+use DarkMatter\DomainMapping\Data\RestrictedDomainQuery;
 use \DarkMatter\DomainMapping\Manager;
 
 /**
@@ -35,21 +37,31 @@ class Restricted extends \WP_REST_Controller {
 	 * @since 2.0.0
 	 *
 	 * @param  \WP_REST_Request $request Current request.
-	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return \WP_REST_Response WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = Manager\Restricted::instance();
-
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
-		$result = $db->add( $domain );
+		$data = new RestrictedDomain();
+		$result = $data->add(
+			[
+				'domain' => $domain,
+			]
+		);
 
 		/**
-		 * Return errors as-is. This is maintain consistency and parity with the
+		 * Return errors as-is. This is to maintain consistency and parity with the
 		 * WP CLI commands.
 		 */
 		if ( is_wp_error( $result ) ) {
 			return rest_ensure_response( $result );
+		} elseif ( false === $result ) {
+			return rest_ensure_response(
+				new \WP_Error(
+					'restricted_unknown_error',
+					__( 'Unknown error occurred.', 'dark-matter' )
+				)
+			);
 		}
 
 		$response = rest_ensure_response(
@@ -92,11 +104,10 @@ class Restricted extends \WP_REST_Controller {
 	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = Manager\Restricted::instance();
-
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
-		$result = $db->delete( $domain );
+		$data   = new RestrictedDomain();
+		$result = $data->delete( $request['domain'] );
 
 		/**
 		 * Return errors as-is. This is maintain consistency and parity with the
@@ -104,6 +115,13 @@ class Restricted extends \WP_REST_Controller {
 		 */
 		if ( is_wp_error( $result ) ) {
 			return rest_ensure_response( $result );
+		} elseif ( false === $result ) {
+			return rest_ensure_response(
+				new \WP_Error(
+					'restricted_unknown_error',
+					__( 'Unknown error occurred.', 'dark-matter' )
+				)
+			);
 		}
 
 		return rest_ensure_response(
@@ -133,12 +151,16 @@ class Restricted extends \WP_REST_Controller {
 	 * @since 2.0.0
 	 *
 	 * @param  \WP_REST_Request $request Current request.
-	 * @return \WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return \WP_REST_Response WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_items( $request ) {
-		$db = Manager\Restricted::instance();
+		$query = new RestrictedDomainQuery(
+			[
+				'number' => 100,
+			]
+		);
 
-		return rest_ensure_response( $db->get() );
+		return rest_ensure_response( $query->records );
 	}
 
 	/**
