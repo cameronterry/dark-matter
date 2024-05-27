@@ -22,7 +22,7 @@ class RestrictedDomain extends CustomTable {
 	 * @return \WP_Error|string
 	 */
 	public function add( $data = [] ) {
-		$data = $this->parse_args( $data );
+		$data = $this->parse_args( $data, false );
 		if ( false === $data ) {
 			return false;
 		}
