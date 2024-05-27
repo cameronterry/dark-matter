@@ -230,4 +230,14 @@ abstract class CustomTableQuery extends CustomQuery {
 
 		$this->var_defaults = $this->query_vars_where = $this->define_fields();
 	}
+
+	/**
+	 * Adds records from the given IDs to the cache that do not already exist in the cache.
+	 *
+	 * @param array $record_ids Record IDs.
+	 * @return void
+	 */
+	protected function prime_caches( $record_ids ) {
+		$this->custom_table->prime_caches( $record_ids );
+	}
 }

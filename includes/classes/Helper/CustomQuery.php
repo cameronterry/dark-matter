@@ -261,7 +261,7 @@ abstract class CustomQuery {
 		/**
 		 * Ignore fields which do not affect the outcome of the query for the cache key.
 		 */
-		unset( $_args['fields'], $_args['update_records_cache'] );
+		unset( $_args['fields'], $_args['update_record_cache'] );
 
 		$key          = md5( serialize( $_args ) );
 		$last_changed = wp_cache_get_last_changed( $this->get_hook_name() );
@@ -283,6 +283,10 @@ abstract class CustomQuery {
 		} else {
 			$record_ids          = $cache_value['record_ids'];
 			$this->found_records = $cache_value['found_records'];
+		}
+
+		if ( $this->query_vars['update_record_cache'] ) {
+			$this->prime_caches( $record_ids );
 		}
 
 		$this->records = $record_ids;
@@ -344,6 +348,14 @@ abstract class CustomQuery {
 
 		do_action_ref_array( "parse_{$this->get_hook_name()}_query", [ &$this ] );
 	}
+
+	/**
+	 * Adds records from the given IDs to the cache that do not already exist in the cache.
+	 *
+	 * @param array $record_ids Record IDs.
+	 * @return void
+	 */
+	protected abstract function prime_caches( $record_ids );
 
 	/**
 	 * Sets up the WordPress query for retrieving records.

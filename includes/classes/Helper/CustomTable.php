@@ -392,6 +392,23 @@ abstract class CustomTable {
 	}
 
 	/**
+	 * Adds records from the given IDs to the cache that do not already exist in the cache.
+	 *
+	 * @param array $record_ids Record IDs.
+	 * @return void
+	 */
+	public function prime_caches( $record_ids ) {
+		global $wpdb;
+
+		$non_cached_ids = _get_non_cached_ids( $record_ids, $this->get_tablename() );
+		if ( ! empty( $non_cached_ids ) ) {
+			$fresh_records = $wpdb->get_results( sprintf( "SELECT * FROM {$this->get_tablename()} WHERE {$this->get_primary_key()} IN (%s)", implode( ',', array_map( 'intval', $non_cached_ids ) ) ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+			$this->update_cache( $fresh_records );
+		}
+	}
+
+	/**
 	 * Update a database table record.
 	 *
 	 * @param array $data Record to be updated.
@@ -416,5 +433,20 @@ abstract class CustomTable {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Updates the records cache for the custom table.
+	 *
+	 * @param array $records Array of Records.
+	 * @return void
+	 */
+	public function update_cache( $records ) {
+		$data = [];
+		foreach ( $records as $record ) {
+			$data[ $record->{$this->get_primary_key()} ] = $record;
+		}
+
+		wp_cache_add_multiple( $data, $this->get_tablename() );
 	}
 }
