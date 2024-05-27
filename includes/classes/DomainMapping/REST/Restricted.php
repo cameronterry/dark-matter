@@ -11,7 +11,6 @@ namespace DarkMatter\DomainMapping\REST;
 
 use DarkMatter\DomainMapping\Data\RestrictedDomain;
 use DarkMatter\DomainMapping\Data\RestrictedDomainQuery;
-use \DarkMatter\DomainMapping\Manager;
 
 /**
  * Class Restricted

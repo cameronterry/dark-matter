@@ -11,7 +11,6 @@ namespace DarkMatter\DomainMapping\CLI;
 
 use DarkMatter\DomainMapping\Data\RestrictedDomain;
 use DarkMatter\DomainMapping\Data\RestrictedDomainQuery;
-use \DarkMatter\DomainMapping\Manager;
 use WP_CLI;
 use WP_CLI_Command;
 
