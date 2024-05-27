@@ -67,7 +67,7 @@ class RestrictedDomain extends CustomTable {
 			],
 			'domain'     => [
 				'nullable'      => false,
-				'queryable'     => false,
+				'queryable'     => true,
 				'type'          => 'VARCHAR',
 				'type_storage'  => 255,
 			],

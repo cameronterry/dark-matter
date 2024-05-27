@@ -20,8 +20,34 @@ class RestrictedDomainQuery extends CustomTableQuery {
 	 *
 	 * @param array $query Query arguments.
 	 */
-	public function __construct( $query ) {
+	public function __construct( $query = [] ) {
 		parent::__construct( $query, Installer::$restricted_domain );
+	}
+
+	/**
+	 * Retrieve the Record ID by domain.
+	 *
+	 * @param string $domain Domain to get ID for.
+	 * @return false|int
+	 */
+	public function get_id_by_domain( $domain ) {
+		if ( empty( $domain ) ) {
+			return false;
+		}
+
+		$query = $this->query(
+			[
+				'domain' => $domain,
+				'fields' => 'ids',
+				'number' => 1,
+			]
+		);
+
+		if ( empty( $query ) ) {
+			return false;
+		}
+
+		return $query[0];
 	}
 
 	/**
