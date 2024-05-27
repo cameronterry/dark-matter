@@ -137,8 +137,12 @@ class DomainMapping extends CustomTable {
 			return new \WP_Error( 'root', __( 'Domains cannot be mapped to the main / root Site.', 'dark-matter' ) );
 		}
 
-		$reserve = \DarkMatter\DomainMapping\Manager\Restricted::instance();
-		if ( $reserve->is_exist( $domain ) ) {
+		$restricted_query = new RestrictedDomainQuery(
+			[
+				'domain' => $domain,
+			]
+		);
+		if ( ! empty( $restricted_query->records ) ) {
 			return new \WP_Error( 'reserved', __( 'This domain has been reserved.', 'dark-matter' ) );
 		}
 
