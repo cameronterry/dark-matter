@@ -32,6 +32,19 @@ class RestrictedDomain extends CustomTable {
 			return $domain;
 		}
 
+		$query     = new RestrictedDomainQuery();
+		$domain_id = $query->get_id_by_domain( $data['domain'] );
+		if ( $domain_id ) {
+			return new \WP_Error(
+				'restricted_domain_already_exists',
+				sprintf(
+					/* translators: %s: restricted domain. */
+					__( 'Domain is already restricted: %s.', 'dark-matter' ),
+					$data['domain']
+				)
+			);
+		}
+
 		$result = parent::add(
 			[
 				'domain' => $domain,
