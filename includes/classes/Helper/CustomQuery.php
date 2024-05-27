@@ -263,9 +263,26 @@ abstract class CustomQuery {
 		 */
 		unset( $_args['fields'], $_args['update_records_cache'] );
 
-		$record_ids = $this->get_record_ids();
-		if ( ! empty( $record_ids ) ) {
-			$this->set_found_records();
+		$key          = md5( serialize( $_args ) );
+		$last_changed = wp_cache_get_last_changed( $this->get_hook_name() );
+		$cache_key    = "{$this->get_hook_name()}:{$key}:{$last_changed}";
+
+		$cache_value = wp_cache_get( $cache_key, "{$this->get_hook_name()}-queries" );
+		if ( false === $cache_value ) {
+			$record_ids = $this->get_record_ids();
+			if ( ! empty( $record_ids ) ) {
+				$this->set_found_records();
+			}
+
+			$cache_value = [
+				'record_ids'    => $record_ids,
+				'found_records' => $this->found_records,
+			];
+
+			wp_cache_set( $cache_key, $cache_value, "{$this->get_hook_name()}-queries" );
+		} else {
+			$record_ids          = $cache_value['record_ids'];
+			$this->found_records = $cache_value['found_records'];
 		}
 
 		$this->records = $record_ids;

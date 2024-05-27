@@ -35,6 +35,8 @@ abstract class CustomTable {
 		}
 
 		global $wpdb;
+
+		wp_cache_set_last_changed( $this->get_tablename() );
 		return $wpdb->insert( $this->get_tablename(), $data );
 	}
 
@@ -194,14 +196,22 @@ abstract class CustomTable {
 	 * @return array|object|\stdClass|null
 	 */
 	public function get_record( $id, $output = OBJECT ) {
-		global $wpdb;
-		return $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$this->get_tablename()} WHERE {$this->get_primary_key()} = %s",
-				$id
-			),
-			$output
-		);
+		$_record = wp_cache_get( $id, $this->get_tablename() );
+
+		if ( false === $_record ) {
+			global $wpdb;
+			$_record = $wpdb->get_row(
+				$wpdb->prepare(
+					"SELECT * FROM {$this->get_tablename()} WHERE {$this->get_primary_key()} = %s",
+					$id
+				),
+				$output
+			);
+
+			wp_cache_set( $id, $_record, $this->get_tablename() );
+		}
+
+		return $_record;
 	}
 
 	/**
@@ -322,12 +332,17 @@ abstract class CustomTable {
 	 */
 	public function delete( $id ) {
 		global $wpdb;
-		return $wpdb->delete(
+		$result = $wpdb->delete(
 			$this->get_tablename(),
 			[
 				$this->get_primary_key() => $id,
 			],
 		);
+		if ( $result ) {
+			wp_cache_set_last_changed( $this->get_tablename() );
+		}
+
+		return $result;
 	}
 
 	/**
@@ -389,12 +404,17 @@ abstract class CustomTable {
 		}
 
 		global $wpdb;
-		return $wpdb->update(
+		$result = $wpdb->update(
 			$this->get_tablename(),
 			$data,
 			[
 				$this->get_primary_key() => $data[ $this->get_primary_key() ]
 			]
 		);
+		if ( $result ) {
+			wp_cache_set_last_changed( $this->get_tablename() );
+		}
+
+		return $result;
 	}
 }
