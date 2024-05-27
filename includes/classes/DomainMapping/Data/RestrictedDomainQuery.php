@@ -25,10 +25,17 @@ class RestrictedDomainQuery extends CustomTableQuery {
 	}
 
 	/**
-	 * @param $record_id
-	 * @return void
+	 * Retrieve the Restricted Domain object for a record ID.
+	 *
+	 * @param int $record_id Record ID.
+	 * @return RestrictedDomain|null
 	 */
 	public function get_record( $record_id ) {
-		// TODO: Implement get_record() method.
+		$restricted_domain = $this->custom_table->get_record( $record_id );
+		if ( empty( $restricted_domain ) ) {
+			return null;
+		}
+
+		return $restricted_domain->domain;
 	}
 }
