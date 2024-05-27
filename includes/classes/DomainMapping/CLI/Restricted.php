@@ -9,6 +9,8 @@
 
 namespace DarkMatter\DomainMapping\CLI;
 
+use DarkMatter\DomainMapping\Data\RestrictedDomain;
+use DarkMatter\DomainMapping\Data\RestrictedDomainQuery;
 use \DarkMatter\DomainMapping\Manager;
 use WP_CLI;
 use WP_CLI_Command;
@@ -46,14 +48,20 @@ class Restricted extends WP_CLI_Command {
 
 		$fqdn = $args[0];
 
-		$restricted = Manager\Restricted::instance();
-		$result     = $restricted->add( $fqdn );
-
+		$data   = new RestrictedDomain();
+		$result = $data->add(
+			[
+				'domain' => $fqdn,
+			]
+		);
 		if ( is_wp_error( $result ) ) {
 			WP_CLI::error( $result->get_error_message() );
+		} elseif ( $result ) {
+			WP_CLI::success( $fqdn . __( ': is now restricted.', 'dark-matter' ) );
+			return;
 		}
 
-		WP_CLI::success( $fqdn . __( ': is now restricted.', 'dark-matter' ) );
+		WP_CLI::error( __( 'An unknown error has occurred.', 'dark-matter' ) );
 	}
 
 	/**
@@ -88,12 +96,14 @@ class Restricted extends WP_CLI_Command {
 	 *
 	 *      wp darkmatter restrict list --format=ids
 	 *
+	 * @subcommand list
+	 *
 	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
 	 */
-	public function list( $args, $assoc_args ) {
+	public function _list( $args, $assoc_args ) {
 		/**
 		 * Handle and validate the format flag if provided.
 		 */
@@ -108,21 +118,23 @@ class Restricted extends WP_CLI_Command {
 			$opts['format'] = 'table';
 		}
 
-		$db = Manager\Restricted::instance();
-
-		$restricted = $db->get();
+		$query = new RestrictedDomainQuery(
+			[
+				'number' => 100,
+			]
+		);
 
 		/**
 		 * Only format the return array if "ids" is not specified.
 		 */
 		if ( 'ids' !== $opts['format'] ) {
 			$restricted = array_map(
-				function ( $domain ) {
+				function ( $restricted_domain ) {
 					return array(
-						'F.Q.D.N.' => $domain,
+						'F.Q.D.N.' => $restricted_domain,
 					);
 				},
-				$restricted
+				$query->records
 			);
 		}
 
