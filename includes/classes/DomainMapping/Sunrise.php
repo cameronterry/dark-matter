@@ -11,8 +11,6 @@
 
 namespace DarkMatter\DomainMapping;
 
-use DarkMatter\DomainMapping\Data;
-use DarkMatter\DomainMapping\Manager;
 use DarkMatter\DomainMapping\Processor\Redirect;
 
 /**
@@ -28,6 +26,11 @@ class Sunrise {
 	 */
 	public function __construct() {
 		$this->init();
+
+		/**
+		 * Ensure the table classes are ready to go before starting.
+		 */
+		\DarkMatter\DomainMapping\Installer::prepare_tables();
 
 		/**
 		 * Find the domain based on the request.
@@ -52,8 +55,9 @@ class Sunrise {
 	 * @return bool|Data\Domain
 	 */
 	private function get_domain() {
-		$fqdn = Helper::instance()->get_request_fqdn();
-		return Manager\Domain::instance()->get( $fqdn );
+		$fqdn  = Helper::instance()->get_request_fqdn();
+		$query = new Data\DomainQuery();
+		return $query->get_by_domain( $fqdn );
 	}
 
 	/**

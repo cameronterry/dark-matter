@@ -40,5 +40,9 @@
                 }
             }
         }
+
+        & .dmp__domain-table-empty {
+            text-align: center;
+        }
     }
 }
