@@ -28,6 +28,11 @@ class Sunrise {
 		$this->init();
 
 		/**
+		 * Ensure the table classes are ready to go before starting.
+		 */
+		\DarkMatter\DomainMapping\Installer::prepare_tables();
+
+		/**
 		 * Find the domain based on the request.
 		 */
 		$domain = $this->get_domain();

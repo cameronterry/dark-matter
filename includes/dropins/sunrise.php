@@ -23,5 +23,4 @@ if ( file_exists( $dirname . 'vendor/autoload.php' ) ) {
 	require_once $dirname . 'vendor/autoload.php';
 }
 
-\DarkMatter\DomainMapping\Installer::prepare_tables();
 new \DarkMatter\DomainMapping\Sunrise();
