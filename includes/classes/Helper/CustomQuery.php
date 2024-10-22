@@ -383,7 +383,7 @@ abstract class CustomQuery {
 			/**
 			 * Filters the query used to retrieve found record count.
 			 *
-			 * @param string             $found_records_query SQL query. Default 'SELECT FOUND_ROWS()'.
+			 * @param string      $found_records_query SQL query. Default 'SELECT FOUND_ROWS()'.
 			 * @param CustomQuery $site_query          The `Custom_Table_Query` instance.
 			 */
 			$found_records_query = apply_filters( "found_{$this->get_hook_name()}_query", 'SELECT FOUND_ROWS()', $this );
