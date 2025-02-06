@@ -345,7 +345,7 @@ class Domains extends \WP_REST_Controller {
 		$query = new Data\DomainQuery(
 			[
 				'active'  => 'any',
-				'site_id' => $site_id,
+				'blog_id' => $site_id,
 			]
 		);
 
@@ -454,7 +454,7 @@ class Domains extends \WP_REST_Controller {
 			$data['type'] = $item->type;
 		}
 
-		if ( in_array( 'site', $fields, true ) ) {
+		if ( in_array( 'site', $fields, true ) && ! empty( $item->blog_id ) ) {
 			$site_data = get_site( $item->blog_id );
 
 			if ( ! empty( $site_data ) ) {
