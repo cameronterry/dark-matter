@@ -56,7 +56,7 @@ class DomainQuery extends CustomTableQuery {
 
 		$query = $this->query(
 			[
-				'domain'     => $blog_id,
+				'blog_id'    => $blog_id,
 				'is_primary' => true,
 				'number'     => 1,
 			]
