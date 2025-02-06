@@ -178,8 +178,8 @@ class Domains extends WP_CLI_Command {
 			}
 
 			$query_args = [
-				'blog_site' => $site_id,
-				'number'    => 500, // Large number.
+				'blog_id' => $site_id,
+				'number'  => 500, // Large number.
 			];
 		}
 
