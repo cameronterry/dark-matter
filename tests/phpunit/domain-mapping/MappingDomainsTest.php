@@ -8,7 +8,8 @@
 /**
  * Class MappingDomainsTest
  */
-class MappingDomainsTest extends \WP_UnitTestCase {
+class MappingDomainsTest extends \WP_UnitTestCase
+{
 	/**
 	 * Attachment ID.
 	 *
@@ -49,7 +50,8 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function setUp() : void {
+	public function setUp(): void
+	{
 		parent::setUp();
 
 		/**
@@ -60,15 +62,15 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		$this->blog_id = $this->factory()->blog->create_object(
 			[
 				'domain' => 'darkmatter.test',
-				'path'   => '/siteone',
+				'path' => '/siteone',
 			]
 		);
 
-		\DarkMatter\DomainMapping\Manager\Domain::instance()->network_media = [
+		$_ENV['DM_NETWORK_MEDIA'] = [
 			$this->media_domain,
 		];
 
-		switch_to_blog( $this->blog_id );
+		switch_to_blog($this->blog_id);
 
 		/**
 		 * Add domains to the new site.
@@ -84,7 +86,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		 *
 		 * @link https://developer.wordpress.org/reference/functions/wp_insert_post/
 		 */
-		$this->post       = $this->factory()->post->create_and_get();
+		$this->post = $this->factory()->post->create_and_get();
 		$this->attachment = $this->factory()->attachment->create_upload_object(
 			DARKMATTER_PHPUNIT_DIR . '/includes/images/wordpress-logo.png',
 			$this->post->ID
@@ -93,7 +95,7 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		/**
 		 * Set the attachment to be the feature image.
 		 */
-		set_post_thumbnail( $this->post, $this->attachment );
+		set_post_thumbnail($this->post, $this->attachment);
 	}
 
 	/**
@@ -101,10 +103,11 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_admin_url() {
+	public function test_admin_url()
+	{
 		$this->assertEquals(
-			get_admin_url( null, '/' ),
-			sprintf( 'https://%1$s/siteone/wp-admin/', WP_TESTS_DOMAIN )
+			get_admin_url(null, '/'),
+			sprintf('https://%1$s/siteone/wp-admin/', WP_TESTS_DOMAIN)
 		);
 	}
 
@@ -113,14 +116,15 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_attachment_src() {
-		$url = wp_get_attachment_image_url( $this->attachment );
+	public function test_attachment_src()
+	{
+		$url = wp_get_attachment_image_url($this->attachment);
 		$pos = stripos(
 			$url,
-			sprintf( 'https://%1$s/', $this->media_domain )
+			sprintf('https://%1$s/', $this->media_domain)
 		);
 
-		$this->assertNotFalse( $pos, '' );
+		$this->assertNotFalse($pos, '');
 	}
 
 	/**
@@ -128,10 +132,11 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_home_url() {
+	public function test_home_url()
+	{
 		$this->assertEquals(
-			get_home_url( null, '/' ),
-			sprintf( 'https://%1$s/', $this->primary_domain )
+			get_home_url(null, '/'),
+			sprintf('https://%1$s/', $this->primary_domain)
 		);
 	}
 
@@ -140,14 +145,15 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_feature_image() {
-		$html = get_the_post_thumbnail( $this->post->ID );
-		$pos  = stripos(
+	public function test_feature_image()
+	{
+		$html = get_the_post_thumbnail($this->post->ID);
+		$pos = stripos(
 			$html,
-			sprintf( 'https://%1$s/', $this->media_domain )
+			sprintf('https://%1$s/', $this->media_domain)
 		);
 
-		$this->assertNotFalse( $pos, '' );
+		$this->assertNotFalse($pos, '');
 	}
 
 	/**
@@ -155,10 +161,11 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_login_url() {
+	public function test_login_url()
+	{
 		$this->assertEquals(
 			wp_login_url(),
-			sprintf( 'https://%1$s/siteone/wp-login.php', WP_TESTS_DOMAIN ),
+			sprintf('https://%1$s/siteone/wp-login.php', WP_TESTS_DOMAIN),
 			'Login URL'
 		);
 	}
@@ -168,7 +175,8 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_logout_url() {
+	public function test_logout_url()
+	{
 		$url = wp_logout_url();
 
 		/**
@@ -176,10 +184,10 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 		 */
 		$pos = stripos(
 			$url,
-			sprintf( 'https://%1$s/siteone/wp-login.php?action=logout', WP_TESTS_DOMAIN )
+			sprintf('https://%1$s/siteone/wp-login.php?action=logout', WP_TESTS_DOMAIN)
 		);
 
-		$this->assertNotFalse( $pos, 'Logout URL.' );
+		$this->assertNotFalse($pos, 'Logout URL.');
 	}
 
 	/**
@@ -187,15 +195,16 @@ class MappingDomainsTest extends \WP_UnitTestCase {
 	 *
 	 * @return void
 	 */
-	public function test_rest_url() {
+	public function test_rest_url()
+	{
 		\DarkMatter\DomainMapping\Processor\Mapping::$is_request_mapped = true;
 
 		$this->assertEquals(
-			/**
-			 * Ensure the REST URL is HTTPS (it gets confused because it checks a number of `$_SERVER` variables).
-			 */
-			set_url_scheme( get_rest_url(), 'https' ),
-			sprintf( 'https://%1$s/wp-json/', $this->primary_domain ),
+		/**
+		 * Ensure the REST URL is HTTPS (it gets confused because it checks a number of `$_SERVER` variables).
+		 */
+			set_url_scheme(get_rest_url(), 'https'),
+			sprintf('https://%1$s/wp-json/', $this->primary_domain),
 			'REST API URL'
 		);
 

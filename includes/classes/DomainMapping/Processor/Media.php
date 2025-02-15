@@ -102,6 +102,49 @@ class Media {
 	}
 
 	/**
+	 * Retrieve the Media Domains, either from a constant or environment variable (both named, `DM_NETWORK_MEDIA`) or
+	 * from the database.
+	 *
+	 * @return Domain[]
+	 */
+	private function get_media_domains() {
+		$domains = [];
+
+		$configured_domains = [];
+		if ( defined( '\DM_NETWORK_MEDIA' ) && is_array( \DM_NETWORK_MEDIA ) ) {
+			$configured_domains = \DM_NETWORK_MEDIA;
+		} elseif ( isset( $_ENV['DM_NETWORK_MEDIA'] ) && is_array( $_ENV['DM_NETWORK_MEDIA'] ) ) {
+			$configured_domains = $_ENV['DM_NETWORK_MEDIA'];
+		}
+
+		if ( ! empty( $configured_domains ) ) {
+			foreach ( $configured_domains as $media_domain ) {
+				$domains[] = new Domain(
+					(object) [
+						'active'     => true,
+						'blog_id'    => get_current_blog_id(),
+						'domain'     => $media_domain,
+						'id'         => -1,
+						'is_https'   => true,
+						'is_primary' => false,
+						'type'       => DM_DOMAIN_TYPE_MEDIA,
+					]
+				);
+			}
+		} else {
+			$query = new DomainQuery(
+				[
+					'type' => DM_DOMAIN_TYPE_MEDIA,
+				]
+			);
+
+			$domains = $query->records;
+		}
+
+		return $domains;
+	}
+
+	/**
 	 * Convert WordPress Core's allowed mime types array, which has keys designed for regex, to straight-forward strings
 	 * for the individual extensions as keys on the array.
 	 *
@@ -351,12 +394,8 @@ class Media {
 		/**
 		 * Ensure we have media domains to use.
 		 */
-		$media_domains = new DomainQuery(
-			[
-				'type' => DM_DOMAIN_TYPE_MEDIA,
-			]
-		);
-		if ( empty( $media_domains->records ) ) {
+		$media_domains = $this->get_media_domains();
+		if ( empty( $media_domains ) ) {
 			$this->sites[ $site_id ] = false;
 			return;
 		}
