@@ -8,6 +8,7 @@
 
 namespace DarkMatter\Helper;
 
+use DarkMatter\Interfaces\CLICommand;
 use DarkMatter\Interfaces\Registerable;
 use HaydenPierce\ClassFinder\ClassFinder;
 
@@ -83,19 +84,29 @@ abstract class Module {
 			/**
 			 * Make sure the class is one that can be worked with.
 			 */
-			if ( ! $reflection->isInstantiable() || ! $reflection->implementsInterface( '\DarkMatter\Interfaces\Registerable' ) ) {
+			if ( ! $reflection->isInstantiable() ) {
 				continue;
 			}
 
-			/**
-			 * Instantiate the class and determine if we can register it.
-			 *
-			 * @var Registerable $class
-			 */
-			$class = new $class();
-			if ( $class->can_register() ) {
-				$this->classes[ $slug ] = $class;
-				$class->register();
+			if ( $reflection->implementsInterface( '\DarkMatter\Interfaces\Registerable' ) ) {
+				/**
+				 * Instantiate the class and determine if we can register it.
+				 *
+				 * @var Registerable $class
+				 */
+				$class = new $class();
+				if ( $class->can_register() ) {
+					$this->classes[ $slug ] = $class;
+					$class->register();
+				}
+			} elseif ( $reflection->isSubclassOf( '\DarkMatter\Interfaces\CLICommand' ) ) {
+				/**
+				 * @var CLICommand $class
+				 */
+				if ( $class::can_register() ) {
+					$this->classes[ $slug ] = $class;
+					$class::register();
+				}
 			}
 		}
 	}
