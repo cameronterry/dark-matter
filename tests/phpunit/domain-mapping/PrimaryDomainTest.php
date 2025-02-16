@@ -67,9 +67,6 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 	public function setUp(): void {
 		parent::setUp();
 
-		$this->darkmatter_domains = \DarkMatter\DomainMapping\Manager\Domain::instance();
-		$this->darkmatter_primary = \DarkMatter\DomainMapping\Manager\Primary::instance();
-
 		switch_to_blog( self::$blog_id );
 	}
 
@@ -84,7 +81,15 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		/**
 		 * Create primary domain.
 		 */
-		$result = $this->darkmatter_domains->add( $domain, true, true );
+		$data = new \DarkMatter\DomainMapping\Data\DomainMapping();
+		$result = $data->add(
+			[
+				'blog_id'    => self::$blog_id,
+				'domain'     => $domain,
+				'is_https'   => true,
+				'is_primary' => true,
+			]
+		);
 		$this->assertNotWPError( $result );
 	}
 
@@ -99,13 +104,23 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		/**
 		 * Create a new domain.
 		 */
-		$result = $this->darkmatter_domains->add( $domain, false, true );
+		$data = new \DarkMatter\DomainMapping\Data\DomainMapping();
+		$result = $data->add(
+			[
+				'active'     => true,
+				'blog_id'    => self::$blog_id,
+				'domain'     => $domain,
+				'is_https'   => true,
+				'is_primary' => true,
+			]
+		);
 		$this->assertNotWPError( $result );
 
 		/**
 		 * Set the domain to primary, ensuring DB is updated.
 		 */
-		$this->darkmatter_primary->set( self::$blog_id, $domain, true );
+		$primary_manager = new \DarkMatter\DomainMapping\Manager\Primary();
+		$primary_manager->set( self::$blog_id, $domain );
 
 		global $wpdb;
 		$data = $wpdb->get_row(
@@ -120,7 +135,9 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		/**
 		 * Ensure the domain get - which is cached - is returning the correct value.
 		 */
-		$result = $this->darkmatter_domains->get( $domain );
+		$query = new \DarkMatter\DomainMapping\Data\DomainQuery();
+
+		$result = $query->get_by_domain( $domain );
 		$this->assertTrue( $result->is_primary, 'Cached update to primary.' );
 	}
 
@@ -135,13 +152,23 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		/**
 		 * Create a new domain.
 		 */
-		$result = $this->darkmatter_domains->add( $domain, true, true );
+		$data = new \DarkMatter\DomainMapping\Data\DomainMapping();
+		$result = $data->add(
+			[
+				'active'     => true,
+				'blog_id'    => self::$blog_id,
+				'domain'     => $domain,
+				'is_https'   => true,
+				'is_primary' => false,
+			]
+		);
 		$this->assertNotWPError( $result );
 
 		/**
 		 * Set the domain to primary, ensuring DB is updated.
 		 */
-		$this->darkmatter_primary->unset( self::$blog_id, $domain, true );
+		$primary_manager = new \DarkMatter\DomainMapping\Manager\Primary();
+		$primary_manager->unset( self::$blog_id, $domain );
 
 		global $wpdb;
 		$data = $wpdb->get_row(
@@ -156,7 +183,9 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		/**
 		 * Ensure the domain get - which is cached - is returning the correct value.
 		 */
-		$result = $this->darkmatter_domains->get( $domain );
+		$query = new \DarkMatter\DomainMapping\Data\DomainQuery();
+
+		$result = $query->get_by_domain( $domain );
 		$this->assertFalse( $result->is_primary, 'Cached update to unset primary.' );
 	}
 
@@ -178,10 +207,20 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 
 		$expected = [];
 
+		$data = new \DarkMatter\DomainMapping\Data\DomainMapping();
+
 		/**
 		 * Create and set primary domains.
 		 */
-		$result = $this->darkmatter_domains->add( $domain1, true, true );
+		$result = $data->add(
+			[
+				'active'     => true,
+				'blog_id'    => self::$blog_id,
+				'domain'     => $domain1,
+				'is_https'   => true,
+				'is_primary' => true,
+			]
+		);
 		$this->assertNotWPError( $result );
 
 		$expected[] = $result;
@@ -191,7 +230,15 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		/**
 		 * Create and set primary domains.
 		 */
-		$result = $this->darkmatter_domains->add( $domain2, true, true );
+		$result = $data->add(
+			[
+				'active'     => true,
+				'blog_id'    => self::$blog_id,
+				'domain'     => $domain2,
+				'is_https'   => true,
+				'is_primary' => true,
+			]
+		);
 		$this->assertNotWPError( $result );
 
 		$expected[] = $result;
@@ -201,7 +248,9 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		 */
 		switch_to_blog( self::$blog_id );
 
-		$primaries = $this->darkmatter_primary->get_all();
+		$primary_manager = new \DarkMatter\DomainMapping\Manager\Primary();
+
+		$primaries = $primary_manager->get_all( 2 );
 		$this->assertEquals( 2, count( $primaries ), 'Two primary domains found.' );
 		$this->assertEqualSets( $expected, $primaries, 'Compare to created with domains.' );
 	}
