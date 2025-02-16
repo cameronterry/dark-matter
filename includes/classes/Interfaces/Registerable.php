@@ -13,6 +13,14 @@ namespace DarkMatter\Interfaces;
  * @since 3.0.0
  */
 interface Registerable {
+
+	/**
+	 * Can the class be registered.
+	 *
+	 * @return bool
+	 */
+	public function can_register();
+
 	/**
 	 * Register method for connecting with actions and filters.
 	 *
