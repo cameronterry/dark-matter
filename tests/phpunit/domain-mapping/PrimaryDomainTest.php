@@ -107,7 +107,6 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		$data = new \DarkMatter\DomainMapping\Data\DomainMapping();
 		$result = $data->add(
 			[
-				'active'     => true,
 				'blog_id'    => self::$blog_id,
 				'domain'     => $domain,
 				'is_https'   => true,
@@ -155,7 +154,6 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		$data = new \DarkMatter\DomainMapping\Data\DomainMapping();
 		$result = $data->add(
 			[
-				'active'     => true,
 				'blog_id'    => self::$blog_id,
 				'domain'     => $domain,
 				'is_https'   => true,
@@ -214,7 +212,6 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		 */
 		$result = $data->add(
 			[
-				'active'     => true,
 				'blog_id'    => self::$blog_id,
 				'domain'     => $domain1,
 				'is_https'   => true,
@@ -232,7 +229,6 @@ class PrimaryDomainTest extends \WP_UnitTestCase {
 		 */
 		$result = $data->add(
 			[
-				'active'     => true,
 				'blog_id'    => self::$blog_id,
 				'domain'     => $domain2,
 				'is_https'   => true,
