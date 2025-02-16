@@ -37,7 +37,7 @@ class Mapping implements Registerable {
 	 * @return bool
 	 */
 	public function can_register() {
-		return ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+		return true;
 	}
 
 	/**

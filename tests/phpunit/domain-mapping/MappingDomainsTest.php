@@ -5,6 +5,8 @@
  * @package DarkMatter
  */
 
+use DarkMatter\DomainMapping\Data\DomainMapping;
+
 /**
  * Class MappingDomainsTest
  */
@@ -75,10 +77,14 @@ class MappingDomainsTest extends \WP_UnitTestCase
 		/**
 		 * Add domains to the new site.
 		 */
-		\DarkMatter\DomainMapping\Manager\Domain::instance()->add(
-			$this->primary_domain,
-			true,
-			true
+		$data = new DomainMapping();
+		$data->add(
+			[
+				'blog_id'    => $this->blog_id,
+				'domain'     => $this->primary_domain,
+				'is_https'   => true,
+				'is_primary' => true,
+			]
 		);
 
 		/**
