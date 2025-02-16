@@ -11,12 +11,20 @@ namespace DarkMatter\Helper;
  * Abstract Class Custom_Table
  */
 abstract class CustomTable {
+
 	/**
 	 * Field definition.
 	 *
 	 * @var array
 	 */
 	protected static $fields = [];
+
+	/**
+	 * Used to store the most recent ID inserted.
+	 *
+	 * @var int
+	 */
+	protected $insert_id = 0;
 
 	/**
 	 * Helper method for adding a record to the Custom Table.
@@ -37,7 +45,10 @@ abstract class CustomTable {
 		global $wpdb;
 
 		wp_cache_set_last_changed( $this->get_tablename() );
-		return $wpdb->insert( $this->get_tablename(), $data );
+		$result = $wpdb->insert( $this->get_tablename(), $data );
+
+		$this->insert_id = $wpdb->insert_id;
+		return $result;
 	}
 
 	/**
