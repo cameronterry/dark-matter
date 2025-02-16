@@ -7,7 +7,6 @@
 
 namespace DarkMatter\DomainMapping\Data;
 
-use DarkMatter\DomainMapping\Installer;
 use DarkMatter\Helper\CustomTableQuery;
 
 /**
@@ -21,7 +20,7 @@ class RestrictedDomainQuery extends CustomTableQuery {
 	 * @param array $query Query arguments.
 	 */
 	public function __construct( $query = [] ) {
-		parent::__construct( $query, Installer::$restricted_domain );
+		parent::__construct( $query, new RestrictedDomain() );
 	}
 
 	/**

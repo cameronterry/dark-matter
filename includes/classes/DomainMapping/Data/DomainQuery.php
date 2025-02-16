@@ -7,7 +7,6 @@
 
 namespace DarkMatter\DomainMapping\Data;
 
-use DarkMatter\DomainMapping\Installer;
 use DarkMatter\Helper\CustomTableQuery;
 
 /**
@@ -20,7 +19,7 @@ class DomainQuery extends CustomTableQuery {
 	 * @param array $query Query arguments.
 	 */
 	public function __construct( $query = [] ) {
-		parent::__construct( $query, Installer::$domain_table );
+		parent::__construct( $query, new DomainMapping() );
 	}
 
 	/**
