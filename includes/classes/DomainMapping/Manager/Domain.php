@@ -26,7 +26,7 @@ class Domain {
 	 *
 	 * @var string
 	 */
-	private $dmtable = '';
+	private $dm_table = '';
 
 	/**
 	 * Hard-coded media domains, most likely through `DM_NETWORK_MEDIA` constant.
