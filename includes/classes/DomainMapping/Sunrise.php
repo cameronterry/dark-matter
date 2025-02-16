@@ -28,23 +28,12 @@ class Sunrise {
 		$this->init();
 
 		/**
-		 * Ensure the table classes are ready to go before starting.
-		 */
-		\DarkMatter\DomainMapping\Installer::prepare_tables();
-
-		/**
 		 * Find the domain based on the request.
 		 */
 		$domain = $this->get_domain();
 		if ( $domain && $domain->active && $this->set_globals( $domain ) && $domain->is_primary ) {
 			$this->update_globals( $domain );
 		}
-
-		/**
-		 * Hook up the redirect logic.
-		 */
-		$redirect = new Redirect();
-		$redirect->register();
 	}
 
 	/**

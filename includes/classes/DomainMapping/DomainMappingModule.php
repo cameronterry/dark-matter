@@ -29,6 +29,9 @@ class DomainMappingModule extends Module {
 	public function __construct() {
 		parent::__construct( 'DomainMapping' );
 
+		define( 'DM_DOMAIN_TYPE_MAIN', 1 );
+		define( 'DM_DOMAIN_TYPE_MEDIA', 2 );
+
 		$this->load();
 		$this->maybe_upgrade();
 	}

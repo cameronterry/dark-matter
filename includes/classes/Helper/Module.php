@@ -36,7 +36,7 @@ abstract class Module {
 	 * @param string $namespace Namespace of the module, excluding the root namespace.
 	 */
 	protected function __construct( $namespace ) {
-		$this->namespace = sprintf( '\DarkMatter\%s', $namespace );
+		$this->namespace = sprintf( 'DarkMatter\%s', $namespace );
 	}
 
 	/**
