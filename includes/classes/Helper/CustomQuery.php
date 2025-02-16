@@ -195,9 +195,9 @@ abstract class CustomQuery {
 			$found_rows = 'SQL_CALC_FOUND_ROWS';
 		}
 
-		$this->sql_clauses['select']  = "SELECT $found_rows $fields";
-		$this->sql_clauses['from']    = "FROM {$this->get_tablename()} $join";
-		$this->sql_clauses['limits']  = $limits;
+		$this->sql_clauses['select'] = "SELECT $found_rows $fields";
+		$this->sql_clauses['from']   = "FROM {$this->get_tablename()} $join";
+		$this->sql_clauses['limits'] = $limits;
 
 		$this->request = "
 			{$this->sql_clauses['select']}
