@@ -58,8 +58,12 @@ class DomainMapping extends CustomTable {
 			/**
 			 * Add the newly inserted ID before producing the return object.
 			 */
-			$data['id'] = $this->insert_id;
-			$domain     = new Domain( (object) $data );
+			$new_record = $this->get_record( $this->insert_id );
+			if ( empty( $new_record ) ) {
+				return false;
+			}
+
+			$domain = new Domain( $new_record );
 
 			if ( ! empty( $current_primary ) ) {
 				$this->update(
