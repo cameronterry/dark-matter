@@ -12,8 +12,8 @@ namespace DarkMatter\DomainMapping\CLI;
 use DarkMatter\DomainMapping\Data\Domain;
 use DarkMatter\DomainMapping\Data\DomainMapping;
 use DarkMatter\DomainMapping\Data\DomainQuery;
+use DarkMatter\Interfaces\CLICommand;
 use WP_CLI;
-use WP_CLI_Command;
 
 /**
  * Class Domains
@@ -22,7 +22,7 @@ use WP_CLI_Command;
  *
  * @since 2.0.0
  */
-class Domains extends WP_CLI_Command {
+class Domains implements CLICommand {
 	/**
 	 * Add a domain to a site on the WordPress Network.
 	 *
@@ -103,12 +103,12 @@ class Domains extends WP_CLI_Command {
 	}
 
 	/**
-	 * Include this CLI amongst the others.
+	 * Can the class be registered.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public static function define() {
-		WP_CLI::add_command( 'darkmatter domain', self::class );
+	public static function can_register() {
+		return ( defined( 'WP_CLI' ) && WP_CLI );
 	}
 
 	/**
@@ -241,6 +241,15 @@ class Domains extends WP_CLI_Command {
 		}
 
 		WP_CLI\Utils\format_items( $opts['format'], $domains, $display );
+	}
+
+	/**
+	 * Register the CLI command.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		WP_CLI::add_command( 'darkmatter domain', self::class );
 	}
 
 	/**

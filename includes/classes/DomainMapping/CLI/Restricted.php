@@ -11,8 +11,8 @@ namespace DarkMatter\DomainMapping\CLI;
 
 use DarkMatter\DomainMapping\Data\RestrictedDomain;
 use DarkMatter\DomainMapping\Data\RestrictedDomainQuery;
+use DarkMatter\Interfaces\CLICommand;
 use WP_CLI;
-use WP_CLI_Command;
 
 /**
  * Class Restricted
@@ -21,7 +21,8 @@ use WP_CLI_Command;
  *
  * @since 2.0.0
  */
-class Restricted extends WP_CLI_Command {
+class Restricted implements CLICommand {
+
 	/**
 	 * Add a domain to the restrict for the WordPress Network.
 	 *
@@ -64,12 +65,12 @@ class Restricted extends WP_CLI_Command {
 	}
 
 	/**
-	 * Include this CLI amongst the others.
+	 * Can the class be registered.
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public static function define() {
-		WP_CLI::add_command( 'darkmatter restrict', self::class );
+	public static function can_register() {
+		return ( defined( 'WP_CLI' ) && WP_CLI );
 	}
 
 	/**
@@ -144,6 +145,15 @@ class Restricted extends WP_CLI_Command {
 				'F.Q.D.N.',
 			]
 		);
+	}
+
+	/**
+	 * Register the CLI command.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		WP_CLI::add_command( 'darkmatter restrict', self::class );
 	}
 
 	/**

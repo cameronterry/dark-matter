@@ -10,8 +10,8 @@
 namespace DarkMatter\DomainMapping\CLI;
 
 use DarkMatter\DomainMapping\Admin\HealthChecks;
+use DarkMatter\Interfaces\CLICommand;
 use WP_CLI;
-use WP_CLI_Command;
 
 /**
  * Class Dropin
@@ -20,7 +20,17 @@ use WP_CLI_Command;
  *
  * @since 2.0.0
  */
-class Dropin extends WP_CLI_Command {
+class Dropin implements CLICommand {
+
+	/**
+	 * Can the class be registered.
+	 *
+	 * @return bool
+	 */
+	public static function can_register() {
+		return ( defined( 'WP_CLI' ) && WP_CLI );
+	}
+
 	/**
 	 * Helper command to see if the Sunrise dropin plugin within Dark Matter is
 	 * the same version as in use on the current WordPress installation.
@@ -43,11 +53,11 @@ class Dropin extends WP_CLI_Command {
 	}
 
 	/**
-	 * Include this CLI amongst the others.
+	 * Register the CLI command.
 	 *
 	 * @return void
 	 */
-	public static function define() {
+	public static function register() {
 		WP_CLI::add_command( 'darkmatter dropin', self::class );
 	}
 
