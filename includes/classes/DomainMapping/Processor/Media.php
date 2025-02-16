@@ -11,6 +11,7 @@ namespace DarkMatter\DomainMapping\Processor;
 
 use DarkMatter\DomainMapping\Data\Domain;
 use DarkMatter\DomainMapping\Data\DomainQuery;
+use DarkMatter\Interfaces\Registerable;
 
 /**
  * Class Media
@@ -19,7 +20,7 @@ use DarkMatter\DomainMapping\Data\DomainQuery;
  *
  * @since 2.2.0
  */
-class Media {
+class Media implements Registerable {
 	/**
 	 * The ID of the current site.
 	 *
@@ -42,11 +43,20 @@ class Media {
 	private $sites = [];
 
 	/**
-	 * Constructor.
+	 * Can this class functionality be registered.
 	 *
-	 * @since 2.2.0
+	 * @return true
 	 */
-	public function __construct() {
+	public function can_register() {
+		return true;
+	}
+
+	/**
+	 * Handle actions and filters for the Media domain(s) mapping.
+	 *
+	 * @return void
+	 */
+	public function register() {
 		add_action( 'init', [ $this, 'init' ], 10 );
 		add_action( 'rest_api_init', [ $this, 'prepare_rest' ] );
 		add_action( 'switch_blog', [ $this, 'switch_blog' ], 10, 1 );
@@ -127,14 +137,14 @@ class Media {
 						'id'         => -1,
 						'is_https'   => true,
 						'is_primary' => false,
-						'type'       => DM_DOMAIN_TYPE_MEDIA,
+						'type'       => \DM_DOMAIN_TYPE_MEDIA,
 					]
 				);
 			}
 		} else {
 			$query = new DomainQuery(
 				[
-					'type' => DM_DOMAIN_TYPE_MEDIA,
+					'type' => \DM_DOMAIN_TYPE_MEDIA,
 				]
 			);
 

@@ -62,6 +62,15 @@ abstract class AbstractAdminPage implements Registerable {
 	protected $slug = '';
 
 	/**
+	 * Can this class functionality be registered.
+	 *
+	 * @return bool
+	 */
+	public function can_register() {
+		return is_admin();
+	}
+
+	/**
 	 * Add the menu item to the page.
 	 *
 	 * @since 3.0.0

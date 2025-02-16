@@ -20,6 +20,16 @@ use DarkMatter\Interfaces\Registerable;
  * @since 2.1.3
  */
 class Yoast implements Registerable {
+
+	/**
+	 * Can this class functionality be registered.
+	 *
+	 * @return true
+	 */
+	public function can_register() {
+		return true;
+	}
+
 	/**
 	 * Correct indexables permalinks to be unmapped prior to save to the database. This works with versions 15.1+ of
 	 * Yoast SEO. Version 15.1 - which contains the `wpseo_should_save_indexable` was released on 14th October 2020.

@@ -32,6 +32,15 @@ class Mapping implements Registerable {
 	public static $is_request_mapped = false;
 
 	/**
+	 * Can this class functionality be registered.
+	 *
+	 * @return bool
+	 */
+	public function can_register() {
+		return ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+	}
+
+	/**
 	 * Register the hooks and actions.
 	 *
 	 * @since 3.0.0

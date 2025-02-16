@@ -20,6 +20,16 @@ use DarkMatter\Interfaces\Registerable;
  * @since 3.0.0
  */
 class Redirect implements Registerable {
+
+	/**
+	 * Can this class functionality be registered.
+	 *
+	 * @return true
+	 */
+	public function can_register() {
+		return true;
+	}
+
 	/**
 	 * Determine if the current request is something we consider for redirecting.
 	 *
