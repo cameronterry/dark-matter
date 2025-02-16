@@ -5,7 +5,6 @@
  * @package DarkMatterPlugin
  */
 
-
 namespace DarkMatter\Interfaces;
 
 /**
