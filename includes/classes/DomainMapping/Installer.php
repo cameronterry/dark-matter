@@ -54,7 +54,7 @@ class Installer {
 	 * @return void
 	 */
 	public function maybe_upgrade() {
-		if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
+		if ( update_network_option( 0, 'dark_matter_db_version', DM_DB_VERSION ) ) {
 			/**
 			 * As dbDelta function is called, ensure that this part of the
 			 * WordPress API is included.
