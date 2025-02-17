@@ -23,6 +23,7 @@ use WP_CLI;
  * @since 2.0.0
  */
 class Domains implements CLICommand {
+
 	/**
 	 * Add a domain to a site on the WordPress Network.
 	 *
@@ -83,12 +84,18 @@ class Domains implements CLICommand {
 			]
 		);
 
-		$assoc_args['blog_id'] = get_current_blog_id();
-		$assoc_args['domain']  = $fqdn;
+		$data_args = [
+			'active'     => ! $assoc_args['disable'],
+			'blog_id'    => get_current_blog_id(),
+			'domain'     => $fqdn,
+			'is_https'   => $assoc_args['https'],
+			'is_primary' => $assoc_args['primary'],
+			'type'       => $assoc_args['type'],
+		];
 
 		$data = new DomainMapping();
 
-		$result = $data->add( $assoc_args, $assoc_args['force'] );
+		$result = $data->add( $data_args, $assoc_args['force'] );
 		if ( is_wp_error( $result ) ) {
 			$error_msg = $result->get_error_message();
 
