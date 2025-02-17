@@ -44,11 +44,22 @@ abstract class CustomTable {
 
 		global $wpdb;
 
-		wp_cache_set_last_changed( $this->get_tablename() );
 		$result = $wpdb->insert( $this->get_tablename(), $data );
+		wp_cache_set_last_changed( $this->get_tablename() );
 
 		$this->insert_id = $wpdb->insert_id;
 		return $result;
+	}
+
+	/**
+	 * Cleans the cache for the record, equivalent to `clean_post_cache()`.
+	 *
+	 * @param int|string $id Record ID.
+	 * @return void
+	 */
+	protected function clean_record_cache( $id ) {
+		wp_cache_delete( $id, $this->get_tablename() );
+		wp_cache_set_last_changed( $this->get_tablename() );
 	}
 
 	/**
@@ -350,7 +361,7 @@ abstract class CustomTable {
 			],
 		);
 		if ( $result ) {
-			wp_cache_set_last_changed( $this->get_tablename() );
+			$this->clean_record_cache( $id );
 		}
 
 		return $result;
@@ -436,11 +447,11 @@ abstract class CustomTable {
 			$this->get_tablename(),
 			$data,
 			[
-				$this->get_primary_key() => $data[ $this->get_primary_key() ]
+				$this->get_primary_key() => $data[ $this->get_primary_key() ],
 			]
 		);
 		if ( $result ) {
-			wp_cache_set_last_changed( $this->get_tablename() );
+			$this->clean_record_cache( $data[ $this->get_primary_key() ] );
 		}
 
 		return $result;
