@@ -11,14 +11,13 @@
 
 namespace DarkMatter\DomainMapping;
 
-use DarkMatter\DomainMapping\Processor\Redirect;
-
 /**
  * Class Sunrise
  *
  * @since 3.0.0
  */
 class Sunrise {
+
 	/**
 	 * Constructor.
 	 *
@@ -129,7 +128,13 @@ class Sunrise {
 		}
 
 		/**
-		 * Set the constant to state the current request has been mapped.
+		 * Set the domain mapping for the plugin.
+		 */
+		add_filter( 'darkmatterplugin_domain_mapping', '__return_true' );
+
+		/**
+		 * Set the constant to say the request is using domain mapping. This is for compatibility with other plugins
+		 * such as Jetpack/VaultPress or W3 Total Cache, and is no longer used by Dark Matter Plugin as of v3.0.0.
 		 */
 		define( 'DOMAIN_MAPPING', true );
 	}

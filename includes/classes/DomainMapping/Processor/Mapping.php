@@ -29,7 +29,7 @@ class Mapping implements Registerable {
 	 *
 	 * @var bool
 	 */
-	public static $is_request_mapped = false;
+	private $is_request_mapped = false;
 
 	/**
 	 * Can this class functionality be registered.
@@ -46,7 +46,7 @@ class Mapping implements Registerable {
 	 * @since 3.0.0
 	 */
 	public function register() {
-		self::$is_request_mapped = ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+		$this->is_request_mapped = apply_filters( 'darkmatterplugin_domain_mapping', false );
 
 		/**
 		 * In some circumstances, we always want to process the logic regardless of request type, circumstances,
@@ -226,7 +226,7 @@ class Mapping implements Registerable {
 		 * the context can be mapped (i.e. it has an active primary domain) and if so, we say the request is mapped.
 		 */
 		global $switched;
-		if ( $switched && self::$is_request_mapped ) {
+		if ( $switched && $this->is_request_mapped ) {
 			$query = new DomainQuery();
 			$primary = $query->get_primary_domain();
 
@@ -240,7 +240,7 @@ class Mapping implements Registerable {
 			return true;
 		}
 
-		return self::$is_request_mapped;
+		return $this->is_request_mapped;
 	}
 
 	/**

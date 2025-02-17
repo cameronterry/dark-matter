@@ -203,17 +203,17 @@ class MappingDomainsTest extends \WP_UnitTestCase
 	 */
 	public function test_rest_url()
 	{
-		\DarkMatter\DomainMapping\Processor\Mapping::$is_request_mapped = true;
+		add_filter( 'darkmatterplugin_domain_mapping', '__return_true' );
 
 		$this->assertEquals(
-		/**
-		 * Ensure the REST URL is HTTPS (it gets confused because it checks a number of `$_SERVER` variables).
-		 */
+			/**
+			 * Ensure the REST URL is HTTPS (it gets confused because it checks a number of `$_SERVER` variables).
+			 */
 			set_url_scheme(get_rest_url(), 'https'),
 			sprintf('https://%1$s/wp-json/', $this->primary_domain),
 			'REST API URL'
 		);
 
-		\DarkMatter\DomainMapping\Processor\Mapping::$is_request_mapped = false;
+		add_filter( 'darkmatterplugin_domain_mapping', '__return_false' );
 	}
 }
