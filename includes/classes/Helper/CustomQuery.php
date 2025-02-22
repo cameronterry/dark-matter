@@ -8,7 +8,7 @@
 namespace DarkMatter\Helper;
 
 /**
- * Abstract class Custom_Table_Query
+ * Abstract class Custom_Table
  */
 abstract class CustomQuery {
 	/**
@@ -86,7 +86,7 @@ abstract class CustomQuery {
 				'no_found_rows'       => false,
 				'number'              => 10,
 				'offset'              => '',
-				'orderby'             => 'id',
+				'orderby'             => $this->get_id_column(),
 				'order'               => 'ASC',
 				'page'                => 1,
 				'search'              => '',
