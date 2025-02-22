@@ -328,11 +328,12 @@ class DomainMapping extends CustomTable {
 	/**
 	 * Update a domain record.
 	 *
-	 * @param array $data  Data record to be updated. Is merged with the pre-existing record, only new values need to be included.
-	 * @param bool  $force Force update. Set to true when changing a primary domain.
+	 * @param array $data             Data record to be updated. Is merged with the pre-existing record, only new values need to be included.
+	 * @param bool  $force            Force update. Set to true when changing a primary domain.
+	 * @param bool  $fire_after_hooks Whether to fire the hooks after update.
 	 * @return bool|Domain|\WP_Error|null
 	 */
-	public function update( $data = [], $force = false ) {
+	public function update( $data = [], $force = false, $fire_after_hooks = true ) {
 		/**
 		 * Bare minimum needed to update a record.
 		 */
@@ -385,20 +386,29 @@ class DomainMapping extends CustomTable {
 
 		$result = parent::update( $data );
 		if ( $result ) {
+			$after = new Domain( (object) $data );
+
+			if ( ! $fire_after_hooks ) {
+				return $after;
+			}
+
 			/**
 			 * If there was an old primary, then we need to unset it.
 			 */
 			if ( ! empty( $current_primary ) ) {
+				/**
+				 * Note: the after hooks will stop a scenario where a Primary Domain is set, the previous domain is
+				 * unset, and then that in turn unsets the newly set primary domain.
+				 */
 				$this->update(
 					[
 						'id'         => $current_primary,
 						'is_primary' => false,
 					],
-					$force
+					$force,
+					false
 				);
 			}
-
-			$after = new Domain( (object) $data );
 
 			if ( $before->is_primary && ! $after->is_primary ) {
 				/**
