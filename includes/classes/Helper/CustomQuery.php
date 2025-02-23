@@ -115,6 +115,22 @@ abstract class CustomQuery {
 	abstract protected function get_hook_name();
 
 	/**
+	 * Retrieve the ID column for the custom table.
+	 *
+	 * @return string
+	 */
+	abstract protected function get_id_column();
+
+	/**
+	 * Retrieve the allowed columns for the OrderBy clause. Defaults to the query variables used in the WHERE clause.
+	 *
+	 * @return string[]
+	 */
+	protected function get_orderby_allowed() {
+		return array_keys( $this->query_vars_where );
+	}
+
+	/**
 	 * Get the default values for the query.
 	 *
 	 * @param array $general_defaults General defaults, including the cache variables and pagination.
@@ -124,8 +140,6 @@ abstract class CustomQuery {
 		$this->query_vars_where = $this->get_fields();
 		return array_merge( $this->query_vars_where, $general_defaults );
 	}
-
-	abstract protected function get_id_column();
 
 	/**
 	 * Retrieve the name of the custom table.
@@ -141,6 +155,57 @@ abstract class CustomQuery {
 	 */
 	public function get_record_ids() {
 		$order = $this->parse_order( $this->query_vars['order'] );
+
+		if ( empty( $this->query_vars['orderby'] ) ) {
+			$orderby = "{$this->get_tablename()}.{$this->get_id_column()} $order";
+		} else {
+			$ordersby_query = is_array( $this->query_vars['orderby'] )
+				? $this->query_vars['orderby']
+				: preg_split( '/[,\s]/', $this->query_vars['orderby'] );
+
+			$ordersby = [];
+			foreach ( $ordersby_query as $key => $value ) {
+				if ( empty( $value ) ) {
+					continue;
+				}
+
+				if ( is_int( $key ) ) {
+					/**
+					 * This is for `'orderby' => [ 'column', 'column' ]`.
+					 */
+					$column_orderby = $value;
+					$column_order   = $order;
+				} else {
+					/**
+					 * This is for `'orderby' => [ 'column' => 'DESC', 'column' => 'ASC' ]`.
+					 */
+					$column_orderby = $key;
+					$column_order   = $value;
+				}
+
+				$parsed_orderby = $this->parse_orderby( $column_orderby );
+				if ( ! $parsed_orderby ) {
+					continue;
+				}
+
+				if ( 0 === stripos( $parsed_orderby, 'FIELD' ) ) {
+					$ordersby[] = $parsed_orderby;
+					continue;
+				}
+
+				$ordersby[] = sprintf(
+					'%s %s',
+					$column_orderby,
+					$this->parse_order( $column_order )
+				);
+			}
+
+			$orderby = implode( ', ', $ordersby );
+		}
+
+		if ( ! empty( $orderby ) ) {
+			$this->sql_clauses['orderby'] = "ORDER BY $orderby";
+		}
 
 		/**
 		 * Handle pagination.
@@ -331,6 +396,26 @@ abstract class CustomQuery {
 		} else {
 			return 'DESC';
 		}
+	}
+
+	/**
+	 * Parse the Order By query var.
+	 *
+	 * @param string $orderby Field for the table to be ordered by.
+	 * @return false|string
+	 */
+	protected function parse_orderby( $orderby ) {
+		global $wpdb;
+
+		$parsed = false;
+		if ( false !== stripos( $orderby, '__in' ) && isset( $this->query_vars_where[ $orderby ] ) ) {
+			$field_in = implode( "', '", $wpdb->_escape( $this->query_vars[ $orderby ] ) );
+			$parsed   = "FIELD( {$this->get_tablename()}, {$field_in} )";
+		} elseif ( in_array( $orderby, $this->get_orderby_allowed(), true ) ) {
+			$parsed = "{$this->get_tablename()}.$orderby";
+		}
+
+		return $parsed;
 	}
 
 	/**
