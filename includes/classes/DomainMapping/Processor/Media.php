@@ -9,8 +9,9 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
-use DarkMatter\DomainMapping\Manager\Domain;
-use DarkMatter\DomainMapping\Manager\Primary;
+use DarkMatter\DomainMapping\Data\Domain;
+use DarkMatter\DomainMapping\Data\DomainQuery;
+use DarkMatter\Interfaces\Registerable;
 
 /**
  * Class Media
@@ -19,7 +20,7 @@ use DarkMatter\DomainMapping\Manager\Primary;
  *
  * @since 2.2.0
  */
-class Media {
+class Media implements Registerable {
 	/**
 	 * The ID of the current site.
 	 *
@@ -42,11 +43,20 @@ class Media {
 	private $sites = [];
 
 	/**
-	 * Constructor.
+	 * Can this class functionality be registered.
 	 *
-	 * @since 2.2.0
+	 * @return true
 	 */
-	public function __construct() {
+	public function can_register() {
+		return true;
+	}
+
+	/**
+	 * Handle actions and filters for the Media domain(s) mapping.
+	 *
+	 * @return void
+	 */
+	public function register() {
 		add_action( 'init', [ $this, 'init' ], 10 );
 		add_action( 'rest_api_init', [ $this, 'prepare_rest' ] );
 		add_action( 'switch_blog', [ $this, 'switch_blog' ], 10, 1 );
@@ -78,7 +88,7 @@ class Media {
 		 * Ensure the site is actually a site.
 		 */
 		$blog = get_site( $site_id );
-		if ( ! is_a( $blog, 'WP_Site' ) ) {
+		if ( ! $blog instanceof \WP_Site ) {
 			return [];
 		}
 
@@ -91,12 +101,57 @@ class Media {
 			$unmapped,
 		];
 
-		$primary = Primary::instance()->get( $site_id );
-		if ( ! empty( $primary ) ) {
+		$query = new DomainQuery();
+		$primary = $query->get_primary_domain( $site_id );
+
+		if ( $primary instanceof Domain ) {
 			$main_domains[] = $primary->domain;
 		}
 
 		return $main_domains;
+	}
+
+	/**
+	 * Retrieve the Media Domains, either from a constant or environment variable (both named, `DM_NETWORK_MEDIA`) or
+	 * from the database.
+	 *
+	 * @return Domain[]
+	 */
+	private function get_media_domains() {
+		$domains = [];
+
+		$configured_domains = [];
+		if ( defined( '\DM_NETWORK_MEDIA' ) && is_array( \DM_NETWORK_MEDIA ) ) {
+			$configured_domains = \DM_NETWORK_MEDIA;
+		} elseif ( isset( $_ENV['DM_NETWORK_MEDIA'] ) && is_array( $_ENV['DM_NETWORK_MEDIA'] ) ) {
+			$configured_domains = $_ENV['DM_NETWORK_MEDIA'];
+		}
+
+		if ( ! empty( $configured_domains ) ) {
+			foreach ( $configured_domains as $media_domain ) {
+				$domains[] = new Domain(
+					(object) [
+						'active'     => true,
+						'blog_id'    => get_current_blog_id(),
+						'domain'     => $media_domain,
+						'id'         => -1,
+						'is_https'   => true,
+						'is_primary' => false,
+						'type'       => \DM_DOMAIN_TYPE_MEDIA,
+					]
+				);
+			}
+		} else {
+			$query = new DomainQuery(
+				[
+					'type' => \DM_DOMAIN_TYPE_MEDIA,
+				]
+			);
+
+			$domains = $query->records;
+		}
+
+		return $domains;
 	}
 
 	/**
@@ -349,7 +404,7 @@ class Media {
 		/**
 		 * Ensure we have media domains to use.
 		 */
-		$media_domains = Domain::instance()->get_domains_by_type( DM_DOMAIN_TYPE_MEDIA, $site_id );
+		$media_domains = $this->get_media_domains();
 		if ( empty( $media_domains ) ) {
 			$this->sites[ $site_id ] = false;
 			return;
@@ -357,7 +412,7 @@ class Media {
 
 		/**
 		 * Seemingly WordPress' `wp_get_attachment_url()` doesn't seem to fully work as intended for `switch_to_blog()`.
-		 * Therefore we must add the requesters' main domains in order for the map / unmap to work, as the media assets
+		 * Therefore, we must add the requesters' main domains in order for the map / unmap to work, as the media assets
 		 * will be served on the requesters' domains rather than the domain of the site it belongs to.
 		 */
 		$main_domains = array_filter(

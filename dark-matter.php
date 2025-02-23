@@ -62,4 +62,4 @@ require_once DM_PATH . '/includes/utility/functions.php';
 /**
  * Let the magic - and bugs ... probably bugs! - begin.
  */
-\DarkMatter\DarkMatter::instance();
+\DarkMatter\DomainMapping\DomainMappingModule::instance();

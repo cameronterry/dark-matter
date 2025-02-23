@@ -17,6 +17,46 @@ use DarkMatter\DomainMapping\Manager\Primary;
  * @since 3.0.0
  */
 class Helper {
+
+	/**
+	 * Check the supplied domain to ensure it is correct.
+	 *
+	 * @param string $domain Domain to check.
+	 * @return string|\WP_Error
+	 */
+	public function check_domain( $domain ) {
+		if ( empty( $domain ) ) {
+			return new \WP_Error( 'empty', __( 'Please include a fully qualified domain name to be added.', 'dark-matter' ) );
+		}
+
+		/**
+		 * Ensure that the URL is purely a domain. In order for the parse_url() to work, the domain must be prefixed
+		 * with a double forward slash.
+		 */
+		if ( false === stripos( $domain, '//' ) ) {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+			$domain_parts = parse_url( '//' . ltrim( $domain, '/' ) );
+		} else {
+			// phpcs:ignore WordPress.WP.AlternativeFunctions.parse_url_parse_url
+			$domain_parts = parse_url( $domain );
+		}
+
+		if ( ! empty( $domain_parts['path'] ) || ! empty( $domain_parts['port'] ) || ! empty( $domain_parts['query'] ) ) {
+			return new \WP_Error( 'unsure', __( 'The domain provided contains path, port, or query string information. Please removed this before continuing.', 'dark-matter' ) );
+		}
+
+		$domain = $domain_parts['host'];
+
+		/**
+		 * Check to ensure we have a valid domain to work with.
+		 */
+		if ( ! filter_var( $domain, FILTER_VALIDATE_DOMAIN, FILTER_FLAG_HOSTNAME ) ) {
+			return new \WP_Error( 'domain', __( 'The domain is not valid.', 'dark-matter' ) );
+		}
+
+		return $domain;
+	}
+
 	/**
 	 * Retrieves the FQDN as request from the URL.
 	 *

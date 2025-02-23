@@ -9,11 +9,11 @@
 
 namespace DarkMatter\DomainMapping\CLI;
 
-use DarkMatter\DomainMapping\Manager;
+use DarkMatter\DomainMapping\Data\Domain;
+use DarkMatter\DomainMapping\Data\DomainMapping;
+use DarkMatter\DomainMapping\Data\DomainQuery;
+use DarkMatter\Interfaces\CLICommand;
 use WP_CLI;
-use WP_CLI_Command;
-
-// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduce backward compatibility (2.x.x) problems for pre-existing users.
 
 /**
  * Class Domains
@@ -22,7 +22,8 @@ use WP_CLI_Command;
  *
  * @since 2.0.0
  */
-class Domains extends WP_CLI_Command {
+class Domains implements CLICommand {
+
 	/**
 	 * Add a domain to a site on the WordPress Network.
 	 *
@@ -72,7 +73,7 @@ class Domains extends WP_CLI_Command {
 
 		$fqdn = $args[0];
 
-		$opts = wp_parse_args(
+		$assoc_args = wp_parse_args(
 			$assoc_args,
 			[
 				'disable' => false,
@@ -83,14 +84,18 @@ class Domains extends WP_CLI_Command {
 			]
 		);
 
-		$type = $this->check_type_opt( $opts['type'] );
+		$data_args = [
+			'active'     => ! $assoc_args['disable'],
+			'blog_id'    => get_current_blog_id(),
+			'domain'     => $fqdn,
+			'is_https'   => $assoc_args['https'],
+			'is_primary' => $assoc_args['primary'],
+			'type'       => $assoc_args['type'],
+		];
 
-		/**
-		 * Add the domain.
-		 */
-		$db     = Manager\Domain::instance();
-		$result = $db->add( $fqdn, $opts['primary'], $opts['https'], $opts['force'], ! $opts['disable'], $type );
+		$data = new DomainMapping();
 
+		$result = $data->add( $data_args, $assoc_args['force'] );
 		if ( is_wp_error( $result ) ) {
 			$error_msg = $result->get_error_message();
 
@@ -105,36 +110,12 @@ class Domains extends WP_CLI_Command {
 	}
 
 	/**
-	 * Checks to ensure the value of type is valid and useable.
+	 * Can the class be registered.
 	 *
-	 * @param string $type Type value to be checked.
-	 * @return integer Domain type.
-	 *
-	 * @since 2.2.0
+	 * @return bool
 	 */
-	private function check_type_opt( $type = '' ) {
-		/**
-		 * Handle the Media flag.
-		 */
-		$domain_types = [
-			'main'  => DM_DOMAIN_TYPE_MAIN,
-			'media' => DM_DOMAIN_TYPE_MEDIA,
-		];
-
-		if ( array_key_exists( strtolower( $type ), $domain_types ) ) {
-			return $domain_types[ $type ];
-		}
-
-		return DM_DOMAIN_TYPE_MAIN;
-	}
-
-	/**
-	 * Include this CLI amongst the others.
-	 *
-	 * @return void
-	 */
-	public static function define() {
-		WP_CLI::add_command( 'darkmatter domain', self::class );
+	public static function can_register() {
+		return ( defined( 'WP_CLI' ) && WP_CLI );
 	}
 
 	/**
@@ -165,12 +146,14 @@ class Domains extends WP_CLI_Command {
 	 *
 	 *      wp darkmatter domain list
 	 *
+	 * @subcommand list
+	 *
 	 * @since 2.0.0
 	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
 	 */
-	public function list( $args, $assoc_args ) {
+	public function _list( $args, $assoc_args ) {
 		/**
 		 * Handle and validate the format flag if provided.
 		 */
@@ -187,8 +170,9 @@ class Domains extends WP_CLI_Command {
 		}
 
 		if ( $opts['primary'] ) {
-			$db      = Manager\Primary::instance();
-			$domains = $db->get_all();
+			$query_args = [
+				'is_primary' => true,
+			];
 		} else {
 			/**
 			 * Retrieve the current Blog ID. However this will be set to null if
@@ -200,9 +184,13 @@ class Domains extends WP_CLI_Command {
 				$site_id = null;
 			}
 
-			$db      = Manager\Domain::instance();
-			$domains = $db->get_domains( $site_id );
+			$query_args = [
+				'blog_id' => $site_id,
+				'number'  => 500, // Large number.
+			];
 		}
+
+		$query = new DomainQuery( $query_args );
 
 		/**
 		 * Filter out and format the columns and values appropriately.
@@ -234,7 +222,7 @@ class Domains extends WP_CLI_Command {
 
 				return $columns;
 			},
-			$domains
+			$query->records
 		);
 
 		/**
@@ -260,6 +248,15 @@ class Domains extends WP_CLI_Command {
 		}
 
 		WP_CLI\Utils\format_items( $opts['format'], $domains, $display );
+	}
+
+	/**
+	 * Register the CLI command.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		WP_CLI::add_command( 'darkmatter domain', self::class );
 	}
 
 	/**
@@ -304,13 +301,15 @@ class Domains extends WP_CLI_Command {
 			]
 		);
 
-		$db = Manager\Domain::instance();
+		$query = new DomainQuery();
+		$domain = $query->get_by_domain( $fqdn );
+		if ( ! $domain instanceof Domain ) {
+			WP_CLI::error( __( 'Domain cannot be found.', 'dark-matter' ) );
+		}
 
-		/**
-		 * Remove the domain.
-		 */
-		$result = $db->delete( $fqdn, $opts['force'] );
+		$data = new DomainMapping();
 
+		$result = $data->delete( $domain->id, $opts['force'] );
 		if ( is_wp_error( $result ) ) {
 			$error_msg = $result->get_error_message();
 
@@ -387,8 +386,12 @@ class Domains extends WP_CLI_Command {
 
 		$fqdn = $args[0];
 
-		$db            = Manager\Domain::instance();
-		$domain_before = $db->get( $fqdn );
+		$query = new DomainQuery();
+
+		$domain_before = $query->get_by_domain( $fqdn );
+		if ( ! $domain_before instanceof Domain ) {
+			WP_CLI::error( __( 'Domain cannot be found.', 'dark-matter' ) );
+		}
 
 		$opts = wp_parse_args(
 			$assoc_args,
@@ -400,6 +403,7 @@ class Domains extends WP_CLI_Command {
 				'use-https' => true,
 				'primary'   => null,
 				'secondary' => null,
+				'type'      => null,
 			]
 		);
 
@@ -449,22 +453,21 @@ class Domains extends WP_CLI_Command {
 			$active = false;
 		}
 
-		/**
-		 * If the type is specified, then validate it to ensure it is correct.
-		 */
-		$type = null;
-		if ( ! empty( $opts['type'] ) ) {
-			$type = $this->check_type_opt( $opts['type'] );
-		}
+		$type = $opts['type'];
 
-		/**
-		 * Update the records.
-		 */
-		$result = $db->update( $fqdn, $is_primary, $is_https, $opts['force'], $active, $type );
+		$data = new DomainMapping();
 
-		/**
-		 * Handle the output for errors and success.
-		 */
+		$result = $data->update(
+			[
+				'id'         => $domain_before->id,
+				'active'     => $active,
+				'domain'     => $fqdn,
+				'is_primary' => $is_primary,
+				'is_https'   => $is_https,
+				'type'       => $type,
+			],
+			$opts['force']
+		);
 		if ( is_wp_error( $result ) ) {
 			$error_msg = $result->get_error_message();
 

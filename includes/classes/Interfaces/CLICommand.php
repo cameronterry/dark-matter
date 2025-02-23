@@ -1,30 +1,30 @@
 <?php
 /**
- * Useful interface for making registerable classes consistent.
+ * Helper for creating CLI commands.
  *
- * @package DarkMatter
+ * @package DarkMatterPlugin
  */
 
 namespace DarkMatter\Interfaces;
 
 /**
- * Interface Registerable
+ * Class CLICommand
  *
  * @since 3.0.0
  */
-interface Registerable {
+interface CLICommand {
 
 	/**
 	 * Can the class be registered.
 	 *
 	 * @return bool
 	 */
-	public function can_register();
+	public static function can_register();
 
 	/**
 	 * Register method for connecting with actions and filters.
 	 *
 	 * @return void
 	 */
-	public function register();
+	public static function register();
 }

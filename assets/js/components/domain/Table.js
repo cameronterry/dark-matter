@@ -148,6 +148,13 @@ class Table extends Component {
 						</tr>
 					);
 				} ) }
+				{ 0 === domains.length && (
+					<tr>
+						<td colSpan={ displayFields.length }>
+							<p className="dmp__domain-table-empty">{ __( 'No domains have been added for this site.', 'darkmatterplugin' ) }</p>
+						</td>
+					</tr>
+				) }
 			</tbody>
 		);
 	}

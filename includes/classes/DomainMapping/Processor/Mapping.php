@@ -9,9 +9,9 @@
 
 namespace DarkMatter\DomainMapping\Processor;
 
+use DarkMatter\DomainMapping\Data\Domain;
+use DarkMatter\DomainMapping\Data\DomainQuery;
 use DarkMatter\DomainMapping\Helper;
-use DarkMatter\DomainMapping\Manager\Domain;
-use DarkMatter\DomainMapping\Manager\Primary;
 use DarkMatter\Interfaces\Registerable;
 
 /**
@@ -29,7 +29,16 @@ class Mapping implements Registerable {
 	 *
 	 * @var bool
 	 */
-	public static $is_request_mapped = false;
+	private $is_request_mapped = false;
+
+	/**
+	 * Can this class functionality be registered.
+	 *
+	 * @return bool
+	 */
+	public function can_register() {
+		return true;
+	}
 
 	/**
 	 * Register the hooks and actions.
@@ -37,7 +46,7 @@ class Mapping implements Registerable {
 	 * @since 3.0.0
 	 */
 	public function register() {
-		self::$is_request_mapped = ( defined( 'DOMAIN_MAPPING' ) && DOMAIN_MAPPING );
+		$this->is_request_mapped = apply_filters( 'darkmatterplugin_domain_mapping', false );
 
 		/**
 		 * In some circumstances, we always want to process the logic regardless of request type, circumstances,
@@ -172,10 +181,10 @@ class Mapping implements Registerable {
 		 * Attempt to find the domain in Dark Matter. If the domain is found, then tell WordPress it is an internal
 		 * domain.
 		 */
-		$db     = Domain::instance();
-		$domain = $db->find( $host );
+		$query  = new DomainQuery();
+		$domain = $query->get_by_domain( $host );
 
-		if ( is_a( $domain, 'DM_Domain' ) ) {
+		if ( $domain instanceof Domain ) {
 			return true;
 		}
 
@@ -217,8 +226,9 @@ class Mapping implements Registerable {
 		 * the context can be mapped (i.e. it has an active primary domain) and if so, we say the request is mapped.
 		 */
 		global $switched;
-		if ( $switched && self::$is_request_mapped ) {
-			$primary = Primary::instance()->get();
+		if ( $switched && $this->is_request_mapped ) {
+			$query = new DomainQuery();
+			$primary = $query->get_primary_domain();
 
 			/**
 			 * If there is no primary or if it is inactive, then the site is not mapped.
@@ -230,7 +240,7 @@ class Mapping implements Registerable {
 			return true;
 		}
 
-		return self::$is_request_mapped;
+		return $this->is_request_mapped;
 	}
 
 	/**
@@ -248,7 +258,7 @@ class Mapping implements Registerable {
 	}
 
 	/**
-	 * Setup the actions to handle the URL mappings.
+	 * Set up the actions to handle the URL mappings.
 	 *
 	 * @since 2.0.0
 	 *
@@ -327,6 +337,7 @@ class Mapping implements Registerable {
 
 		add_filter( 'script_loader_tag', [ $this, 'map' ], -10, 4 );
 		add_filter( 'style_loader_tag', [ $this, 'map' ], -10, 4 );
+		add_filter( 'script_module_loader_src', [ $this, 'map' ], -10, 4 );
 
 		add_filter( 'upload_dir', [ $this, 'upload' ], 10, 1 );
 	}
