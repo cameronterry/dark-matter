@@ -19,6 +19,19 @@ class DomainQuery extends CustomTableQuery {
 	 * @param array $query Query arguments.
 	 */
 	public function __construct( $query = [] ) {
+		/**
+		 * Set the default order by. Without this, it'll rely on ID.
+		 */
+		$query = wp_parse_args(
+			$query,
+			[
+				'orderby' => [
+					'is_primary' => 'DESC',
+					'domain'     => 'ASC',
+				],
+			]
+		);
+
 		parent::__construct( $query, new DomainMapping() );
 	}
 
