@@ -23,7 +23,7 @@ class DarkMatter_Primary {
 	 *
 	 * @var string
 	 */
-	private $dmtable = '';
+	private $dm_table = '';
 
 	/**
 	 * Reference to the global $wpdb and is more for code cleaniness.
