@@ -361,6 +361,7 @@ class DM_URL {
 
 		add_filter( 'script_loader_tag', array( $this, 'map' ), -10, 4 );
 		add_filter( 'style_loader_tag', array( $this, 'map' ), -10, 4 );
+		add_filter( 'script_module_loader_src', [ $this, 'map' ], -10, 4 );
 
 		add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
 	}
