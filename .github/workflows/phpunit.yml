@@ -19,17 +19,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Start MySQL
         run: sudo systemctl start mysql.service
 
-      - name: Set standard 10up cache directories
+      - name: Set standard cache directories
         run: |
           composer config -g cache-dir "${{ env.COMPOSER_CACHE }}"
 
       - name: Prepare composer cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.COMPOSER_CACHE }}
           key: composer-${{ env.COMPOSER_VERSION }}-${{ hashFiles('**/composer.lock') }}
@@ -42,6 +42,11 @@ jobs:
           php-version: '8.0'
           coverage: none
           tools: composer:v2
+
+      # For Ubuntu 24.04 image, SVN was removed. But, this is needed for WP/PHPUnit.
+      # https://github.com/actions/runner-images/issues/10636
+      - name: Install SVN
+        run: sudo apt-get install -y subversion
 
       - name: Install dependencies
         run: composer install
