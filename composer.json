@@ -11,13 +11,13 @@
         }
     ],
     "require": {
-        "php": ">=7.0"
+        "php": ">=8.0"
     },
     "require-dev": {
         "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
         "automattic/vipwpcs": "^2.2",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^9.6",
         "yoast/phpunit-polyfills": "^1.0"
     },
     "scripts": {
