@@ -14,11 +14,11 @@
         "php": ">=8.0"
     },
     "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^0.7.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
         "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "automattic/vipwpcs": "^2.2",
+        "automattic/vipwpcs": "^3.0",
         "phpunit/phpunit": "^9.6",
-        "yoast/phpunit-polyfills": "^1.0"
+        "yoast/phpunit-polyfills": "^4.0"
     },
     "scripts": {
         "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
