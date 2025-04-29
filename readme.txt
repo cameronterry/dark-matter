@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 6.1
-Stable tag: 2.3.4
+Tested up to: 6.8
+Stable tag: 2.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,16 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.4.0 =
+
+* Fixed a warning notice for dynamic properties in newer versions of PHP.
+* Fixed the response for creating a domain with the REST API endpoint not returning the proper response (was missing the sub-object for site).
+* Fixed an issue where [Script Modules](https://make.wordpress.org/core/2024/03/04/script-modules-in-6-5/) domains didn't map properly.
+* Tested upto WordPress 6.8.
+* Plugin development:
+  * Composer and NPM dependencies updated.
+  * Fixed an issue on GitHub Actions where SVN has been removed from ubuntu-latest container.
 
 = 2.3.4 =
 
