@@ -84,10 +84,13 @@ Google Analytics) with over 60 websites.
 * Fixed a warning notice for dynamic properties in newer versions of PHP.
 * Fixed the response for creating a domain with the REST API endpoint not returning the proper response (was missing the sub-object for site).
 * Fixed an issue where [Script Modules](https://make.wordpress.org/core/2024/03/04/script-modules-in-6-5/) domains didn't map properly.
+* Switched Root API for the Admin UI to that introduction in React 18+.
+* Changed name from "Dark Matter" to "Dark Matter Plugin".
 * Tested upto WordPress 6.8.
 * Plugin development:
   * Composer and NPM dependencies updated.
   * Fixed an issue on GitHub Actions where SVN has been removed from ubuntu-latest container.
+  * Simplified the PHPCS configuration.
 
 = 2.3.4 =
 
