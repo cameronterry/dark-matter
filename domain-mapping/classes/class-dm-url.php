@@ -282,6 +282,38 @@ class DM_URL {
 	}
 
 	/**
+	 * @param WP_Theme_JSON_Data $theme_json
+	 * @return WP_Theme_JSON_Data
+	 */
+	public function map_theme_json( $theme_json ) {
+		$mapped_data = $theme_json->get_data();
+		if ( empty( $mapped_data['settings']['typography']['fontFamilies']['custom'] ) ) {
+			return $theme_json;
+		}
+
+		/**
+		 * Loop through all the custom font families and map the `src` for any custom fonts. Most likely candidate is
+		 * someone using the Google Fonts options within the Full Site Editor/Blocks.
+		 */
+		foreach ( $mapped_data['settings']['typography']['fontFamilies']['custom'] as $i_font_family => $font_family ) {
+			/**
+			 * A font family can have many font faces, therefore, we need to loop through them too.
+			 */
+			foreach ( $font_family['fontFace'] as $i_font_face => $font_face ) {
+				if ( empty( $font_face['src'] ) || false !== stripos( 'file:', $font_face['src'] ) ) {
+					continue;
+				}
+
+				$mapped_data['settings']['typography']['fontFamilies']['custom'][ $i_font_family ]['fontFace'][ $i_font_face ]['src'] = $this->map( $font_face['src'] );
+			}
+		}
+
+		$theme_json->update_with( $mapped_data );
+
+		return $theme_json;
+	}
+
+	/**
 	 * Setup the actions to handle the URL mappings.
 	 *
 	 * @since 2.0.0
@@ -363,6 +395,7 @@ class DM_URL {
 		add_filter( 'style_loader_tag', array( $this, 'map' ), -10, 4 );
 
 		add_filter( 'upload_dir', array( $this, 'upload' ), 10, 1 );
+		add_filter( 'wp_theme_json_data_user', array( $this, 'map_theme_json' ) );
 	}
 
 	/**
