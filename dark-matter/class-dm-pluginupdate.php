@@ -74,21 +74,8 @@ class DM_PluginUpdate {
 			return json_decode( wp_remote_retrieve_body( $response ) );
 		}
 
-		/**
-		 * Construct the URL for Dark Matter Cloud.
-		 *
-		 * @link https://github.com/YahnisElsts/wp-update-server
-		 */
-		$url = add_query_arg(
-			[
-				'action' => 'get_metadata',
-				'slug'   => 'dark-matter',
-			],
-			'https://plugins.darkmattercloud.com/'
-		);
-
 		$response = wp_remote_get(
-			$url,
+			'https://www.darkmatterplugin.com/wp-json/packagemanager/v1/plugins/info/dark-matter',
 			[
 				'timeout' => 3,
 				'headers' => [
