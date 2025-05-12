@@ -3,7 +3,7 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 6.8
+Tested up to: 6.8.1
 Stable tag: 2.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -82,11 +82,12 @@ Google Analytics) with over 60 websites.
 = 2.4.0 =
 
 * Fixed a warning notice for dynamic properties in newer versions of PHP.
-* Fixed the response for creating a domain with the REST API endpoint not returning the proper response (was missing the sub-object for site).
 * Fixed an issue where [Script Modules](https://make.wordpress.org/core/2024/03/04/script-modules-in-6-5/) domains didn't map properly.
+* Fixed an issue with custom fonts URLs are not being mapped when adjusting settings for Full Site Editing.
+* Fixed the response for creating a domain with the REST API endpoint not returning the proper response (was missing the sub-object for site).
 * Switched Root API for the Admin UI to that introduction in React 18+.
 * Changed name from "Dark Matter" to "Dark Matter Plugin".
-* Tested upto WordPress 6.8.
+* Tested upto WordPress 6.8.1.
 * Plugin development:
   * Composer and NPM dependencies updated.
   * Fixed an issue on GitHub Actions where SVN has been removed from ubuntu-latest container.
