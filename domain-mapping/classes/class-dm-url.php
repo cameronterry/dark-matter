@@ -66,7 +66,8 @@ class DM_URL {
 		 *
 		 * @link https://github.com/Yoast/wordpress-seo/blob/11.6/admin/links/class-link-content-processor.php#L43-L48 Yoast SEO code reference.
 		 */
-		if ( is_admin() && ! wp_doing_ajax() && ! empty( $_SERVER['REQUEST_METHOD'] ) && 'GET' !== wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) {
+		$request_method = wp_unslash( wp_strip_all_tags( $_SERVER['REQUEST_METHOD'] ?? '' ) );
+		if ( is_admin() && ! wp_doing_ajax() && ! empty( $request_method ) && 'GET' !== wp_unslash( $request_method ) ) {
 			return;
 		}
 
