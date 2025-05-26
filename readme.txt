@@ -81,11 +81,17 @@ Google Analytics) with over 60 websites.
 
 = 2.4.0 =
 
+* The SSO between admin and primary domain - used to show the admin bar on mapped domains - has been removed.
+  * Functionality was based on third-party cookies and no longer works reliably.
+  * A number of browsers, such as Brave, Firefox, Safari, block or handle third party cookies in a manner that means the feature doesn't work.
+  * Similar to issue with the rebuild attempted in v3. More information, and links to browser's documentations, can be found on [PR 109](https://github.com/cameronterry/dark-matter/pull/109).
 * Fixed a warning notice for dynamic properties in newer versions of PHP.
 * Fixed an issue where [Script Modules](https://make.wordpress.org/core/2024/03/04/script-modules-in-6-5/) domains didn't map properly.
-* Fixed an issue with custom fonts URLs are not being mapped when adjusting settings for Full Site Editing.
+* Fixed an issue with custom font(s) URL(s) are not being mapped when adjusting settings for Full Site Editing.
 * Fixed the response for creating a domain with the REST API endpoint not returning the proper response (was missing the sub-object for site).
-* Switched Root API for the Admin UI to that introduction in React 18+.
+* Improved the escaping of Request URI in `DM_URL`.
+* Moved to a new update server.
+* Switched Root API for the Admin UI to that introduced in React 18+.
 * Changed name from "Dark Matter" to "Dark Matter Plugin".
 * Tested upto WordPress 6.8.1.
 * Plugin development:
