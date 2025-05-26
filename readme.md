@@ -8,15 +8,6 @@ individual domains.
 
 ## Constants
 
-### Disable Single Sign-On
-
-Dark Matter includes a basic single sign-on functionality for WordPress administrators and editors. This can be disabled
-if desired using a constant.
-
-```php
-define( 'DARKMATTER_SSO_TYPE', 'disable' );
-```
-
 ### Set Media Domains
 
 Media Domains can be setup through the CLI commands on a per site basis, or setup for all sites on a Multisite using a
