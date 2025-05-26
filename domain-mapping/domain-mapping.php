@@ -36,13 +36,6 @@ require_once DM_PATH . '/domain-mapping/api/class-darkmatter-domains.php';
 require_once DM_PATH . '/domain-mapping/api/class-darkmatter-primary.php';
 require_once DM_PATH . '/domain-mapping/api/class-darkmatter-restrict.php';
 
-/**
- * Disable SSO if the COOKIE_DOMAIN constant is set.
- */
-if ( DM_HealthChecks::instance()->cookie_domain_dm_set() && ( ! defined( 'DARKMATTER_SSO_TYPE' ) || 'disable' !== DARKMATTER_SSO_TYPE ) ) {
-	require_once DM_PATH . '/domain-mapping/sso/class-dm-sso-cookie.php';
-}
-
 require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-domains-controller.php';
 require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-restricted-controller.php';
 
