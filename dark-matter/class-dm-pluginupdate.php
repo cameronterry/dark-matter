@@ -74,21 +74,8 @@ class DM_PluginUpdate {
 			return json_decode( wp_remote_retrieve_body( $response ) );
 		}
 
-		/**
-		 * Construct the URL for Dark Matter Cloud.
-		 *
-		 * @link https://github.com/YahnisElsts/wp-update-server
-		 */
-		$url = add_query_arg(
-			[
-				'action' => 'get_metadata',
-				'slug'   => 'dark-matter',
-			],
-			'https://plugins.darkmattercloud.com/'
-		);
-
 		$response = wp_remote_get(
-			$url,
+			'https://www.darkmatterplugin.com/wp-json/packagemanager/v1/plugins/info/dark-matter',
 			[
 				'timeout' => 3,
 				'headers' => [
@@ -145,35 +132,35 @@ class DM_PluginUpdate {
 		 */
 		$data = $this->request();
 
-		if ( empty( $data ) ) {
+		if ( empty( $data ) || empty( $data->slug ) ) {
 			return false;
 		}
 
 		$result = new stdClass();
 
-		$result->name           = $data->name;
-		$result->slug           = $data->slug;
-		$result->version        = $data->version;
-		$result->new_version    = $data->version;
-		$result->tested         = $data->tested;
-		$result->requires       = $data->requires;
-		$result->author         = $data->author;
-		$result->author_profile = $data->author_homepage;
-		$result->download_link  = $data->download_url;
-		$result->trunk          = $data->download_url;
-		$result->requires_php   = $data->requires_php;
-		$result->last_updated   = $data->last_updated;
+		$result->name           = $data->name ?? '';
+		$result->slug           = $data->slug ?? '';
+		$result->version        = $data->version ?? '';
+		$result->new_version    = $data->version ?? '';
+		$result->tested         = $data->tested ?? '';
+		$result->requires       = $data->requires ?? '';
+		$result->author         = $data->author ?? '';
+		$result->author_profile = $data->author_homepage ?? '';
+		$result->download_link  = $data->download_url ?? '';
+		$result->trunk          = $data->download_url ?? '';
+		$result->requires_php   = $data->requires_php ?? '';
+		$result->last_updated   = $data->last_updated ?? '';
 
 		$result->sections = [
-			'description'  => $data->sections->description,
-			'installation' => $data->sections->installation,
-			'changelog'    => $data->sections->changelog,
+			'description'  => $data->sections->description ?? '',
+			'installation' => $data->sections->installation ?? '',
+			'changelog'    => $data->sections->changelog ?? '',
 		];
 
 		if ( ! empty( $data->banners ) ) {
 			$result->banners = [
-				'low'  => $data->banners->low,
-				'high' => $data->banners->high,
+				'low'  => $data->banners->low ?? '',
+				'high' => $data->banners->high ?? '',
 			];
 		}
 

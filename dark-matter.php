@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: Dark Matter
+ * Plugin Name: Dark Matter Plugin
  * Plugin URI: https://github.com/cameronterry/dark-matter
  * Description: A highly opinionated domain mapping plugin for WordPress.
  * Version: 2.3.4

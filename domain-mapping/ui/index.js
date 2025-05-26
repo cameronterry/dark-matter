@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import DomainMapping from './Components/DomainMapping';
 
 /**
@@ -8,4 +8,6 @@ import DomainMapping from './Components/DomainMapping';
  * and it's blocks. Which we do not need here.
  */
 
-render( <DomainMapping />, document.querySelector( '#root' ) );
+const container = document.getElementById( 'root' );
+const root = createRoot( container );
+root.render( <DomainMapping /> );
