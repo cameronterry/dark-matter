@@ -1,0 +1,20 @@
+{
+  "name": "darkmatterplugin",
+  "version": "2.5.0",
+  "description": "Domain mapping for WordPress, by Dark Matter Plugin.",
+  "keywords": [
+    "wordpress",
+    "wordpress",
+    "plugin"
+  ],
+  "homepage": "https://github.com/cameronterry/dark-matter#readme",
+  "bugs": {
+    "url": "https://github.com/cameronterry/dark-matter/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cameronterry/dark-matter.git"
+  },
+  "license": "GPL-2.0-only",
+  "author": "Cameron Terry"
+}
