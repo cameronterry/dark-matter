@@ -16,5 +16,14 @@
     "url": "git+https://github.com/cameronterry/dark-matter.git"
   },
   "license": "GPL-2.0-only",
-  "author": "Cameron Terry"
+  "author": "Cameron Terry",
+  "scripts": {
+    "build": "NODE_ENV=production askyr-webpack",
+    "build-dev": "NODE_ENV=development askyr-webpack"
+  },
+  "devDependencies": {
+    "@cameronterry/tooling": "github:cameronterry/tooling",
+    "@wordpress/babel-preset-default": "^8.24.0",
+    "@wordpress/dependency-extraction-webpack-plugin": "^6.24.0"
+  }
 }
