@@ -61,28 +61,23 @@ class DM_UI {
 	 * @return void
 	 */
 	public function enqueue() {
-		$min = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' );
+		$script_data = include DM_PATH . 'dist/app-script.asset.php';
 
-		wp_register_script(
-			'dark-matter-domains',
-			DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping' . $min . '.js',
-			[ 'wp-i18n' ],
-			DM_VERSION,
-			true
+		wp_enqueue_script(
+			'darkmatterplugin-admin-script',
+			DM_PLUGIN_URL . 'dist/app-script.js',
+			$script_data['dependencies'],
+			$script_data['version'],
+			[
+				'in_footer' => true,
+			]
 		);
-
-		wp_localize_script(
-			'dark-matter-domains',
-			'dmSettings',
-			array(
-				'rest_root' => get_rest_url(),
-				'nonce'     => wp_create_nonce( 'wp_rest' ),
-			)
+		wp_enqueue_style(
+			'darkmatterplugin-admin-style',
+			DM_PLUGIN_URL . 'dist/app-style.css',
+			[],
+			$script_data['version'],
 		);
-
-		wp_enqueue_script( 'dark-matter-domains' );
-
-		wp_enqueue_style( 'dark-matter-domains', DM_PLUGIN_URL . 'domain-mapping/build/domain-mapping-style' . $min . '.css', [], DM_VERSION );
 	}
 
 	/**
