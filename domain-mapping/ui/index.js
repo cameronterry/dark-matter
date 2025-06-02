@@ -1,12 +1,12 @@
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-import DomainMapping from './Components/DomainMapping';
+/**
+ * WordPress dependencies
+ */
+import { createRoot } from '@wordpress/element';
 
 /**
- * We include React within the code for Dark Matter. WordPress does have React
- * but it's currently part of wp.element, but this is specifically for Gutenberg
- * and it's blocks. Which we do not need here.
+ * Internal dependencies
  */
+import DomainMapping from './Components/DomainMapping';
 
 const container = document.getElementById( 'root' );
 const root = createRoot( container );

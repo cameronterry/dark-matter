@@ -1,9 +1,15 @@
+/**
+ * WordPress dependencies.
+ */
+import { Component } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import React from 'react';
 
+/**
+ * Internal dependencies.
+ */
 import Domains from '../API/Domains';
 
-class DomainAdd extends React.Component {
+class DomainAdd extends Component {
 	/**
 	 * Constructor.
 	 *
