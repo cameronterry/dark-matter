@@ -1,12 +1,18 @@
+/**
+ * WordPress dependencies.
+ */
+import { Component } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import React from 'react';
 
+/**
+ * Internal dependencies.
+ */
 import DomainAdd from './DomainAdd';
 import Domains from '../API/Domains';
 import DomainRow from './DomainRow';
 import Message from './Message';
 
-class DomainMapping extends React.Component {
+class DomainMapping extends Component {
 	/**
 	 * Constructor.
 	 *

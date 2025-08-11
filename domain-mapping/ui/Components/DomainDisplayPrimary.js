@@ -1,7 +1,10 @@
-import React from 'react';
+/**
+ * WordPress dependencies.
+ */
+import { Component } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 
-class DomainDisplayPrimary extends React.Component {
+class DomainDisplayPrimary extends Component {
 	/**
 	 * Render component.
 	 */
