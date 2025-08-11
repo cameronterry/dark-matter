@@ -23,8 +23,11 @@
   },
   "devDependencies": {
     "@cameronterry/tooling": "github:cameronterry/tooling",
-    "@wordpress/babel-preset-default": "^8.24.0",
+    "@wordpress/babel-preset-default": "^8.28.0",
     "@wordpress/dependency-extraction-webpack-plugin": "^6.24.0"
+  },
+  "overrides": {
+    "@babel/runtime": "^7.27.6"
   },
   "buildEntryPoints": {
     "app-script": "./domain-mapping/ui/index.js",
