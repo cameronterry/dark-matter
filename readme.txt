@@ -92,6 +92,7 @@ Google Analytics) with over 60 websites.
 * Moves build assets into `dist/` folder rather than `build/`. (Note: you may need to adjust deployment process ignore directives.)
 * Uses `wordpress/api-fetch` package instead of `jQuery.ajax()`.
   * This also removes the dependency on jQuery for Dark Matter Plugin.
+* Updated composer dependencies for development.
 * Tested up to WordPress 6.8.2.
 
 = 2.4.0 =
