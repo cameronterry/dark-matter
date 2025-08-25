@@ -112,6 +112,24 @@ class DomainMapping extends Component {
 	async getData() {
 		const result = await this.api.getAll();
 
+		const primary = result.find( ( domainRecord ) => domainRecord.is_primary );
+
+		const adminDomain = document.getElementById( 'root' ).dataset?.adminDomain ?? '';
+		const currentDomain = document.querySelector( '#wp-admin-bar-view-site > a' ).getAttribute( 'href' ).split( 'wp-admin' )[0];
+
+		if ( adminDomain && currentDomain ) {
+			document.querySelectorAll( `a[href*="${currentDomain}"][role="menuitem"]` ).forEach( ( menuItem ) => {
+				if ( primary && primary?.is_active ) {
+					menuItem.setAttribute( 'href',
+						( primary.is_https ? 'https' : 'http' )
+						+ `://${primary.domain}/`
+					);
+				} else {
+					menuItem.setAttribute( 'href', adminDomain );
+				}
+			} );
+		}
+
 		this.setState( {
 			domains: result,
 		} );

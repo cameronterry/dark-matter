@@ -39,11 +39,18 @@ class DomainAdd extends Component {
 		let message = '';
 
 		if ( result.code ) {
-			message = sprintf(
-				/* translators: error message */
-				__( 'Cannot add domain. %s', 'dark-matter' ),
-				result.message
-			);
+			if ( 'primary' === result.code ) {
+				message = sprintf(
+					__( 'Cannot add domain. Primary domain cannot be overridden by a new domain.', 'dark-matter' ),
+					result.message
+				);
+			} else {
+				message = sprintf(
+					/* translators: error message */
+					__( 'Cannot add domain. %s', 'dark-matter' ),
+					result.message
+				);
+			}
 		} else {
 			message = sprintf(
 				/* translators: added domain */

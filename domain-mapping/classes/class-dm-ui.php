@@ -111,7 +111,7 @@ class DM_UI {
 			wp_die( esc_html__( 'You do not have permission to manage domains.', 'dark-matter' ) );
 		}
 		?>
-		<div id="root"></div>
+		<div id="root" data-admin-domain="<?php echo esc_url( get_home_url( null, '/', 'unmapped' ) ); ?>"></div>
 		<?php
 	}
 }
