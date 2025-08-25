@@ -11,11 +11,15 @@ class Domains {
 	 * @param {Object} data Data record for the new domain.
 	 */
 	async add( data ) {
-		return await apiFetch( {
-			data,
-			method: 'POST',
-			path: '/dm/v1/domain',
-		} );
+		try {
+			return await apiFetch( {
+				data,
+				method: 'POST',
+				path: '/dm/v1/domain',
+			} );
+		} catch ( error ) {
+			return error;
+		}
 	}
 
 	/**
