@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 6.8.1
-Stable tag: 2.4
+Stable tag: 2.5.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -93,6 +93,9 @@ Google Analytics) with over 60 websites.
 * Uses `wordpress/api-fetch` package instead of `jQuery.ajax()`.
   * This also removes the dependency on jQuery for Dark Matter Plugin.
 * Updated composer dependencies for development.
+* Developer updates;
+  * Removed version bump and Snyk.
+  * Resolves a couple of Dependabot issues.
 * Tested up to WordPress 6.8.2.
 
 = 2.4.0 =
