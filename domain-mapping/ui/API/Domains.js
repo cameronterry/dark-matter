@@ -1,7 +1,7 @@
 /**
- * We use jQuery's AJAX mechanism as this is already in WordPress and
- * doesn't require a separate dependency / library liks Axios ... for now.
+ * WordPress dependencies
  */
+import apiFetch from '@wordpress/api-fetch';
 
 class Domains {
 	/**
@@ -11,25 +11,15 @@ class Domains {
 	 * @param {Object} data Data record for the new domain.
 	 */
 	async add( data ) {
-		let result = null;
-
 		try {
-			result = await window.jQuery.ajax( {
-				url: window.dmSettings.rest_root + 'dm/v1/domain',
+			return await apiFetch( {
 				data,
-				dataType: 'json',
-				method: 'post',
-				beforeSend( xhr ) {
-					xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-				},
+				method: 'POST',
+				path: '/dm/v1/domain',
 			} );
 		} catch ( error ) {
-			if ( error.responseJSON ) {
-				result = error.responseJSON;
-			}
+			return error;
 		}
-
-		return result;
 	}
 
 	/**
@@ -40,43 +30,22 @@ class Domains {
 	 * @param {string} domain FQDN to be deleted.
 	 */
 	async delete( domain ) {
-		let result = null;
-
-		try {
-			result = await window.jQuery.ajax( {
-				url: window.dmSettings.rest_root + 'dm/v1/domain/' + domain,
-				data: {
-					force: true,
-				},
-				dataType: 'json',
-				method: 'DELETE',
-				beforeSend( xhr ) {
-					xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-				},
-			} );
-		} catch ( error ) {
-			if ( error.responseJSON ) {
-				result = error.responseJSON;
-			}
-		}
-
-		return result;
+		return await apiFetch( {
+			data: {
+				force: true,
+			},
+			method: 'DELETE',
+			path: `/dm/v1/domain/${domain}`,
+		} );
 	}
 
 	/**
 	 * Retrieve all the domains for a specific website.
 	 */
 	async getAll() {
-		const result = await window.jQuery.ajax( {
-			url: window.dmSettings.rest_root + 'dm/v1/domains',
-			dataType: 'json',
-			method: 'GET',
-			beforeSend( xhr ) {
-				xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-			},
+		return await apiFetch( {
+			path: '/dm/v1/domains',
 		} );
-
-		return result;
 	}
 
 	/**
@@ -97,26 +66,11 @@ class Domains {
 		 */
 		delete data.site;
 
-		let result = null;
-
-		try {
-			result = await window.jQuery.ajax( {
-				url:
-					window.dmSettings.rest_root + 'dm/v1/domain/' + data.domain,
-				data,
-				dataType: 'json',
-				method: 'PUT',
-				beforeSend( xhr ) {
-					xhr.setRequestHeader( 'X-WP-Nonce', window.dmSettings.nonce );
-				},
-			} );
-		} catch ( error ) {
-			if ( error.responseJSON ) {
-				result = error.responseJSON;
-			}
-		}
-
-		return result;
+		return await apiFetch( {
+			data,
+			method: 'PUT',
+			path: `/dm/v1/domain/${data.domain}`,
+		} );
 	}
 }
 

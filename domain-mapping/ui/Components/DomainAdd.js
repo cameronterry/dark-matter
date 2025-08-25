@@ -1,9 +1,15 @@
+/**
+ * WordPress dependencies.
+ */
+import { Component } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import React from 'react';
 
+/**
+ * Internal dependencies.
+ */
 import Domains from '../API/Domains';
 
-class DomainAdd extends React.Component {
+class DomainAdd extends Component {
 	/**
 	 * Constructor.
 	 *
@@ -33,11 +39,18 @@ class DomainAdd extends React.Component {
 		let message = '';
 
 		if ( result.code ) {
-			message = sprintf(
-				/* translators: error message */
-				__( 'Cannot add domain. %s', 'dark-matter' ),
-				result.message
-			);
+			if ( 'primary' === result.code ) {
+				message = sprintf(
+					__( 'Cannot add domain. Primary domain cannot be overridden by a new domain.', 'dark-matter' ),
+					result.message
+				);
+			} else {
+				message = sprintf(
+					/* translators: error message */
+					__( 'Cannot add domain. %s', 'dark-matter' ),
+					result.message
+				);
+			}
 		} else {
 			message = sprintf(
 				/* translators: added domain */

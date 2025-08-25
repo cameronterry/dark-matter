@@ -1,71 +1,36 @@
 {
-  "name": "dark-matter",
-  "version": "2.4.0",
-  "description": "Domain Mapping plugin for WordPress.",
-  "main": "index.js",
-  "scripts": {
-    "build": "NODE_ENV=production webpack --mode production",
-    "build-dev": "NODE_ENV=development webpack --mode none",
-    "build-all": "npm run build && npm run build-dev",
-    "bump": "bump composer.json dark-matter.php package.json && composer update --lock && npm install --package-lock-only",
-    "lint": "composer lint && eslint",
-    "lint-js": "eslint",
-    "release": "composer install --no-dev --optimize-autoloader && npm ci --ignore-scripts && npm run build-all",
-    "start": "composer install && npm install && npm run build-all",
-    "test": "snyk test"
-  },
-  "pre-commit": [
-    "lint-staged"
+  "name": "darkmatterplugin",
+  "version": "2.5.0",
+  "description": "Domain mapping for WordPress, by Dark Matter Plugin.",
+  "keywords": [
+    "wordpress",
+    "wordpress",
+    "plugin"
   ],
-  "lint-staged": {
-    "*.js": [
-      "npm run lint-js"
-    ],
-    "*.php": [
-      "composer run lint"
-    ]
+  "homepage": "https://github.com/cameronterry/dark-matter#readme",
+  "bugs": {
+    "url": "https://github.com/cameronterry/dark-matter/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/cameronterry/dark-matter.git"
   },
+  "license": "GPL-2.0-only",
   "author": "Cameron Terry",
-  "license": "GPL-2.0",
-  "bugs": {
-    "url": "https://github.com/cameronterry/dark-matter/issues"
+  "scripts": {
+    "build": "NODE_ENV=production askyr-webpack",
+    "build-dev": "NODE_ENV=development askyr-webpack"
   },
-  "homepage": "https://github.com/cameronterry/dark-matter#readme",
   "devDependencies": {
-    "@babel/core": "^7.17.9",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/plugin-transform-runtime": "^7.17.0",
-    "@babel/preset-env": "^7.16.11",
-    "@babel/preset-react": "^7.16.7",
-    "@wordpress/eslint-plugin": "^13.4.0",
-    "babel-loader": "^9.0.0",
-    "css-loader": "^6.7.1",
-    "cssnano": "^5.1.7",
-    "eslint": "^8.57.1",
-    "eslint-webpack-plugin": "^3.1.1",
-    "lint-staged": "^15.5.1",
-    "mini-css-extract-plugin": "^2.6.0",
-    "postcss": "^8.4.12",
-    "postcss-import": "^15.0.0",
-    "postcss-loader": "^7.0.1",
-    "postcss-preset-env": "^7.4.3",
-    "prettier": "^2.6.2",
-    "snyk": "^1.996.0",
-    "style-loader": "^3.3.1",
-    "version-bump-prompt": "^6.1.0",
-    "webpack": "^5.72.0",
-    "webpack-cli": "^5.0.1",
-    "webpack-remove-empty-scripts": "^1.0.1",
-    "webpackbar": "^5.0.2"
+    "@cameronterry/tooling": "github:cameronterry/tooling",
+    "@wordpress/babel-preset-default": "^8.28.0",
+    "@wordpress/dependency-extraction-webpack-plugin": "^6.24.0"
   },
-  "dependencies": {
-    "@babel/runtime": "^7.17.9",
-    "@wordpress/i18n": "^4.6.0",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0"
+  "overrides": {
+    "@babel/runtime": "^7.27.6"
+  },
+  "buildEntryPoints": {
+    "app-script": "./domain-mapping/ui/index.js",
+    "app-style": "./domain-mapping/ui/App.css"
   }
 }

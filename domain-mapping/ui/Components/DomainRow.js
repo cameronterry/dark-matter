@@ -1,12 +1,22 @@
+/**
+ * WordPress dependencies.
+ */
+import { Component } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
-import React from 'react';
 
+/**
+ * Internal dependencies.
+ */
 import DomainDisplayMedia from './DomainDisplayMedia';
 import DomainDisplayPrimary from './DomainDisplayPrimary';
 import DomainDisplaySecondary from './DomainDisplaySecondary';
+
+/**
+ * Constants.
+ */
 import { DOMAIN_TYPES } from '../API/Enums';
 
-class DomainRow extends React.Component {
+class DomainRow extends Component {
 	/**
 	 * Handle the Activating / Deactivating of domains.
 	 *

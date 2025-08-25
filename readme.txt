@@ -4,7 +4,7 @@ Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 6.8.1
-Stable tag: 2.4
+Stable tag: 2.5.0
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,25 @@ Google Analytics) with over 60 websites.
 
 == Changelog ==
 
+= 2.5.0 =
+
+* Switched to a new reusable build tool for CSS and JavaScript rather than some self cobbled together Webpack process.
+* Switched to `wordpress/elements` package with Dependency Extraction rather than including a standalone version of React.
+  * Should prevent the possibility of any compatibility issues and ensures the plugin and WordPress use the same version.
+  * JS for the Admin UI is now 12KB instead of 180KB. CSS is marginally smaller.
+  * Static assets now use a dynamic, build-related, version instead of relying on the constant.
+  * Removed the plugin's own webpack and postcss config files.
+  * This plugin now only includes minified, built, CSS and JS files. Non-minified is no longer included.
+  * JS now included in the footer.
+* Moves build assets into `dist/` folder rather than `build/`. (Note: you may need to adjust deployment process ignore directives.)
+* Uses `wordpress/api-fetch` package instead of `jQuery.ajax()`.
+  * This also removes the dependency on jQuery for Dark Matter Plugin.
+* Updated composer dependencies for development.
+* Developer updates;
+  * Removed version bump and Snyk.
+  * Resolves a couple of Dependabot issues.
+* Tested up to WordPress 6.8.2.
+
 = 2.4.0 =
 
 * The SSO between admin and primary domain - used to show the admin bar on mapped domains - has been removed.
@@ -93,7 +112,7 @@ Google Analytics) with over 60 websites.
 * Moved to a new update server.
 * Switched Root API for the Admin UI to that introduced in React 18+.
 * Changed name from "Dark Matter" to "Dark Matter Plugin".
-* Tested upto WordPress 6.8.1.
+* Tested up to WordPress 6.8.1.
 * Plugin development:
   * Composer and NPM dependencies updated.
   * Fixed an issue on GitHub Actions where SVN has been removed from ubuntu-latest container.
