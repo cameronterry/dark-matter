@@ -36,7 +36,6 @@ defined( 'ABSPATH' ) || die;
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
 define( 'DMP_INC', DM_PATH . 'includes/classes/' );
 define( 'DM_VERSION', '2.5.0' );
-define( 'DM_DB_VERSION', '20210517' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 
@@ -46,6 +45,16 @@ define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 if ( file_exists( DM_PATH . 'vendor/autoload.php' ) ) {
 	require_once DM_PATH . 'vendor/autoload.php';
 }
+
+/**
+ * Load the plugin.
+ *
+ * Note: the load priority to be before the default/normal `10`, and some instances where they use the `5`.
+ */
+function darkmatterplugin_load() {
+	\DarkMatterPlugin\Plugin::instance()->load();
+}
+add_action( 'init', 'darkmatterplugin_load', 1 );
 
 /**
  * Define global cache groups and other cache related settings for all modules.
