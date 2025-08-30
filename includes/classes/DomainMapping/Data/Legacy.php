@@ -1,38 +1,42 @@
 <?php
 /**
- * Class DM_Database
+ * Handle the database definitions for Domain Mapping in the same manner as the original DM_Database.
  *
- * @package DarkMatter
- * @since 2.0.0
+ * @package DarkMatterPlugin\DomainMapping
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatterPlugin\DomainMapping\Data;
+
+use DarkMatterPlugin\Registerable;
 
 /**
- * Class DM_Database
- *
- * @since 2.0.0
+ * Class Legacy.
  */
-class DM_Database {
+class Legacy implements Registerable {
+
 	/**
-	 * Constructor.
+	 * Database version.
 	 *
-	 * @since 2.0.0
+	 * @var string
 	 */
-	public function __construct() {
-		add_action( 'init', array( $this, 'maybe_upgrade' ) );
+	private $version = '20210517';
+
+	/**
+	 * Can the Legacy can be used.
+	 *
+	 * @return true
+	 */
+	public function can_register() {
+		return true;
 	}
 
 	/**
-	 * Check to see if the database upgrade is required. If so, then perform the
-	 * necessary table creation / update commands.
-	 *
-	 * @since 2.0.0
+	 * Run the database upgrade if needed.
 	 *
 	 * @return void
 	 */
 	public function maybe_upgrade() {
-		if ( update_network_option( null, 'dark_matter_db_version', DM_DB_VERSION ) ) {
+		if ( update_network_option( null, 'dark_matter_db_version', $this->version ) ) {
 			/**
 			 * As dbDelta function is called, ensure that this part of the
 			 * WordPress API is included.
@@ -45,9 +49,16 @@ class DM_Database {
 	}
 
 	/**
-	 * Upgrade the domains table.
+	 * Handle actions and filters for Data Legacy.
 	 *
-	 * @since 2.0.0
+	 * @return void
+	 */
+	public function register() {
+		add_action( 'init', [ $this, 'maybe_upgrade' ] );
+	}
+
+	/**
+	 * Upgrade the domains table.
 	 *
 	 * @return void
 	 */
@@ -88,22 +99,4 @@ class DM_Database {
 
 		dbDelta( $sql );
 	}
-
-	/**
-	 * Return the Singleton Instance of the class.
-	 *
-	 * @since 2.0.0
-	 *
-	 * @return DM_Database
-	 */
-	public static function instance() {
-		static $instance = false;
-
-		if ( ! $instance ) {
-			$instance = new self();
-		}
-
-		return $instance;
-	}
 }
-DM_Database::instance();
