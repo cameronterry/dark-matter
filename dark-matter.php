@@ -34,10 +34,18 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
+define( 'DMP_INC', DM_PATH . 'includes/classes/' );
 define( 'DM_VERSION', '2.5.0' );
 define( 'DM_DB_VERSION', '20210517' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+/**
+ * Include the Autoloader.
+ */
+if ( file_exists( DM_PATH . 'vendor/autoload.php' ) ) {
+	require_once DM_PATH . 'vendor/autoload.php';
+}
 
 /**
  * Define global cache groups and other cache related settings for all modules.
