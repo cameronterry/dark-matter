@@ -37,9 +37,3 @@ require_once DM_PATH . '/domain-mapping/api/class-darkmatter-restrict.php';
 
 require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-domains-controller.php';
 require_once DM_PATH . '/domain-mapping/rest/class-dm-rest-restricted-controller.php';
-
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-domain-cli.php';
-	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-dropin-cli.php';
-	require_once DM_PATH . '/domain-mapping/cli/class-darkmatter-restrict-cli.php';
-}
