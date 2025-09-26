@@ -1,21 +1,23 @@
 <?php
 /**
- * Class DarkMatter_Restrict_CLI
+ * Command for restricting (or reserving) domains from use.
  *
  * @package DarkMatter
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatterPlugin\DomainMapping\CLI;
 
-// phpcs:disable PHPCompatibility.Keywords.ForbiddenNames.listFound -- Changing CLI for list would introduced backward compatibility (2.x.x) problems for pre-existing users.
+use DarkMatterPlugin\Command;
+use WP_CLI;
 
 /**
- * Class DarkMatter_Restrict_CLI
+ * Class Restrict
  *
  * @since 2.0.0
  */
-class DarkMatter_Restrict_CLI {
+class Restrict implements Command {
+
 	/**
 	 * Add a domain to the restrict for the WordPress Network.
 	 *
@@ -41,7 +43,7 @@ class DarkMatter_Restrict_CLI {
 
 		$fqdn = $args[0];
 
-		$restricted = DarkMatter_Restrict::instance();
+		$restricted = \DarkMatter_Restrict::instance();
 		$result     = $restricted->add( $fqdn );
 
 		if ( is_wp_error( $result ) ) {
@@ -52,11 +54,20 @@ class DarkMatter_Restrict_CLI {
 	}
 
 	/**
+	 * Register the Restrict class.
+	 *
+	 * @return bool
+	 */
+	public static function can_register() {
+		return true;
+	}
+
+	/**
 	 * Retrieve a list of all Restricted domains for the Network.
 	 *
 	 * ### OPTIONS
 	 *
-	 * * [--format]
+	 * [--format]
 	 * : Determine which format that should be returned. Defaults to "table" and
 	 * accepts "ids", "json", "csv", "yaml", and "count".
 	 *
@@ -76,10 +87,12 @@ class DarkMatter_Restrict_CLI {
 	 *
 	 * @since 2.0.0
 	 *
+	 * @subcommand list
+	 *
 	 * @param array $args CLI args.
 	 * @param array $assoc_args CLI args maintaining the flag names from the terminal.
 	 */
-	public function list( $args, $assoc_args ) {
+	public function _list( $args, $assoc_args ) {
 		/**
 		 * Handle and validate the format flag if provided.
 		 */
@@ -94,7 +107,7 @@ class DarkMatter_Restrict_CLI {
 			$opts['format'] = 'table';
 		}
 
-		$db = DarkMatter_Restrict::instance();
+		$db = \DarkMatter_Restrict::instance();
 
 		$restricted = $db->get();
 
@@ -146,7 +159,7 @@ class DarkMatter_Restrict_CLI {
 
 		$fqdn = $args[0];
 
-		$restricted = DarkMatter_Restrict::instance();
+		$restricted = \DarkMatter_Restrict::instance();
 		$result     = $restricted->delete( $fqdn );
 
 		if ( is_wp_error( $result ) ) {
@@ -155,5 +168,13 @@ class DarkMatter_Restrict_CLI {
 
 		WP_CLI::success( $fqdn . __( ': is no longer restricted.', 'dark-matter' ) );
 	}
+
+	/**
+	 * Handle the registration of the Restrict CLI.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		WP_CLI::add_command( 'darkmatter restrict', self::class );
+	}
 }
-WP_CLI::add_command( 'darkmatter restrict', 'DarkMatter_Restrict_CLI' );
