@@ -1,6 +1,6 @@
 <?php
 /**
- * Class DarkMatter_Domain_CLI
+ * Command list for managing domains within Dark Matter Plugin.
  *
  * @package DarkMatter
  * @since 2.0.0
@@ -12,11 +12,12 @@ use DarkMatterPlugin\Command;
 use WP_CLI;
 
 /**
- * Class DarkMatter_Domain_CLI
+ * Class Domain
  *
  * @since 2.0.0
  */
 class Domain implements Command {
+
 	/**
 	 * Add a domain to a site on the WordPress Network.
 	 *
