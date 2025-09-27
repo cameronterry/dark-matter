@@ -1,17 +1,26 @@
 <?php
 /**
- * Class DM_REST_Restricted_Controller
+ * Provide REST API support for managing restricted/reserved domains for Dark Matter Plugin.
  *
  * @package DarkMatter
  * @since 2.0.0
  */
 
+namespace DarkMatterPlugin\DomainMapping\REST\V1;
+
+use DarkMatterPlugin\Registerable;
+use WP_REST_Controller;
+use WP_REST_Request;
+use WP_REST_Response;
+use WP_REST_Server;
+
 /**
- * Class DM_REST_Restricted_Controller
+ * Class Restrict
  *
  * @since 2.0.0
  */
-class DM_REST_Restricted_Controller extends WP_REST_Controller {
+class Restrict extends WP_REST_Controller implements Registerable {
+
 	/**
 	 * Constructor.
 	 *
@@ -23,15 +32,24 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Register the Restrict REST API.
+	 *
+	 * @return true
+	 */
+	public function can_register() {
+		return true;
+	}
+
+	/**
 	 * Add a domain to the Restricted domains list.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return WP_REST_Response|\WP_Error WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = DarkMatter_Restrict::instance();
+		$db = \DarkMatter_Restrict::instance();
 
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
@@ -82,10 +100,10 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return WP_REST_Response|\WP_Error WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = DarkMatter_Restrict::instance();
+		$db = \DarkMatter_Restrict::instance();
 
 		$domain = ( isset( $request['domain'] ) ? $request['domain'] : '' );
 
@@ -129,7 +147,7 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_items( $request ) {
-		$db = DarkMatter_Restrict::instance();
+		$db = \DarkMatter_Restrict::instance();
 
 		return rest_ensure_response( $db->get() );
 	}
@@ -186,17 +204,13 @@ class DM_REST_Restricted_Controller extends WP_REST_Controller {
 			]
 		);
 	}
-}
 
-/**
- * Setup the REST Controller for Domains for use.
- *
- * @since 2.0.0
- *
- * @return void
- */
-function dark_matter_restricted_rest() {
-	$controller = new DM_REST_Restricted_Controller();
-	$controller->register_routes();
+	/**
+	 * Handle actions and filters for Restrict REST API endpoints.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+	}
 }
-add_action( 'rest_api_init', 'dark_matter_restricted_rest' );
