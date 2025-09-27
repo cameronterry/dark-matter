@@ -1,34 +1,22 @@
 <?php
 /**
- * Class DM_UI
+ * Admin page for managing domains.
  *
- * @package DM_UI
+ * @package DarkMatter
+ *
  * @since 2.0.0
  */
 
-defined( 'ABSPATH' ) || die;
+namespace DarkMatterPlugin\DomainMapping\Admin;
+
+use DarkMatterPlugin\Registerable;
 
 /**
- * Class DM_UI
+ * Class Domains
  *
  * @since 2.0.0
  */
-class DM_UI {
-	/**
-	 * Constructor
-	 *
-	 * @since 2.0.0
-	 */
-	public function __construct() {
-		/**
-		 * The root website cannot be mapped.
-		 */
-		if ( is_main_site() ) {
-			return;
-		}
-
-		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
-	}
+class Domains implements Registerable {
 
 	/**
 	 * Initialise the admin menu and prep the hooks for the CSS and JavaScript
@@ -51,6 +39,24 @@ class DM_UI {
 		);
 
 		add_action( 'load-' . $hook_suffix, array( $this, 'enqueue' ) );
+	}
+
+	/**
+	 * Register the Domains UI class.
+	 *
+	 * @return bool
+	 */
+	public function can_register() {
+		return
+			/**
+			 * Dark Matter Plugin currently does not support domain mapping on the root site.
+			 */
+			! is_main_site()
+			/**
+			 * Maintain support for hiding the UI, used for sites where domain mapping is managed by either server
+			 * admins using the CLI. Or installations using a custom integration through the REST API.
+			 */
+			&& ( ! defined( 'DARKMATTER_HIDE_UI' ) || ! DARKMATTER_HIDE_UI );
 	}
 
 	/**
@@ -114,6 +120,13 @@ class DM_UI {
 		<div id="root" data-admin-domain="<?php echo esc_url( get_home_url( null, '/', 'unmapped' ) ); ?>"></div>
 		<?php
 	}
-}
 
-new DM_UI();
+	/**
+	 * Handle actions and filters for the Domains UI.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		add_action( 'admin_menu', [ $this, 'admin_menu' ] );
+	}
+}
