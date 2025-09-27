@@ -22,11 +22,6 @@ require_once DM_PATH . '/domain-mapping/classes/class-dm-domain.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-healthchecks.php';
 require_once DM_PATH . '/domain-mapping/classes/class-dm-url.php';
 
-/**
- * Plugin compatibility.
- */
-require_once DM_PATH . '/domain-mapping/classes/third-party/class-dm-yoast.php';
-
 require_once DM_PATH . '/domain-mapping/api/class-darkmatter-domains.php';
 require_once DM_PATH . '/domain-mapping/api/class-darkmatter-primary.php';
 require_once DM_PATH . '/domain-mapping/api/class-darkmatter-restrict.php';
