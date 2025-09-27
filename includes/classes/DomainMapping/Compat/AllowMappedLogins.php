@@ -1,8 +1,10 @@
 <?php
 /**
- * Helper file to provide basic compatibilty for some popular plugins.
+ * Add compatibility for some plugins that functionality to permit visitors to a site to register, which should remain
+ * on the primary domain.
  *
  * @package DarkMatter
+ *
  * @since 2.0.0
  */
 
