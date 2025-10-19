@@ -45,7 +45,7 @@ class DM_URL {
 			'wp-login.php'    => true,
 			'wp-register.php' => true,
 		];
-		$filename        = $this->get_request_filename();
+		$filename        = \DarkMatterPlugin\get_request_filename();
 		if ( ! empty( $filename ) && array_key_exists( $filename, $admin_filenames ) ) {
 			/**
 			 * Ensure the "Go to [site name]" and Privacy Policy links still go to the mapped domain.
@@ -86,8 +86,7 @@ class DM_URL {
 		 * archived or deleted.
 		 */
 		$blog = get_site();
-
-		if ( (int) $blog->public < 0 || '0' !== $blog->archived || '0' !== $blog->deleted ) {
+		if ( \DarkMatterPlugin\is_site_public( $blog ) ) {
 			return;
 		}
 
@@ -98,7 +97,7 @@ class DM_URL {
 		 * the unmapped and mapped domain - like REST API and XMLRPC - will not
 		 * be properly detected for the rewrite rules.
 		 */
-		add_action( 'muplugins_loaded', array( $this, 'prepare' ), -10 );
+		add_action( 'plugins_loaded', array( $this, 'prepare' ) );
 
 		/**
 		 * Jetpack compatibility. This filter ensures that Jetpack gets the
@@ -142,22 +141,6 @@ class DM_URL {
 		}
 
 		return $url;
-	}
-
-	/**
-	 * Get the filename, if it has one, from the current request.
-	 *
-	 * @return string
-	 */
-	public function get_request_filename() {
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_unslash( wp_strip_all_tags( $_SERVER['REQUEST_URI'] ) ) );
-		$request     = ltrim( $request_uri, '/' );
-
-		/**
-		 * Get the filename and remove any query strings.
-		 */
-		$filename = basename( $request );
-		return strtok( $filename, '?' );
 	}
 
 	/**
@@ -358,7 +341,7 @@ class DM_URL {
 		 * affect database and cache updates to ensure compatibility if the
 		 * domain mapping is changed or removed.
 		 */
-		$request_uri = ( empty( $_SERVER['REQUEST_URI'] ) ? '' : wp_strip_all_tags( wp_unslash( $_SERVER['REQUEST_URI'] ) ) );
+		$request_uri = \DarkMatterPlugin\get_request_uri();
 
 		/**
 		 * This is called for all requests as it is possible for the REST API to be called and process without a cURL

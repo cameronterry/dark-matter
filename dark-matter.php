@@ -54,7 +54,7 @@ if ( file_exists( DM_PATH . 'vendor/autoload.php' ) ) {
 function darkmatterplugin_load() {
 	\DarkMatterPlugin\Plugin::instance()->load();
 }
-add_action( 'plugins_loaded', 'darkmatterplugin_load' );
+add_action( 'plugins_loaded', 'darkmatterplugin_load', 5 );
 
 /**
  * Define global cache groups and other cache related settings for all modules.
