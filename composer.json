@@ -14,7 +14,9 @@
     "psr-4": {
       "DarkMatterPlugin\\": "includes/classes/"
     },
-    "files": []
+    "files": [
+      "includes/helpers.php"
+    ]
   },
   "require": {
     "php": ">=8.0",
