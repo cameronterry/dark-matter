@@ -3,6 +3,7 @@
  * Plugin Name: Sunrise by Dark Matter Plugin
  * Plugin URI: https://github.com/cameronterry/dark-matter
  * Description: A version of sunrise.php drop-in plugin used in conjunction with Dark Matter Plugin domain mapping.
+ * Version: 2.6.0
  * Author: Cameron Terry
  * Author URI: https://github.com/cameronterry/
  * Text Domain: dark-matter
