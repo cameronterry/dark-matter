@@ -9,6 +9,7 @@
 namespace DarkMatterPlugin\DomainMapping\Mapping;
 
 use function DarkMatterPlugin\get_request_fqdn;
+use function DarkMatterPlugin\is_site_public;
 
 /**
  * Class Sunrise.
@@ -55,37 +56,6 @@ class Sunrise {
 		}
 
 		define( 'DARKMATTER_COOKIE_SET', ! defined( 'COOKIE_DOMAIN' ) );
-	}
-
-	/**
-	 * Checks the supply blog/site to ensure it is public.
-	 *
-	 * @param \WP_Site $blog Blog to check.
-	 * @return bool True if public. False otherwise.
-	 */
-	public function is_public( $blog ) {
-		/**
-		 * Make sure we have the right kind of object.
-		 */
-		if ( ! $blog instanceof \WP_Site ) {
-			return false;
-		}
-
-		return (
-			/**
-			 * Check the current blog is public and be compatible with plugins such as Restricted Site Access/RSA, which
-			 * may set this value lower than zero (0) for differentiating between settings.
-			 */
-			0 < (int) $blog->public
-			/**
-			 * Has the blog/"site" been archived?
-			 */
-			&& 0 === (int) $blog->archived
-			/**
-			 * Has the blog/"site" been "soft" deleted?
-			 */
-			&& 0 === (int) $blog->deleted
-		);
 	}
 
 	/**
@@ -138,6 +108,6 @@ class Sunrise {
 		$current_site = \WP_Network::get_instance( $current_blog->site_id );
 		$site_id      = $current_blog->site_id;
 
-		return $this->is_public( $current_blog );
+		return is_site_public( $current_blog );
 	}
 }
