@@ -86,7 +86,7 @@ class DM_URL {
 		 * archived or deleted.
 		 */
 		$blog = get_site();
-		if ( \DarkMatterPlugin\is_site_public( $blog ) ) {
+		if ( ! \DarkMatterPlugin\is_site_public( $blog ) ) {
 			return;
 		}
 
