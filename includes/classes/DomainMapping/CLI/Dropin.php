@@ -75,7 +75,7 @@ class Dropin implements Command {
 	 */
 	public function update( $args, $assoc_args ) {
 		$destination = WP_CONTENT_DIR . '/sunrise.php';
-		$source      = DM_PATH . '/domain-mapping/sunrise.php';
+		$source      = DM_PATH . 'includes/dropins/sunrise.php';
 
 		$opts = wp_parse_args(
 			$assoc_args,
