@@ -63,8 +63,3 @@ wp_cache_add_global_groups( 'dark-matter' );
 
 require_once DM_PATH . '/dark-matter/class-dm-pluginupdate.php';
 new DM_PluginUpdate();
-
-/**
- * Domain Mapping module.
- */
-require DM_PATH . '/domain-mapping/domain-mapping.php';
