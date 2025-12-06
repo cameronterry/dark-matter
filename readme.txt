@@ -81,6 +81,7 @@ Google Analytics) with over 60 websites.
 
 = 2.5.1 =
 
+* Confirming WordPress 6.9 support.
 * Fixed the build CSS to be parsed properly for browsers.
   * 2.5.0 included CSS with the ampersands used in PostCSS incorrectly.
   * Most modern browsers could parse the CSS still, so should have cause few issues.
