@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 6.8.1
-Stable tag: 2.5.0
+Tested up to: 6.9
+Stable tag: 2.5.1
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,14 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.5.1 =
+
+* Fixed the build CSS to be parsed properly for browsers.
+  * 2.5.0 included CSS with the ampersands used in PostCSS incorrectly.
+  * Most modern browsers could parse the CSS still, so should have cause few issues.
+* Updated composer dependencies for development.
+* Updated npm dependencies.
 
 = 2.5.0 =
 
