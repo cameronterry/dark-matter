@@ -60,6 +60,3 @@ add_action( 'plugins_loaded', 'darkmatterplugin_load', 5 );
  * Define global cache groups and other cache related settings for all modules.
  */
 wp_cache_add_global_groups( 'dark-matter' );
-
-require_once DM_PATH . '/dark-matter/class-dm-pluginupdate.php';
-new DM_PluginUpdate();
