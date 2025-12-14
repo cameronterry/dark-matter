@@ -167,6 +167,15 @@ class Restrict extends WP_REST_Controller implements Registerable {
 	}
 
 	/**
+	 * Handle actions and filters for Restrict REST API endpoints.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+	}
+
+	/**
 	 * Register REST API routes for Restricted domains.
 	 *
 	 * @since 2.0.0
@@ -203,14 +212,5 @@ class Restrict extends WP_REST_Controller implements Registerable {
 				'permission_callback' => array( $this, 'get_items_permissions_check' ),
 			]
 		);
-	}
-
-	/**
-	 * Handle actions and filters for Restrict REST API endpoints.
-	 *
-	 * @return void
-	 */
-	public function register() {
-		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 }

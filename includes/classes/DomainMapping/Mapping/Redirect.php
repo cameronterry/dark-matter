@@ -192,7 +192,7 @@ class Redirect implements Registerable {
 	}
 
 	/**
-	 *
+	 * Handle actions and filters for Redirect logic.
 	 *
 	 * @return void
 	 */

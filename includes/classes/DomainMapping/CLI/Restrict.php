@@ -135,6 +135,15 @@ class Restrict implements Command {
 	}
 
 	/**
+	 * Handle the registration of the Restrict CLI.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		WP_CLI::add_command( 'darkmatter restrict', self::class );
+	}
+
+	/**
 	 * Remove a domain to the restrict for the WordPress Network.
 	 *
 	 * ### OPTIONS
@@ -167,14 +176,5 @@ class Restrict implements Command {
 		}
 
 		WP_CLI::success( $fqdn . __( ': is no longer restricted.', 'dark-matter' ) );
-	}
-
-	/**
-	 * Handle the registration of the Restrict CLI.
-	 *
-	 * @return void
-	 */
-	public static function register() {
-		WP_CLI::add_command( 'darkmatter restrict', self::class );
 	}
 }

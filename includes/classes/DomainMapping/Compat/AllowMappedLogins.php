@@ -18,15 +18,6 @@ use DarkMatterPlugin\Registerable;
 class AllowMappedLogins implements Registerable {
 
 	/**
-	 * Can class register.
-	 *
-	 * @return true
-	 */
-	public function can_register() {
-		return true;
-	}
-
-	/**
 	 * Add support for logins on mapped domains for WooCommerce and bbPress.
 	 *
 	 * @since 2.0.0
@@ -47,6 +38,15 @@ class AllowMappedLogins implements Registerable {
 		) {
 			add_filter( 'darkmatter_allow_logins', '__return_true' );
 		}
+	}
+
+	/**
+	 * Can class register.
+	 *
+	 * @return true
+	 */
+	public function can_register() {
+		return true;
 	}
 
 	/**

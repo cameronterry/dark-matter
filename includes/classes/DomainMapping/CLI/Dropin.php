@@ -50,6 +50,15 @@ class Dropin implements Command {
 	}
 
 	/**
+	 * Handle the registration of Dropin commands.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		WP_CLI::add_command( 'darkmatter dropin', self::class );
+	}
+
+	/**
 	 * Upgrade the Sunrise dropin plugin to the latest version within the Dark
 	 * Matter plugin.
 	 *
@@ -107,14 +116,5 @@ class Dropin implements Command {
 		} else {
 			WP_CLI::error( __( 'Unknown error occurred preventing the update of Sunrise dropin.', 'dark-matter' ) );
 		}
-	}
-
-	/**
-	 * Handle the registration of Dropin commands.
-	 *
-	 * @return void
-	 */
-	public static function register() {
-		WP_CLI::add_command( 'darkmatter dropin', self::class );
 	}
 }

@@ -489,6 +489,15 @@ class Domain extends WP_REST_Controller implements Registerable {
 	}
 
 	/**
+	 * Handle actions and filters for Domain(s) REST endpoint.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
+	}
+
+	/**
 	 * Register the routes for the REST API.
 	 *
 	 * @since 2.0.0
@@ -627,14 +636,5 @@ class Domain extends WP_REST_Controller implements Registerable {
 	public function update_item_permissions_check( $request ) {
 		/** This action is documented in domain-mapping/classes/class-dm-ui.php */
 		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'rest-update' ) );
-	}
-
-	/**
-	 * Handle actions and filters for Domain(s) REST endpoint.
-	 *
-	 * @return void
-	 */
-	public function register() {
-		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 }

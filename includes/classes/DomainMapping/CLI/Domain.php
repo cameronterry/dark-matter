@@ -260,6 +260,15 @@ class Domain implements Command {
 	}
 
 	/**
+	 * Handle the command registration for domain commands.
+	 *
+	 * @return void
+	 */
+	public static function register() {
+		WP_CLI::add_command( 'darkmatter domain', self::class );
+	}
+
+	/**
 	 * Remove a specific domain on a Site on the WordPress Network.
 	 *
 	 * ### OPTIONS
@@ -473,14 +482,5 @@ class Domain implements Command {
 		}
 
 		WP_CLI::success( $fqdn . __( ': successfully updated.', 'dark-matter' ) );
-	}
-
-	/**
-	 * Handle the command registration for domain commands.
-	 *
-	 * @return void
-	 */
-	public static function register() {
-		WP_CLI::add_command( 'darkmatter domain', self::class );
 	}
 }
