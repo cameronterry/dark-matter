@@ -7,7 +7,7 @@
 
 namespace DarkMatterPlugin;
 
-use Spatie\StructureDiscoverer\Discover;
+use DarkMatterPlugin\Vendor\Spatie\StructureDiscoverer\Discover;
 
 /**
  * Class Plugin

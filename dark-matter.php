@@ -42,8 +42,8 @@ define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 /**
  * Include the Autoloader.
  */
-if ( file_exists( DM_PATH . 'vendor/autoload.php' ) ) {
-	require_once DM_PATH . 'vendor/autoload.php';
+if ( file_exists( DM_PATH . 'vendor_prefixed/autoload.php' ) ) {
+	require_once DM_PATH . 'vendor_prefixed/autoload.php';
 }
 
 /**
