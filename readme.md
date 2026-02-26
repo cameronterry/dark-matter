@@ -25,7 +25,7 @@ define( 'DM_NETWORK_MEDIA', [
 
 ### Add / Update / Remove Domains
 
-Examples of adding, removing and updating a domain for a Site.
+# Examples of adding, removing and updating a domain for a Site.
 
 ```
 wp --url="sites.my.com/siteone" darkmatter domain add www.example.com --primary --https
@@ -54,14 +54,14 @@ wp --url="sites.my.com/siteone" darkmatter domain set secondarydomain.com --type
 
 ### Listing Domains
 
-Examples of listing domains for a Site.
+# Examples of listing domains for a Site.
 
 ```
 wp --url="sites.my.com/siteone" darkmatter domain list
 wp --url="sites.my.com/siteone" darkmatter domain list --format=json
 ```
 
-Examples of listing domains for the entire Network.
+# Examples of listing domains for the entire Network.
 
 ```
 wp darkmatter domain list
@@ -93,7 +93,7 @@ wp darkmatter restrict add www.example.com
 wp darkmatter restrict remove www.example.com
 ```
 
-Examples of retrieving a list of all restricted domains for a Network.
+# Examples of retrieving a list of all restricted domains for a Network.
 
 ```
 wp darkmatter restrict list
