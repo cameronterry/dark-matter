@@ -10,6 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
       - name: Review dependencies and licenses
-        uses: actions/dependency-review-action@v3
+        uses: actions/dependency-review-action@v4
