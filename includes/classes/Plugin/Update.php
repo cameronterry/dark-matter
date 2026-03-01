@@ -1,18 +1,25 @@
 <?php
 /**
- * Plugin Update
+ * Class for handling checks for Updates, as Dark Matter Plugin is not listed on WordPress.org Plugin Directory.
  *
- * @package DarkMatter
+ * @package DarkMatterPlugin
  *
  * @since 2.2.0
  */
 
+namespace DarkMatterPlugin\Plugin;
+
+use DarkMatterPlugin\Registerable;
+
 /**
- * Class DM_PluginUpdate
+ * Class Update
+ *
+ * Formerly `DM_PluginUpdate`.
  *
  * @since 2.2.0
  */
-class DM_PluginUpdate {
+class Update implements Registerable {
+
 	/**
 	 * Cache key for the API response from WP Update Server.
 	 *
@@ -32,11 +39,20 @@ class DM_PluginUpdate {
 	private $plugin_slug = 'dark-matter/dark-matter.php';
 
 	/**
-	 * Constructor
+	 * Register this class.
 	 *
-	 * @since 2.2.0
+	 * @return true
 	 */
-	public function __construct() {
+	public function can_register() {
+		return true;
+	}
+
+	/**
+	 * Handle actions and filters for Update checks and functionality.
+	 *
+	 * @return void
+	 */
+	public function register() {
 		add_filter( 'plugins_api', [ $this, 'plugin_info' ], 20, 3 );
 		add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'push_update' ], 10, 1 );
 	}

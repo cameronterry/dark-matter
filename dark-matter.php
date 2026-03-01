@@ -34,20 +34,29 @@ defined( 'ABSPATH' ) || die;
 
 /** Setup the Plugin Constants */
 define( 'DM_PATH', plugin_dir_path( __FILE__ ) );
-define( 'DM_VERSION', '2.6.0' );
-define( 'DM_DB_VERSION', '20210517' );
+define( 'DMP_INC', DM_PATH . 'includes/classes/' );
+define( 'DM_VERSION', '2.5.1' );
 
 define( 'DM_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+/**
+ * Include the Autoloader.
+ */
+if ( file_exists( DM_PATH . 'vendor_prefixed/autoload.php' ) ) {
+	require_once DM_PATH . 'vendor_prefixed/autoload.php';
+}
+
+/**
+ * Load the plugin.
+ *
+ * Note: the load priority to be before the default/normal `10`, and some instances where they use the `5`.
+ */
+function darkmatterplugin_load() {
+	\DarkMatterPlugin\Plugin::instance()->load();
+}
+add_action( 'plugins_loaded', 'darkmatterplugin_load', 5 );
 
 /**
  * Define global cache groups and other cache related settings for all modules.
  */
 wp_cache_add_global_groups( 'dark-matter' );
-
-require_once DM_PATH . '/dark-matter/class-dm-pluginupdate.php';
-new DM_PluginUpdate();
-
-/**
- * Domain Mapping module.
- */
-require DM_PATH . '/domain-mapping/domain-mapping.php';

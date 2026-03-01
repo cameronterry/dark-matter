@@ -19,6 +19,7 @@
     <exclude-pattern>*/dev-lib/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
     <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/vendor_prefixed/*</exclude-pattern>
     <exclude-pattern>*/dist/*</exclude-pattern>
     <exclude-pattern>*/tests/phpunit/includes/*</exclude-pattern>
 </ruleset>

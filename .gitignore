@@ -3,6 +3,7 @@ node_modules
 
 /dist/
 /vendor/
+/vendor_prefixed/
 
 # PHPUnit
 /.phpunit.cache
