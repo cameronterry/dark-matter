@@ -13,10 +13,7 @@
   "autoload": {
     "psr-4": {
       "DarkMatterPlugin\\": "includes/classes/"
-    },
-    "files": [
-      "includes/helpers.php"
-    ]
+    }
   },
   "require": {
     "php": ">=8.0",

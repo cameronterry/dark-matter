@@ -52,6 +52,8 @@ if ( file_exists( DM_PATH . 'vendor_prefixed/autoload.php' ) ) {
  * Note: the load priority to be before the default/normal `10`, and some instances where they use the `5`.
  */
 function darkmatterplugin_load() {
+	require_once DM_PATH . 'includes/helpers.php';
+
 	\DarkMatterPlugin\Plugin::instance()->load();
 }
 add_action( 'plugins_loaded', 'darkmatterplugin_load', 5 );
