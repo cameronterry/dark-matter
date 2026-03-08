@@ -54,7 +54,7 @@ function get_request_fqdn() {
  * @return string
  */
 function get_request_uri() {
-	return empty( $_SERVER['REQUEST_URI'] ) ? '' : stripslashes_deep( strip_all_tags( $_SERVER['REQUEST_URI'] ) );
+	return empty( $_SERVER['REQUEST_URI'] ) ? '' : stripslashes_deep( strip_all_tags( $_SERVER['REQUEST_URI'] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 }
 
 /**

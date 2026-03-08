@@ -4,6 +4,8 @@
  * the current site based on the request.
  *
  * @package DarkMatterPlugin
+ *
+ * @phpcs:disable WordPress.WP.GlobalVariablesOverride.Prohibited
  */
 
 namespace DarkMatterPlugin\DomainMapping\Mapping;
