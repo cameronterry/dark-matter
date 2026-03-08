@@ -13,7 +13,10 @@
   "autoload": {
     "psr-4": {
       "DarkMatterPlugin\\": "includes/classes/"
-    }
+    },
+    "files": [
+      "includes/helpers.php"
+    ]
   },
   "require": {
     "php": ">=8.0",
@@ -24,8 +27,7 @@
     "phpcompatibility/phpcompatibility-wp": "^2.1",
     "automattic/vipwpcs": "^3.0",
     "phpunit/phpunit": "^9.6",
-    "yoast/phpunit-polyfills": "^4.0",
-    "brianhenryie/strauss": "^0.22.2"
+    "yoast/phpunit-polyfills": "^4.0"
   },
   "scripts": {
     "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
@@ -33,18 +35,26 @@
     "lint-fix": "phpcbf .",
     "test": "phpunit",
     "test-setup": "bash scripts/install-wp-tests.sh dark_matter_test root root",
+    "prefix-namespaces": [
+      "@php scripts/bin/strauss.phar",
+      "@php composer dump-autoload"
+    ],
     "post-install-cmd": [
-      "strauss"
+      "@prefix-namespaces"
     ],
     "post-update-cmd": [
-      "strauss"
+      "@prefix-namespaces"
+    ],
+    "post-autoload-dump": [
+      "@php scripts/bin/strauss.phar include-autoloader"
     ]
   },
   "extra": {
     "strauss": {
       "target_directory": "vendor_prefixed",
       "namespace_prefix": "DarkMatterPlugin\\Vendor\\",
-      "classmap_prefix": "DarkMatterPlugin_Vendor_"
+      "classmap_prefix": "DarkMatterPlugin_Vendor_",
+      "delete_vendor_packages": true
     }
   },
   "config": {

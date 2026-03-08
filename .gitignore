@@ -5,6 +5,9 @@ node_modules
 /vendor/
 /vendor_prefixed/
 
+/scripts/bin/*
+!/scripts/bin/.gitkeep
+
 # PHPUnit
 /.phpunit.cache
 .phpunit.result.cache
