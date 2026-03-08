@@ -1,7 +1,7 @@
 {
   "name": "cameronterry/dark-matter",
-  "version": "2.5.1",
-  "description": "A highly opinionated domain mapping plugin for WordPress.",
+  "version": "2.6.0",
+  "description": "Domain mapping for WordPress, by Dark Matter Plugin.",
   "type": "wordpress-plugin",
   "license": "GPL-2.0+",
   "authors": [
