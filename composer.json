@@ -35,7 +35,11 @@
     "lint-fix": "phpcbf .",
     "test": "phpunit",
     "test-setup": "bash scripts/install-wp-tests.sh dark_matter_test root root",
+    "download-strauss": [
+      "sh -c 'test -f ./scripts/bin/strauss.phar || curl -o scripts/bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar'"
+    ],
     "prefix-namespaces": [
+      "@download-strauss",
       "@php scripts/bin/strauss.phar",
       "@php composer dump-autoload"
     ],
@@ -46,6 +50,7 @@
       "@prefix-namespaces"
     ],
     "post-autoload-dump": [
+      "@download-strauss",
       "@php scripts/bin/strauss.phar include-autoloader"
     ]
   },
