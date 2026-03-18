@@ -19,7 +19,7 @@
     ]
   },
   "require": {
-    "php": ">=8.0",
+    "php": ">=8.1",
     "spatie/php-structure-discoverer": "^2.3"
   },
   "require-dev": {
@@ -65,6 +65,9 @@
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "platform": {
+      "php": "8.1"
     }
   }
 }
