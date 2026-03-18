@@ -5,7 +5,7 @@ cd ..
 rm -rf ~/dm/release/dark-matter
 mkdir -p ~/dm/release/dark-matter
 
-rsync -av -progress ./ ~/dm/release/dark-matter --exclude node_modules --exclude vendor
+rsync -av -progress ./ ~/dm/release/dark-matter --exclude node_modules
 
 # Run the build.
 cd ~/dm/release/dark-matter
@@ -18,10 +18,9 @@ rm -rf domain-mapping/ui
 rm -rf node_modules
 rm -rf scripts
 rm -rf tests
-rm -rf vendor
 rm -rf .*
-rm *.json
-rm *.lock
+rm package.json
+rm package-lock.json
 rm phpcs.xml
 rm phpunit.xml.dist
 rm postcss.config.js
