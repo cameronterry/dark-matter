@@ -26,8 +26,8 @@ function darkmatterplugin_sunrise() {
 	/**
 	 * Include the PSR-4 autoloader.
 	 */
-	if ( file_exists( $darkmatterplugin_path . 'vendor_prefixed/autoload.php' ) ) {
-		require_once $darkmatterplugin_path . 'vendor_prefixed/autoload.php';
+	if ( file_exists( $darkmatterplugin_path . 'vendor/autoload.php' ) ) {
+		require_once $darkmatterplugin_path . 'vendor/autoload.php';
 	}
 
 	new \DarkMatterPlugin\DomainMapping\Mapping\Sunrise( $darkmatterplugin_path );
