@@ -41,8 +41,8 @@ class SunriseDropin implements Registerable {
 			return 'notfound';
 		}
 
-		$current   = DM_PATH . 'includes/dropins/sunrise.php';
-		$legacy    = DM_PATH . 'includes/legacy/sunrise.php';
+		$current = DM_PATH . 'includes/dropins/sunrise.php';
+		$legacy  = DM_PATH . 'inc/legacy-sunrise-dropin.php';
 
 		$installed_size = filesize( $installed );
 		$installed_md5  = md5_file( $installed );
