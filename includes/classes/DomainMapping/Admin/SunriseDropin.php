@@ -87,9 +87,9 @@ class SunriseDropin implements Registerable {
 		if ( 'latest' === $version ) {
 			return;
 		} elseif ( 'notfound' === $version ) {
-			$message = __( 'Sunrise dropin plugin could not be found.', 'darkmatterplugin' );
+			$message = __( 'Dark Matter Plugin: Sunrise dropin plugin could not be found.', 'darkmatterplugin' );
 		} elseif( 'legacy' === $version ) {
-			$message = __( 'An update is available for the Sunrise dropin plugin.', 'darkmatterplugin' );
+			$message = __( 'Dark Matter Plugin: An update is available for the Sunrise dropin plugin.', 'darkmatterplugin' );
 		}
 
 		if ( empty( $message ) ) {
