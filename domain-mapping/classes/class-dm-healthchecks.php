@@ -105,7 +105,7 @@ class DM_HealthChecks {
 		}
 
 		$current = DM_PATH . 'includes/dropins/sunrise.php';
-		$legacy  = DM_PATH . 'inc/legacy-sunrise-dropin.php';
+		$legacy  = DM_PATH . 'domain-mapping/inc/legacy-sunrise-dropin.php';
 
 		$installed_size = filesize( $installed );
 		$installed_md5  = md5_file( $installed );
