@@ -10,6 +10,12 @@ defined( 'ABSPATH' ) || die();
 
 wp_cache_add_global_groups( 'dark-matter' );
 
+wp_trigger_error(
+	'sunrise.php',
+	'This version of sunrise.php dropin was altered and updated in 2.6.0. Please update your current version.',
+	E_USER_DEPRECATED
+);
+
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
 	define( 'SUNRISE_LOADED', true );
 }
