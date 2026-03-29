@@ -2,7 +2,7 @@
 Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
-Requires PHP: 7.0.0
+Requires PHP: 8.1
 Tested up to: 6.9
 Stable tag: 2.5.1
 License: GPLv2

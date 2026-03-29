@@ -3,6 +3,10 @@ node_modules
 
 /dist/
 /vendor/
+/vendor_prefixed/
+
+/scripts/bin/*
+!/scripts/bin/.gitkeep
 
 # PHPUnit
 /.phpunit.cache

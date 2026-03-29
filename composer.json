@@ -1,35 +1,73 @@
 {
-    "name": "cameronterry/dark-matter",
-    "version": "2.5.1",
-    "description": "A highly opinionated domain mapping plugin for WordPress.",
-    "type": "wordpress-plugin",
-    "license": "GPL-2.0+",
-    "authors": [
-        {
-            "name": "Cameron Terry",
-            "email": "cameronterry@protonmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=8.0"
-    },
-    "require-dev": {
-        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
-        "phpcompatibility/phpcompatibility-wp": "^2.1",
-        "automattic/vipwpcs": "^3.0",
-        "phpunit/phpunit": "^9.6",
-        "yoast/phpunit-polyfills": "^4.0"
-    },
-    "scripts": {
-        "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
-        "lint-all": "phpcs .",
-        "lint-fix": "phpcbf .",
-        "test": "phpunit",
-        "test-setup": "bash scripts/install-wp-tests.sh dark_matter_test root root"
-    },
-    "config": {
-        "allow-plugins": {
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
+  "name": "cameronterry/dark-matter",
+  "version": "2.6.0",
+  "description": "Domain mapping for WordPress, by Dark Matter Plugin.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0+",
+  "authors": [
+    {
+      "name": "Cameron Terry",
+      "email": "cameronterry@protonmail.com"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "DarkMatterPlugin\\": "includes/classes/"
+    },
+    "files": [
+      "includes/helpers.php"
+    ]
+  },
+  "require": {
+    "php": ">=8.1",
+    "spatie/php-structure-discoverer": "^2.3"
+  },
+  "require-dev": {
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+    "phpcompatibility/phpcompatibility-wp": "^2.1",
+    "automattic/vipwpcs": "^3.0",
+    "phpunit/phpunit": "^9.6",
+    "yoast/phpunit-polyfills": "^4.0"
+  },
+  "scripts": {
+    "lint": "phpcs . --extensions=php --warning-severity=8 -s --runtime-set testVersion 8.0",
+    "lint-all": "phpcs .",
+    "lint-fix": "phpcbf .",
+    "test": "phpunit",
+    "test-setup": "bash scripts/install-wp-tests.sh dark_matter_test root root",
+    "download-strauss": [
+      "sh -c 'test -f ./scripts/bin/strauss.phar || curl -o scripts/bin/strauss.phar -L -C - https://github.com/BrianHenryIE/strauss/releases/latest/download/strauss.phar'"
+    ],
+    "prefix-namespaces": [
+      "@download-strauss",
+      "@php scripts/bin/strauss.phar",
+      "@php composer dump-autoload"
+    ],
+    "post-install-cmd": [
+      "@prefix-namespaces"
+    ],
+    "post-update-cmd": [
+      "@prefix-namespaces"
+    ],
+    "post-autoload-dump": [
+      "@download-strauss",
+      "@php scripts/bin/strauss.phar include-autoloader"
+    ]
+  },
+  "extra": {
+    "strauss": {
+      "target_directory": "vendor_prefixed",
+      "namespace_prefix": "DarkMatterPlugin\\Vendor\\",
+      "classmap_prefix": "DarkMatterPlugin_Vendor_",
+      "delete_vendor_packages": true
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    },
+    "platform": {
+      "php": "8.1"
+    }
+  }
 }

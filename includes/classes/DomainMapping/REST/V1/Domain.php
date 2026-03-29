@@ -1,17 +1,26 @@
 <?php
 /**
- * Class DM_REST_Domains_Controller
+ * Provide REST API support for managing domains for Dark Matter Plugin.
  *
  * @package DarkMatter
  * @since 2.0.0
  */
 
+namespace DarkMatterPlugin\DomainMapping\REST\V1;
+
+use DarkMatterPlugin\Registerable;
+use WP_REST_Controller;
+use WP_REST_Request;
+use WP_REST_Response;
+use WP_REST_Server;
+
 /**
- * Class DM_REST_Domains_Controller
+ * Class Domain
  *
  * @since 2.0.0
  */
-class DM_REST_Domains_Controller extends WP_REST_Controller {
+class Domain extends WP_REST_Controller implements Registerable {
+
 	/**
 	 * Constructor.
 	 *
@@ -24,15 +33,24 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	}
 
 	/**
+	 * Register the Domains REST endpoint.
+	 *
+	 * @return true
+	 */
+	public function can_register() {
+		return true;
+	}
+
+	/**
 	 * Add a domain to the Site.
 	 *
 	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return WP_REST_Response|\WP_Error WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function create_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$item = $this->prepare_item_for_database( $request );
 
@@ -78,10 +96,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return WP_REST_Response|\WP_Error WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function delete_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$result = $db->delete( $request['domain'], $request['force'] );
 
@@ -128,7 +146,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$result = $db->get( $request['domain'] );
 
@@ -301,7 +319,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return WP_REST_Response|\WP_Error WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function get_items( $request ) {
 		$site_id = null;
@@ -318,7 +336,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 			$site_id = get_current_blog_id();
 		}
 
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$response = array();
 
@@ -404,7 +422,7 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 *
 	 * @since 2.0.0
 	 *
-	 * @param  DM_Domain       $item Domain object to be prepared for response.
+	 * @param  \DM_Domain      $item Domain object to be prepared for response.
 	 * @param  WP_REST_Request $request Current request.
 	 * @return array Prepared item for REST response.
 	 */
@@ -468,6 +486,15 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Handle actions and filters for Domain(s) REST endpoint.
+	 *
+	 * @return void
+	 */
+	public function register() {
+		add_action( 'rest_api_init', [ $this, 'register_routes' ] );
 	}
 
 	/**
@@ -565,10 +592,10 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 	 * @since 2.0.0
 	 *
 	 * @param  WP_REST_Request $request Current request.
-	 * @return WP_REST_Response|mixed WP_REST_Response on success. WP_Error on failure.
+	 * @return WP_REST_Response|\WP_Error WP_REST_Response on success. WP_Error on failure.
 	 */
 	public function update_item( $request ) {
-		$db = DarkMatter_Domains::instance();
+		$db = \DarkMatter_Domains::instance();
 
 		$item = $this->prepare_item_for_database( $request );
 
@@ -611,16 +638,3 @@ class DM_REST_Domains_Controller extends WP_REST_Controller {
 		return current_user_can( apply_filters( 'dark_matter_domain_permission', 'upgrade_network', 'rest-update' ) );
 	}
 }
-
-/**
- * Setup the REST Controller for Domains for use.
- *
- * @since 2.0.0
- *
- * @return void
- */
-function dark_matter_domains_rest() {
-	$controller = new DM_REST_Domains_Controller();
-	$controller->register_routes();
-}
-add_action( 'rest_api_init', 'dark_matter_domains_rest' );
