@@ -95,13 +95,28 @@ class DM_HealthChecks {
 	 *
 	 * @since 2.1.0
 	 *
-	 * @return bool True if the dropin is the correct version. False otherwise.
+	 * @param bool $bool True to return boolean values, false to return strings.
+	 * @return bool|string True if the dropin is the correct version. False otherwise.
 	 */
-	public function is_dropin_latest() {
-		$destination = WP_CONTENT_DIR . '/sunrise.php';
-		$source      = DM_PATH . 'includes/dropins/sunrise.php';
+	public function is_dropin_latest( $bool = true ) {
+		$installed = WP_CONTENT_DIR . '/sunrise.php';
+		if ( ! file_exists( $installed ) ) {
+			return $bool ? false : 'notfound';
+		}
 
-		return filesize( $destination ) === filesize( $source ) && md5_file( $destination ) === md5_file( $source );
+		$current = DM_PATH . 'includes/dropins/sunrise.php';
+		$legacy  = DM_PATH . 'inc/legacy-sunrise-dropin.php';
+
+		$installed_size = filesize( $installed );
+		$installed_md5  = md5_file( $installed );
+
+		if ( $installed_size === filesize( $current ) && $installed_md5 === md5_file( $current ) ) {
+			return $bool ? true : 'latest';
+		} elseif ( $installed_size === filesize( $legacy ) && $installed_md5 === md5_file( $legacy ) ) {
+			return $bool ? false : 'legacy';
+		}
+
+		return $bool ? false : 'unknown';
 	}
 
 	/**
@@ -152,6 +167,8 @@ class DM_HealthChecks {
 	 * @return array Test result.
 	 */
 	public function test_dropin() {
+		$status = $this->is_dropin_latest( false );
+
 		$result = [
 			'label'       => __( 'Sunrise dropin is enabled and up-to-date.', 'dark-matter' ),
 			'status'      => 'good',
@@ -167,7 +184,7 @@ class DM_HealthChecks {
 			'test'        => 'darkmatter_domain_mapping_dropin',
 		];
 
-		if ( ! $this->dropin_exists() ) {
+		if ( 'notfound' === $status ) {
 			$result['label']          = __( 'Sunrise dropin cannot be found.', 'dark-matter' );
 			$result['badge']['color'] = 'red';
 			$result['status']         = 'critical';
@@ -195,13 +212,23 @@ class DM_HealthChecks {
 			return $result;
 		}
 
-		if ( ! $this->is_dropin_latest() ) {
+		if ( $status === 'legacy' ) {
 			$result['label']          = __( 'Your Sunrise dropin does not match the Dark Matter version.', 'dark-matter' );
+			$result['badge']['color'] = 'red';
+			$result['status']         = 'critical';
+			$result['description']    = sprintf(
+				'<p>%s</p>',
+				esc_html__( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in Dark Matter plugin folder.', 'dark-matter' )
+			);
+		}
+
+		if ( $status === 'unknown' ) {
+			$result['label']          = __( 'Custom Sunrise dropin.', 'dark-matter' );
 			$result['badge']['color'] = 'orange';
 			$result['status']         = 'recommended';
 			$result['description']    = sprintf(
 				'<p>%s</p>',
-				__( 'Sunrise dropin is different from the version recommended by Dark Matter. Please update sunrise.php to the version found in Dark Matter plugin folder.', 'dark-matter' )
+				esc_html__( 'Detected a customised version of Sunrise dropin. Please refer to 2.6.0 release notes and ensure you update your version of Sunrise dropin accordingly.', 'dark-matter' )
 			);
 		}
 
