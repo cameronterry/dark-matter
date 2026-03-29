@@ -104,7 +104,7 @@ class SunriseDropin implements Registerable {
 				/* translators: %s: URL used to perform the action. */
 				__( 'You can update the Sunrise dropin plugin by <a href="%s">clicking here</a>.', 'darkmatterplugin' ),
 				wp_nonce_url(
-					admin_url( '/admin.php?action=darkmatterplugin_update_dropin' ),
+					admin_url( '/admin-post.php?action=darkmatterplugin_update_dropin' ),
 					'darkmatterplugin_update_dropin'
 				)
 			);
@@ -135,11 +135,54 @@ class SunriseDropin implements Registerable {
 	}
 
 	/**
+	 * Handle the sunrise update actions from the notification.
+	 *
+	 * @return void
+	 */
+	public function handle_update() {
+		/**
+		 * Restrict this action to administrator's only.
+		 */
+		if ( ! current_user_can( $this->permission_cap ) ) {
+			wp_die(
+				__( 'Sorry, you are not allowed to update Sunrise by Dark Matter Plugin.', 'darkmatterplugin' ),
+			);
+		}
+
+		$nonce = wp_unslash( sanitize_text_field( $_GET['_wpnonce'] ) );
+		if ( ! wp_verify_nonce( $nonce, 'darkmatterplugin_update_dropin' ) ) {
+			wp_die(
+				__( 'Sorry, we are unable to handle this request.', 'darkmatterplugin' ),
+			);
+		}
+
+		/**
+		 * If possible, return the administrator to the page they were on previously. If this cannot be determined, for
+		 * whatever reason, then we opt to return to the admin dashboard.
+		 */
+		$referer = wp_get_referer();
+		if ( empty( $referer ) ) {
+			$referer = admin_url();
+		}
+
+		wp_safe_redirect(
+			add_query_arg(
+				[
+					'darkmatterplugin_sunrise' => 'updated',
+				],
+				$referer
+			)
+		);
+		die;
+	}
+
+	/**
 	 * Handle actions and filters for the Sunrise Dropin checks and handling.
 	 *
 	 * @return void
 	 */
 	public function register() {
 		add_action( 'admin_notices', [ $this, 'maybe_show_notice' ] );
+		add_action( 'admin_post_darkmatterplugin_update_dropin', [ $this, 'handle_update' ] );
 	}
 }
