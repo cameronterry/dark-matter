@@ -10,11 +10,23 @@ defined( 'ABSPATH' ) || die();
 
 wp_cache_add_global_groups( 'dark-matter' );
 
-wp_trigger_error(
-	'sunrise.php',
-	'This version of sunrise.php dropin was altered and updated in 2.6.0. Please update your current version.',
-	E_USER_DEPRECATED
-);
+/**
+ * Generate an error for website's that continue to the use the older version after 2.6.0.
+ */
+if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+	/**
+	 * Rather than execute immediately, we put it in the `init` action rather than potentially slow down installs (more
+	 * than this does) and to ensure dependency function calls by `wp_trigger_error()`, such as `wp_kses()`, are
+	 * available.
+	 */
+	add_action( 'init', function () {
+		wp_trigger_error(
+			'',
+			'Domain Mapping: this version of sunrise.php dropin was altered and updated in 2.6.0. Please update your current version.',
+			E_USER_DEPRECATED
+		);
+	} );
+}
 
 if ( false === defined( 'SUNRISE_LOADED' ) ) {
 	define( 'SUNRISE_LOADED', true );
