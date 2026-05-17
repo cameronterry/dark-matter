@@ -3,8 +3,8 @@ Contributors: cameronterry
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 6.9
-Stable tag: 2.5.1
+Tested up to: 7.0
+Stable tag: 2.5.2
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,18 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.5.2 =
+
+* Confirming WordPress 7.0 support.
+* Confirming support for PHP versions 8.2.x, 8.3.x, and 8.4.x (Dark Matter Plugin is primarily developed using PHP 8.4.x).
+* Fixed a fatal error that occurs with the plugin update check if Dark Matter Plugin's website experiences an outage or is unavailable.
+* Modified the button CSS classes within WP-Admin > Settings > Domains to use WordPress Core styles.
+  * Fixes a colour mismatch with the new admin colours in WordPress 7.0.
+  * Fixes an issue where Domains admin page didn't fully work with the colours when switching "Administration Colour Scheme".
+  * Slightly reduces the overall CSS from Dark Matter Plugin.
+* Updated composer dependencies for maintainers.
+* Updated npm dependencies for maintainers.
 
 = 2.5.1 =
 

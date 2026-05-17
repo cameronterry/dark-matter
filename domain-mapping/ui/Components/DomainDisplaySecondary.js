@@ -19,24 +19,24 @@ class DomainDisplaySecondary extends Component {
 					<a href={ url }>{ this.props.data.domain }</a>
 				</p>
 				{ this.props.data.is_active ? (
-					<button onClick={ this.props.activate }>
+					<button className="button-link" onClick={ this.props.activate }>
 						{ __( 'Deactivate', 'dark-matter' ) }
 					</button>
 				) : (
-					<button onClick={ this.props.activate }>
+					<button className="button-link" onClick={ this.props.activate }>
 						{ __( 'Activate', 'dark-matter' ) }
 					</button>
 				) }
 				<span>|</span>
-				<button onClick={ this.props.primary }>
+				<button className="button-link" onClick={ this.props.primary }>
 					{ __( 'Set as Primary', 'dark-matter' ) }
 				</button>
 				<span>|</span>
-				<button onClick={ this.props.convert }>
+				<button className="button-link" onClick={ this.props.convert }>
 					{ __( 'Convert to Media domain', 'dark-matter' ) }
 				</button>
 				<span>|</span>
-				<button onClick={ this.props.protocol }>
+				<button className="button-link" onClick={ this.props.protocol }>
 					{ sprintf(
 						/* translators: protocol */
 						__( 'Change to %s', 'dark-matter' ),
@@ -46,7 +46,7 @@ class DomainDisplaySecondary extends Component {
 					) }
 				</button>
 				<span>|</span>
-				<button className="submitdelete" onClick={ this.props.delete }>
+				<button className="button-link submitdelete" onClick={ this.props.delete }>
 					{ __( 'Delete', 'dark-matter' ) }
 				</button>
 			</td>

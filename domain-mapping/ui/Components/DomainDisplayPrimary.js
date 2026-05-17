@@ -21,16 +21,16 @@ class DomainDisplayPrimary extends Component {
 					</strong>
 				</p>
 				{ this.props.data.is_active ? (
-					<button onClick={ this.props.activate }>
+					<button className="button-link" onClick={ this.props.activate }>
 						{ __( 'Deactivate', 'dark-matter' ) }
 					</button>
 				) : (
-					<button onClick={ this.props.activate }>
+					<button className="button-link" onClick={ this.props.activate }>
 						{ __( 'Activate', 'dark-matter' ) }
 					</button>
 				) }
 				<span>|</span>
-				<button onClick={ this.props.protocol }>
+				<button className="button-link" onClick={ this.props.protocol }>
 					{ sprintf(
 						/* translators: protocol */
 						__( 'Change to %s', 'dark-matter' ),
@@ -40,7 +40,7 @@ class DomainDisplayPrimary extends Component {
 					) }
 				</button>
 				<span>|</span>
-				<button className="submitdelete" onClick={ this.props.delete }>
+				<button className="button-link submitdelete" onClick={ this.props.delete }>
 					{ __( 'Delete', 'dark-matter' ) }
 				</button>
 			</td>

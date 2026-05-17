@@ -176,7 +176,11 @@ class DM_PluginUpdate {
 	 * @return mixed New value of site transient.
 	 */
 	public function push_update( $value = null ) {
-		$data              = $this->request();
+		$data = $this->request();
+		if ( empty( $data ) || ! property_exists( $data, 'version' ) ) {
+			return $value;
+		}
+
 		$data->new_version = $data->version;
 		$data->package     = $data->download_url;
 

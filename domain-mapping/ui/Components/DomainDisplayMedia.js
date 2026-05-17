@@ -18,11 +18,11 @@ class DomainDisplayMedia extends Component {
 						<a href={ url }>{ this.props.data.domain }</a>
 					</em>
 				</p>
-				<button onClick={ this.props.convert }>
+				<button className="button-link" onClick={ this.props.convert }>
 					{ __( 'Convert to Secondary domain', 'dark-matter' ) }
 				</button>
 				<span>|</span>
-				<button className="submitdelete" onClick={ this.props.delete }>
+				<button className="button-link submitdelete" onClick={ this.props.delete }>
 					{ __( 'Delete', 'dark-matter' ) }
 				</button>
 			</td>
