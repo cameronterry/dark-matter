@@ -85,7 +85,7 @@ Google Analytics) with over 60 websites.
 * Confirming support for PHP versions 8.2.x, 8.3.x, and 8.4.x (Dark Matter Plugin is primarily developed using PHP 8.4.x).
 * Fixed an issue where a fatal error would occur when checking for updates to Dark Matter Plugin.
 * Modified the button CSS classes within WP-Admin > Settings > Domains to use WordPress Core styles.
-  * Fixes a colour mismatch for the new admin theme colours in WordPress 7.0.
+  * Fixes a colour mismatch with the new admin colours in WordPress 7.0.
   * Fixes an issue where Domains admin page didn't fully work with the colours when switching "Administration Colour Scheme".
   * Slightly reduces the overall CSS from Dark Matter Plugin.
 * Updated composer dependencies for developers of the plugin.
