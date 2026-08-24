@@ -1,10 +1,10 @@
 === Dark Matter Plugin ===
-Contributors: cameronterry
+Contributors: cameronterry, pacifika
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
 Tested up to: 7.0
-Stable tag: 2.5.2
+Stable tag: 2.5.3
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,12 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.5.3 =
+
+* Confirming WordPress 7.1 support.
+* Replaced with Webpack with rspack for CSS and JS build processes.
+* Updated composer dependencies for maintainers.
 
 = 2.5.2 =
 
