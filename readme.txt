@@ -83,6 +83,7 @@ Google Analytics) with over 60 websites.
 
 * Confirming WordPress 7.1 support.
 * Replaced with Webpack with rspack for CSS and JS build processes.
+* Admin JavaScript enqueues now include a valid [Subresource Integrity](https://developer.mozilla.org/en-US/docs/Web/Security/Defenses/Subresource_Integrity) attribute.
 * Updated composer dependencies for maintainers.
 
 = 2.5.2 =
