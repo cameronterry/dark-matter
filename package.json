@@ -1,6 +1,6 @@
 {
   "name": "darkmatterplugin",
-  "version": "2.5.2",
+  "version": "2.5.3",
   "description": "Domain mapping for WordPress, by Dark Matter Plugin.",
   "keywords": [
     "wordpress",
@@ -18,16 +18,11 @@
   "license": "GPL-2.0-only",
   "author": "Cameron Terry",
   "scripts": {
-    "build": "NODE_ENV=production askyr-webpack",
-    "build-dev": "NODE_ENV=development askyr-webpack"
+    "build": "rspack build"
   },
   "devDependencies": {
-    "@cameronterry/tooling": "github:cameronterry/tooling",
-    "@wordpress/babel-preset-default": "^8.28.0",
-    "@wordpress/dependency-extraction-webpack-plugin": "^6.24.0"
-  },
-  "overrides": {
-    "@babel/runtime": "^7.27.6"
+    "@askyr/build": "github:askyrdev/build",
+    "@rspack/cli": "^2.1.10"
   },
   "buildEntryPoints": {
     "app-script": "./domain-mapping/ui/index.js",

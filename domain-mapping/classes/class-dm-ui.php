@@ -61,23 +61,33 @@ class DM_UI {
 	 * @return void
 	 */
 	public function enqueue() {
-		$script_data = include DM_PATH . 'dist/app-script.asset.php';
-
-		wp_enqueue_script(
-			'darkmatterplugin-admin-script',
-			DM_PLUGIN_URL . 'dist/app-script.js',
-			$script_data['dependencies'],
-			$script_data['version'],
-			[
-				'in_footer' => true,
-			]
-		);
-		wp_enqueue_style(
-			'darkmatterplugin-admin-style',
-			DM_PLUGIN_URL . 'dist/app-style.css',
-			[],
-			$script_data['version'],
-		);
+		$assets = wp_json_file_decode( DM_PATH . 'dist/assets.json', [ 'associative' => true ] );
+		foreach ( $assets as $asset ) {
+			if ( 'css' === $asset['type'] ) {
+				wp_enqueue_style(
+					$asset['id'],
+					sprintf(
+						'%sdist/%s',
+						DM_PLUGIN_URL,
+						$asset['filename'],
+					),
+					[],
+					$asset['version']
+				);
+			} elseif ( 'javascript' === $asset['type'] ) {
+				wp_enqueue_script(
+					$asset['id'],
+					sprintf(
+						'%sdist/%s',
+						DM_PLUGIN_URL,
+						$asset['filename'],
+					),
+					$asset['dependencies'],
+					$asset['version'],
+					$asset['meta']
+				);
+			}
+		}
 	}
 
 	/**
