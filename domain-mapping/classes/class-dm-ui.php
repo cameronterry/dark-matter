@@ -14,6 +14,14 @@ defined( 'ABSPATH' ) || die;
  * @since 2.0.0
  */
 class DM_UI {
+
+	/**
+	 * Hashes for the static assets.
+	 *
+	 * @var array
+	 */
+	private $assets_hashes = [];
+
 	/**
 	 * Constructor
 	 *
@@ -61,23 +69,65 @@ class DM_UI {
 	 * @return void
 	 */
 	public function enqueue() {
-		$script_data = include DM_PATH . 'dist/app-script.asset.php';
+		$assets = wp_json_file_decode( DM_PATH . 'dist/assets.json', [ 'associative' => true ] );
+		if ( empty( $assets ) ) {
+			return;
+		}
 
-		wp_enqueue_script(
-			'darkmatterplugin-admin-script',
-			DM_PLUGIN_URL . 'dist/app-script.js',
-			$script_data['dependencies'],
-			$script_data['version'],
-			[
-				'in_footer' => true,
-			]
-		);
-		wp_enqueue_style(
-			'darkmatterplugin-admin-style',
-			DM_PLUGIN_URL . 'dist/app-style.css',
-			[],
-			$script_data['version'],
-		);
+		add_filter( 'wp_script_attributes', array( $this, 'enqueue_script_hashes' ) );
+
+		foreach ( $assets as $asset ) {
+			$id = sprintf( 'dmp-%s', $asset['id'] );
+
+			if ( 'css' === $asset['type'] ) {
+				$this->assets_hashes[ "$id-css" ] = $asset['hashes'];
+
+				wp_enqueue_style(
+					$id,
+					sprintf(
+						'%sdist/%s',
+						DM_PLUGIN_URL,
+						$asset['filename'],
+					),
+					[],
+					$asset['version']
+				);
+			} elseif ( 'javascript' === $asset['type'] ) {
+				$this->assets_hashes[ "$id-js" ] = $asset['hashes'];
+
+				wp_enqueue_script(
+					$id,
+					sprintf(
+						'%sdist/%s',
+						DM_PLUGIN_URL,
+						$asset['filename'],
+					),
+					$asset['dependencies'],
+					$asset['version'],
+					$asset['meta']
+				);
+			}
+		}
+	}
+
+	/**
+	 * Add the `integrity=""` attribute to the custom scripts added by this plugin.
+	 *
+	 * @param array $attributes Attributes for the `<script />` tag.
+	 * @return array
+	 */
+	public function enqueue_script_hashes( $attributes ) {
+		if ( empty( $attributes['id'] ) || false === stripos( $attributes['id'], 'dmp-' ) ) {
+			return $attributes;
+		}
+
+		if ( ! array_key_exists( $attributes['id'], $this->assets_hashes ) ) {
+			return $attributes;
+		}
+
+		$attributes['integrity'] = implode( ' ', $this->assets_hashes[ $attributes['id'] ] );
+
+		return $attributes;
 	}
 
 	/**
