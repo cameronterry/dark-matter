@@ -14,6 +14,14 @@ defined( 'ABSPATH' ) || die;
  * @since 2.0.0
  */
 class DM_UI {
+
+	/**
+	 * Hashes for the static assets.
+	 *
+	 * @var array
+	 */
+	private $assets_hashes = [];
+
 	/**
 	 * Constructor
 	 *
@@ -62,10 +70,20 @@ class DM_UI {
 	 */
 	public function enqueue() {
 		$assets = wp_json_file_decode( DM_PATH . 'dist/assets.json', [ 'associative' => true ] );
+		if ( empty( $assets ) ) {
+			return;
+		}
+
+		add_filter( 'wp_script_attributes', array( $this, 'enqueue_script_hashes' ) );
+
 		foreach ( $assets as $asset ) {
+			$id = sprintf( 'dmp-%s', $asset['id'] );
+
 			if ( 'css' === $asset['type'] ) {
+				$this->assets_hashes[ "$id-css" ] = $asset['hashes'];
+
 				wp_enqueue_style(
-					$asset['id'],
+					$id,
 					sprintf(
 						'%sdist/%s',
 						DM_PLUGIN_URL,
@@ -75,8 +93,10 @@ class DM_UI {
 					$asset['version']
 				);
 			} elseif ( 'javascript' === $asset['type'] ) {
+				$this->assets_hashes[ "$id-js" ] = $asset['hashes'];
+
 				wp_enqueue_script(
-					$asset['id'],
+					$id,
 					sprintf(
 						'%sdist/%s',
 						DM_PLUGIN_URL,
@@ -88,6 +108,26 @@ class DM_UI {
 				);
 			}
 		}
+	}
+
+	/**
+	 * Add the `integrity=""` attribute to the custom scripts added by this plugin.
+	 *
+	 * @param array $attributes Attributes for the `<script />` tag.
+	 * @return array
+	 */
+	public function enqueue_script_hashes( $attributes ) {
+		if ( empty( $attributes['id'] ) || false === stripos( $attributes['id'], 'dmp-' ) ) {
+			return $attributes;
+		}
+
+		if ( ! array_key_exists( $attributes['id'], $this->assets_hashes ) ) {
+			return $attributes;
+		}
+
+		$attributes['integrity'] = implode( ' ', $this->assets_hashes[ $attributes['id'] ] );
+
+		return $attributes;
 	}
 
 	/**
