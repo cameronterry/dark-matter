@@ -24,8 +24,7 @@ rm *.json
 rm *.lock
 rm phpcs.xml
 rm phpunit.xml.dist
-rm postcss.config.js
-rm webpack.config.js
+rm rspack.config.mjs
 
 cd ~/dm/release/
 
