@@ -3,8 +3,8 @@ Contributors: cameronterry, pacifika
 Tags: domain mapping, multisite
 Requires at least: 5.0
 Requires PHP: 7.0.0
-Tested up to: 7.0
-Stable tag: 2.5.3
+Tested up to: 7.1
+Stable tag: 2.5.4
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -78,6 +78,11 @@ Google Analytics) with over 60 websites.
 1. Admin interface for mapping Domains to a specific website.
 
 == Changelog ==
+
+= 2.5.4 =
+
+* Chore: updated composer dependencies.
+* Chore: updated npm dependencies.
 
 = 2.5.3 =
 
