@@ -144,7 +144,12 @@ function darkmatter_maybe_redirect() {
 	}
 
 	if ( $is_admin && $host !== $original_blog->domain ) {
-		$is_ssl_admin = ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN );
+		/**
+		 * Never downgrade an HTTPS request. FORCE_SSL_ADMIN still upgrades plain
+		 * HTTP ones. `force_ssl_admin()` cannot be used: core only syncs it with
+		 * the constant in wp_ssl_constants(), after muplugins_loaded.
+		 */
+		$is_ssl_admin = is_ssl() || ( defined( 'FORCE_SSL_ADMIN' ) && FORCE_SSL_ADMIN );
 
 		$url = 'http' . ( $is_ssl_admin ? 's' : '' ) . '://' . $original_blog->domain . $original_blog->path . $request;
 	} elseif ( $host !== $primary->domain || is_ssl() !== $primary->is_https ) {
